@@ -1,0 +1,47 @@
+{
+	"name": "express-mysql-boilerplate",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon index.js --exec babel-node",
+		"test": "jest --setupFiles dotenv/config"
+	},
+	"author": "daechanJo",
+	"license": "ISC",
+	"dependencies": {
+		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
+		"express": "^4.18.2",
+		"global": "^4.4.0",
+		"jest": "^27.3.1",
+		"joi": "^17.9.2",
+		"morgan": "^1.10.0",
+		"mysql2": "^3.6.0",
+		"nunjucks": "^3.2.4",
+		"passport": "^0.6.0",
+		"passport-jwt": "^4.0.1",
+		"sequelize": "^6.32.1",
+		"sequelize-cli": "^6.6.1",
+		"winston": "^3.10.0",
+		"winston-daily-rotate-file": "^4.7.1"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.17.0",
+		"@babel/core": "^7.17.0",
+		"@babel/node": "^7.22.6",
+		"@babel/plugin-transform-runtime": "^7.17.0",
+		"@babel/preset-env": "^7.16.4",
+		"dotenv": "^16.0.0",
+		"nodemon": "^3.0.1"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"coveragePathIgnorePatterns": [
+			"/node_modules/"
+		],
+		"modulePathIgnorePatterns": [
+			"__config__"
+		]
+	}
+}
