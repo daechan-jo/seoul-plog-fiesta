@@ -15,8 +15,8 @@ const Header = () => {
         <Link to="/mypage">
           <button>마이 페이지</button>
         </Link>
-        <Link to="#">
-          <button>로그아웃</button>
+        <Link to="/login">
+          <button>로그인</button>
         </Link>
       </nav>
     </header>
