@@ -1,21 +1,17 @@
-import db from "../models";
+/** @description 프리즈마 예제 */
+const userService = require("../services/userService");
 
-const User = db.users;
+async function getAllUsers(req, res) {
+	try {
+		const allUsers = await userService.getAllUsers();
+		console.log(allUsers);
+		res.json(allUsers);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "An error occurred" });
+	}
+}
 
-const addUser = async (req, res, next) => {
-    try {
-        const { name, email, password, provider, snsId } = req.body;
-        const user = await User.create({
-            name,
-            email,
-            password,
-            provider,
-            snsId,
-        });
-        res.status(201).json({ user });
-    } catch (error) {
-        next(error);
-    }
+module.exports = {
+	getAllUsers,
 };
-
-module.exports = { addUser };

@@ -3,7 +3,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middleware/errorMiddleware";
 import loggerMiddleware from "./middleware/loggerMiddleware";
-import userRouter from "./routes/userRouter";
+import userRoutes from "./routes/userRoutes";
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 const app = express();
 
@@ -16,7 +18,14 @@ require("./models/index");
 app.use(loggerMiddleware);
 
 //todo 앞으로 작성될 라우터핸들러 위치
-// app.use(userRouter);
+app.use(userRoutes);
 
 app.use(errorMiddleware);
+
+/** @description 프로세스 종류 후 프리즈마 연결해제 */
+process.on("SIGINT", async () => {
+	await prisma.$disconnect();
+	process.exit();
+});
+
 export { app };
