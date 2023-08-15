@@ -1,12 +1,16 @@
-const NetworkContainer = () => {
+import { useState } from 'react';
+import PageNav from "../../components/common/PageNav";
+import ItemList from "../../components/network/ItemList";
+
+const MyNetworkContainer = () => {
+  const [lists, setLists] = useState(['groups', 'users'])
+
   return (
     <main>
-      <div>
-        네트워크페이지입니다. params의 view나 state를 이용하여 group 혹은 user를
-        정합시다.
-      </div>
+      <PageNav lists={lists} setLists={setLists} />
+      <ItemList/>
     </main>
   );
 };
 
-export default NetworkContainer;
+export default MyNetworkContainer;

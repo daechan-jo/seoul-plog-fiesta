@@ -1,9 +1,19 @@
-const RankingContainer = () => {
+import Map from '../../components/ranking/Map';
+import TopGroup from '../../components/ranking/TopGroup';
+import TopUser from '../../components/ranking/TopUser';
+
+const HomeContainer = () => {
   return (
     <main>
-      <div>랭킹 페이지입니다.</div>
+      <div>
+        <Map />
+        <div >
+          <TopGroup />
+          <TopUser />
+        </div>
+      </div>
     </main>
   );
 };
 
-export default RankingContainer;
+export default HomeContainer;

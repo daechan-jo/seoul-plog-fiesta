@@ -1,13 +1,12 @@
-const MyGroup = () => {
+const TopGroup = () => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
-        <h1>나의 모임 현황</h1>
-        <button className="gBtn">모임 리스트 관리</button>
+        <h1>상위 모임</h1>
       </div>
       <div className="contentContainer">모임 넣을겁니다.</div>
     </div>
   );
 };
 
-export default MyGroup;
+export default TopGroup;
