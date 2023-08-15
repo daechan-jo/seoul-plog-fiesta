@@ -1,3 +1,4 @@
+import styles from './index.module.scss';
 import Modal from 'react-modal';
 
 const Plogging = ({ isOpen, closeModal }) => {
@@ -8,8 +9,17 @@ const Plogging = ({ isOpen, closeModal }) => {
       right: 'auto',
       bottom: 'auto',
       transform: 'translate(-50%, -50%)',
-      width: '70%',
-      maxHeight: '80vh',
+      width: '80vw',
+      height: '80vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   };
 
@@ -20,12 +30,14 @@ const Plogging = ({ isOpen, closeModal }) => {
       contentLabel="Authentication Modal"
       style={modalStyles}
     >
-      <div className="gContainer">
-        <div className="titleContainer">
+      <div className={styles.plogging}>
+        <div className={styles.titleContainer}>
           <h1>인증하기</h1>
         </div>
-        <div className="contentContainer">지도 넣을겁니다.</div>
-        <button onClick={closeModal}>Close Modal</button>
+        <div className={styles.contentContainer}>지도 넣을겁니다.</div>
+        <button className onClick={closeModal}>
+          Close Modal
+        </button>
       </div>
     </Modal>
   );

@@ -3,15 +3,9 @@ import styles from './layout.module.scss';
 import { useState } from 'react';
 import Plogging from '../common/Plogging';
 
-const Header = ({ setIsPosting }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+const Header = ({ isModalOpen, setIsModalOpen }) => {
   const openModal = () => {
     setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
 
   return (
@@ -22,7 +16,6 @@ const Header = ({ setIsPosting }) => {
       </div>
       <nav className={styles.navContainer}>
         <button onClick={openModal}>인증하러가기</button>
-        <Plogging isOpen={isModalOpen} closeModal={closeModal} />
         <Link to="/mypage">
           <button>마이 페이지</button>
         </Link>

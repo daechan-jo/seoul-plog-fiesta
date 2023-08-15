@@ -16,10 +16,10 @@ code {
 }
 
 main {
-  padding-top: $headerHeight;
-  padding-left: $navWidth + 10px;
+  padding-top: $headerHeight + 10px;
+  padding-left: $navWidth + 40px;
   padding-bottom: 20px;
-  padding-right: 20px;
+  padding-right: 40px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -28,10 +28,12 @@ main {
 
 .gContainer {
   background-color: white;
-  width: 1200px;
+  width: 80vw;
   padding: 40px;
   margin: 20px;
-  border-radius: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
   .titleContainer {
     width: 100%;
     display: flex;
@@ -39,7 +41,7 @@ main {
     h1 {
       font-size: 30px;
       font-weight: 700;
-      margin: 10px 0;
+      margin: 20px 0;
     }
   }
   .contentContainer {
@@ -58,4 +60,9 @@ main {
   padding: 10px 20px;
   color: white;
   margin: 10px;
+}
+
+.gList {
+  width: 80vw;
+  height: 80vh;
 }
