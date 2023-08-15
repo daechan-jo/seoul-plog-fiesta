@@ -17,6 +17,7 @@ code {
 main {
   background-color: #ededed;
   padding-top: $headerHeight;
+  padding-left: $navWidth;
   min-height: 100vh;
   display: flex;
   justify-content: center;
