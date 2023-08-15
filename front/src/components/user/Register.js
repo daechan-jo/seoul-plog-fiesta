@@ -1,8 +1,7 @@
 import styles from "./user.module.scss";
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
-// import App from "../../App.js"
-import { Container, Col, Row, Form, Button } from "react-bootstrap";
+import App from "../../App.js"
 const Register = () => {
   const navigate = useNavigate();
   //useState로 email 상태를 생성함.
@@ -40,103 +39,27 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormValid) {
-
-    }
+    // 저번 웹프 스켈레톤 코드 SAVAGE
     // try {
-    //   // "user/register" 엔드포인트로 post요청함.
     //   await App.post("/register", {
+    //     name,
+    //     nickname,
     //     email,
     //     password,
-    //     name,
-    //   });
+    //     confirmPassword
+    //   })
 
     //   // 로그인 페이지로 이동함.
     //   navigate("/login");
     // } catch (err) {
     //   console.log("회원가입에 실패하였습니다.", err);
     // }
-  };
+
+  }
+
 
 
   return (
-    // <Container className={styles.container}>
-    //   <Row className="justify-content-md-center mt-5">
-    //     <Col lg={8}>
-    //       <Form onSubmit={handleSubmit}>
-    //         <Form.Group controlId="registerName" className="mt-3">
-    //           <Form.Label>이름</Form.Label>
-    //           <Form.Control
-    //             type="text"
-    //             autoComplete="off"
-    //             value={name}
-    //             onChange={(e) => setName(e.target.value)}
-    //           />
-    //           {!isNameValid && (
-    //             <Form.Text className="text-success">
-    //               이름은 2글자 이상으로 설정해 주세요.
-    //             </Form.Text>
-    //           )}
-    //         </Form.Group>
-    //         <Form.Group controlId="registerEmail">
-    //           <Form.Label>이메일 주소</Form.Label>
-    //           <Form.Control
-    //             type="email"
-    //             autoComplete="off"
-    //             value={email}
-    //             onChange={(e) => setEmail(e.target.value)}
-    //           />
-    //           {!isEmailValid && (
-    //             <Form.Text className="text-success">
-    //               이메일 형식이 올바르지 않습니다.
-    //             </Form.Text>
-    //           )}
-    //         </Form.Group>
-
-    //         <Form.Group controlId="registerPassword" className="mt-3">
-    //           <Form.Label>비밀번호</Form.Label>
-    //           <Form.Control
-    //             type="password"
-    //             autoComplete="off"
-    //             value={password}
-    //             onChange={(e) => setPassword(e.target.value)}
-    //           />
-    //           {!isPasswordValid && (
-    //             <Form.Text className="text-success">
-    //               비밀번호는 4글자 이상으로 설정해 주세요.
-    //             </Form.Text>
-    //           )}
-    //         </Form.Group>
-
-    //         <Form.Group controlId="registerConfirmPassword" className="mt-3">
-    //           <Form.Label>비밀번호 재확인</Form.Label>
-    //           <Form.Control
-    //             type="password"
-    //             autoComplete="off"
-    //             value={confirmPassword}
-    //             onChange={(e) => setConfirmPassword(e.target.value)}
-    //           />
-    //           {!isPasswordSame && (
-    //             <Form.Text className="text-success">
-    //               비밀번호가 일치하지 않습니다.
-    //             </Form.Text>
-    //           )}
-    //         </Form.Group>
-
-
-
-    //         <Form.Group as={Row} className="mt-3 text-center">
-    //           <Col sm={{ span: 20 }}>
-    //             <Button variant="primary" type="submit" disabled={!isFormValid}>
-    //               회원가입
-    //             </Button>
-    //           </Col>
-    //         </Form.Group>
-    //       </Form>
-    //     </Col>
-    //   </Row>
-    // </Container>
-
     <form className={styles.container} >
       {/* 화살표 추가하고 싶은데 외않되 */}
       <div className="arrow"></div>

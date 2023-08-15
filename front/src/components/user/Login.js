@@ -1,7 +1,7 @@
 import styles from "./user.module.scss";
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
+//@ts-ignore
 
 const Login = () => {
   //useState로 email 상태를 생성함.
@@ -38,7 +38,7 @@ const Login = () => {
     }
   }
   return (
-    <form className={styles.container}>
+    <form className={styles.logincontainer}>
       <label>아이디</label>
       <input className="id" type="email" placeholder="user@example.com" onChange={(e) => setEmail(e.target.value)} />
       {!isEmailValid && <div className={styles["error-message"]}>유효한 이메일 주소를 입력하세요.</div>}
