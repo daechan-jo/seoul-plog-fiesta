@@ -5,6 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 999;
   position: fixed;
   top: 0;
   left: $navWidth;
@@ -30,6 +31,7 @@
   width: $navWidth;
   height: 100%;
   position: fixed;
+  z-index: 999;
   top: 0;
   left: 0;
   bottom: 0;

@@ -1,7 +1,19 @@
 import { Link } from 'react-router-dom';
 import styles from './layout.module.scss';
+import { useState } from 'react';
+import Plogging from '../common/Plogging';
 
-const Header = () => {
+const Header = ({ setIsPosting }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.logoContainer}>
@@ -9,9 +21,8 @@ const Header = () => {
         <div>logo</div>
       </div>
       <nav className={styles.navContainer}>
-        <Link to="#">
-          <button>인증하러가기</button>
-        </Link>
+        <button onClick={openModal}>인증하러가기</button>
+        <Plogging isOpen={isModalOpen} closeModal={closeModal} />
         <Link to="/mypage">
           <button>마이 페이지</button>
         </Link>
