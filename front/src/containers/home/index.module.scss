@@ -1,0 +1,11 @@
+.container {
+  width: 1000px;
+  height: 800px;
+  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  background-color: beige;
+  .box {
+    display: flex;
+  }
+}

@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from '../components/common/Header';
-import Nav from '../components/common/Nav';
+import Header from '../components/layout/Header';
+import Nav from '../components/layout/Nav';
 
 const Layout = ({ children }) => {
   return (
