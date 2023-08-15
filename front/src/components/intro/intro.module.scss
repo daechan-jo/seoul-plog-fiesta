@@ -1,0 +1,67 @@
+.Introcontainer {
+    // 배경용!
+    background-color: #00821d;
+    width: 100%;
+    height: 100vh;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+
+
+
+    // Plogging 타이틀
+    .title {
+
+        font-size: 100px;
+        font-weight: 100em;
+        animation: fadeIn 2s ease-in-out;
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    }
+
+    span {
+        color: white;
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    //Plogging 설명
+    .summary {
+        // $font medium 적용방법을 몰라 확인 후 추가...
+        font-size: 16px;
+        padding: 30px;
+        animation: fadeIn 3s ease-in-out;
+
+    }
+
+    .sideImage {
+        // 색 대충 잡고 내일 수정할 것
+        background-color: rgb(255, 255, 255, 0.8);
+        width: 50vw;
+        // 높이이상하지만 일단 지정
+        height: 100vh;
+        margin-left: 50%;
+        // flex-direction: row;
+        animation: fadeIn 3s ease-in-out;
+    }
+}
+
+@media (max-width:800px) {
+    .sideImage {
+        margin-left: 0;
+        width: 100vw;
+        // flex-direction: column;
+
+    }
+}
