@@ -1,7 +1,18 @@
+import styles from './index.module.scss';
+import Map from '../../components/home/Map';
+import MyGroup from '../../components/home/MyGroup';
+import MyUser from '../../components/home/MyUser';
+
 const HomeContainer = () => {
   return (
     <main>
-      <div>홈 페이지입니다. 로그인없으면 /intro로 navigate</div>
+      <div classname={styles.container}>
+        <Map />
+        <div classname={styles.box}>
+          <MyGroup />
+          <MyUser />
+        </div>
+      </div>
     </main>
   );
 };

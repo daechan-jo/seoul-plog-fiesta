@@ -1,0 +1,80 @@
+@import '../../styles/variables.scss';
+
+.map {
+  background-color: white;
+  width: 1200px;
+  padding: 40px;
+  margin: 20px;
+  border-radius: 15px;
+  .titleContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    h1 {
+      font-size: 30px;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+  }
+  .contentContainer {
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    padding: 20px;
+  }
+}
+
+.myGroup {
+  background-color: white;
+  padding: 40px;
+  margin: 20px;
+  border-radius: 15px;
+  .titleContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    h1 {
+      font-size: 30px;
+      font-weight: 700;
+    }
+  }
+  .contentContainer {
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    padding: 20px;
+  }
+}
+
+.myUser {
+  background-color: white;
+  padding: 40px;
+  margin: 20px;
+  border-radius: 15px;
+  .titleContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    h1 {
+      font-size: 30px;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+  }
+  .contentContainer {
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    padding: 20px;
+  }
+}
+
+.btn {
+  font-size: 20px;
+  font-weight: 700;
+  background-color: $point;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: white;
+  margin: 10px;
+}

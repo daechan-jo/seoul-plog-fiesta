@@ -1,0 +1,9 @@
+div.container {
+  background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  background-color: beige;
+  div.box {
+    display: flex;
+  }
+}

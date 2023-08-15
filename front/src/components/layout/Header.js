@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import styles from "./layout.module.scss";
+import { Link } from 'react-router-dom';
+import styles from './layout.module.scss';
 
 const Header = () => {
   return (
@@ -10,16 +10,13 @@ const Header = () => {
       </div>
       <nav className={styles.navContainer}>
         <Link to="#">
-          <button>page1</button>
+          <button>인증하러가기</button>
         </Link>
-        <Link to="#">
-          <button>page2</button>
+        <Link to="/mypage">
+          <button>마이 페이지</button>
         </Link>
-        <Link to="#">
-          <button>page3</button>
-        </Link>
-        <Link to="#">
-          <button>page4</button>
+        <Link to="/login">
+          <button>로그인</button>
         </Link>
       </nav>
     </header>
