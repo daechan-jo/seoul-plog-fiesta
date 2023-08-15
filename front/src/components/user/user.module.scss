@@ -4,9 +4,17 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  background-color: white;
-  padding: 30px;
+  // 투명도 넣어봤습니다
+  background-color: rgb(255, 255, 255, 0.8);
+  padding: 20px;
+  padding-top: 50px;
 
+  .error-message {
+    color: red;
+    font-size: 12px;
+    // margin-top: 3px;
+    margin-bottom: 10px;
+  }
 
   label {
     font-weight: 700;
@@ -14,6 +22,47 @@
 
   input {
     font-weight: 700;
+    padding: 10px;
+
+    ::placeholder {
+      font-weight: 700;
+    }
+  }
+
+  button {
+    margin-top: 50px;
+    padding: 15px;
+    background-color: #00821D;
+    border-radius: 20px;
+    font-weight: 700;
+    color: white
+  }
+}
+
+.logincontainer {
+  width: 40%;
+  height: 80vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  // 투명도 넣어봤습니다
+  background-color: rgb(255, 255, 255, 0.8);
+  padding: 20px;
+
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: -50px;
+  }
+
+  label {
+    font-weight: 700;
+    margin-bottom: -50px;
+  }
+
+  input {
+    font-weight: 700;
+    padding: 10px;
 
     ::placeholder {
       font-weight: 700;
