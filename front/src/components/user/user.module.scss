@@ -1,0 +1,14 @@
+.container {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  label {
+    font-weight: 700;
+  }
+  input {
+    font-weight: 700;
+    ::placeholder {
+      font-weight: 700;
+    }
+  }
+}
