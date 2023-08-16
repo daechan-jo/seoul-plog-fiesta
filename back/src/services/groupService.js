@@ -106,6 +106,37 @@ const getUserGroups = async (userId) => {
 	}
 };
 
+const getRandomGroups = async () => {
+	try {
+		return await prisma.group.findMany({
+			take: 10,
+			orderBy: {
+				id: "desc",
+			},
+			include: {
+				manager: true,
+				GroupUser: true,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const searchGroupsByName = async (groupName) => {
+	try {
+		return await prisma.group.findMany({
+			where: {
+				name: {
+					contains: groupName,
+				},
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	createGroup,
 	getALlGroups,
@@ -114,4 +145,6 @@ module.exports = {
 	requestToJoinGroup,
 	approveRegistration,
 	getUserGroups,
+	getRandomGroups,
+	searchGroupsByName,
 };

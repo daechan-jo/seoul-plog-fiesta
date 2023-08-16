@@ -86,6 +86,31 @@ const getUserGroups = async (req, res, next) => {
 	}
 };
 
+/** @description 랜덤 그룹 리스트 */
+const getRandomGroups = async (req, res, next) => {
+	try {
+		const randomGroups = await groupService.getRandomGroups();
+		res.status(200).json({ message: "랜덤 그룹 리스트", randomGroups });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+/** @description 제공된 문자열이 포함된 모든 그룹 */
+const searchGroupsByName = async (req, res, next) => {
+	const groupName = req.params.groupname;
+	try {
+		const groups = await groupService.searchGroupsByName(groupName);
+		res.status(200).json({ message: "그룹 검색 결과", groups });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 module.exports = {
 	createGroup,
 	getAllGroups,
@@ -93,4 +118,6 @@ module.exports = {
 	requestToJoinGroup,
 	approveRegistration,
 	getUserGroups,
+	getRandomGroups,
+	searchGroupsByName,
 };
