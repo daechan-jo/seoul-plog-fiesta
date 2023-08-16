@@ -1,14 +1,21 @@
 import styles from './user.module.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AiOutlineArrowLeft } from "react-icons/ai"
 // import App from "../../App.js"
 const PasswordChange = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
 
+
+
+  const goBack = () => {
+    navigate(-1);
+  };
   return (
     <form className={styles.container}>
+      <AiOutlineArrowLeft onClick={goBack} />
       <label>이름</label>
       <input
         type="text"

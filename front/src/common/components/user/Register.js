@@ -1,7 +1,7 @@
 import styles from './user.module.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { AiOutlineArrowLeft } from "react-icons/ai"
 const Register = () => {
   const navigate = useNavigate();
   //useState로 email 상태를 생성함.
@@ -60,6 +60,7 @@ const Register = () => {
   };
   return (
     <form className={styles.container}>
+      <AiOutlineArrowLeft onClick={goBack} />
       <button className="previous" onClick={goBack} >&lt; </button>
 
 

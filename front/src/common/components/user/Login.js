@@ -1,7 +1,7 @@
 import styles from "./user.module.scss";
 import React, { useState, useContext } from "react";
 import { useNavigate, useHistory } from "react-router-dom";
-
+import { AiOutlineArrowLeft } from "react-icons/ai"
 //@ts-ignore
 
 const Login = () => {
@@ -45,12 +45,11 @@ const Login = () => {
 
 
   const goBack = () => {
-    navigate("/");
+    navigate(-1);
   };
   return (
     <form className={styles.logincontainer}>
-
-      <button className="previous" onClick={goBack} >&lt; </button>
+      <AiOutlineArrowLeft onClick={goBack} />
       <label>아이디</label>
       <input className="id" type="email" placeholder="user@example.com" onChange={(e) => setEmail(e.target.value)} />
       {!isEmailValid && <div className={styles["error-message"]}>유효한 이메일 주소를 입력하세요.</div>}
