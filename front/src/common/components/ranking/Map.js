@@ -1,12 +1,16 @@
-const Map = () => {
+import Map from '../common/Map';
+
+const rankingMap = () => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
         <h1>플로깅 지도</h1>
       </div>
-      <div className="contentMapContainer">지도 넣을겁니다.</div>
+      <div className="contentMapContainer">
+        <Map />
+      </div>
     </div>
   );
 };
 
-export default Map;
+export default rankingMap;

@@ -29,6 +29,8 @@ main {
   padding: 20px;
   border-radius: 10px;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   .titleContainer {
     width: 100%;
@@ -47,14 +49,14 @@ main {
     padding: 20px;
   }
   .contentMapContainer {
-    width: 100%;
-    height: 40vh;
+    width: 840px;
+    height: 100%;
     background-color: gray;
     padding: 20px;
   }
   .contentMinContainer {
     width: 100%;
-    height: 22vh;
+    height: 100%;
     background-color: gray;
     padding: 20px;
   }
@@ -78,10 +80,12 @@ main {
 .threeContainer {
   width: 100%;
   display: flex;
-  flex-direction: column;
   gap: 20px;
   .box {
+    max-width: 40%;
+    width: 100%;
     display: flex;
+    flex-direction: column;
     gap: 20px;
   }
 }
