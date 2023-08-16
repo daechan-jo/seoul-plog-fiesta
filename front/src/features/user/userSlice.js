@@ -6,17 +6,19 @@ const userSlice = createSlice({
   reducers: {
     login(state, action) {
       //api요청 후 반환값을 state에 넣기
-      state = {
-        email: action.payload.email,
-        nickName: action.payload.nickName,
-      };
+      //const { email, nickName } = action.payload;
+      const email = 'hi';
+      const nickName = 'hi';
+      state.email = email;
+      state.nickName = nickName;
     },
     register(state, action) {
       //api요청 후 반환값을 state에 넣기 => 회원가입하면 자동 로그인됨
-      state = {
-        email: action.payload.email,
-        nickName: action.payload.nickName,
-      };
+      //const { email, nickName } = action.payload;
+      const email = 'hi';
+      const nickName = 'hi';
+      state.email = email;
+      state.nickName = nickName;
     },
     logout(state, action) {
       //api요청 후 state를 삭제함
