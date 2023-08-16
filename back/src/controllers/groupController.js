@@ -2,21 +2,13 @@ import groupService from "../services/groupService.js";
 
 /** @description 그룹 생성 */
 const createGroup = async (req, res, next) => {
-	const { name, managerId, goal, region, introduction, memberLimit } =
-		req.body;
+	const groupData = req.body;
 	try {
-		const group = await groupService.createGroup({
-			name,
-			managerId,
-			goal,
-			region,
-			introduction,
-			memberLimit,
-		});
-		res.status(201).json({ message: "그룹 생성 성공", group });
+		const group = await groupService.createGroup(groupData);
+		res.status(201).json({ message: "그룹 생성", group });
 	} catch (error) {
+		console.error(error);
 		error.status = 500;
-		error.message = "그룹 생성 실패";
 		next(error);
 	}
 };
@@ -27,8 +19,8 @@ const getAllGroups = async (req, res, next) => {
 		const groups = await groupService.getALlGroups();
 		res.status(200).json({ message: "그룹 전체 리스트", groups });
 	} catch (error) {
+		console.error(error);
 		error.status = 500;
-		error.message = "그룹 전체 리스트 실패";
 		next(error);
 	}
 };
@@ -41,8 +33,8 @@ const getGroupDetails = async (req, res, next) => {
 		if (!group) return res.status(404).json({ message: "그룹 없음" });
 		res.status(200).json(group);
 	} catch (error) {
+		console.error(error);
 		error.status = 500;
-		error.message = "그룹 상세 정보 조회 실패";
 		next(error);
 	}
 };

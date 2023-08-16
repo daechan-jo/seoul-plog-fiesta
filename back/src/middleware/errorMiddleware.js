@@ -4,10 +4,11 @@ function errorMiddleware(error, req, res, next) {
 	res.status(statusCode).send(error.message);
 
 	const stackLines = error.stack.split("\n");
-	const truncatedStack = stackLines.slice(0, 5).join("\n");
+	const truncatedStack = stackLines.slice(0, 50).join("\n");
 	const reqBodyString = JSON.stringify(req.body);
+
 	logger.error(
-		`[${req.method}] ${req.path} | ${statusCode} | [REQUEST] ${reqBodyString} | ${truncatedStack}`
+		`[${req.method}] ${req.path} | ${statusCode} | [REQUEST] ${reqBodyString} | ${truncatedStack}`,
 	);
 }
 module.exports = errorMiddleware;
