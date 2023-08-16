@@ -10,7 +10,8 @@ label {
   margin-bottom: 5px;
 }
 
-input {
+input,
+textarea {
   display: block;
   width: 100%;
   padding: 10px;
@@ -20,15 +21,18 @@ input {
   transition: border-color 0.3s ease-in-out;
 }
 
-input::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: #999;
 }
 
-input:hover {
+input:hover,
+textarea:hover {
   border-color: #66afe9;
 }
 
-input.wrong {
+input.wrong,
+textarea.wrong {
   border: 2px solid #af0000;
   box-shadow: 0 0 5px rgba(248, 0, 0, 0.5);
   outline: none;

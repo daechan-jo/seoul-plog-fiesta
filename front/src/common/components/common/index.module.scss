@@ -9,6 +9,7 @@
 }
 
 .plogging {
+  position: relative;
   width: 100%;
   padding: 40px;
   display: flex;
@@ -27,7 +28,7 @@
   .contentContainer {
     width: 100%;
     height: 100%;
-    background-color: gray;
+    margin-top: 20px;
     padding: 20px;
   }
 }
@@ -58,6 +59,65 @@
       border-radius: 100%;
       top: -10%;
       right: -1%;
+    }
+  }
+}
+.ploggingFormContainer {
+  width: 100%;
+  padding: 0px;
+  .ploggingForm {
+    height: 45vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 100px;
+    .imgContainer {
+      width: 30vw;
+      height: 50vh;
+      background-color: gray;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        position: absolute;
+        width: 30vw;
+        height: 50vh;
+      }
+    }
+    .content {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      input {
+        height: 35px;
+      }
+      textarea {
+        height: 70px;
+      }
+    }
+  }
+
+  .btns {
+    width: 250px;
+    display: flex;
+    position: absolute;
+    justify-content: space-between;
+    bottom: -80px;
+    right: 20px;
+    button {
+      font-size: 20px;
+      font-weight: 700;
+      padding: 10px 20px;
+      background-color: green;
+      border-radius: 5px;
+    }
+    .back {
+      background-color: gray;
+      color: white;
     }
   }
 }

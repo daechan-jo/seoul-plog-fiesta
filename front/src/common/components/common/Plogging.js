@@ -1,3 +1,4 @@
+import PloggingForm from './PloggingForm';
 import styles from './index.module.scss';
 import Modal from 'react-modal';
 
@@ -9,7 +10,7 @@ const Plogging = ({ isOpen, closeModal }) => {
       right: 'auto',
       bottom: 'auto',
       transform: 'translate(-50%, -50%)',
-      width: '80vw',
+      width: '70vw',
       height: '80vh',
       display: 'flex',
       flexDirection: 'column',
@@ -34,10 +35,9 @@ const Plogging = ({ isOpen, closeModal }) => {
         <div className={styles.titleContainer}>
           <h1>인증하기</h1>
         </div>
-        <div className={styles.contentContainer}>지도 넣을겁니다.</div>
-        <button className onClick={closeModal}>
-          Close Modal
-        </button>
+        <div className={styles.contentContainer}>
+          <PloggingForm closeModal={closeModal} />
+        </div>
       </div>
     </Modal>
   );
