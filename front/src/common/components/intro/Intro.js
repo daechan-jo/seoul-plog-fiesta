@@ -1,6 +1,12 @@
 import React from 'react';
 import style from "./intro.module.scss"
 const Intro = () => {
+    // 챗지피티한테 물어본거 잠깐 추가해봅니다
+    // <div className={style.sideImage}>
+    //   {rankingData.map((rank, index) => (
+    //     <div key={index} className={style.ranks}>{rank.name} - {rank.score}점</div>
+    //   ))}
+    // </div>
     return (
         <div className={style.Introcontainer}>
             <div className={style.title}>

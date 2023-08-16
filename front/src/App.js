@@ -6,6 +6,7 @@ import MyNetworkPage from './pages/MyNetworkPage';
 import NetworkPage from './pages/NetworkPage';
 import RankingPage from './pages/RankingPage';
 import MyPage from './pages/MyPage';
+import PasswordPage from './pages/PasswordPage';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
       <Route path="/mynetwork" element={<MyNetworkPage />} />
       <Route path="/network" element={<NetworkPage />} />
       <Route path="/ranking" element={<RankingPage />} />
+      <Route path="/setpassword" element={<PasswordPage />} />
       <Route path="*" element={<IntroPage />} />
     </Routes>
   );
