@@ -45,4 +45,38 @@ const getGroupDetails = async (groupId) => {
 	}
 };
 
-module.exports = { createGroup, getALlGroups, getGroupDetails };
+const isUserGroupMember = async (userId, groupId) => {
+	try {
+		const groupUser = await prisma.groupUser.findFirst({
+			where: {
+				userId,
+				groupId,
+			},
+		});
+		return !!groupUser;
+	} catch (error) {
+		throw error;
+	}
+};
+
+const requestToJoinGroup = async (userId, groupId) => {
+	try {
+		await prisma.groupUser.create({
+			data: {
+				userId,
+				groupId,
+				isAccepted: false,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+module.exports = {
+	createGroup,
+	getALlGroups,
+	getGroupDetails,
+	isUserGroupMember,
+	requestToJoinGroup,
+};

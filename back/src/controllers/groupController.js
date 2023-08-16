@@ -39,4 +39,28 @@ const getGroupDetails = async (req, res, next) => {
 	}
 };
 
-module.exports = { createGroup, getAllGroups, getGroupDetails };
+/** @description 그룹 가입 신청 */
+const requestToJoinGroup = async (req, res, next) => {
+	const userId = req.user.id; // pasport에서 user를 req에 넣어줌
+	const groupId = parseInt(req.params.id);
+	try {
+		const group = await groupService.getGroupDetails(groupId);
+		if (!group) return res.status(404).json({ message: "그룹 없음" });
+		const isMember = await groupService.isUserGroupMember(userId, groupId);
+		if (isMember)
+			return res.status(400).json({ message: "이미 가입된 그룹" });
+		await groupService.requestToJoinGroup(userId, groupId);
+		res.status(200).json({ message: "그룹 가입 신청 완료" });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+module.exports = {
+	createGroup,
+	getAllGroups,
+	getGroupDetails,
+	requestToJoinGroup,
+};
