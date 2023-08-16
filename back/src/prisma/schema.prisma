@@ -59,7 +59,7 @@ model GroupUser {
 	userId    Int
 	group     Group  @relation(fields: [groupId], references: [id])
 	groupId   Int
-	role      String
+	isAdmin   Boolean @default(true)
 
 	@@id([userId, groupId])
 }
