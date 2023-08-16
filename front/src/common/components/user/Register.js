@@ -61,9 +61,6 @@ const Register = () => {
   return (
     <form className={styles.container}>
       <AiOutlineArrowLeft onClick={goBack} />
-      <button className="previous" onClick={goBack} >&lt; </button>
-
-
       <label>이름</label>
       <input
         className="name"

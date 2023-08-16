@@ -5,6 +5,7 @@ import { AiOutlineArrowLeft } from "react-icons/ai"
 //@ts-ignore
 
 const Login = () => {
+  const navigate = useNavigate()
   //useState로 email 상태를 생성함.
   const [email, setEmail] = useState("");
   //useState로 password 상태를 생성함.
@@ -38,15 +39,24 @@ const Login = () => {
 
     }
   }
-  const navigate = useNavigate()
   const findPassword = () => {
     navigate("/setpassword")
   }
-
-
+  // 뒤로가기 버튼 함수
   const goBack = () => {
     navigate(-1);
   };
+
+  // //카카오톡 로그인을 위한 변수들
+  // const REST_API_KEY = '백엔드한테 달라하자1';
+  // const REDIRECT_URI = '백엔드한테 달라하자2';
+  // const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+  // // 카카오톡 로그인을 위한 loginHandler
+  // const kakaoLoginHandler = () => {
+  //   window.location.href = link;
+  // };
+
   return (
     <form className={styles.logincontainer}>
       <AiOutlineArrowLeft onClick={goBack} />
@@ -57,10 +67,11 @@ const Login = () => {
       <label>비밀번호</label>
       <input type="password" placeholder="비밀번호" onChange={(e) => setPassword(e.target.value)} />
       {!isPasswordValid && <div className={styles["error-message"]}>비밀번호는 4글자 이상이어야 합니다.</div>}
-      <button type="submit" onSubmit={handleSubmit}>로그인 </button>
-      {/* <Link to="/setpassword"> */}
-      <button onClick={findPassword}>비밀번호 찾기</button>
-      {/* </Link> */}
+      <div className={styles.buttonContainer}>
+        <button className={styles.localLogin} type="submit" onSubmit={handleSubmit}>로그인 </button>
+        <button className={styles.localLogin} onClick={findPassword}>비밀번호 찾기</button>
+        {/* <button className={styles.kakaoLogin} onClick={kakaoLoginHandler}>카카오 로그인</button> */}
+      </div>
     </form>
 
 

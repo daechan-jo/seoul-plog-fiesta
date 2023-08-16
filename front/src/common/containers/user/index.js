@@ -3,7 +3,7 @@ import Register from "../../components/user/Register";
 import { useState } from "react";
 
 const UserContainer = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   return <main>
     {isLogin ? <Login /> : <Register />}
   </main>;

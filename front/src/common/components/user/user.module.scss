@@ -40,17 +40,9 @@
 }
 
 
-.slick-arrow {
-  width: 60px;
-  height: 68px;
-  background-color: #fff;
-  border: 1px solid #eee;
-  font-size: 0px;
-}
-
 .logincontainer {
   width: 40%;
-  height: 80vh;
+  height: 90vh;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -83,15 +75,38 @@
 
   }
 
-  button {
-    padding: 15px;
-    background-color: #00821D;
-    border-radius: 20px;
-    font-weight: 700;
-    color: white;
+  .buttonContainer {
+    display: flex;
+    flex-direction: column;
+    /* 세로 방향으로 정렬 */
     align-items: center;
+    justify-content: center;
 
+    @media(max-width:800px) {}
 
+    button {
+      width: 30%;
+      padding: 15px;
+    }
+
+    .localLogin {
+
+      background-color: #00821D;
+      border-radius: 20px;
+      font-weight: 700;
+      color: white;
+      align-items: center;
+    }
+
+    .kakaoLogin {
+      width: 30%;
+      padding: 15px;
+      background-color: #ffe812;
+      border-radius: 20px;
+      font-weight: 700;
+      color: black;
+      align-items: center;
+    }
   }
 
 }
