@@ -1,4 +1,3 @@
-import styles from './index.module.scss';
 import Map from '../../components/home/Map';
 import MyGroup from '../../components/home/MyGroup';
 import MyUser from '../../components/home/MyUser';
@@ -6,9 +5,9 @@ import MyUser from '../../components/home/MyUser';
 const HomeContainer = () => {
   return (
     <main>
-      <div classname={styles.container}>
+      <div className="threeContainer">
         <Map />
-        <div classname={styles.box}>
+        <div className="box">
           <MyGroup />
           <MyUser />
         </div>

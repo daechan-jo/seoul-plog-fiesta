@@ -5,9 +5,9 @@ import TopUser from '../../components/ranking/TopUser';
 const HomeContainer = () => {
   return (
     <main>
-      <div>
+      <div className="threeContainer">
         <Map />
-        <div >
+        <div className="box">
           <TopGroup />
           <TopUser />
         </div>

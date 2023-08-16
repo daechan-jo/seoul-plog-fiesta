@@ -1,3 +1,4 @@
+import styles from './index.module.scss';
 import { useState } from 'react';
 
 const MyInfo = () => {
@@ -8,7 +9,7 @@ const MyInfo = () => {
         <div className="titleContainer">
           <h1>내 정보</h1>
         </div>
-        <div className="contentContainer">
+        <div className={styles.box}>
           <label>이메일</label>
         </div>
       </div>
