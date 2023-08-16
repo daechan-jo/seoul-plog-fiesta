@@ -1,5 +1,5 @@
-import UserContainer from "../containers/user";
-import Layout from "./Layout";
+import UserContainer from '../common/containers/user';
+import Layout from './Layout';
 
 const UserPage = () => {
   return (

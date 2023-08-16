@@ -1,4 +1,4 @@
-@import '../../styles/variables.scss';
+@import '../../../styles/variables.scss';
 
 .header {
   height: $headerHeight;
@@ -44,6 +44,7 @@
     justify-content: space-evenly;
     align-items: center;
     a {
+      padding: 15px;
       font-size: 35px;
     }
     .active {
