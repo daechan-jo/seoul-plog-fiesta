@@ -4,13 +4,13 @@ import logger from "../config/logger.js";
 const morganMiddleware = morgan((tokens, req, res) => {
 	const logMessage = `[${tokens.method(req, res)}] ${tokens.url(
 		req,
-		res
+		res,
 	)} | ${tokens.status(req, res)} | ${tokens.res(
 		req,
 		res,
-		"content-length"
-	)} - ${tokens["response-time"](req, res)} ms | [Response] ${JSON.parse(
-		req.body
+		"content-length",
+	)} - ${tokens["response-time"](req, res)} ms | [Response] ${JSON.stringify(
+		req.body,
 	)}`;
 
 	const statusCode = res.statusCode;

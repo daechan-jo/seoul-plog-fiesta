@@ -2,8 +2,17 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const createGroup = async (groupData) => {
+	const { name, managerId, goal, region, introduction } = groupData;
 	try {
-		return await prisma.group.create(groupData);
+		return await prisma.group.create({
+			data: {
+				name,
+				managerId,
+				goal,
+				region,
+				introduction,
+			},
+		});
 	} catch (error) {
 		throw error;
 	}
@@ -17,7 +26,6 @@ const getALlGroups = async () => {
 	}
 };
 
-//todo 가벼운 경고 확인
 const getGroupDetails = async (groupId) => {
 	try {
 		return await prisma.group.findUnique({

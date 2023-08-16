@@ -55,6 +55,7 @@ model Group {
 	goal 		  String?
 	region 		String?
 	introduction String?
+	memberLimit  Int        @default(50)
   GroupUser GroupUser[]
 }
 
