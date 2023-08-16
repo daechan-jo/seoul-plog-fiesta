@@ -46,18 +46,29 @@ const getGroupDetails = async (groupId) => {
 	}
 };
 
+const isUserGroupAdmin = async (userId, groupId) => {
+	const group = await prisma.group.findUnique({
+		where: {
+			id: groupId,
+		},
+		include: {
+			manager: true,
+		},
+	});
+	return group.managerId === userId;
+};
+
 const isUserGroupMember = async (userId, groupId) => {
-	try {
-		const groupUser = await prisma.groupUser.findFirst({
-			where: {
-				userId,
-				groupId,
+	const groupUser = await prisma.groupUser.findUnique({
+		where: {
+			userId_groupId: {
+				userId: userId,
+				groupId: groupId,
 			},
-		});
-		return !!groupUser;
-	} catch (error) {
-		throw error;
-	}
+		},
+	});
+
+	return !!groupUser;
 };
 
 const requestToJoinGroup = async (userId, groupId) => {
@@ -264,6 +275,126 @@ const deletePost = async (postId, userId) => {
 	}
 };
 
+const getCommentDetails = async (commentId) => {
+	try {
+		return await prisma.comment.findUnique({
+			where: {
+				id: commentId,
+			},
+			include: {
+				post: {
+					include: {
+						group: true,
+					},
+				},
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const editComment = async (commentId, content) => {
+	try {
+		return await prisma.comment.update({
+			where: {
+				id: commentId,
+			},
+			data: {
+				content,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const deleteComment = async (commentId) => {
+	try {
+		await prisma.comment.delete({
+			where: {
+				id: commentId,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const leaveGroup = async (userId, groupId) => {
+	try {
+		await prisma.groupUser.delete({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const removeGroupMember = async (userId, groupId) => {
+	try {
+		const isRemoved = await prisma.groupUser.delete({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
+			},
+		});
+		return isRemoved !== null;
+	} catch (error) {
+		throw error;
+	}
+};
+
+const dropGroup = async (groupId) => {
+	try {
+		const group = await prisma.group.findUnique({
+			where: {
+				id: groupId,
+			},
+			include: {
+				posts: {
+					select: {
+						id: true,
+					},
+				},
+			},
+		});
+		if (!group) throw new Error("존재하지 않는 그룹");
+		if (group.managerId !== userId) throw new Error("권한이 없음");
+
+		await prisma.groupUser.deleteMany({
+			where: {
+				groupId: groupId,
+			},
+		});
+
+		const postIds = group.posts.map((post) => post.id);
+		await prisma.post.deleteMany({
+			where: {
+				id: {
+					in: postIds,
+				},
+			},
+		});
+
+		await prisma.group.delete({
+			where: {
+				id: groupId,
+			},
+		});
+		return true;
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	createGroup,
 	getALlGroups,
@@ -280,4 +411,11 @@ module.exports = {
 	getPostById,
 	editPost,
 	deletePost,
+	getCommentDetails,
+	editComment,
+	deleteComment,
+	leaveGroup,
+	isUserGroupAdmin,
+	removeGroupMember,
+	dropGroup,
 };

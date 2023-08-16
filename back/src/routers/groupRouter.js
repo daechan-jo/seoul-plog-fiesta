@@ -25,11 +25,23 @@ groupRouter
 	.post("/group/post", groupController.createPost)
 	.get(groupController.getAllPosts);
 
-groupRouter.post("/group/comment", groupController.createComment);
-
 groupRouter
 	.get("/group/post/:postid", groupController.getPostById)
 	.put(groupController.editPost)
 	.delete(groupController.deletePost);
+
+groupRouter.post("/group/comment", groupController.createComment);
+groupRouter
+	.put("/group/comment/:commentid", groupController.editComment)
+	.delete(groupController.deleteComment);
+
+groupRouter.delete("/group/:groupid", groupController.leaveGroup);
+
+groupRouter.delete(
+	"/group/:groupid/:userid",
+	groupController.removeGroupMember,
+);
+
+groupRouter.delete("/group/drop/:groupid", groupController.dropGroup);
 
 module.exports = groupRouter;
