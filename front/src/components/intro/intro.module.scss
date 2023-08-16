@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
 .Introcontainer {
     // 배경용!
     background-color: #00821d;
@@ -16,6 +18,8 @@
         font-size: 100px;
         font-weight: 100em;
         animation: fadeIn 2s ease-in-out;
+        margin-top: 200px;
+        font-family: 'Playfair Display', serif;
 
         @keyframes fadeIn {
             0% {
@@ -28,12 +32,17 @@
                 transform: translateY(0);
             }
         }
+
+        @media (max-width:800px) {
+            margin-top: 20px;
+        }
     }
 
     span {
         color: white;
         font-style: italic;
         font-weight: bold;
+        font-family: 'Playfair Display', serif;
     }
 
     //Plogging 설명
@@ -42,26 +51,80 @@
         font-size: 16px;
         padding: 30px;
         animation: fadeIn 3s ease-in-out;
-
+        line-height: 20px;
     }
 
     .sideImage {
         // 색 대충 잡고 내일 수정할 것
         background-color: rgb(255, 255, 255, 0.8);
         width: 50vw;
-        // 높이이상하지만 일단 지정
+        // 높이이상하지만 일단 지정, 오피스아워에 답변 듣기
         height: 100vh;
         margin-left: 50%;
-        // flex-direction: row;
         animation: fadeIn 3s ease-in-out;
-    }
-}
+        position: fixed;
 
-@media (max-width:800px) {
-    .sideImage {
-        margin-left: 0;
-        width: 100vw;
-        // flex-direction: column;
-
+        @media (max-width:800px) {
+            background-color: yellowgreen;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            // 옆에 빈칸왜왜왜 대체왜NOoo
+            margin-left: 0;
+            margin-top: 70px;
+        }
     }
+
+
+    .ranks {
+        margin: 15px;
+        padding: 10px;
+        background-color: blue;
+        border: 3px yellow solid;
+
+        @media (max-width:800px) {
+            background-color: burlywood;
+        }
+    }
+
+    .login {
+        align-items: center;
+        width: 10%;
+        color: black;
+        background-color: white;
+        padding: 10px;
+        border-radius: 20px;
+        flex-direction: column;
+        animation: fadeIn 3s ease-in-out;
+        justify-content: center;
+
+        @media (max-width:800px) {
+            position: relative;
+            background-color: aqua;
+            width: 30%;
+
+            // position: relative;
+            // 옆에 빈칸왜왜왜 대체왜NOoo
+        }
+    }
+
+    .register {
+        align-items: center;
+        width: 10%;
+        background-color: gray;
+        padding: 10px;
+        border-radius: 20px;
+        flex-direction: column;
+        animation: fadeIn 3s ease-in-out;
+        justify-content: center;
+
+        @media (max-width:800px) {
+            position: relative;
+            background-color: red;
+            width: 30%;
+            // position: relative;
+            // 옆에 빈칸왜왜왜 대체왜NOoo
+        }
+    }
+
 }

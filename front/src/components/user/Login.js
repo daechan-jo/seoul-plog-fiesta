@@ -46,10 +46,10 @@ const Login = () => {
       <label>비밀번호</label>
       <input type="password" placeholder="비밀번호" onChange={(e) => setPassword(e.target.value)} />
       {!isPasswordValid && <div className={styles["error-message"]}>비밀번호는 4글자 이상이어야 합니다.</div>}
-
       <button type="submit" onSubmit={handleSubmit}>로그인 </button>
-
     </form>
+
+
   );
 };
 
