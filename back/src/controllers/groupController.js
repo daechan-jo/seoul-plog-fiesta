@@ -2,7 +2,7 @@ import groupService from "../services/groupService.js";
 
 /** @description 그룹 생성 */
 const createGroup = async (req, res, next) => {
-	const groupData = req.body;
+	const groupData = req.body; // passport 완성되면 그냥 user에서 추출해도...
 	try {
 		const group = await groupService.createGroup(groupData);
 		res.status(201).json({ message: "그룹 생성", group });
@@ -73,10 +73,24 @@ const approveRegistration = async (req, res, next) => {
 	}
 };
 
+/** @description 나의 그룹 리스트 */
+const getUserGroups = async (req, res, next) => {
+	const userId = req.user.id;
+	try {
+		const groups = await groupService.getUserGroups(userId);
+		res.status(200).json({ message: "나의 그룹 리스트", groups });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 module.exports = {
 	createGroup,
 	getAllGroups,
 	getGroupDetails,
 	requestToJoinGroup,
 	approveRegistration,
+	getUserGroups,
 };

@@ -89,6 +89,23 @@ const approveRegistration = async (groupId, userId) => {
 	}
 };
 
+const getUserGroups = async (userId) => {
+	try {
+		const groups = await prisma.groupUser.findMany({
+			where: {
+				userId,
+				isAccepted: true,
+			},
+			include: {
+				group: true,
+			},
+		});
+		return groups.map((groupUser) => groupUser.group);
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	createGroup,
 	getALlGroups,
@@ -96,4 +113,5 @@ module.exports = {
 	isUserGroupMember,
 	requestToJoinGroup,
 	approveRegistration,
+	getUserGroups,
 };
