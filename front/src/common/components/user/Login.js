@@ -1,7 +1,7 @@
 import styles from "./user.module.scss";
-import { Link } from 'react-router-dom';
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useHistory } from "react-router-dom";
+
 //@ts-ignore
 
 const Login = () => {
@@ -38,8 +38,19 @@ const Login = () => {
 
     }
   }
+  const navigate = useNavigate()
+  const findPassword = () => {
+    navigate("/setpassword")
+  }
+
+
+  const goBack = () => {
+    navigate("/");
+  };
   return (
     <form className={styles.logincontainer}>
+
+      <button className="previous" onClick={goBack} >&lt; </button>
       <label>아이디</label>
       <input className="id" type="email" placeholder="user@example.com" onChange={(e) => setEmail(e.target.value)} />
       {!isEmailValid && <div className={styles["error-message"]}>유효한 이메일 주소를 입력하세요.</div>}
@@ -48,9 +59,9 @@ const Login = () => {
       <input type="password" placeholder="비밀번호" onChange={(e) => setPassword(e.target.value)} />
       {!isPasswordValid && <div className={styles["error-message"]}>비밀번호는 4글자 이상이어야 합니다.</div>}
       <button type="submit" onSubmit={handleSubmit}>로그인 </button>
-      <Link to="/setpassword">
-        <button>비밀번호 찾기</button>
-      </Link>
+      {/* <Link to="/setpassword"> */}
+      <button onClick={findPassword}>비밀번호 찾기</button>
+      {/* </Link> */}
     </form>
 
 
