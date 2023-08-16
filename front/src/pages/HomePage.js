@@ -1,4 +1,4 @@
-import HomeContainer from '../containers/home';
+import HomeContainer from '../common/containers/home';
 import Layout from './Layout';
 
 const HomePage = () => {

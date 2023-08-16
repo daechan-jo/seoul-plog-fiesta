@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
 import styles from './layout.module.scss';
-import { useState } from 'react';
-import Plogging from '../common/Plogging';
 
 const Header = ({ isModalOpen, setIsModalOpen }) => {
   const openModal = () => {

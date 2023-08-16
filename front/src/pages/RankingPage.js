@@ -1,4 +1,4 @@
-import RankingContainer from '../containers/ranking';
+import RankingContainer from '../common/containers/ranking';
 import Layout from './Layout';
 
 const RankingPage = () => {

@@ -1,4 +1,4 @@
-import IntroContainer from '../containers/intro';
+import IntroContainer from '../common/containers/intro';
 
 const IntroPage = () => {
   return <IntroContainer />;

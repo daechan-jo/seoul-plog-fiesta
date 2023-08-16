@@ -1,4 +1,4 @@
-import MyContainer from '../containers/my';
+import MyContainer from '../common/containers/my';
 import Layout from './Layout';
 
 const MyPage = () => {

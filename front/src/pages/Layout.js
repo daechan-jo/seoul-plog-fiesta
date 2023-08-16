@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Header from '../components/layout/Header';
-import Nav from '../components/layout/Nav';
-import Plogging from '../components/common/Plogging';
+import Header from '../common/components/layout/Header';
+import Nav from '../common/components/layout/Nav';
+import Plogging from '../common/components/common/Plogging';
 
 const Layout = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

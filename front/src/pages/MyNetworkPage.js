@@ -1,4 +1,4 @@
-import MyNetworkContainer from '../containers/myNetwork';
+import MyNetworkContainer from '../common/containers/myNetwork';
 import Layout from './Layout';
 
 const MyNetworkPage = () => {
