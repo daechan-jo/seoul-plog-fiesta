@@ -27,11 +27,15 @@ const Intro = ({ rank }) => {
                 </div>
             </div>
             <div className={style.sideImage}>
-                <div className={style.ranks}>1위<div className={style.profile} /></div>
-                <div className={style.ranks}>2위<div className={style.profile} /></div>
-                <div className={style.ranks}>3위<div className={style.profile} /></div>
-                <div className={style.ranks}>4위<div className={style.profile} /></div>
-                <div className={style.ranks}>5위<div className={style.profile} /></div>
+                <div className={style.rankBox}>
+                    <div className={style.rankTitle}>랭킹</div>
+                    <div className={style.ranks}>
+                        <div className={style.rankBack}>1위</div><div className={style.profile} /></div>
+                    <div className={style.ranks}><span className={style.rankBack}>2위</span><div className={style.profile} /></div>
+                    <div className={style.ranks}><span className={style.rankBack}>3위</span><div className={style.profile} /></div>
+                    <div className={style.ranks}><span className={style.rankBack}>4위</span><div className={style.profile} /></div>
+                    <div className={style.ranks}><span className={style.rankBack}>5위</span><div className={style.profile} /></div>
+                </div>
             </div>
             <div className={style.ButtonContainer}>
                 <button className={style.main} onClick={mainMove}>메인으로</button>
