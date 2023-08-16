@@ -73,10 +73,27 @@ const requestToJoinGroup = async (userId, groupId) => {
 	}
 };
 
+const approveRegistration = async (groupId, userId) => {
+	try {
+		await prisma.groupUser.updateMany({
+			where: {
+				groupId,
+				userId,
+			},
+			data: {
+				isAccepted: true,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	createGroup,
 	getALlGroups,
 	getGroupDetails,
 	isUserGroupMember,
 	requestToJoinGroup,
+	approveRegistration,
 };

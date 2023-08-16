@@ -27,7 +27,7 @@ const getAllGroups = async (req, res, next) => {
 
 /** @description 그룹 상세 정보 */
 const getGroupDetails = async (req, res, next) => {
-	const groupId = parseInt(req.params.id);
+	const groupId = parseInt(req.params.groupid);
 	try {
 		const group = await groupService.getGroupDetails(groupId);
 		if (!group) return res.status(404).json({ message: "그룹 없음" });
@@ -39,11 +39,10 @@ const getGroupDetails = async (req, res, next) => {
 	}
 };
 
-//todo passport 구현 후 테스트필요
 /** @description 그룹 가입 신청 */
 const requestToJoinGroup = async (req, res, next) => {
-	const userId = req.user.id; // pasport에서 user를 req에 넣어줌
-	const groupId = parseInt(req.params.id);
+	const userId = req.user.id; // pasport에서 user를 req에 넣어줌. 아직 미구현
+	const groupId = parseInt(req.params.groupid);
 	try {
 		const group = await groupService.getGroupDetails(groupId);
 		if (!group) return res.status(404).json({ message: "그룹 없음" });
@@ -59,9 +58,25 @@ const requestToJoinGroup = async (req, res, next) => {
 	}
 };
 
+/** @description 그룹 가입 신청 승인 */
+const approveRegistration = async (req, res, next) => {
+	const groupId = parseInt(req.params.groupid);
+	const userId = parseInt(req.params.userid);
+	try {
+		await groupService.approveRegistration(groupId, userId);
+
+		res.status(200).json({ message: "그룹 가입 승인 완료" });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 module.exports = {
 	createGroup,
 	getAllGroups,
 	getGroupDetails,
 	requestToJoinGroup,
+	approveRegistration,
 };
