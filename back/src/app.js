@@ -24,7 +24,7 @@ app.use(groupRoutes);
 
 app.use(errorMiddleware);
 
-/** @description 프로세스 종류 후 프리즈마 연결해제 */
+/** @description 프로세스 종료 후 프리즈마 연결해제 */
 process.on("SIGINT", async () => {
 	await prisma.$disconnect();
 	process.exit();

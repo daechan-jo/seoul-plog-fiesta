@@ -17,6 +17,7 @@ const getALlGroups = async () => {
 	}
 };
 
+//todo 가벼운 경고 확인
 const getGroupDetails = async (groupId) => {
 	try {
 		return await prisma.group.findUnique({
