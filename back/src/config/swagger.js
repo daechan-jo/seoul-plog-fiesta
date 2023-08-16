@@ -13,7 +13,7 @@ const swaggerDefinition = {
 
 const options = {
 	swaggerDefinition: swaggerDefinition,
-	apis: ["../src/routes/*.js"], //todo 경로테스트 필요
+	apis: ["../src/routers/*.js"], //todo 경로테스트 필요
 };
 
 const swaggerSpec = swaggerJSDoc(options);

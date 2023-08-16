@@ -3,7 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middleware/errorMiddleware";
 import loggerMiddleware from "./middleware/loggerMiddleware";
-import userRoutes from "./routes/userRoutes";
+import userRoutes from "./routers/userRouters";
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
