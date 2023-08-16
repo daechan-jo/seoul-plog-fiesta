@@ -4,7 +4,7 @@ const TopGroup = () => {
       <div className="titleContainer">
         <h1>상위 모임</h1>
       </div>
-      <div className="contentContainer">모임 넣을겁니다.</div>
+      <div className="contentMinContainer">모임 넣을겁니다.</div>
     </div>
   );
 };

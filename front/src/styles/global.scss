@@ -13,10 +13,10 @@ code {
 }
 
 main {
-  padding-top: $headerHeight + 10px;
+  padding-top: $headerHeight;
   padding-left: $navWidth + 40px;
-  padding-bottom: 20px;
   padding-right: 40px;
+  padding-bottom: 20px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -24,10 +24,9 @@ main {
 }
 
 .gContainer {
+  width: 100%;
   background-color: white;
-  width: 80vw;
-  padding: 40px;
-  margin: 20px;
+  padding: 20px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -36,7 +35,7 @@ main {
     display: flex;
     justify-content: space-between;
     h1 {
-      font-size: 30px;
+      font-size: 25px;
       font-weight: 700;
       margin: 20px 0;
     }
@@ -44,6 +43,18 @@ main {
   .contentContainer {
     width: 100%;
     height: 100%;
+    background-color: gray;
+    padding: 20px;
+  }
+  .contentMapContainer {
+    width: 100%;
+    height: 40vh;
+    background-color: gray;
+    padding: 20px;
+  }
+  .contentMinContainer {
+    width: 100%;
+    height: 22vh;
     background-color: gray;
     padding: 20px;
   }
@@ -60,6 +71,17 @@ main {
 }
 
 .gList {
-  width: 80vw;
-  height: 80vh;
+  width: 100%;
+  height: 75vh;
+}
+
+.threeContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .box {
+    display: flex;
+    gap: 20px;
+  }
 }
