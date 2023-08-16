@@ -39,6 +39,7 @@ const getGroupDetails = async (req, res, next) => {
 	}
 };
 
+//todo passport 구현 후 테스트필요
 /** @description 그룹 가입 신청 */
 const requestToJoinGroup = async (req, res, next) => {
 	const userId = req.user.id; // pasport에서 user를 req에 넣어줌
