@@ -4,96 +4,100 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Course {
-	id               Int       @id @default(autoincrement())
-	WLK_COURS_FLAG_NM String
-	WLK_COURS_NM      String
-	COURS_DC          String
-	SIGNGU_NM         String
-	COURS_LEVEL_NM    String
-	COURS_LT_CN       Float
-	COURS_DETAIL_LT_CN String
-	ADIT_DC           String  	@db.VarChar(1000)
-	COURS_TIME_CN     String
-	OPTN_DC           String
-	TOILET_DC         String
-	CVNTL_NM          String
-	LNM_ADDR          String
-	COURS_SPOT_LA     Float
-	COURS_SPOT_LO     Float
+  id                 Int    @id @default(autoincrement())
+  WLK_COURS_FLAG_NM  String
+  WLK_COURS_NM       String
+  COURS_DC           String
+  SIGNGU_NM          String
+  COURS_LEVEL_NM     String
+  COURS_LT_CN        Float
+  COURS_DETAIL_LT_CN String
+  ADIT_DC            String @db.VarChar(1000)
+  COURS_TIME_CN      String
+  OPTN_DC            String
+  TOILET_DC          String
+  CVNTL_NM           String
+  LNM_ADDR           String
+  COURS_SPOT_LA      Float
+  COURS_SPOT_LO      Float
 }
 
 model User {
-	id          Int         @id @default(autoincrement())
-	name        String
-	nickname    String      @unique
-	email       String      @unique
-	password    String
-	about       String?
-	activity    String?
-	authCount	  Int         @default(0)
-	friendshipsA Friendship[] @relation("UserFriendshipsA")
-	friendshipsB Friendship[] @relation("UserFriendshipsB")
-	groups      GroupUser[]
-	createdGroups Group[]
-	posts       Post[]
-	comments    Comment[]
+  id            Int          @id @default(autoincrement())
+  name          String
+  nickname      String       @unique
+  email         String       @unique
+  password      String
+  about         String?
+  activity      String?
+  authCount     Int          @default(0)
+  friendshipsA  Friendship[] @relation("UserFriendshipsA")
+  friendshipsB  Friendship[] @relation("UserFriendshipsB")
+  groups        GroupUser[]
+  createdGroups Group[]
+  posts         Post[]
+  comments      Comment[]
 }
 
 model Group {
-	id      Int           @id @default(autoincrement())
-	name    String
-	admin   User          @relation(fields: [adminId], references: [id])
-	adminId Int
-	members GroupUser[]
-	posts   Post[]
+  id        Int         @id @default(autoincrement())
+  name      String
+  manager   User        @relation(fields: [managerId], references: [id])
+  managerId Int
+  posts     Post[]
+	goal 		  String?
+	region 		String?
+	introduction String?
+  GroupUser GroupUser[]
 }
 
 model GroupUser {
-	user      User   @relation(fields: [userId], references: [id])
-	userId    Int
-	group     Group  @relation(fields: [groupId], references: [id])
-	groupId   Int
-	isAdmin   Boolean @default(true)
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int
+  group      Group   @relation(fields: [groupId], references: [id])
+  groupId    Int
+  isAdmin    Boolean @default(false)
+  isAccepted Boolean @default(false)
 
-	@@id([userId, groupId])
+  @@id([userId, groupId])
 }
 
 model Friendship {
-	id     Int  @id @default(autoincrement())
-	userA  User @relation("UserFriendshipsA", fields: [userAId], references: [id])
-	userAId Int
-	userB  User @relation("UserFriendshipsB", fields: [userBId], references: [id])
-	userBId Int
+  id      Int  @id @default(autoincrement())
+  userA   User @relation("UserFriendshipsA", fields: [userAId], references: [id])
+  userAId Int
+  userB   User @relation("UserFriendshipsB", fields: [userBId], references: [id])
+  userBId Int
 
-	@@unique([userAId, userBId])
+  @@unique([userAId, userBId])
 }
 
 model Post {
-	id        Int      @id @default(autoincrement())
-	writer    User     @relation(fields: [writerId], references: [id])
-	writerId  Int
-	group     Group    @relation(fields: [groupId], references: [id])
-	groupId   Int
-	title     String
-	content   String
-	isNotice  Boolean
-	createdAt DateTime @default(now())
-	comments  Comment[]
+  id        Int       @id @default(autoincrement())
+  writer    User      @relation(fields: [writerId], references: [id])
+  writerId  Int
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   Int
+  title     String
+  content   String
+  isNotice  Boolean
+  createdAt DateTime  @default(now())
+  comments  Comment[]
 }
 
 model Comment {
-	id        Int      @id @default(autoincrement())
-	writer    User     @relation(fields: [writerId], references: [id])
-	writerId  Int
-	post      Post     @relation(fields: [postId], references: [id])
-	postId    Int
-	content   String
-	createdAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  writer    User     @relation(fields: [writerId], references: [id])
+  writerId  Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  content   String
+  createdAt DateTime @default(now())
 }
-
