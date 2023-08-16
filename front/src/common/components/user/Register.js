@@ -55,11 +55,13 @@ const Register = () => {
     //   console.log("회원가입에 실패하였습니다.", err);
     // }
   };
-
+  const goBack = () => {
+    navigate(-1);
+  };
   return (
     <form className={styles.container}>
-      {/* 화살표 추가하고 싶은데 외않되 */}
-      <div className="arrow"></div>
+      <button className="previous" onClick={goBack} >&lt; </button>
+
 
       <label>이름</label>
       <input

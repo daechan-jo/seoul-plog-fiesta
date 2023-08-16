@@ -39,6 +39,15 @@
   }
 }
 
+
+.slick-arrow {
+  width: 60px;
+  height: 68px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  font-size: 0px;
+}
+
 .logincontainer {
   width: 40%;
   height: 80vh;
@@ -69,6 +78,10 @@
     }
   }
 
+  .previous {
+    background-color: red;
+
+  }
 
   button {
     padding: 15px;
@@ -77,6 +90,8 @@
     font-weight: 700;
     color: white;
     align-items: center;
+
+
   }
 
 }

@@ -1,6 +1,15 @@
 import React from 'react';
 import style from "./intro.module.scss"
+import { useNavigate } from "react-router-dom";
+
 const Intro = () => {
+    const navigate = useNavigate()
+    const loginForm = () => {
+        navigate("/login")
+    }
+    const registerForm = () => {
+        navigate("/register")
+    }
     // 챗지피티한테 물어본거 잠깐 추가해봅니다
     // <div className={style.sideImage}>
     //   {rankingData.map((rank, index) => (
@@ -24,8 +33,8 @@ const Intro = () => {
                 <div className={style.ranks}>4위</div>
                 <div className={style.ranks}>5위</div>
             </div>
-            <button className={style.login}>로그인하기</button>
-            <button className={style.register}>회원가입하기</button>
+            <button className={style.login} onClick={loginForm}>로그인하기</button>
+            <button className={style.register} onClick={registerForm}>회원가입하기</button>
         </div >
     );
 };
