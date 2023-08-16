@@ -1,10 +1,9 @@
 import React from 'react';
 import style from "./intro.module.scss"
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Button, Col } from "react-bootstrap";
 
 
-const Intro = ({ user, setIsEditing, isEditable, isNetwork }) => {
+const Intro = ({ rank }) => {
     const navigate = useNavigate()
     const loginForm = () => {
         navigate("/login")
