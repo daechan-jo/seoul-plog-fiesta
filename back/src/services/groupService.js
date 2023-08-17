@@ -2,13 +2,15 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const groupUtils = require("../utils/groupUtils");
 
-const createGroup = async (groupData) => {
-	const { name, managerId, goal, region, introduction } = groupData;
+const createGroup = async (groupData, managerId) => {
+	const { name, goal, region, introduction } = groupData;
 	try {
 		return await prisma.group.create({
 			data: {
 				name,
-				managerId,
+				manager: {
+					connect: { id: managerId },
+				},
 				goal,
 				region,
 				introduction,

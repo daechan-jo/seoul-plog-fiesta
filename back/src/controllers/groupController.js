@@ -4,8 +4,9 @@ const groupUtils = require("../utils/groupUtils");
 /** @description 그룹 생성 */
 const createGroup = async (req, res, next) => {
 	const groupData = req.body; // passport 완성되면 그냥 user에서 추출해도...
+	const managerId = req.user.id;
 	try {
-		const group = await groupService.createGroup(groupData);
+		const group = await groupService.createGroup(groupData, managerId);
 		res.status(201).json({ message: "그룹 생성", group });
 	} catch (error) {
 		console.error(error);
@@ -63,7 +64,7 @@ const requestToJoinGroup = async (req, res, next) => {
 
 /** @description 그룹 가입 신청 목록 */
 const getGroupJoinRequests = async (req, res, next) => {
-	const groupId = parseInt(req.parmas.groupid);
+	const groupId = parseInt(req.params.groupid);
 	try {
 		const groupJoinRequests = await groupService.getGroupJoinRequests(
 			groupId,

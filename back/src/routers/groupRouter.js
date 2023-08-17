@@ -6,9 +6,9 @@ groupRouter
 	.post("/group", groupController.createGroup)
 	.get(groupController.getAllGroups);
 
-groupRouter.post("/group/join/:groupid", groupController.requestToJoinGroup);
-
-groupRouter.get("/group/join/:groupid", groupController.getGroupJoinRequests);
+groupRouter
+	.post("/group/join/:groupid", groupController.requestToJoinGroup)
+	.get("/group/join/:groupid", groupController.getGroupJoinRequests);
 
 groupRouter.post(
 	"/group/approve/:groupid/:userid",
