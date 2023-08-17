@@ -61,6 +61,24 @@ const requestToJoinGroup = async (req, res, next) => {
 	}
 };
 
+/** @description 그룹 가입 신청 목록 */
+const getGroupJoinRequests = async (req, res, next) => {
+	const groupId = parseInt(req.parmas.groupid);
+	try {
+		const groupJoinRequests = await groupService.getGroupJoinRequests(
+			groupId,
+		);
+		res.status(200).json({
+			message: "가입 신청 목록",
+			requests: groupJoinRequests,
+		});
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 /** @description 그룹 가입 신청 승인 */
 const approveRegistration = async (req, res, next) => {
 	const groupId = parseInt(req.params.groupid);
@@ -69,6 +87,27 @@ const approveRegistration = async (req, res, next) => {
 		await groupService.approveRegistration(groupId, userId);
 
 		res.status(200).json({ message: "그룹 가입 승인 완료" });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+/** @description 그룹 가입 신청 거절 */
+const rejectGroupJoinRequest = async (req, res, next) => {
+	const userId = parseInt(req.params.userid);
+	const groupId = parseInt(req.params.groupid);
+	try {
+		const success = await groupService.rejectGroupJoinRequest(
+			userId,
+			groupId,
+		);
+		if (success) {
+			res.status(200).json({ message: "그룹 가입 거절" });
+		} else {
+			res.status(400).json({ message: "그룹 가입 거절 실패" });
+		}
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -307,6 +346,7 @@ module.exports = {
 	getGroupDetails,
 	requestToJoinGroup,
 	approveRegistration,
+	rejectGroupJoinRequest,
 	getUserGroups,
 	getRandomGroups,
 	searchGroupsByName,
@@ -321,4 +361,5 @@ module.exports = {
 	leaveGroup,
 	removeGroupMember,
 	dropGroup,
+	getGroupJoinRequests,
 };

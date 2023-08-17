@@ -85,6 +85,22 @@ const requestToJoinGroup = async (userId, groupId) => {
 	}
 };
 
+const getGroupJoinRequests = async (groupId) => {
+	try {
+		return await prisma.groupUser.findMany({
+			where: {
+				groupId: groupId,
+				isAccepted: false,
+			},
+			include: {
+				user: true,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
 const approveRegistration = async (groupId, userId) => {
 	try {
 		await prisma.groupUser.updateMany({
@@ -96,6 +112,30 @@ const approveRegistration = async (groupId, userId) => {
 				isAccepted: true,
 			},
 		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const rejectGroupJoinRequest = async (groupId, userId) => {
+	try {
+		const groupUser = await prisma.groupUser.findFirst({
+			where: {
+				userId: userId,
+				groupId: groupId,
+				isAccepted: false,
+			},
+		});
+		if (!groupUser) throw new Error("가입 신청이 없음");
+		await prisma.groupUser.delete({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
+			},
+		});
+		return true;
 	} catch (error) {
 		throw error;
 	}
@@ -418,4 +458,6 @@ module.exports = {
 	isUserGroupAdmin,
 	removeGroupMember,
 	dropGroup,
+	rejectGroupJoinRequest,
+	getGroupJoinRequests,
 };

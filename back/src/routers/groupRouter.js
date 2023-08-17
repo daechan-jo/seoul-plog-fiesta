@@ -8,9 +8,16 @@ groupRouter
 
 groupRouter.post("/group/join/:groupid", groupController.requestToJoinGroup);
 
+groupRouter.get("/group/join/:groupid", groupController.getGroupJoinRequests);
+
 groupRouter.post(
 	"/group/approve/:groupid/:userid",
 	groupController.approveRegistration,
+);
+
+groupRouter.delete(
+	"/group/reject/:groupid/:userid",
+	groupController.rejectGroupJoinRequest,
 );
 
 groupRouter.get("/group/:groupid", groupController.getGroupDetails);
