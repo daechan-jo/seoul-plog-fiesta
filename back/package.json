@@ -10,19 +10,21 @@
 	"author": "daechanJo",
 	"license": "ISC",
 	"dependencies": {
+		"@prisma/client": "^5.1.1",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
+		"csv-parser": "^3.0.0",
 		"express": "^4.18.2",
+		"fs": "^0.0.1-security",
 		"global": "^4.4.0",
 		"jest": "^27.3.1",
 		"joi": "^17.9.2",
 		"morgan": "^1.10.0",
+		"multer": "^1.4.5-lts.1",
 		"mysql2": "^3.6.0",
 		"nunjucks": "^3.2.4",
 		"passport": "^0.6.0",
 		"passport-jwt": "^4.0.1",
-		"sequelize": "^6.32.1",
-		"sequelize-cli": "^6.6.1",
 		"winston": "^3.10.0",
 		"winston-daily-rotate-file": "^4.7.1"
 	},
@@ -32,8 +34,13 @@
 		"@babel/node": "^7.22.6",
 		"@babel/plugin-transform-runtime": "^7.17.0",
 		"@babel/preset-env": "^7.16.4",
+		"csv-parse": "^5.4.0",
 		"dotenv": "^16.0.0",
-		"nodemon": "^3.0.1"
+		"nodemon": "^3.0.1",
+		"prettier": "3.0.1",
+		"prisma": "^5.1.1",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^5.0.0"
 	},
 	"jest": {
 		"testEnvironment": "node",
