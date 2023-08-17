@@ -1,9 +1,10 @@
 import router from "express";
+import authenticateJWT from "../middlewares/authenticateJWT";
 import groupController from "../controllers/groupController";
 const groupRouter = router();
 
 groupRouter
-	.post("/group", groupController.createGroup)
+	.post("/group", authenticateJWT, groupController.createGroup)
 	.get(groupController.getAllGroups);
 
 groupRouter

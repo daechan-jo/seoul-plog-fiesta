@@ -2,11 +2,9 @@ const jwt = require("jsonwebtoken");
 
 function generateToken(payload, secretKey, expiresIn) {
 	return jwt.sign(payload, secretKey, {
-		expiresIn : '1h',
+		expiresIn: expiresIn,
 		issuer: "Pineapple Pizza",
 	});
 }
 
-module.exports = {
-	generateToken,
-};
+module.exports = generateToken;

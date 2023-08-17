@@ -11,6 +11,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"@prisma/client": "^5.1.1",
+		"bcrypt": "^5.1.1",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
 		"csv-parser": "^3.0.0",
@@ -19,12 +20,14 @@
 		"global": "^4.4.0",
 		"jest": "^27.3.1",
 		"joi": "^17.9.2",
+		"jsonwebtoken": "^9.0.1",
 		"morgan": "^1.10.0",
 		"multer": "^1.4.5-lts.1",
 		"mysql2": "^3.6.0",
 		"nunjucks": "^3.2.4",
 		"passport": "^0.6.0",
 		"passport-jwt": "^4.0.1",
+		"passport-local": "^1.0.0",
 		"winston": "^3.10.0",
 		"winston-daily-rotate-file": "^4.7.1"
 	},
