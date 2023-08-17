@@ -9,6 +9,10 @@
   padding: 20px;
   padding-top: 50px;
 
+  .arrowLeft {
+    cursor: pointer;
+  }
+
   .error-message {
     color: red;
     font-size: 12px;
@@ -29,87 +33,24 @@
     }
   }
 
+
+
   button {
     margin-top: 50px;
     padding: 15px;
     background-color: #00821D;
     border-radius: 20px;
     font-weight: 700;
-    color: white
+    color: white;
+  }
+
+  .kakaoLogin {
+    background-color: #ffe812;
+    color: black;
+    // align-items: center;
   }
 }
 
-
-.logincontainer {
-  width: 40%;
-  height: 90vh;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  // 투명도 넣어봤습니다
-  background-color: rgb(255, 255, 255, 0.8);
-  padding: 20px;
-
-  .error-message {
-    color: red;
-    font-size: 12px;
-    margin-top: -50px;
-  }
-
-  label {
-    font-weight: 700;
-    margin-bottom: -50px;
-  }
-
-  input {
-    font-weight: 700;
-    padding: 10px;
-
-    ::placeholder {
-      font-weight: 700;
-    }
-  }
-
-  .previous {
-    background-color: red;
-
-  }
-
-  .buttonContainer {
-    display: flex;
-    flex-direction: column;
-    /* 세로 방향으로 정렬 */
-    align-items: center;
-    justify-content: center;
-
-    @media(max-width:800px) {}
-
-    button {
-      width: 30%;
-      padding: 15px;
-    }
-
-    .localLogin {
-
-      background-color: #00821D;
-      border-radius: 20px;
-      font-weight: 700;
-      color: white;
-      align-items: center;
-    }
-
-    .kakaoLogin {
-      width: 30%;
-      padding: 15px;
-      background-color: #ffe812;
-      border-radius: 20px;
-      font-weight: 700;
-      color: black;
-      align-items: center;
-    }
-  }
-
-}
 
 //일단 대충 레이아웃 볼라고 body랑 메인은 갖고 왔ㅇ서요
 body {
