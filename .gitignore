@@ -10,3 +10,4 @@ package-lock.json
 yarn.lock
 .editorconfig
 main.py
+migrations

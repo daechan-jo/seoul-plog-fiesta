@@ -44,6 +44,13 @@ model User {
   createdGroups Group[]
   posts         Post[]
   comments      Comment[]
+	profileImage   UserProfileImage?
+}
+model UserProfileImage {
+	id         Int      @id @default(autoincrement())
+	imageUrl   String
+	user       User     @relation(fields: [userId], references: [id])
+	userId     Int      @unique
 }
 
 model Group {
@@ -102,3 +109,4 @@ model Comment {
   content   String
   createdAt DateTime @default(now())
 }
+
