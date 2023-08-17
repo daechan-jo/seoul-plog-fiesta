@@ -1,3 +1,5 @@
+//db에 넣어둠
+
 // const { PrismaClient } = require("@prisma/client");
 // const fs = require("fs");
 // const csvParser = require("csv-parser");

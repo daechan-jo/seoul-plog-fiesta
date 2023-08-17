@@ -1,6 +1,6 @@
 module.exports = {
-	secret: "secretKey", //todo 환경변수에 넣기
+	secret: process.env.JWT_SECRETKEY,
 	expiresIn: "1h",
-	refreshSecret: "refreshSecretKey", //todo 환경변수에 넣기
-	refreshExpiresIn: "7d",
+	// refreshSecret: "refreshSecretKey", // 다음 기회에..
+	// refreshExpiresIn: "7d",
 };
