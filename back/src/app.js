@@ -5,6 +5,7 @@ import errorMiddleware from "./middleware/errorMiddleware";
 import loggerMiddleware from "./middleware/loggerMiddleware";
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+import userRoutes from "./routers/userRouter";
 import groupRoutes from "./routers/groupRouter";
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(cookieParser());
 app.use(loggerMiddleware);
 
 //todo 앞으로 작성될 라우터핸들러 위치
+app.use(userRoutes);
 app.use(groupRoutes);
 
 app.use(errorMiddleware);

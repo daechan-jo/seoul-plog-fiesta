@@ -10,7 +10,7 @@ const uploadProfileImage = async (req, res, next) => {
 
 	try {
 		const imagePath = path.join("../uploads/img", filename);
-		fs.renameSync(req.file.path, imagePath);
+		fs.renameSync(req.file.path, imagePath); // 버퍼 대신
 
 		const newImage = await uploadService.uploadProfileImage(
 			userId,
