@@ -1,19 +1,15 @@
-const ItemList = ({ items }) => {
+import Item from '../network/Item';
+
+const ItemList = ({ datas }) => {
   return (
     <div className="gContainer gList">
       <div className="titleContainer">
         <h1>나의 친구들</h1>
       </div>
-      <div className="contentContainer">
-        {/* {items} */}
-        {/* <pre>{JSON.stringify(items, null, 2)}</pre> */}
-        <div className="itemList">
-          {items.map((item) => (
-            <li key={item.id}>
-              {item.name} - {item.region}
-            </li>
-          ))}
-        </div>
+      <div className="contentListContainer">
+        {datas.map((data) => (
+          <Item data={data} />
+        ))}
       </div>
     </div>
   );

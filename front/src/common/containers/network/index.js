@@ -51,14 +51,87 @@ const mockupUser = [
 ];
 
 const mockupGroup = [
-  { id: '1', name: '그룹이름1', region: 'gwangin' },
-  { id: '2', name: '그룹이름2', region: 'dongdaemun' },
-  { id: '3', name: '그룹이름3', region: 'gangnam' },
-  { id: '4', name: '그룹이름4', region: 'mapo' },
-  { id: '5', name: '그룹이름5', region: 'jongno' },
-  { id: '6', name: '그룹이름6', region: 'yongsan' },
-  { id: '7', name: '그룹이름7', region: 'gangbuk' },
-  { id: '8', name: '그룹이름8', region: 'songpa' },
-  { id: '9', name: '그룹이름9', region: 'seongdong' },
-  { id: '10', name: '그룹이름10', region: 'seodaemun' },
+  {
+    imgUrl: 'http://placekitten.com/200/200',
+    id: 8,
+    name: 'group test1',
+    managerId: 7,
+    goal: '잘먹고잘자기',
+    region: '써울',
+    introduction: '안녕하세용',
+    memberLimit: 50,
+    GroupUser: [
+      {
+        userId: 7,
+      },
+      {
+        userId: 9,
+      },
+    ],
+    memberCount: 2,
+  },
+  {
+    imgUrl: 'http://placekitten.com/200/200',
+    id: 9,
+    name: 'group test3',
+    managerId: 7,
+    goal: '잘먹고잘자기',
+    region: '써울',
+    introduction: '안녕하세용',
+    memberLimit: 50,
+    GroupUser: [
+      {
+        userId: 7,
+      },
+    ],
+    memberCount: 1,
+  },
+  {
+    imgUrl: 'http://placekitten.com/200/200',
+    id: 10,
+    name: 'group test4',
+    managerId: 7,
+    goal: '잘먹고잘자기',
+    region: '써울',
+    introduction: '안녕하세용',
+    memberLimit: 50,
+    GroupUser: [
+      {
+        userId: 7,
+      },
+    ],
+    memberCount: 1,
+  },
+  {
+    imgUrl: 'http://placekitten.com/200/200',
+    id: 11,
+    name: 'group test5',
+    managerId: 7,
+    goal: '잘먹고잘자기',
+    region: '써울',
+    introduction: '안녕하세용',
+    memberLimit: 50,
+    GroupUser: [
+      {
+        userId: 7,
+      },
+    ],
+    memberCount: 1,
+  },
+  {
+    imgUrl: 'http://placekitten.com/200/200',
+    id: 12,
+    name: 'group test6',
+    managerId: 7,
+    goal: '잘먹고잘자기',
+    region: '써울',
+    introduction: '안녕하세용',
+    memberLimit: 50,
+    GroupUser: [
+      {
+        userId: 7,
+      },
+    ],
+    memberCount: 1,
+  },
 ];
