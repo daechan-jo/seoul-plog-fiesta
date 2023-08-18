@@ -28,7 +28,7 @@ const MyNetworkContainer = () => {
 
   return (
     <main>
-      <PageNav lists={lists} onViewChange={handleViewChange} />
+      <PageNav view={view} lists={lists} onViewChange={handleViewChange} />
       <ItemList datas={view === 'groups' ? mockupGroup : mockupUser} />
     </main>
   );
