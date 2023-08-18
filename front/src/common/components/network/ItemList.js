@@ -1,3 +1,4 @@
+import Paging from '../myNetwork/Pagenation';
 import Item from './Item';
 
 const ItemList = ({ datas }) => {
@@ -11,6 +12,7 @@ const ItemList = ({ datas }) => {
           <Item data={data} />
         ))}
       </div>
+      <Paging />
     </div>
   );
 };

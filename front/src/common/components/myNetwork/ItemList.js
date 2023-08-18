@@ -1,4 +1,5 @@
 import Item from '../network/Item';
+import Paging from './Pagenation';
 
 const ItemList = ({ datas }) => {
   return (
@@ -11,6 +12,7 @@ const ItemList = ({ datas }) => {
           <Item data={data} />
         ))}
       </div>
+      <Paging />
     </div>
   );
 };
