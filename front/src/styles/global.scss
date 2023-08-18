@@ -1,0 +1,91 @@
+@import './variables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ededed;
+}
+
+code {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+  padding-top: $headerHeight;
+  padding-left: $navWidth + 40px;
+  padding-right: 40px;
+  padding-bottom: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.gContainer {
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .titleContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    h1 {
+      font-size: 25px;
+      font-weight: 700;
+      margin: 20px 0;
+    }
+  }
+  .contentContainer {
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    padding: 20px;
+  }
+  .contentMapContainer {
+    width: 840px;
+    height: 100%;
+    background-color: gray;
+    padding: 20px;
+  }
+  .contentMinContainer {
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    padding: 20px;
+  }
+}
+
+.gBtn {
+  font-size: 20px;
+  font-weight: 700;
+  background-color: $point;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: white;
+  margin: 10px;
+}
+
+.gList {
+  width: 100%;
+  height: 75vh;
+}
+
+.threeContainer {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  .box {
+    max-width: 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
