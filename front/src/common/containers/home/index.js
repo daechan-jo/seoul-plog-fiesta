@@ -18,7 +18,7 @@ const HomeContainer = () => {
 
 export default HomeContainer;
 
-// 내 모임 및 유저의 가장 최신 글 5개를 가져옴
+// 내 모임 및 유저의 가장 최신 글 5개를 가져옴 => 전체리스트를 가져와서, 5개만 뿌리고, 전체리스트 뷰
 const mockupGroup = [
   {
     post_id: '1',

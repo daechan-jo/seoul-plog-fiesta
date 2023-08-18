@@ -1,12 +1,17 @@
+import MyGroup from './MyGroup';
 import styles from './index.module.scss';
 
-const MyGroups = () => {
+const MyGroups = ({ datas }) => {
   return (
-    <div className="gContainer">
+    <div className={`gContainer ${styles.groupContainer}`}>
       <div className="titleContainer">
         <h1>모임관리</h1>
       </div>
-      <div className={styles.shortBox}>친구들 넣을겁니다.</div>
+      <div className={styles.shortBox}>
+        {datas.map((data) => (
+          <MyGroup data={data} />
+        ))}
+      </div>
     </div>
   );
 };
