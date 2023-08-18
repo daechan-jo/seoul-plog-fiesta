@@ -2,6 +2,7 @@ import styles from './user.module.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from "react-icons/ai"
+import * as Api from "../../../api"
 const Register = () => {
   const navigate = useNavigate();
   //useState로 email 상태를 생성함.
@@ -39,28 +40,30 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 저번 웹프 스켈레톤 코드 SAVAGE
-    // try {
-    //   await App.post("/register", {
-    //     name,
-    //     nickname,
-    //     email,
-    //     password,
-    //     confirmPassword
-    //   })
 
-    //   // 로그인 페이지로 이동함.
-    //   navigate("/login");
-    // } catch (err) {
-    //   console.log("회원가입에 실패하였습니다.", err);
-    // }
+    try {
+      // "user/register" 엔드포인트로 post요청함.
+      await Api.post("user/register", {
+        email,
+        password,
+        name,
+      });
+
+      // 로그인 페이지로 이동함.
+      navigate("/login");
+    } catch (err) {
+      console.log("회원가입에 실패하였습니다.", err);
+    }
   };
+
+
   const goBack = () => {
     navigate(-1);
   };
+
   return (
     <form className={styles.container}>
-      <AiOutlineArrowLeft onClick={goBack} />
+      <AiOutlineArrowLeft className={styles.arrowLeft} onClick={goBack} />
       <label>이름</label>
       <input
         className="name"
@@ -123,7 +126,7 @@ const Register = () => {
       )}
 
       <button type="submit" onSubmit={handleSubmit}>
-        회원가입{' '}
+        회원가입
       </button>
     </form>
   );

@@ -7,6 +7,7 @@ const userSlice = createSlice({
     login(state, action) {
       //api요청 후 반환값을 state에 넣기
       //const { email, nickName } = action.payload;
+      // action의 payload속성에 접근
       const email = 'hi';
       const nickName = 'hi';
       state.email = email;

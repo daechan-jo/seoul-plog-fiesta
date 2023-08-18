@@ -15,7 +15,7 @@ const PasswordChange = () => {
   };
   return (
     <form className={styles.container}>
-      <AiOutlineArrowLeft onClick={goBack} />
+      <AiOutlineArrowLeft className={styles.arrowLeft} onClick={goBack} />
       <label>이름</label>
       <input
         type="text"
