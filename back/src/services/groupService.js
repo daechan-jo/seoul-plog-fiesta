@@ -5,7 +5,19 @@ const groupUtils = require("../utils/groupUtils");
 const createGroup = async (groupData, managerId) => {
 	const { name, goal, region, introduction } = groupData;
 	try {
-		return await prisma.group.create({
+		const checkGroup = await prisma.group.findFirst({
+			where: {
+				name,
+			},
+		});
+		if (checkGroup) throw new Error("이미 존재하는 그룹 이름");
+		const userGroupCount = await prisma.group.count({
+			where: {
+				managerId: managerId,
+			},
+		});
+		if (userGroupCount >= 5) throw new Error("그룹 생성 제한 초과");
+		const createdGroup = await prisma.group.create({
 			data: {
 				name,
 				manager: {
@@ -16,6 +28,15 @@ const createGroup = async (groupData, managerId) => {
 				introduction,
 			},
 		});
+		await prisma.groupUser.create({
+			data: {
+				userId: managerId,
+				groupId: createdGroup.id,
+				isAdmin: true,
+				isAccepted: true,
+			},
+		});
+		return createdGroup;
 	} catch (error) {
 		throw error;
 	}
@@ -23,7 +44,26 @@ const createGroup = async (groupData, managerId) => {
 
 const getALlGroups = async () => {
 	try {
-		return await prisma.group.findMany();
+		const groups = await prisma.group.findMany({
+			select: {
+				id: true,
+				name: true,
+				goal: true,
+				region: true,
+				memberLimit: true,
+				posts: true,
+				GroupUser: {
+					select: {
+						userId: true,
+					},
+				},
+			},
+		});
+
+		return groups.map((group) => ({
+			...group,
+			memberCount: group.GroupUser.length,
+		}));
 	} catch (error) {
 		throw error;
 	}
@@ -87,15 +127,28 @@ const requestToJoinGroup = async (userId, groupId) => {
 	}
 };
 
-const getGroupJoinRequests = async (groupId) => {
+const getGroupJoinRequests = async (managerId) => {
 	try {
-		return await prisma.groupUser.findMany({
+		return await prisma.group.findMany({
 			where: {
-				groupId: groupId,
-				isAccepted: false,
+				managerId: managerId,
+				GroupUser: {
+					some: {
+						isAccepted: false,
+						isAdmin: false,
+					},
+				},
 			},
 			include: {
-				user: true,
+				GroupUser: {
+					where: {
+						isAccepted: false,
+						isAdmin: false,
+					},
+					include: {
+						user: true,
+					},
+				},
 			},
 		});
 	} catch (error) {
@@ -103,12 +156,28 @@ const getGroupJoinRequests = async (groupId) => {
 	}
 };
 
-const approveRegistration = async (groupId, userId) => {
+const acceptRegistration = async (managerId, groupId, userId) => {
 	try {
-		await prisma.groupUser.updateMany({
+		const groupUser = await prisma.groupUser.findUnique({
 			where: {
-				groupId,
-				userId,
+				userId_groupId: {
+					groupId: groupId,
+					userId: userId,
+				},
+			},
+			include: {
+				group: true,
+			},
+		});
+		if (!groupUser) throw new Error("가입 신청 없음");
+		if (groupUser.group.managerId !== managerId)
+			throw new Error("권한 없음");
+		return await prisma.groupUser.update({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
 			},
 			data: {
 				isAccepted: true,
@@ -119,16 +188,23 @@ const approveRegistration = async (groupId, userId) => {
 	}
 };
 
-const rejectGroupJoinRequest = async (groupId, userId) => {
+const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
 	try {
-		const groupUser = await prisma.groupUser.findFirst({
+		const groupUser = await prisma.groupUser.findUnique({
 			where: {
-				userId: userId,
-				groupId: groupId,
-				isAccepted: false,
+				userId_groupId: {
+					groupId: groupId,
+					userId: userId,
+				},
+			},
+			include: {
+				group: true,
 			},
 		});
-		if (!groupUser) throw new Error("가입 신청이 없음");
+		if (!groupUser) throw new Error("가입 신청 없음");
+		if (groupUser.group.managerId !== managerId)
+			throw new Error("권한 없음");
+
 		await prisma.groupUser.delete({
 			where: {
 				userId_groupId: {
@@ -143,18 +219,30 @@ const rejectGroupJoinRequest = async (groupId, userId) => {
 	}
 };
 
-const getUserGroups = async (userId) => {
+const getMyGroups = async (userId) => {
 	try {
-		const groups = await prisma.groupUser.findMany({
+		return await prisma.groupUser.findMany({
 			where: {
-				userId,
-				isAccepted: true,
+				userId: userId,
 			},
-			include: {
-				group: true,
+			select: {
+				groupId: true,
+				group: {
+					select: {
+						id: true,
+						name: true,
+						managerId: true,
+						manager: {
+							select: {
+								id: true,
+								name: true,
+								nickname: true,
+							},
+						},
+					},
+				},
 			},
 		});
-		return groups.map((groupUser) => groupUser.group);
 	} catch (error) {
 		throw error;
 	}
@@ -443,8 +531,8 @@ module.exports = {
 	getGroupDetails,
 	isUserGroupMember,
 	requestToJoinGroup,
-	approveRegistration,
-	getUserGroups,
+	acceptRegistration,
+	getMyGroups,
 	getRandomGroups,
 	searchGroupsByName,
 	createPost,

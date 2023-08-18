@@ -3,11 +3,11 @@ const groupUtils = require("../utils/groupUtils");
 
 /** @description 그룹 생성 */
 const createGroup = async (req, res, next) => {
-	const groupData = req.body; // passport 완성되면 그냥 user에서 추출해도...
+	const groupData = req.body;
 	const managerId = req.user.id;
 	try {
 		const group = await groupService.createGroup(groupData, managerId);
-		res.status(201).json({ message: "그룹 생성", group });
+		res.status(201).json(group);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -19,7 +19,7 @@ const createGroup = async (req, res, next) => {
 const getAllGroups = async (req, res, next) => {
 	try {
 		const groups = await groupService.getALlGroups();
-		res.status(200).json({ message: "그룹 전체 리스트", groups });
+		res.status(200).json(groups);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -43,7 +43,8 @@ const getGroupDetails = async (req, res, next) => {
 
 /** @description 그룹 가입 신청 */
 const requestToJoinGroup = async (req, res, next) => {
-	const userId = req.user.id; // pasport에서 user를 req에 넣어줌. 아직 미구현
+	const userId = req.user.id;
+	console.log(userId);
 	const groupId = parseInt(req.params.groupid);
 	try {
 		const group = await groupService.getGroupDetails(groupId);
@@ -64,15 +65,12 @@ const requestToJoinGroup = async (req, res, next) => {
 
 /** @description 그룹 가입 신청 목록 */
 const getGroupJoinRequests = async (req, res, next) => {
-	const groupId = parseInt(req.params.groupid);
+	const managerId = req.user.id;
 	try {
 		const groupJoinRequests = await groupService.getGroupJoinRequests(
-			groupId,
+			managerId,
 		);
-		res.status(200).json({
-			message: "가입 신청 목록",
-			requests: groupJoinRequests,
-		});
+		res.status(200).json(groupJoinRequests);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -81,13 +79,19 @@ const getGroupJoinRequests = async (req, res, next) => {
 };
 
 /** @description 그룹 가입 신청 승인 */
-const approveRegistration = async (req, res, next) => {
+const acceptRegistration = async (req, res, next) => {
+	const managerId = req.user.id;
 	const groupId = parseInt(req.params.groupid);
 	const userId = parseInt(req.params.userid);
 	try {
-		await groupService.approveRegistration(groupId, userId);
+		const acceptedRequest = await groupService.acceptRegistration(
+			managerId,
+			groupId,
+			userId,
+		);
+		// await groupService.acceptRegistration(groupId, userId);
 
-		res.status(200).json({ message: "그룹 가입 승인 완료" });
+		res.status(200).json(acceptedRequest);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -99,8 +103,11 @@ const approveRegistration = async (req, res, next) => {
 const rejectGroupJoinRequest = async (req, res, next) => {
 	const userId = parseInt(req.params.userid);
 	const groupId = parseInt(req.params.groupid);
+	// const { userId, groupId } = parseInt(req.params);
+	const managerId = req.user.id;
 	try {
 		const success = await groupService.rejectGroupJoinRequest(
+			managerId,
 			userId,
 			groupId,
 		);
@@ -117,11 +124,11 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 };
 
 /** @description 나의 그룹 리스트 */
-const getUserGroups = async (req, res, next) => {
+const getMyGroups = async (req, res, next) => {
 	const userId = req.user.id;
 	try {
-		const groups = await groupService.getUserGroups(userId);
-		res.status(200).json({ message: "나의 그룹 리스트", groups });
+		const groups = await groupService.getMyGroups(userId);
+		res.status(200).json(groups);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -346,9 +353,9 @@ module.exports = {
 	getAllGroups,
 	getGroupDetails,
 	requestToJoinGroup,
-	approveRegistration,
+	acceptRegistration,
 	rejectGroupJoinRequest,
-	getUserGroups,
+	getMyGroups,
 	getRandomGroups,
 	searchGroupsByName,
 	createPost,
