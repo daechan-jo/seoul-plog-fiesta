@@ -96,3 +96,19 @@ main {
     gap: 20px;
   }
 }
+
+.itemList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  li {
+    background-color: white;
+    width: 300px;
+    height: 300px;
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+    flex-direction: column;
+    border-radius: 20px;
+  }
+}
