@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 import authRoutes from "./routers/authRouter";
 import userRoutes from "./routers/userRouter";
 import groupRoutes from "./routers/groupRouter";
+import uploadRouter from "./routers/uploadRouter";
 
 const passport = require("passport");
 import { local, jwt } from "./config";
@@ -27,6 +28,7 @@ passport.use("jwt", jwt);
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(groupRoutes);
+app.use(uploadRouter);
 
 app.use(errorMiddleware);
 
