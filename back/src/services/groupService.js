@@ -279,19 +279,20 @@ const searchGroupsByName = async (groupName) => {
 	}
 };
 
-const createPost = async (postData, user) => {
-	const { writerId, groupId, title, content, isNotice } = postData;
-	const isAdmin = await groupUtils.isUserGroupAdmin(writerId, groupId);
-
-	if (isNotice && !isAdmin) throw new Error("공지사항 작성 권한이 없음");
-	if (!(await groupUtils.isUserGroupMember(writerId, groupId)))
-		throw new Error("그룹 멤버가 아님");
-
+const createPost = async (userId, groupId, title, content, isNotice) => {
 	try {
+		const groupUser = await groupUtils.getGroupUser(userId, groupId);
+		if (!groupUser) throw new Error("그룹 구성원 아님");
+		const isManager = await groupUtils.isGroupManager(userId, groupId);
+		if (isNotice && !isManager) throw new Error("권한 없음");
 		return await prisma.post.create({
 			data: {
-				writerId,
-				groupId,
+				writer: {
+					connect: { id: userId },
+				},
+				group: {
+					connect: { id: groupId },
+				},
 				title,
 				content,
 				isNotice,
@@ -317,16 +318,16 @@ const createComment = async (commentData, user) => {
 	}
 };
 
-const getAllPosts = async () => {
+const getAllPosts = async (groupId) => {
 	try {
 		return await prisma.post.findMany({
-			include: {
-				writer: true,
-				group: true,
-				comments: true,
+			where: {
+				groupId,
 			},
 		});
-	} catch (error) {}
+	} catch (error) {
+		throw error;
+	}
 };
 
 const getPostById = async (postId) => {
@@ -339,6 +340,31 @@ const getPostById = async (postId) => {
 				writer: true,
 				group: true,
 				comments: true,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getRecentPosts = async (userId) => {
+	try {
+		const userGroupIds = await prisma.groupUser.findMany({
+			where: {
+				userId: userId,
+				isAccepted: true,
+			},
+			select: {
+				groupId: true,
+			},
+		});
+		const groupIds = userGroupIds.map((userGroup) => userGroup.groupId);
+		return await prisma.post.findMany({
+			where: {
+				groupId: { in: groupIds },
+			},
+			orderBy: {
+				createdAt: "desc",
 			},
 		});
 	} catch (error) {
@@ -550,4 +576,5 @@ module.exports = {
 	dropGroup,
 	rejectGroupJoinRequest,
 	getGroupJoinRequests,
+	getRecentPosts,
 };

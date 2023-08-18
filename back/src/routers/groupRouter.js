@@ -31,21 +31,49 @@ groupRouter.delete(
 
 groupRouter.get("/group/mygroup", authenticateJWT, groupController.getMyGroups);
 
-groupRouter.get("/group/:groupid", groupController.getGroupDetails);
+groupRouter.get(
+	"/group/:groupid",
+	authenticateJWT,
+	groupController.getGroupDetails,
+);
 
+//todo 삭제예정
 groupRouter.get("/group/random", groupController.getRandomGroups);
-
 groupRouter.get("/group/:groupname", groupController.searchGroupsByName);
 
-groupRouter.post("/group/post", groupController.createPost);
-groupRouter.get(groupController.getAllPosts);
+groupRouter.post(
+	"/group/post/:groupid",
+	authenticateJWT,
+	groupController.createPost,
+);
 
-groupRouter.get("/group/post/:postid", groupController.getPostById);
+groupRouter.get(
+	"/group/posts/:groupid",
+	authenticateJWT,
+	groupController.getAllPosts,
+);
+
+groupRouter.get(
+	"/group/post/:postid",
+	authenticateJWT,
+	groupController.getPostById,
+);
+
+//todo here
+groupRouter.get(
+	"/group/recent/posts",
+	authenticateJWT,
+	groupController.getRecentPosts,
+);
+
 groupRouter.put(groupController.editPost);
+
 groupRouter.delete(groupController.deletePost);
 
 groupRouter.post("/group/comment", groupController.createComment);
+
 groupRouter.put("/group/comment/:commentid", groupController.editComment);
+
 groupRouter.delete(groupController.deleteComment);
 
 groupRouter.delete("/group/:groupid", groupController.leaveGroup);

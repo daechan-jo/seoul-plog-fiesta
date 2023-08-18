@@ -9,25 +9,25 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
-model Course {
-  id                 Int    @id @default(autoincrement())
-  WLK_COURS_FLAG_NM  String
-  WLK_COURS_NM       String
-  COURS_DC           String
-  SIGNGU_NM          String
-  COURS_LEVEL_NM     String
-  COURS_LT_CN        Float
-  COURS_DETAIL_LT_CN String
-  ADIT_DC            String @db.VarChar(1000)
-  COURS_TIME_CN      String
-  OPTN_DC            String
-  TOILET_DC          String
-  CVNTL_NM           String
-  LNM_ADDR           String
-  COURS_SPOT_LA      Float
-  COURS_SPOT_LO      Float
-}
+//언젠가 쓸 일이 있겠찌..?
+// model Course {
+//   id                 Int    @id @default(autoincrement())
+//   WLK_COURS_FLAG_NM  String
+//   WLK_COURS_NM       String
+//   COURS_DC           String
+//   SIGNGU_NM          String
+//   COURS_LEVEL_NM     String
+//   COURS_LT_CN        Float
+//   COURS_DETAIL_LT_CN String
+//   ADIT_DC            String @db.VarChar(1000)
+//   COURS_TIME_CN      String
+//   OPTN_DC            String
+//   TOILET_DC          String
+//   CVNTL_NM           String
+//   LNM_ADDR           String
+//   COURS_SPOT_LA      Float
+//   COURS_SPOT_LO      Float
+// }
 
 model User {
   id            Int          @id @default(autoincrement())
@@ -88,16 +88,17 @@ model Friendship {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  writer    User      @relation(fields: [writerId], references: [id])
-  writerId  Int
-  group     Group     @relation(fields: [groupId], references: [id])
-  groupId   Int
-  title     String
-  content   String
-  isNotice  Boolean
-  createdAt DateTime  @default(now())
-  comments  Comment[]
+	id        Int       @id @default(autoincrement())
+	writer    User      @relation(fields: [writerId], references: [id])
+	writerId  Int
+	group     Group     @relation(fields: [groupId], references: [id])
+	groupId   Int
+	title     String
+	content   String
+	isNotice  Boolean
+	createdAt DateTime  @default(now())
+	comments  Comment[]
+	images    PostImage[]
 }
 
 model Comment {
@@ -110,3 +111,9 @@ model Comment {
   createdAt DateTime @default(now())
 }
 
+model PostImage {
+	id				 Int      @id @default(autoincrement())
+	imageUrl String
+	post Post @relation(fields: [postId], references: [id])
+	postId Int
+}

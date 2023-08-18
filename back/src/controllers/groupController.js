@@ -148,7 +148,7 @@ const getRandomGroups = async (req, res, next) => {
 	}
 };
 
-/** @description 제공된 문자열이 포함된 모든 그룹 */
+//todo 삭제예정
 const searchGroupsByName = async (req, res, next) => {
 	const groupName = req.params.groupname;
 	try {
@@ -163,10 +163,18 @@ const searchGroupsByName = async (req, res, next) => {
 
 /** @description 게시글 작성 */
 const createPost = async (req, res, next) => {
-	const postData = req.body;
+	const userId = req.user.id;
+	const groupId = parseInt(req.params.groupid);
+	const { title, content, isNotice } = req.body;
 	try {
-		const post = await groupService.createPost(postData, req.user);
-		res.status(201).json({ message: "게시글 작성", post });
+		const post = await groupService.createPost(
+			userId,
+			groupId,
+			title,
+			content,
+			isNotice,
+		);
+		res.status(201).json(post);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -187,11 +195,25 @@ const createComment = async (req, res, next) => {
 	}
 };
 
+/** @description 소속 그룹 최신 인증글 리스트 */
+const getRecentPosts = async (req, res, next) => {
+	const userId = req.user.id;
+	try {
+		const posts = await groupService.getRecentPosts(userId);
+		res.status(200).json(posts);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 /** @description 게시글 전체 리스트 */
 const getAllPosts = async (req, res, next) => {
+	const groupId = parseInt(req.params.groupid);
 	try {
-		const posts = await groupService.getAllPosts();
-		res.status(200).json({ message: "게시글 리스트", posts });
+		const posts = await groupService.getAllPosts(groupId);
+		res.status(200).json(posts);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -204,7 +226,8 @@ const getPostById = async (req, res, next) => {
 	const postId = parseInt(req.params.postid);
 	try {
 		const post = await groupService.getPostById(postId);
-		res.status(200).json({ message: "게시글 상세 정보", post });
+		if (!post) return res.status(404).json({ message: "게시글 없음" });
+		res.status(200).json(post);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -370,4 +393,5 @@ module.exports = {
 	removeGroupMember,
 	dropGroup,
 	getGroupJoinRequests,
+	getRecentPosts,
 };
