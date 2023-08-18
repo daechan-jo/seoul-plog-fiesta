@@ -1,14 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PageNav from '../../components/common/PageNav';
 import ItemList from '../../components/network/ItemList';
 
 const MyNetworkContainer = () => {
-  const [lists, setLists] = useState(['groups', 'users']);
+  //현재 페이지의 Nav 정적값을 결정함
+  const lists = ['groups', 'users'];
+  //Nav 값에 따른 view를 설정함
+  const [view, setView] = useState('group');
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  // URL의 query에서 view를 가져옴
+  const queryView = searchParams.get('view');
+  const navigate = useNavigate();
+
+  //view가 변경되면 URL을 이동
+  const handleViewChange = (newView) => {
+    navigate(`/network?view=${newView}`);
+  };
+  //view가 변경되면 새로 렌더링
+  useEffect(() => {
+    if (queryView) {
+      setView(queryView);
+    }
+  }, [queryView]);
 
   return (
     <main>
-      <PageNav lists={lists} setLists={setLists} />
-      <ItemList />
+      <PageNav lists={lists} onViewChange={handleViewChange} />
+      <ItemList datas={view === 'groups' ? mockupGroup : mockupUser} />
     </main>
   );
 };
