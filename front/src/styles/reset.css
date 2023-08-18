@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+li,
+a,
+img,
+p,
+div,
+header,
+nav,
+main,
+article,
+aside,
+section,
+footer,
+address,
+table,
+tr,
+td,
+th,
+del,
+span,
+em,
+strong,
+sup,
+sub,
+dl,
+dt,
+dd,
+form,
+fieldset,
+legend,
+input,
+label,
+select,
+option,
+button {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0em;
+}
+
+table,
+tr,
+td,
+th {
+  border-collapse: collapse;
+}
+ul,
+ol,
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+textarea {
+  resize: none;
+  border: 0;
+}
+fieldset {
+  border: 0;
+}

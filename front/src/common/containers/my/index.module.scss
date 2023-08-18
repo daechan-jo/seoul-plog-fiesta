@@ -1,0 +1,9 @@
+.my {
+  display: flex;
+  gap: 20px;
+  .myBox {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
