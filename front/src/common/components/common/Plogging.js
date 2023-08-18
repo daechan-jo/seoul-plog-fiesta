@@ -2,6 +2,8 @@ import PloggingForm from './PloggingForm';
 import styles from './index.module.scss';
 import Modal from 'react-modal';
 
+Modal.setAppElement('#root');
+
 const Plogging = ({ isOpen, closeModal }) => {
   const modalStyles = {
     content: {

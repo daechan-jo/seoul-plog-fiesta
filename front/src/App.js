@@ -7,6 +7,8 @@ import NetworkPage from './pages/NetworkPage';
 import RankingPage from './pages/RankingPage';
 import MyPage from './pages/MyPage';
 import PasswordPage from './pages/PasswordPage';
+import GroupIdPage from './pages/GroupIdPage';
+import UserIdPage from './pages/UserIdPage';
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
       <Route path="/network" element={<NetworkPage />} />
       <Route path="/ranking" element={<RankingPage />} />
       <Route path="/setpassword" element={<PasswordPage />} />
+      <Route path="/group/:groupId" element={<GroupIdPage />} />
+      <Route path="/user/:userId" element={<UserIdPage />} />
       <Route path="*" element={<IntroPage />} />
     </Routes>
   );

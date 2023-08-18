@@ -1,19 +1,20 @@
-import styles from "./user.module.scss";
-import React, { useState, useContext } from "react";
-import { useNavigate, useHistory } from "react-router-dom";
-import { AiOutlineArrowLeft } from "react-icons/ai"
-//@ts-ignore
-// import * as Api from "../../api";
-// import { DispatchContext } from "../../App";
+import styles from './user.module.scss';
+import React, { useState, useContext } from 'react';
+import { useNavigate, useHistory } from 'react-router-dom';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import * as Api from '../../../api';
+import { useDispatch } from 'react-redux';
+import { login } from '../../../features/user/userSlice';
 
 const Login = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   //useState로 email 상태를 생성함.
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   //useState로 password 상태를 생성함.
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   //useState로 confirmPassword 상태를 생성함.
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
   // const dispatch = useContext(DispatchContext);
 
   //이메일이 abc@example.com 형태인지 regex를 이용해 확인함.
@@ -21,7 +22,7 @@ const Login = () => {
     return email
       .toLowerCase()
       .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       );
   };
 
@@ -35,37 +36,28 @@ const Login = () => {
   // 위 4개 조건이 모두 동시에 만족되는지 여부를 확인함.
   const isFormValid = isEmailValid && isPasswordValid && isPasswordSame;
 
+  const data = {
+    email,
+    password,
+    nickname: 'mynickname',
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //   try {
-    //     // "user/login" 엔드포인트로 post요청함.
-    //     const res = await Api.post("user/login", {
-    //       email,
-    //       password,
-    //     });
-    //     // 유저 정보는 response의 data임.
-    //     const user = res.data;
-    //     // JWT 토큰은 유저 정보의 token임.
-    //     const jwtToken = user.token;
-    //     // sessionStorage에 "userToken"이라는 키로 JWT 토큰을 저장함.
-    //     sessionStorage.setItem("userToken", jwtToken);
-    //     // dispatch 함수를 이용해 로그인 성공 상태로 만듦.
-    //     dispatch({
-    //       type: "LOGIN_SUCCESS",
-    //       payload: user,
-    //     });
-
-    //     // 기본 페이지로 이동함.
-    //     navigate("/", { replace: true });
-    //   } catch (err) {
-    //     console.log("로그인에 실패하였습니다.\n", err);
-    //   }
+    Api.post('auth/login', data)
+      .then((res) => {
+        const token = res.data.token;
+        sessionStorage.setItem('userToken', token);
+        dispatch(login(res.data.data));
+        navigate('/', { replace: true });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
-
   const findPassword = () => {
-    navigate("/setpassword")
-  }
+    navigate('/setpassword');
+  };
   // 뒤로가기 버튼 함수
   const goBack = () => {
     navigate(-1);
@@ -85,20 +77,45 @@ const Login = () => {
     <form className={styles.container}>
       <AiOutlineArrowLeft className={styles.arrowLeft} onClick={goBack} />
       <label>아이디</label>
-      <input className="id" type="email" placeholder="user@example.com" onChange={(e) => setEmail(e.target.value)} />
-      {!isEmailValid && <div className={styles["error-message"]}>유효한 이메일 주소를 입력하세요.</div>}
+      <input
+        className="id"
+        type="email"
+        placeholder="user@example.com"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      {!isEmailValid && (
+        <div className={styles['error-message']}>
+          유효한 이메일 주소를 입력하세요.
+        </div>
+      )}
 
       <label>비밀번호</label>
-      <input type="password" placeholder="비밀번호" onChange={(e) => setPassword(e.target.value)} />
-      {!isPasswordValid && <div className={styles["error-message"]}>비밀번호는 4글자 이상이어야 합니다.</div>}
+      <input
+        type="password"
+        placeholder="비밀번호"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      {!isPasswordValid && (
+        <div className={styles['error-message']}>
+          비밀번호는 4글자 이상이어야 합니다.
+        </div>
+      )}
       {/* <div className={styles.buttonContainer}> */}
-      <button className={styles.localLogin} type="submit" onSubmit={handleSubmit}>로그인 </button>
-      <button className={styles.localLogin} onClick={findPassword}>비밀번호 찾기</button>
-      <button className={styles.kakaoLogin} onClick={kakaoLoginHandler}>카카오 로그인</button>
+      <button
+        className={styles.localLogin}
+        type="submit"
+        onSubmit={handleSubmit}
+      >
+        로그인{' '}
+      </button>
+      <button className={styles.localLogin} onClick={findPassword}>
+        비밀번호 찾기
+      </button>
+      <button className={styles.kakaoLogin} onClick={kakaoLoginHandler}>
+        카카오 로그인
+      </button>
       {/* </div> */}
     </form>
-
-
   );
 };
 

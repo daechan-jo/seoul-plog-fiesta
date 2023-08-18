@@ -1,13 +1,40 @@
-.box {
-  width: 40vw;
-  height: 70vh;
+.info {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 2%;
   display: flex;
-  background-color: gray;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  .imgContainer {
+    width: 50%;
+    background-color: antiquewhite;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  li {
+    width: 50%;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+  }
 }
 
 .shortBox {
-  width: 30vw;
+  width: 100%;
   height: 30vh;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   background-color: gray;
+}
+
+.myGroup {
+  overflow: hidden;
+  .imgContainer {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 }

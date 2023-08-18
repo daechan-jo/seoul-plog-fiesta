@@ -8,8 +8,8 @@ const HomeContainer = () => {
       <div className="threeContainer">
         <Map />
         <div className="box">
-          <TopGroup />
-          <TopUser />
+          <TopGroup datas={mockupGroup} />
+          <TopUser datas={mockupUser} />
         </div>
       </div>
     </main>
