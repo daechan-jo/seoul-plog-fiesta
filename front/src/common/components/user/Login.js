@@ -1,21 +1,19 @@
 import styles from './user.module.scss';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, useHistory } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import * as Api from '../../../api';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../../features/user/userSlice';
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  //useState로 email 상태를 생성함.
+  const dispatch = useDispatch(); // 리덕스 툴킷을 활용한 상태관리 => store.js 확인
+
+  const user = useSelector((state) => state.user);
+
   const [email, setEmail] = useState('');
-  //useState로 password 상태를 생성함.
   const [password, setPassword] = useState('');
-  //useState로 confirmPassword 상태를 생성함.
-  const [confirmPassword, setConfirmPassword] = useState('');
-  // const dispatch = useContext(DispatchContext);
 
   //이메일이 abc@example.com 형태인지 regex를 이용해 확인함.
   const validateEmail = (email) => {
@@ -26,25 +24,17 @@ const Login = () => {
       );
   };
 
-  //위 validateEmail 함수를 통해 이메일 형태 적합 여부를 확인함.
   const isEmailValid = validateEmail(email);
-  // 비밀번호가 4글자 이상인지 여부를 확인함.
   const isPasswordValid = password.length >= 4;
-  // 비밀번호와 확인용 비밀번호가 일치하는지 여부를 확인함.
-  const isPasswordSame = password === confirmPassword;
 
-  // 위 4개 조건이 모두 동시에 만족되는지 여부를 확인함.
-  const isFormValid = isEmailValid && isPasswordValid && isPasswordSame;
-
-  const data = {
-    email,
-    password,
-    nickname: 'mynickname',
-  };
+  // 로그인 버튼 클릭 시 토큰을 받아와서 스토리지에 저장 => 상태 업데이트 => 홈페이지 이동
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    Api.post('auth/login', data)
+    Api.post('auth/login', {
+      email,
+      password,
+    })
       .then((res) => {
         const token = res.data.token;
         sessionStorage.setItem('userToken', token);
@@ -72,6 +62,13 @@ const Login = () => {
   const kakaoLoginHandler = () => {
     window.location.href = link;
   };
+
+  // user의 상태가 존재하면 홈 페이지로 이동시킴
+  useEffect(() => {
+    if (user.email) {
+      navigate('/');
+    }
+  });
 
   return (
     <form className={styles.container}>
@@ -106,7 +103,7 @@ const Login = () => {
         type="submit"
         onSubmit={handleSubmit}
       >
-        로그인{' '}
+        로그인
       </button>
       <button className={styles.localLogin} onClick={findPassword}>
         비밀번호 찾기
