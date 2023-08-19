@@ -8,20 +8,49 @@ const createComment = async (
 	parentId,
 	isCertPost,
 ) => {
-	try {
-		let newData = {
-			content,
-			writer: { connect: { id: writerId } },
-			parent: parentId ? { connect: { id: parentId } } : null,
-		};
+	let commentData = {
+		writer: {
+			connect: { id: writerId },
+		},
+		content,
+	};
 
-		const updatedData = isCertPost
-			? { ...newData, certPost: { connect: { id: postId } } }
-			: { ...newData, post: { connect: { id: postId } } };
-
-		return await prisma.comment.create({
-			data: updatedData,
+	if (isCertPost) {
+		const certPostExists = await prisma.certPost.findUnique({
+			where: { id: postId },
 		});
+		if (!certPostExists) {
+			throw new Error("Cert post not found");
+		}
+
+		commentData.certPost = {
+			connect: { id: postId },
+		};
+	} else {
+		const postExists = await prisma.post.findUnique({
+			where: { id: postId },
+		});
+		if (!postExists) {
+			throw new Error("Post not found");
+		}
+
+		commentData.post = {
+			connect: { id: postId },
+		};
+	}
+
+	if (parentId !== undefined && parentId !== null) {
+		commentData.parent = {
+			connect: { id: parentId },
+		};
+	}
+
+	try {
+		const newComment = await prisma.comment.create({
+			data: commentData,
+		});
+
+		return newComment;
 	} catch (error) {
 		throw error;
 	}

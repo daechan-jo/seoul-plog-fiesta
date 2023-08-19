@@ -4,7 +4,7 @@ import commentController from "../controllers/commentController";
 
 const commentRouter = router();
 commentRouter.post(
-	"comment/:postid",
+	"/comment/:postid",
 	authenticateJWT,
 	commentController.createComment,
 );
