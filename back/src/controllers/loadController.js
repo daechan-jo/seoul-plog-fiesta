@@ -34,8 +34,6 @@ const loadPostImage = async (req, res, next) => {
 			return res.status(404).send("이미지가 없습니다");
 		}
 		const imagePath = path.join(__dirname, "..", "..", postImage.imageUrl);
-		console.log("postImage.imageUrl:", postImage.imageUrl);
-		console.log("imagePath:", imagePath);
 
 		fs.access(imagePath, fs.constants.F_OK, (err) => {
 			if (err) {

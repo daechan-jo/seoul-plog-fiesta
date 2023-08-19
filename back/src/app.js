@@ -24,11 +24,6 @@ app.use(loggerMiddleware);
 app.use(passport.initialize());
 passport.use("local", local);
 passport.use("jwt", jwt);
-// app.use(
-// 	"/uploads/images",
-// 	express.static(path.join(__dirname, "uploads/images")),
-// );
-//todo 앞으로 작성될 라우터핸들러 위치
 
 app.use(authRoutes);
 app.use(userRoutes);

@@ -40,6 +40,7 @@ groupRouter.get(
 //todo 삭제예정
 groupRouter.get("/group/random", groupController.getRandomGroups);
 groupRouter.get("/group/:groupname", groupController.searchGroupsByName);
+//
 
 groupRouter.post(
 	"/group/post/:groupid",

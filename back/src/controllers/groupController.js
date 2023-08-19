@@ -44,7 +44,6 @@ const getGroupDetails = async (req, res, next) => {
 /** @description 그룹 가입 신청 */
 const requestToJoinGroup = async (req, res, next) => {
 	const userId = req.user.id;
-	console.log(userId);
 	const groupId = parseInt(req.params.groupid);
 	try {
 		const group = await groupService.getGroupDetails(groupId);

@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const createUser = async (userData) => {
 	console.log(userData);
 	const { name, nickname, email, password } = userData;
-	//todo 이메일 중복체크 추가, 해쉬화 오류 픽스
 	const existingUser = await prisma.user.findUnique({
 		where: {
 			email: email,

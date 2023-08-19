@@ -33,8 +33,6 @@ const getGroupUser = async (userId, groupId) => {
 				userId: userId,
 				groupId: groupId,
 			},
-			// userId: userId,
-			// groupId: groupId,
 			isAccepted: true,
 		},
 	});

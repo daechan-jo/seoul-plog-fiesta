@@ -18,7 +18,6 @@ const morganMiddleware = morgan((tokens, req, res) => {
 	if (statusCode < 400) {
 		logger.info(logMessage);
 	}
-
 	return null; // 로그 출력을 수정하지 않음을 나타내기 위해 null을 반환
 });
 
