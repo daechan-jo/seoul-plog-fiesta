@@ -49,4 +49,16 @@ const createComment = async (
 	}
 };
 
-module.exports = { createComment };
+const getCommentById = async (commentId) => {
+	return prisma.comment.findUnique({ where: { id: commentId } });
+};
+
+const updateComment = async (commentId, content) => {
+	console.log(commentId, content);
+	return prisma.comment.update({
+		where: { id: commentId },
+		data: { content },
+	});
+};
+
+module.exports = { createComment, getCommentById, updateComment };

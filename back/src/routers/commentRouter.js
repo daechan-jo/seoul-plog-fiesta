@@ -9,4 +9,10 @@ commentRouter.post(
 	commentController.createComment,
 );
 
+commentRouter.put(
+	"/comment/:commentid",
+	authenticateJWT,
+	commentController.updateComment,
+);
+
 module.exports = commentRouter;
