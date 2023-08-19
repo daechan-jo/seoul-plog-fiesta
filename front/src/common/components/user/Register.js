@@ -1,20 +1,18 @@
 import styles from './user.module.scss';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AiOutlineArrowLeft } from "react-icons/ai"
-import * as Api from "../../../api"
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import * as Api from '../../../api';
 const Register = () => {
   const navigate = useNavigate();
-  //useState로 email 상태를 생성함.
-  const [email, setEmail] = useState('');
-  //useState로 password 상태를 생성함.
-  const [password, setPassword] = useState('');
-  //useState로 confirmPassword 상태를 생성함.
-  const [confirmPassword, setConfirmPassword] = useState('');
-  //useState로 name 상태를 생성함.
-  const [name, setName] = useState('');
-  //useState로 nickname 상태를 생성함.
-  const [nickname, setNickName] = useState('');
+
+  const [userData, setUserData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+    nickname: '',
+  });
 
   //이메일이 abc@example.com 형태인지 regex를 이용해 확인함.
   const validateEmail = (email) => {
@@ -26,50 +24,53 @@ const Register = () => {
   };
 
   //위 validateEmail 함수를 통해 이메일 형태 적합 여부를 확인함.
-  const isEmailValid = validateEmail(email);
+  const isEmailValid = validateEmail(userData.email);
   // 비밀번호가 4글자 이상인지 여부를 확인함.
-  const isPasswordValid = password.length >= 4;
+  const isPasswordValid = userData.password.length >= 4;
   // 비밀번호와 확인용 비밀번호가 일치하는지 여부를 확인함.
-  const isPasswordSame = password === confirmPassword;
+  const isPasswordSame = userData.password === userData.confirmPassword;
   // 이름이 2글자 이상인지 여부를 확인함.
-  const isNameValid = name.length >= 2;
-  const isNickNameValid = nickname.length >= 2;
+  const isNameValid = userData.name.length >= 2;
+  const isNickNameValid = userData.nickname.length >= 2;
   // 위 4개 조건이 모두 동시에 만족되는지 여부를 확인함.
   const isFormValid =
     isEmailValid && isPasswordValid && isPasswordSame && isNameValid;
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       // "user/register" 엔드포인트로 post요청함.
-      await Api.post("user/register", {
-        email,
-        password,
-        name,
-      });
-
+      await Api.post('/auth', userData);
       // 로그인 페이지로 이동함.
-      navigate("/login");
+      navigate('/login');
     } catch (err) {
-      console.log("회원가입에 실패하였습니다.", err);
+      console.log('회원가입에 실패하였습니다.', err);
     }
   };
-
 
   const goBack = () => {
     navigate(-1);
   };
 
   return (
-    <form className={styles.container}>
+    <form className={styles.container} onSubmit={handleSubmit}>
       <AiOutlineArrowLeft className={styles.arrowLeft} onClick={goBack} />
-      <label>이름</label>
       <input
         className="name"
         type="text"
+        name="name" // input 요소와 연결된 state의 이름을 지정
         placeholder="이름"
-        onChange={(e) => setName(e.target.value)}
+        value={userData.name} // value에 state 값 연결
+        onChange={handleInputChange} // input 변경 핸들러 호출
       />
       {!isNameValid && (
         <div className={styles['error-message']}>
@@ -80,8 +81,10 @@ const Register = () => {
       <input
         className="nickname"
         type="text"
+        name="nickname"
         placeholder="닉네임"
-        onChange={(e) => setNickName(e.target.value)}
+        value={userData.nickname}
+        onChange={handleInputChange}
       />
       {!isNickNameValid && (
         <div className={styles['error-message']}>
@@ -92,8 +95,10 @@ const Register = () => {
       <input
         className="id"
         type="email"
+        name="email"
         placeholder="user@example.com"
-        onChange={(e) => setEmail(e.target.value)}
+        value={userData.email}
+        onChange={handleInputChange}
       />
       {!isEmailValid && (
         <div className={styles['error-message']}>
@@ -104,8 +109,10 @@ const Register = () => {
       <label>비밀번호</label>
       <input
         type="password"
+        name="password"
         placeholder="비밀번호"
-        onChange={(e) => setPassword(e.target.value)}
+        value={userData.password}
+        onChange={handleInputChange}
       />
       {!isPasswordValid && (
         <div className={styles['error-message']}>
@@ -116,18 +123,12 @@ const Register = () => {
       <label>비밀번호 확인</label>
       <input
         type="password"
+        name="confirmPassword"
         placeholder="비밀번호 확인"
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        value={userData.confirmPassword}
+        onChange={handleInputChange}
       />
-      {!isPasswordSame && (
-        <div className={styles['error-message']}>
-          비밀번호가 일치하지 않습니다.
-        </div>
-      )}
-
-      <button type="submit" onSubmit={handleSubmit}>
-        회원가입
-      </button>
+      <button type="submit">회원가입</button>
     </form>
   );
 };

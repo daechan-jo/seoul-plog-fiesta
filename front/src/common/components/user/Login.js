@@ -1,6 +1,6 @@
 import styles from './user.module.scss';
-import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate, useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import * as Api from '../../../api';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +9,6 @@ import { login } from '../../../features/user/userSlice';
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch(); // 리덕스 툴킷을 활용한 상태관리 => store.js 확인
-
-  const user = useSelector((state) => state.user);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,37 +40,14 @@ const Login = () => {
         navigate('/', { replace: true });
       })
       .catch((err) => {
+        alert(err);
         console.error(err);
       });
   };
-  const findPassword = () => {
-    navigate('/setpassword');
-  };
-  // 뒤로가기 버튼 함수
-  const goBack = () => {
-    navigate(-1);
-  };
-
-  // //카카오톡 로그인을 위한 변수들
-  const REST_API_KEY = '백엔드한테 달라하자1';
-  const REDIRECT_URI = '백엔드한테 달라하자2';
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-
-  // 카카오톡 로그인을 위한 loginHandler
-  const kakaoLoginHandler = () => {
-    window.location.href = link;
-  };
-
-  // user의 상태가 존재하면 홈 페이지로 이동시킴
-  useEffect(() => {
-    if (user.email) {
-      navigate('/');
-    }
-  });
 
   return (
-    <form className={styles.container}>
-      <AiOutlineArrowLeft className={styles.arrowLeft} onClick={goBack} />
+    <form className={styles.container} onSubmit={handleSubmit}>
+      <AiOutlineArrowLeft className={styles.arrowLeft} />
       <label>아이디</label>
       <input
         className="id"
@@ -97,21 +72,26 @@ const Login = () => {
           비밀번호는 4글자 이상이어야 합니다.
         </div>
       )}
-      {/* <div className={styles.buttonContainer}> */}
-      <button
-        className={styles.localLogin}
-        type="submit"
-        onSubmit={handleSubmit}
-      >
+      <button className={styles.localLogin} type="submit">
         로그인
       </button>
-      <button className={styles.localLogin} onClick={findPassword}>
+      <button
+        className={styles.localLogin}
+        onClick={() => {
+          navigate('/setpassword');
+        }}
+      >
         비밀번호 찾기
       </button>
-      <button className={styles.kakaoLogin} onClick={kakaoLoginHandler}>
-        카카오 로그인
+      <button
+        className={styles.localLogin}
+        onClick={() => {
+          navigate('/register');
+        }}
+      >
+        회원가입 하기
       </button>
-      {/* </div> */}
+      <button className={styles.kakaoLogin}>카카오 로그인</button>
     </form>
   );
 };
