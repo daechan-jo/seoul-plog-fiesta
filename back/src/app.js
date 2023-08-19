@@ -9,9 +9,10 @@ import authRoutes from "./routers/authRouter";
 import userRoutes from "./routers/userRouter";
 import groupRoutes from "./routers/groupRouter";
 import uploadRouter from "./routers/uploadRouter";
-
+import loadRouter from "./routers/loadRouter";
 const passport = require("passport");
 import { local, jwt } from "./config";
+import path from "path";
 const app = express();
 
 app.use(cors());
@@ -23,12 +24,17 @@ app.use(loggerMiddleware);
 app.use(passport.initialize());
 passport.use("local", local);
 passport.use("jwt", jwt);
-
+// app.use(
+// 	"/uploads/images",
+// 	express.static(path.join(__dirname, "uploads/images")),
+// );
 //todo 앞으로 작성될 라우터핸들러 위치
+
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(groupRoutes);
 app.use(uploadRouter);
+app.use(loadRouter);
 
 app.use(errorMiddleware);
 

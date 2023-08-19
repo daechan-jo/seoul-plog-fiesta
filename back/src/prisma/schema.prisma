@@ -46,6 +46,7 @@ model User {
 	comments      Comment[]
 	profileImage   UserProfileImage?
 }
+
 model UserProfileImage {
 	id         Int      @id @default(autoincrement())
 	imageUrl   String

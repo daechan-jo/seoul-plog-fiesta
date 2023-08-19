@@ -11,3 +11,4 @@ yarn.lock
 .editorconfig
 main.py
 migrations
+uploads
