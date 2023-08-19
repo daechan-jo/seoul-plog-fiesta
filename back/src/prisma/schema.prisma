@@ -104,15 +104,19 @@ model Post {
 }
 
 model Comment {
-	id        Int      @id @default(autoincrement())
-	writer    User     @relation(fields: [writerId], references: [id])
-	writerId  Int
-	post      Post     @relation(fields: [postId], references: [id])
-	postId    Int
-	certPost  certPost? @relation(fields: [certPostId], references: [id])
+	id         Int       @id @default(autoincrement())
+	content    String
+	createdAt  DateTime  @default(now())
+	updatedAt  DateTime  @updatedAt
+	writer     User      @relation(fields: [writerId], references: [id])
+	writerId   Int
+	post       Post?     @relation(fields: [postId], references: [id])
+	postId     Int?
+	certPost   certPost? @relation(fields: [certPostId], references: [id])
 	certPostId Int?
-	content   String
-	createdAt DateTime @default(now())
+	parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
+	parentId   Int?
+	children   Comment[] @relation("CommentToComment")
 }
 
 model PostImage {

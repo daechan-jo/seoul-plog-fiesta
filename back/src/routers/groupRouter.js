@@ -60,14 +60,18 @@ groupRouter.get(
 	groupController.getPostById,
 );
 
-//todo here
 groupRouter.get(
 	"/group/recent/posts",
 	authenticateJWT,
 	groupController.getRecentPosts,
 );
 
-groupRouter.put(groupController.editPost);
+//todo here
+groupRouter.put(
+	"/group/post/put/:postid",
+	authenticateJWT,
+	groupController.editPost,
+);
 
 groupRouter.delete(groupController.deletePost);
 

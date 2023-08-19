@@ -372,8 +372,11 @@ const getRecentPosts = async (userId) => {
 	}
 };
 
-const editPost = async (postId, postData) => {
+const editPost = async (postId, userId, postData) => {
 	try {
+		const post = await prisma.post.findUnique({ where: { id: postId } });
+		if (!post) throw new Error("존재하지 않는 게시글");
+		if (post.writerId !== userId) throw new Error("권한이 없음");
 		const filteredData = Object.entries(postData).reduce(
 			(acc, [key, value]) => {
 				if (value !== null) {
@@ -388,11 +391,6 @@ const editPost = async (postId, postData) => {
 				id: postId,
 			},
 			data: filteredData,
-			include: {
-				writer: true,
-				group: true,
-				comments: true,
-			},
 		});
 	} catch (error) {
 		throw error;

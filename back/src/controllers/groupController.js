@@ -237,10 +237,15 @@ const getPostById = async (req, res, next) => {
 /** @description 게시글 수정 */
 const editPost = async (req, res, next) => {
 	const postId = parseInt(req.params.postid);
+	const userId = req.user.id;
 	const postData = req.body;
 	try {
-		const updatedPost = await groupService.editPost(postId, postData);
-		res.status(200).json({ message: "게시글 수정", post: updatedPost });
+		const updatedPost = await groupService.editPost(
+			postId,
+			userId,
+			postData,
+		);
+		res.status(200).json(updatedPost);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
