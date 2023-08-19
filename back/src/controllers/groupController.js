@@ -181,19 +181,6 @@ const createPost = async (req, res, next) => {
 	}
 };
 
-/** @description 댓글 작성 */
-const createComment = async (req, res, next) => {
-	const commentData = req.body;
-	try {
-		const comment = await groupService.createComment(commentData, req.user);
-		res.status(201).json({ message: "댓글 작성", comment });
-	} catch (error) {
-		console.error(error);
-		error.status = 500;
-		next(error);
-	}
-};
-
 /** @description 소속 그룹 최신 인증글 리스트 */
 const getRecentPosts = async (req, res, next) => {
 	const userId = req.user.id;
@@ -266,49 +253,6 @@ const deletePost = async (req, res, next) => {
 		error.status = 500;
 		next(error);
 	}
-};
-
-/** @description 댓글 수정 */
-const editComment = async (req, res, next) => {
-	const userId = req.user.id;
-	const commentId = parseInt(req.params.commentid);
-	const { content } = req.body;
-	try {
-		const comment = await groupService.getCommentDetails(commntId);
-		if (!comment) return res.status(404).json({ message: "댓글 없음" });
-
-		const isCommenter = comment.writerId === userId;
-		if (!isCommenter)
-			return res.status(400).json({ message: "댓글 작성자만 수정 가능" });
-
-		const updatedComment = await groupService.deditComment(
-			commentId,
-			content,
-		);
-		res.status(200).json({ message: "댓글 수정", comment: updatedComment });
-	} catch (error) {}
-};
-
-/** @description 댓글 삭제 */
-const deleteComment = async (req, res, next) => {
-	const userId = req.user.id;
-	const commentId = parseInt(req.params.commentid);
-
-	try {
-		const comment = await groupService.getCommentDetails(commentId);
-		if (!comment) return res.status(404).json({ message: "댓글 없음" });
-
-		const isCommenter = comment.writerId === userId;
-		const isGroupAdmin = await groupUtils.isUserGroupMember(
-			userId,
-			comment.post.groupId,
-		);
-		if (!isCommenter && !isGroupAdmin)
-			return res.status(400).json({ message: "권한 없음" });
-
-		await groupService.deleteComment(commentId);
-		res.status(200).json({ message: `댓글 삭제 : ${commentId}` });
-	} catch (error) {}
 };
 
 /** @description 그룹 탈퇴 */
@@ -386,13 +330,10 @@ module.exports = {
 	getRandomGroups,
 	searchGroupsByName,
 	createPost,
-	createComment,
 	getAllPosts,
 	getPostById,
 	editPost,
 	deletePost,
-	editComment,
-	deleteComment,
 	leaveGroup,
 	removeGroupMember,
 	dropGroup,

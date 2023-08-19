@@ -303,21 +303,6 @@ const createPost = async (userId, groupId, title, content, isNotice) => {
 	}
 };
 
-const createComment = async (commentData, user) => {
-	const { writerId, postId, content } = commentData;
-	try {
-		return await prisma.comment.create({
-			data: {
-				writerId,
-				postId,
-				content,
-			},
-		});
-	} catch (error) {
-		throw error;
-	}
-};
-
 const getAllPosts = async (groupId) => {
 	try {
 		return await prisma.post.findMany({
@@ -429,40 +414,6 @@ const deletePost = async (postId, userId) => {
 	}
 };
 
-const getCommentDetails = async (commentId) => {
-	try {
-		return await prisma.comment.findUnique({
-			where: {
-				id: commentId,
-			},
-			include: {
-				post: {
-					include: {
-						group: true,
-					},
-				},
-			},
-		});
-	} catch (error) {
-		throw error;
-	}
-};
-
-const editComment = async (commentId, content) => {
-	try {
-		return await prisma.comment.update({
-			where: {
-				id: commentId,
-			},
-			data: {
-				content,
-			},
-		});
-	} catch (error) {
-		throw error;
-	}
-};
-
 const deleteComment = async (commentId) => {
 	try {
 		await prisma.comment.delete({
@@ -560,13 +511,10 @@ module.exports = {
 	getRandomGroups,
 	searchGroupsByName,
 	createPost,
-	createComment,
 	getAllPosts,
 	getPostById,
 	editPost,
 	deletePost,
-	getCommentDetails,
-	editComment,
 	deleteComment,
 	leaveGroup,
 	isUserGroupAdmin,

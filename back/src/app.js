@@ -10,9 +10,10 @@ import userRoutes from "./routers/userRouter";
 import groupRoutes from "./routers/groupRouter";
 import uploadRouter from "./routers/uploadRouter";
 import loadRouter from "./routers/loadRouter";
-const passport = require("passport");
+import commentRouter from "./routers/commentRouter";
 import { local, jwt } from "./config";
-import path from "path";
+const passport = require("passport");
+
 const app = express();
 
 app.use(cors());
@@ -30,6 +31,7 @@ app.use(userRoutes);
 app.use(groupRoutes);
 app.use(uploadRouter);
 app.use(loadRouter);
+app.use(commentRouter);
 
 app.use(errorMiddleware);
 

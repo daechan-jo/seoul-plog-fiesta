@@ -75,12 +75,6 @@ groupRouter.put(
 
 groupRouter.delete(groupController.deletePost);
 
-groupRouter.post("/group/comment", groupController.createComment);
-
-groupRouter.put("/group/comment/:commentid", groupController.editComment);
-
-groupRouter.delete(groupController.deleteComment);
-
 groupRouter.delete("/group/:groupid", groupController.leaveGroup);
 
 groupRouter.delete(
