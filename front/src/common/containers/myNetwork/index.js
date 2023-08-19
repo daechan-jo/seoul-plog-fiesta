@@ -40,7 +40,10 @@ const MyNetworkContainer = () => {
   return (
     <main>
       <PageNav view={view} lists={lists} onViewChange={handleViewChange} />
-      <ItemList datas={view === 'groups' ? mockupGroup : mockupUser} />
+      <ItemList
+        datas={view === 'groups' ? mockupGroup : mockupUser}
+        view={view}
+      />
     </main>
   );
 };

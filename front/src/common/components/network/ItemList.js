@@ -1,7 +1,7 @@
 import Paging from '../myNetwork/Pagenation';
 import Item from './Item';
 
-const ItemList = ({ datas }) => {
+const ItemList = ({ datas, view }) => {
   return (
     <div className="gContainer  gList">
       <div className="titleContainer">
@@ -9,7 +9,7 @@ const ItemList = ({ datas }) => {
       </div>
       <div className="contentListContainer">
         {datas.map((data) => (
-          <Item data={data} />
+          <Item data={data} view={view} />
         ))}
       </div>
       <Paging />

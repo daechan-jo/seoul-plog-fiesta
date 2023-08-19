@@ -1,6 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 
-const Item = ({ data }) => {
+const Item = ({ data, view }) => {
+  const navigator = useNavigate();
   /*
   {
      imgUrl: 'http://placekitten.com/200/200',
@@ -15,13 +17,18 @@ const Item = ({ data }) => {
   */
 
   return (
-    <div className={styles.itemContainer}>
+    <div
+      className={styles.itemContainer}
+      onClick={() => {
+        navigator(`/${view}/${data.id}`);
+      }}
+    >
       <div key={data.id}>
         <img src={data.imgUrl} alt={data.id} />
       </div>
       <ul className={styles.item}>
         <li key={data.name}>
-          <label>그룹 이름</label>
+          <label>{view} 이름</label>
           <div>{data.name}</div>
         </li>
         <li key={data.goal}>
