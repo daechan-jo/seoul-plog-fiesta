@@ -1,4 +1,6 @@
 import groupService from "../services/groupService.js";
+import commentService from "../services/commentService.js";
+import imageService from "../services/imageService.js";
 const groupUtils = require("../utils/groupUtils");
 
 /** @description 그룹 생성 */
@@ -135,31 +137,6 @@ const getMyGroups = async (req, res, next) => {
 	}
 };
 
-/** @description 랜덤 그룹 리스트 */
-const getRandomGroups = async (req, res, next) => {
-	try {
-		const randomGroups = await groupService.getRandomGroups();
-		res.status(200).json({ message: "랜덤 그룹 리스트", randomGroups });
-	} catch (error) {
-		console.error(error);
-		error.status = 500;
-		next(error);
-	}
-};
-
-//todo 삭제예정
-const searchGroupsByName = async (req, res, next) => {
-	const groupName = req.params.groupname;
-	try {
-		const groups = await groupService.searchGroupsByName(groupName);
-		res.status(200).json({ message: "그룹 검색 결과", groups });
-	} catch (error) {
-		console.error(error);
-		error.status = 500;
-		next(error);
-	}
-};
-
 /** @description 게시글 작성 */
 const createPost = async (req, res, next) => {
 	const userId = req.user.id;
@@ -246,6 +223,19 @@ const deletePost = async (req, res, next) => {
 	const userId = req.user.id;
 
 	try {
+		const post = await groupService.getPostById(postId);
+		if (!post) return res.status(404).json({ message: "게시글 없음" });
+		if (post.writerId !== userId) {
+			const groupUser = await groupService.getGroupUserByUserIdAndGroupId(
+				userId,
+				post.groupId,
+			);
+			if (!(groupUser && groupUser.isAdmin))
+				return res.status(403).json({ message: "권한 없음" });
+		}
+		//todo promise.all 을 사용할 수 있지 않을까?
+		await commentService.deleteCommentsByPostId(postId);
+		await imageService.deleteImagesByPostId(postId);
 		await groupService.deletePost(postId, userId);
 		res.status(200).json({ message: `게시글 삭제 : ${postId}` });
 	} catch (error) {
@@ -327,8 +317,6 @@ module.exports = {
 	acceptRegistration,
 	rejectGroupJoinRequest,
 	getMyGroups,
-	getRandomGroups,
-	searchGroupsByName,
 	createPost,
 	getAllPosts,
 	getPostById,

@@ -6,8 +6,8 @@ function errorMiddleware(error, req, res, next) {
 	// 혹시나 RangeError: Invalid status code: undefined 에러가 발생하면
 	// 아래 코드 한줄을 주석처리하고 res.json(error.message);만 사용하면 됨.
 	// 디버깅 끝나면 원복해서 다시 사용하시면 됨니다.
-	res.status(error.status).json(error.message);
-	// res.json(error.message);
+	// res.status(error.status).json(error.message);
+	res.json(error.message);
 	const stackLines = error.stack.split("\n");
 	const truncatedStack = stackLines.slice(0, 50).join("\n");
 	const reqBodyString = JSON.stringify(req.body);

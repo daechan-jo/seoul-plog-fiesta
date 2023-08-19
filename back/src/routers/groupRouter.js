@@ -37,11 +37,6 @@ groupRouter.get(
 	groupController.getGroupDetails,
 );
 
-//todo 삭제예정
-groupRouter.get("/group/random", groupController.getRandomGroups);
-groupRouter.get("/group/:groupname", groupController.searchGroupsByName);
-//
-
 groupRouter.post(
 	"/group/post/:groupid",
 	authenticateJWT,
@@ -66,14 +61,18 @@ groupRouter.get(
 	groupController.getRecentPosts,
 );
 
-//todo here
 groupRouter.put(
 	"/group/post/put/:postid",
 	authenticateJWT,
 	groupController.editPost,
 );
 
-groupRouter.delete(groupController.deletePost);
+//todo here
+groupRouter.delete(
+	"/group/post/delete/:postid",
+	authenticateJWT,
+	groupController.deletePost,
+);
 
 groupRouter.delete("/group/:groupid", groupController.leaveGroup);
 

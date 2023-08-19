@@ -248,37 +248,6 @@ const getMyGroups = async (userId) => {
 	}
 };
 
-const getRandomGroups = async () => {
-	try {
-		return await prisma.group.findMany({
-			take: 10,
-			orderBy: {
-				id: "desc",
-			},
-			include: {
-				manager: true,
-				GroupUser: true,
-			},
-		});
-	} catch (error) {
-		throw error;
-	}
-};
-
-const searchGroupsByName = async (groupName) => {
-	try {
-		return await prisma.group.findMany({
-			where: {
-				name: {
-					contains: groupName,
-				},
-			},
-		});
-	} catch (error) {
-		throw error;
-	}
-};
-
 const createPost = async (userId, groupId, title, content, isNotice) => {
 	try {
 		const groupUser = await groupUtils.getGroupUser(userId, groupId);
@@ -384,6 +353,7 @@ const editPost = async (postId, userId, postData) => {
 
 const deletePost = async (postId, userId) => {
 	try {
+		console.log(postId);
 		const post = await prisma.post.findUnique({
 			where: {
 				id: postId,
@@ -525,8 +495,6 @@ module.exports = {
 	requestToJoinGroup,
 	acceptRegistration,
 	getMyGroups,
-	getRandomGroups,
-	searchGroupsByName,
 	createPost,
 	getAllPosts,
 	getPostById,
