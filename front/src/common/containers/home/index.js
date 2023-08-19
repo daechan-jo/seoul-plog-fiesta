@@ -1,15 +1,38 @@
+import { useEffect, useState } from 'react';
 import Map from '../../components/home/Map';
 import MyGroup from '../../components/home/MyGroup';
 import MyUser from '../../components/home/MyUser';
+import * as Api from '../../../api';
 
 const HomeContainer = () => {
+  const [map, setMap] = useState(null);
+  const [groups, setGroups] = useState(mockupGroup);
+  const [users, setUsers] = useState(mockupUser);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const resMap = await Api.get('/auth');
+        const resGroups = await Api.get('/group/recent/posts');
+        const resUsers = await Api.get('/user/recent/posts');
+        //setMap(resMap);
+        //setGroups(resGroups);
+        //setUsers(resUsers);
+      } catch (err) {
+        console.log('데이터를 불러오는데 실패.', err);
+      }
+    };
+    console.log('데이터가져오기');
+    getData();
+  }, []);
+
   return (
     <main>
       <div className="threeContainer">
         <Map />
         <div className="box">
-          <MyGroup />
-          <MyUser />
+          <MyGroup datas={groups} />
+          <MyUser datas={users} />
         </div>
       </div>
     </main>

@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PageNav from '../../components/common/PageNav';
 import ItemList from '../../components/network/ItemList';
+import * as Api from '../../../api';
 
 const MyNetworkContainer = () => {
   //현재 페이지의 Nav 정적값을 결정함
   const lists = ['groups', 'users'];
   //Nav 값에 따른 view를 설정함
   const [view, setView] = useState('group');
+  const [datas, setDatas] = useState();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -21,8 +23,17 @@ const MyNetworkContainer = () => {
   };
   //view가 변경되면 새로 렌더링
   useEffect(() => {
+    const getData = async (view) => {
+      try {
+        const res = await Api.get(`/${view}/my${view}`);
+        //setDatas(res);
+      } catch (err) {
+        console.log('데이터를 불러오는데 실패.', err);
+      }
+    };
     if (queryView) {
       setView(queryView);
+      getData(queryView);
     }
   }, [queryView]);
 

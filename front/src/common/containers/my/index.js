@@ -1,15 +1,38 @@
 import MyInfo from '../../components/my/MyInfo';
 import MyGroups from '../../components/my/MyGroups';
 import MyUsers from '../../components/my/MyUsers';
+import { useEffect, useState } from 'react';
+import * as Api from '../../../api';
 
 const MyContainer = () => {
+  const [myInfo, setMyInfo] = useState(mockmyInfo);
+  const [myGroups, setMyGroups] = useState(mockupGroup);
+  const [myUsers, setMyUsers] = useState();
+
+  useEffect(() => {
+    const getDatas = async () => {
+      try {
+        const resMyInfo = await Api.get('');
+        const resMyGroups = await Api.get('');
+        const resMyUsers = await Api.get('');
+        //setMyInfo(resMyInfo)
+        //setMyGroups(resMyGroups)
+        //setMyUsers(resMyUsers)
+      } catch (err) {
+        console.log('데이터를 불러오는데 실패.', err);
+      }
+    };
+    console.log('데이터가져오기');
+    getDatas();
+  }, []);
+
   return (
     <main>
       <div className="threeContainer">
         <MyInfo data={myInfo} />
         <div className="box">
-          <MyGroups datas={mockupGroup} />
-          <MyUsers />
+          <MyGroups datas={myGroups} />
+          <MyUsers datas={myUsers} />
         </div>
       </div>
     </main>
@@ -18,7 +41,7 @@ const MyContainer = () => {
 
 export default MyContainer;
 
-const myInfo = {
+const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
   name: '이름',
   nickname: '별명',
