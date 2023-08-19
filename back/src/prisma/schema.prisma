@@ -45,6 +45,7 @@ model User {
 	posts         Post[]
 	comments      Comment[]
 	profileImage   UserProfileImage?
+	certPosts certPost[]
 }
 
 model UserProfileImage {
@@ -108,6 +109,8 @@ model Comment {
 	writerId  Int
 	post      Post     @relation(fields: [postId], references: [id])
 	postId    Int
+	certPost  certPost? @relation(fields: [certPostId], references: [id])
+	certPostId Int?
 	content   String
 	createdAt DateTime @default(now())
 }
@@ -117,4 +120,25 @@ model PostImage {
 	imageUrl String
 	post Post @relation(fields: [postId], references: [id])
 	postId Int
+}
+
+
+model certPost {
+	id        Int              @id @default(autoincrement())
+	writer    User             @relation(fields: [writerId], references: [id])
+	writerId  Int
+	title     String
+	borough  String
+	distance  Float
+	content   String
+	createdAt DateTime         @default(now())
+	comments      Comment[]
+	images    certPostImage[]
+}
+
+model certPostImage {
+	id           Int          @id @default(autoincrement())
+	imageUrl     String
+	certPost certPost @relation(fields: [certPostId], references: [id])
+	certPostId Int
 }
