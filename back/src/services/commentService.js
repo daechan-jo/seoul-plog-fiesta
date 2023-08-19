@@ -14,7 +14,6 @@ const createComment = async (
 		},
 		content,
 	};
-
 	if (isCertPost) {
 		const certPostExists = await prisma.certPost.findUnique({
 			where: { id: postId },
@@ -22,7 +21,6 @@ const createComment = async (
 		if (!certPostExists) {
 			throw new Error("Cert post not found");
 		}
-
 		commentData.certPost = {
 			connect: { id: postId },
 		};
@@ -33,24 +31,19 @@ const createComment = async (
 		if (!postExists) {
 			throw new Error("Post not found");
 		}
-
 		commentData.post = {
 			connect: { id: postId },
 		};
 	}
-
 	if (parentId !== undefined && parentId !== null) {
 		commentData.parent = {
 			connect: { id: parentId },
 		};
 	}
-
 	try {
-		const newComment = await prisma.comment.create({
+		return await prisma.comment.create({
 			data: commentData,
 		});
-
-		return newComment;
 	} catch (error) {
 		throw error;
 	}
