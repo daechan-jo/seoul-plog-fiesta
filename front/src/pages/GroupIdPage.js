@@ -1,13 +1,13 @@
 import { useParams } from 'react-router-dom';
 import Layout from './Layout';
+import GroupIdContainer from '../common/containers/groupId';
 
 const GroupIdPage = () => {
-  const params = useParams();
+  const { groupId } = useParams();
 
   return (
     <Layout>
-      <div>유저의 개인페이지</div>
-      <div>{params.groupId}</div>
+      <GroupIdContainer id={groupId} />
     </Layout>
   );
 };
