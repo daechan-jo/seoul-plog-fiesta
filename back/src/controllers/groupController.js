@@ -233,10 +233,11 @@ const deletePost = async (req, res, next) => {
 			if (!(groupUser && groupUser.isAdmin))
 				return res.status(403).json({ message: "권한 없음" });
 		}
-		//todo promise.all 을 사용할 수 있지 않을까?
-		await commentService.deleteCommentsByPostId(postId);
-		await imageService.deleteImagesByPostId(postId);
-		await groupService.deletePost(postId, userId);
+		await Promise.all([
+			commentService.deleteCommentsByPostId(postId),
+			imageService.deleteImagesByPostId(postId),
+			groupService.deletePost(postId, userId),
+		]);
 		res.status(200).json({ message: `게시글 삭제 : ${postId}` });
 	} catch (error) {
 		console.error(error);
@@ -252,9 +253,11 @@ const leaveGroup = async (req, res, next) => {
 
 	try {
 		const isMember = await groupUtils.isUserGroupMember(userId, groupId);
+		console.log(isMember);
 		if (!isMember)
 			return res.status(400).json({ message: "가입되지 않은 그룹" });
-
+		if (isMember.isAdmin === true)
+			return res.status(400).json({ message: "관리자는 탈퇴할 수 없음" });
 		await groupService.leaveGroup(userId, groupId);
 		res.status(200).json({ message: `그룹 탈퇴 : ${groupId}` });
 	} catch (error) {

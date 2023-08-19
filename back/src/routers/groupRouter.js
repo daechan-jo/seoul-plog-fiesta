@@ -67,17 +67,21 @@ groupRouter.put(
 	groupController.editPost,
 );
 
-//todo here
 groupRouter.delete(
 	"/group/post/delete/:postid",
 	authenticateJWT,
 	groupController.deletePost,
 );
 
-groupRouter.delete("/group/:groupid", groupController.leaveGroup);
-
 groupRouter.delete(
-	"/group/:groupid/:userid",
+	"/group/:groupid",
+	authenticateJWT,
+	groupController.leaveGroup,
+);
+
+//todo here
+groupRouter.delete(
+	"/group/expulse/:groupid/:userid",
 	groupController.removeGroupMember,
 );
 

@@ -14,7 +14,7 @@ const isUserGroupAdmin = async (userId, groupId) => {
 };
 
 const isUserGroupMember = async (userId, groupId) => {
-	const groupUser = await prisma.groupUser.findUnique({
+	return prisma.groupUser.findUnique({
 		where: {
 			userId_groupId: {
 				userId: userId,
@@ -22,8 +22,6 @@ const isUserGroupMember = async (userId, groupId) => {
 			},
 		},
 	});
-
-	return !!groupUser;
 };
 
 const getGroupUser = async (userId, groupId) => {
