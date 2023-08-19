@@ -500,6 +500,23 @@ const dropGroup = async (groupId) => {
 	}
 };
 
+const getGroupByPostId = async (postId) => {
+	return prisma.group.findFirst({
+		where: { post: { some: { id: postId } } },
+	});
+};
+
+const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
+	return prisma.groupUser.findUnique({
+		where: {
+			userId_groupId: {
+				userId: userId,
+				groupId: groupId,
+			},
+		},
+	});
+};
+
 module.exports = {
 	createGroup,
 	getALlGroups,
@@ -523,4 +540,6 @@ module.exports = {
 	rejectGroupJoinRequest,
 	getGroupJoinRequests,
 	getRecentPosts,
+	getGroupByPostId,
+	getGroupUserByUserIdAndGroupId,
 };

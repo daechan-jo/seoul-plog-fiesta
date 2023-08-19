@@ -1,5 +1,5 @@
 import commentService from "../services/commentService";
-
+import groupService from "../services/groupService";
 const createComment = async (req, res, next) => {
 	const postId = parseInt(req.params.postid);
 	const writerId = req.user.id;
@@ -45,4 +45,53 @@ const updateComment = async (req, res, next) => {
 	}
 };
 
-module.exports = { createComment, updateComment };
+const deleteComment = async (req, res, next) => {
+	try {
+		const commentId = parseInt(req.params.commentid);
+		const userId = req.user.id;
+		const comment = await commentService.getCommentById(commentId);
+
+		if (!comment) return res.status(404).json({ error: "댓글 없음" });
+		if (comment.writerId !== userId) {
+			const group = await groupService.getGroupByPostId(comment.postId);
+			//todo 인증게시판 로직
+			// const certPost = await certPostService.getCertPostByCommentId(
+			// 	commentId,
+			// );
+			// 인증게시판 서비스 로직에 들어갈꺼
+			//getCertPostByCommentId = async (commentId) => {
+			//     return await prisma.certPost.findFirst({
+			//         where: { comments: { some: { id: commentId } } },
+			//     });
+			// };
+			if (group) {
+				const groupUser =
+					await groupService.getGroupUserByUserIdAndGroupId(
+						userId,
+						group.id,
+					);
+				if (!(groupUser && groupUser.isAdmin)) {
+					return res.status(403).json({
+						error: "작성자 또는 그룹관리자만 삭제 가능",
+					});
+				}
+			} /*else if (certPost) {
+				나중에 인증게시판 구현되면 추가
+			} */ else {
+				return res.status(404).json({
+					error: "찾을 수 없음",
+				});
+			}
+		}
+
+		await commentService.deleteComment(commentId);
+
+		res.json({ message: "댓글 삭제 성공" });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+module.exports = { createComment, updateComment, deleteComment };

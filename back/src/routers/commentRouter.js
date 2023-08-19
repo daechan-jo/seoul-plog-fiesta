@@ -15,4 +15,10 @@ commentRouter.put(
 	commentController.updateComment,
 );
 
+commentRouter.delete(
+	"/comment/:commentid",
+	authenticateJWT,
+	commentController.deleteComment,
+);
+
 module.exports = commentRouter;

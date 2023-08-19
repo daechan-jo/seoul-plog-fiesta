@@ -61,4 +61,13 @@ const updateComment = async (commentId, content) => {
 	});
 };
 
-module.exports = { createComment, getCommentById, updateComment };
+const deleteComment = async (commentId) => {
+	return prisma.comment.delete({ where: { id: commentId } });
+};
+
+module.exports = {
+	createComment,
+	getCommentById,
+	updateComment,
+	deleteComment,
+};
