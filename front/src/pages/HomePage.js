@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import HomeContainer from '../common/containers/home';
+import HomeContainer from '../containers/home';
 import Layout from './Layout';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';

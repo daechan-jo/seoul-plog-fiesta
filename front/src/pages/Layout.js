@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
-import Header from '../common/components/layout/Header';
-import Nav from '../common/components/layout/Nav';
-import Plogging from '../common/components/common/Plogging';
-import ErrorModal from '../common/components/common/ErrorModal';
+import Header from '../components/layout/Header';
+import Nav from '../components/layout/Nav';
+import Plogging from '../components/common/Plogging';
+import ErrorModal from '../components/common/ErrorModal';
+import { useRecoilState } from 'recoil';
+import { isErrorState } from '../features/recoilState';
 
 const Layout = ({ children }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isError, setIsError] = useState(true);
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  if (!isModalOpen) {
-    return (
-      <>
-        <Header isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-        <Nav />
-        {isError && <ErrorModal setIsError={setIsError} />}
-        {children}
-      </>
-    );
-  }
-  return <Plogging isOpen={isModalOpen} closeModal={closeModal} />;
+  const [isWriting, setIsWriting] = useState(false);
+  const [isError, setIsError] = useRecoilState(isErrorState);
+  return (
+    <>
+      <Header setIsWriting={setIsWriting} />
+      <Nav />
+      {isError && <ErrorModal />}
+      {isWriting && <Plogging setIsWriting={setIsWriting} />}
+      {children}
+    </>
+  );
 };
 
 export default Layout;

@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import IntroPage from './pages/IntroPage';
 import HomePage from './pages/HomePage';
-import MyNetworkPage from './pages/MyNetworkPage';
 import NetworkPage from './pages/NetworkPage';
 import RankingPage from './pages/RankingPage';
 import MyPage from './pages/MyPage';
@@ -19,12 +18,11 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegistePage />} />
       <Route path="/mypage" element={<MyPage />} />
-      <Route path="/mynetwork" element={<MyNetworkPage />} />
       <Route path="/network" element={<NetworkPage />} />
       <Route path="/ranking" element={<RankingPage />} />
       <Route path="/setpassword" element={<PasswordPage />} />
-      <Route path="/groups/:groupId" element={<GroupIdPage />} />
-      <Route path="/users/:userId" element={<UserIdPage />} />
+      <Route path="/group/:groupId" element={<GroupIdPage />} />
+      <Route path="/user/:userId" element={<UserIdPage />} />
       <Route path="*" element={<IntroPage />} />
     </Routes>
   );

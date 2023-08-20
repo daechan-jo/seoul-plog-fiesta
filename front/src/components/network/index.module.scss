@@ -1,0 +1,24 @@
+.itemContainer {
+  height: 100%;
+  display: flex;
+  padding: 20px;
+  background-color: #ededed;
+  border-radius: 15px;
+  justify-content: space-between;
+  gap: 20px;
+  img {
+    width: 200px;
+  }
+  .item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    label {
+      font-size: 17px;
+    }
+    div {
+      font-size: 20px;
+    }
+  }
+}

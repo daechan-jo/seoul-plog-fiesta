@@ -6,6 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ededed;
+  height: 100vh;
 }
 
 code {
@@ -13,14 +14,21 @@ code {
 }
 
 main {
-  padding-top: $headerHeight;
-  padding-left: $navWidth + 40px;
-  padding-right: 40px;
-  padding-bottom: 20px;
-  min-height: 100vh;
+  margin-left: $navWidth;
+  padding: 0 30px 30px 30px;
   display: flex;
   flex-direction: column;
-  position: relative;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+.fullVh {
+  height: 100vh;
+}
+
+.navVh {
+  height: 100vh;
 }
 
 .gContainer {
@@ -36,11 +44,6 @@ main {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    h1 {
-      font-size: 25px;
-      font-weight: 700;
-      margin: 20px 0 20px 0;
-    }
   }
   .contentContainer {
     width: 100%;
@@ -52,6 +55,7 @@ main {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 20px;
   }
   .contentMapContainer {
@@ -64,6 +68,12 @@ main {
     height: 100%;
     padding: 20px;
   }
+}
+.img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .gBtn {
@@ -88,6 +98,7 @@ main {
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 20px;
   }
 }
@@ -147,4 +158,57 @@ ul.pagination li a.active {
   width: 48px;
   height: 30px;
   color: #00821d;
+}
+
+.modal {
+  background-color: rgba(89, 89, 89, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  form {
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 40px;
+    background-color: white;
+    .container {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+    }
+    .img {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      .img-container {
+        width: 300px;
+        height: 300px;
+        background-color: gray;
+        img {
+          width: 300px;
+        }
+      }
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      div {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        gap: 20px;
+      }
+      textarea {
+        height: 150px;
+      }
+    }
+  }
 }

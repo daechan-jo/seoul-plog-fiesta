@@ -13,9 +13,21 @@ const get = async (endpoint, params = '') => {
 
 const post = async (endpoint, data) => {
   try {
-    console.log(`POST: ${endpoint}`);
+    console.log(`POST: ${process.env.REQUEST_URL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
-    const res = await instance.get(endpoint, data);
+    const res = await instance.post(endpoint, data);
+    return res;
+  } catch (err) {
+    console.error('POST ERROR', err);
+    throw err;
+  }
+};
+
+const registerPost = async (endpoint, data) => {
+  try {
+    console.log(`POST: ${process.env.REQUEST_URL}${endpoint}`);
+    console.log(`DATA: ${JSON.stringify(data)}`);
+    const res = await instance.post(endpoint, data);
     return res;
   } catch (err) {
     console.error('POST ERROR', err);
@@ -25,9 +37,9 @@ const post = async (endpoint, data) => {
 
 const postForm = async (endpoint, data) => {
   try {
-    console.log(`POST: /${endpoint}`);
+    console.log(`POST: ${process.env.REQUEST_URL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
-    const res = await formDataInstance.get(endpoint, data);
+    const res = await formDataInstance.post(endpoint, data);
     return res;
   } catch (err) {
     console.error('POST ERROR', err);
@@ -37,7 +49,7 @@ const postForm = async (endpoint, data) => {
 
 const put = async (endpoint, data) => {
   try {
-    console.log(`PUH: ${endpoint}`);
+    console.log(`PUH: ${process.env.REQUEST_URL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
     const filteredData = {};
     for (const key in data) {
@@ -56,7 +68,7 @@ const put = async (endpoint, data) => {
 
 const del = async (endpoint, params = '') => {
   try {
-    console.log(`DELTE: /${endpoint}/params`);
+    console.log(`DELTE: ${process.env.REQUEST_URL}${endpoint}/params`);
     const res = await instance.delete(endpoint + '/' + params);
     return res;
   } catch (err) {
@@ -64,4 +76,4 @@ const del = async (endpoint, params = '') => {
     throw err;
   }
 };
-export { get, post, postForm, put, del as delete };
+export { get, post, registerPost, postForm, put, del as delete };
