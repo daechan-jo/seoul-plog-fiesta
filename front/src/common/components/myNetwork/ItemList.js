@@ -2,7 +2,7 @@ import Item from '../network/Item';
 import Paging from './Pagenation';
 import { BiSearchAlt2 } from 'react-icons/bi';
 
-const ItemList = ({ datas }) => {
+const ItemList = ({ datas, view }) => {
   return (
     <div className="gContainer gList">
       <div className="titleContainer">
@@ -13,7 +13,7 @@ const ItemList = ({ datas }) => {
       </div>
       <div className="contentListContainer">
         {datas.map((data) => (
-          <Item data={data} />
+          <Item data={data} key={data.id} view={view} />
         ))}
       </div>
       <Paging />

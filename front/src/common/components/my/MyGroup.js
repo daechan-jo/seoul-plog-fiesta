@@ -7,7 +7,7 @@ const MyGroup = ({ data }) => {
     <div
       className={styles.myGroup}
       onClick={() => {
-        navigator(`/group/${data.id}`);
+        navigator(`/groups/${data.id}`);
       }}
     >
       <div className={styles.imgContainer}>

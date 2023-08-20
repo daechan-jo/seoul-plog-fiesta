@@ -23,7 +23,10 @@ const MyInfo = ({ data }) => {
         </div>
         <ul className={styles.info}>
           <div className={styles.imgContainer}>
-            <img src={data.imgUrl} alt="profile" />
+            <img
+              src={data.imgUrl || 'http://placekitten.com/200/200'}
+              alt="profile"
+            />
           </div>
           <li>
             <label>이메일</label>
