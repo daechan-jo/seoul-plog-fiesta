@@ -13,9 +13,12 @@ import loadRouter from "./routers/loadRouter";
 import commentRouter from "./routers/commentRouter";
 import { local, jwt } from "./config";
 const passport = require("passport");
+// import http from "http";
+// import { Server } from "socket.io";
 
 const app = express();
-
+// const server = http.createServer(app);
+// const io = new Server(server);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -41,4 +44,4 @@ process.on("SIGINT", async () => {
 	process.exit();
 });
 
-export { app };
+module.exports = { app };

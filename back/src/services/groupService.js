@@ -162,7 +162,7 @@ const acceptRegistration = async (managerId, groupId, userId) => {
 			where: {
 				userId_groupId: {
 					groupId: groupId,
-					userId: userId,
+					userId: managerId,
 				},
 			},
 			include: {

@@ -82,6 +82,7 @@ groupRouter.delete(
 //todo here
 groupRouter.delete(
 	"/group/expulse/:groupid/:userid",
+	authenticateJWT,
 	groupController.removeGroupMember,
 );
 

@@ -90,7 +90,6 @@ const acceptRegistration = async (req, res, next) => {
 			groupId,
 			userId,
 		);
-		// await groupService.acceptRegistration(groupId, userId);
 
 		res.status(200).json(acceptedRequest);
 	} catch (error) {
@@ -219,10 +218,9 @@ const editPost = async (req, res, next) => {
 
 /** @description 게시글 삭제 */
 const deletePost = async (req, res, next) => {
-	const postId = parseInt(req.params.postid);
-	const userId = req.user.id;
-
 	try {
+		const postId = parseInt(req.params.postid);
+		const userId = req.user.id;
 		const post = await groupService.getPostById(postId);
 		if (!post) return res.status(404).json({ message: "게시글 없음" });
 		if (post.writerId !== userId) {
@@ -233,12 +231,13 @@ const deletePost = async (req, res, next) => {
 			if (!(groupUser && groupUser.isAdmin))
 				return res.status(403).json({ message: "권한 없음" });
 		}
+		//todo 삭제진행을 알리고 삭제 후 소켓io?를 통해 상황 알리기
 		await Promise.all([
 			commentService.deleteCommentsByPostId(postId),
 			imageService.deleteImagesByPostId(postId),
 			groupService.deletePost(postId, userId),
 		]);
-		res.status(200).json({ message: `게시글 삭제 : ${postId}` });
+		res.status(202).json({ message: `게시글 삭제 : ${postId}` });
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -279,7 +278,7 @@ const removeGroupMember = async (req, res, next) => {
 
 		const isRemoved = await groupService.removeGroupMember(userId, groupId);
 		if (isRemoved) {
-			res.status(200).json({ message: `그룹원 강퇴 : ${userId}` });
+			res.status(200).json({ message: `그룹원 추방 : ${userId}` });
 		} else {
 			res.status(404).json({ message: "그룹원 없음" });
 		}

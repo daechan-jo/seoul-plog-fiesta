@@ -37,7 +37,6 @@ model User {
 	password      String
 	about         String?
 	activity      String?
-	authCount     Int          @default(0)
 	friendshipsA  Friendship[] @relation("UserFriendshipsA")
 	friendshipsB  Friendship[] @relation("UserFriendshipsB")
 	groups        GroupUser[]
