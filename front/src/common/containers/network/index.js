@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PageNav from '../../components/common/PageNav';
 import ItemList from '../../components/network/ItemList';
 import * as Api from '../../../api';
+import GroupMaking from '../../components/network/GroupMaking';
 
 const MyNetworkContainer = () => {
   //현재 페이지의 Nav 정적값을 결정함

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import * as Api from '../../../api';
+
 const Register = () => {
   const navigate = useNavigate();
 
@@ -47,12 +48,13 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid) {
+      alert('입력값을 다시 확인해주세요');
       setUserData((prevData) => ({
         ...prevData,
         password: '',
         confirmPassword: '',
       }));
-      return alert('입력값을 다시 확인해주세요');
+      return;
     }
 
     try {

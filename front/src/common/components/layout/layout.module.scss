@@ -5,12 +5,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1;
   position: fixed;
   top: 0;
   left: $navWidth;
   right: 0;
   padding: 40px 60px;
+  background-color: #ededed;
   .logoContainer {
     width: 10%;
     display: flex;
@@ -31,7 +31,6 @@
   width: $navWidth;
   height: 100%;
   position: fixed;
-  z-index: 1;
   top: 0;
   left: 0;
   bottom: 0;

@@ -29,14 +29,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    Api.post('auth/login', {
+    /*
+    {
+    "message": "로그인 성공",
+    "user": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IuyasOuhnO2XrCIsImVtYWlsIjoiamFoNTEyQG5hdmVyLmNvbSIsImlhdCI6MTY5MjUxNDA5NywiZXhwIjoxNjkyNTI0ODk3LCJpc3MiOiJQaW5lYXBwbGUgUGl6emEifQ.Pr3ax-BZcfJq-rYTH15YF-Tk4DenyXZP_y8vo5OZF-w",
+        "email": "jah512@naver.com",
+        "nickname": "헬로우"
+    }
+}
+    */
+    await Api.post('auth/login', {
       email,
       password,
     })
       .then((res) => {
-        const token = res.data.token;
-        sessionStorage.setItem('userToken', token);
-        dispatch(login(res.data.data));
+        const { token, email, nickname } = res.data.user;
+        dispatch(login({ token, email, nickname }));
         navigate('/', { replace: true });
       })
       .catch((err) => {
