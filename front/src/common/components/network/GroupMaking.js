@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { seoulDistricts } from '../common/exportData';
 import { handleImgChange } from '../../../utils';
 
-const GroupMaking = ({ setIsModal }) => {
+const GroupMaking = ({ setIsModal, setDatas }) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -27,10 +27,11 @@ const GroupMaking = ({ setIsModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await Api.registerPost('/group', formData);
+      const res = await Api.registerPost('/group', formData);
+      setDatas((datas) => [...datas, res]);
       setIsModal(false);
     } catch (err) {
-      console.log('회원가입에 실패하였습니다.', err);
+      console.log('그룹 생성에 실패하였습니다.', err);
     }
   };
 

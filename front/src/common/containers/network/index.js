@@ -10,7 +10,7 @@ const MyNetworkContainer = () => {
   const lists = ['group', 'user'];
   //Nav 값에 따른 view를 설정함
   const [view, setView] = useState('group');
-  const [datas, setDatas] = useState();
+  const [datas, setDatas] = useState([]);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -29,9 +29,14 @@ const MyNetworkContainer = () => {
     const getData = async (view) => {
       try {
         setIsFetching(true);
-        const res = await Api.get(`/${view}`);
-        console.log(res.data);
-        setDatas(res.data);
+
+        if (view === 'group') {
+          const res = await Api.get(`/${view}`);
+          setDatas(res.data);
+        } else {
+          const res = await Api.get(`/${view}s`);
+          setDatas(mockupUser);
+        }
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
       } finally {
@@ -41,7 +46,7 @@ const MyNetworkContainer = () => {
 
     setView(queryView || 'group');
     getData(queryView);
-  }, [queryView]);
+  }, [queryView, view]);
 
   if (isFetching) {
     return <div>로딩중</div>;
@@ -50,7 +55,7 @@ const MyNetworkContainer = () => {
   return (
     <main>
       <PageNav view={view} lists={lists} onViewChange={handleViewChange} />
-      <ItemList datas={datas} view={view} />
+      <ItemList datas={datas} view={view} setDatas={setDatas} />
     </main>
   );
 };

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
+import user_none from '../../../assets/user_none.png';
 
 const MyGroup = ({ data }) => {
   const navigator = useNavigate();
@@ -11,7 +12,7 @@ const MyGroup = ({ data }) => {
       }}
     >
       <div className={styles.imgContainer}>
-        <img src={data.imgUrl} alt="이미지" />
+        <img src={data.imgUrl || user_none} alt="이미지" />
       </div>
       <div>{data.name}</div>
       <div>{data.score}</div>

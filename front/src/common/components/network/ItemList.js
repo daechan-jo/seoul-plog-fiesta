@@ -2,15 +2,16 @@ import { useState } from 'react';
 import Item from './Item';
 import GroupMaking from './GroupMaking';
 
-const ItemList = ({ datas, view }) => {
+const ItemList = ({ datas, view, setDatas }) => {
   const [isModal, setIsModal] = useState(false);
 
-  if (!datas) {
+  if (datas === null) {
     return <div>로딩중</div>;
   }
+
   return (
     <div className="gContainer  gList">
-      {isModal && <GroupMaking setIsModal={setIsModal} />}
+      {isModal && <GroupMaking setIsModal={setIsModal} setDatas={setDatas} />}
       <div className="titleContainer">
         <h1>유저리스트</h1>
         <button

@@ -5,26 +5,37 @@ import { useEffect, useState } from 'react';
 import * as Api from '../../../api';
 
 const MyContainer = () => {
+  const [isFetching, setIsFetching] = useState(false);
   const [myInfo, setMyInfo] = useState(mockmyInfo);
-  const [myGroups, setMyGroups] = useState(mockupGroup);
+  const [myGroups, setMyGroups] = useState([]);
   const [myUsers, setMyUsers] = useState();
 
   useEffect(() => {
     const getDatas = async () => {
+      setIsFetching(true);
       try {
-        const resMyInfo = await Api.get('');
-        const resMyGroups = await Api.get('');
-        const resMyUsers = await Api.get('');
+        const [resInfo, resGroups, resUsers] = await Promise.all([
+          Api.get('/auth'),
+          Api.get('/group/mygroup'),
+          Api.get('/user/recent/posts'),
+        ]);
+
         //setMyInfo(resMyInfo)
-        //setMyGroups(resMyGroups)
+        setMyGroups(resGroups);
         //setMyUsers(resMyUsers)
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
+      } finally {
+        setIsFetching(false);
       }
     };
     console.log('데이터가져오기');
     getDatas();
   }, []);
+
+  if (isFetching) {
+    return <div>로딩중</div>;
+  }
 
   return (
     <main>
