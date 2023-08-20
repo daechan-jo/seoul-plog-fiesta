@@ -31,13 +31,13 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
       setDatas((datas) => [...datas, res]);
       setIsModal(false);
     } catch (err) {
-      console.log('그룹 생성에 실패하였습니다.', err);
+      console.log('에 실패하였습니다.', err);
     }
   };
 
   return (
     <div className="modal">
-      <form>
+      <form onSubmit={handleSubmit}>
         <h1>그룹생성</h1>
         <div className="container">
           <div className="img">
@@ -94,7 +94,7 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
             </div>
           </div>
         </div>
-        <button type="submit" onClick={handleSubmit} className="gBtn">
+        <button type="submit" className="gBtn">
           그룹 생성
         </button>
         <button

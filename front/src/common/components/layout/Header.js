@@ -3,11 +3,8 @@ import styles from './layout.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../features/user/userSlice';
 
-const Header = ({ isModalOpen, setIsModalOpen }) => {
+const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
   const user = useSelector((state) => state.user);
 
   const handleLogoutClick = () => {
@@ -21,7 +18,13 @@ const Header = ({ isModalOpen, setIsModalOpen }) => {
         <div>logo</div>
       </div>
       <nav className={styles.navContainer}>
-        <button onClick={openModal}>인증하러가기</button>
+        <button
+          onClick={() => {
+            setIsWriting(true);
+          }}
+        >
+          인증하러가기
+        </button>
         <Link to="/mypage">
           <button>마이 페이지</button>
         </Link>
