@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
+import user_none from '../../../assets/user_none.png';
 
 const Item = ({ data, view }) => {
   const navigator = useNavigate();
@@ -24,7 +25,7 @@ const Item = ({ data, view }) => {
       }}
     >
       <div key={data.id}>
-        <img src={data.imgUrl} alt={data.id} />
+        <img src={data.imgUrl || user_none} alt="그룹 이미지" />
       </div>
       <ul className={styles.item}>
         <li key={data.name}>

@@ -5,9 +5,11 @@ import { useNavigate } from 'react-router-dom';
 
 const NetworkPage = () => {
   const navigator = useNavigate();
+
   useEffect(() => {
-    navigator('/network?view=groups');
+    navigator('/network?view=group');
   }, [navigator]);
+
   return (
     <Layout>
       <NetworkContainer />

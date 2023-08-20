@@ -1,6 +1,6 @@
 import styles from './index.module.scss';
 import { useState } from 'react';
-
+import user_none from '../../../assets/user_none.png';
 /*
 const myInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -23,10 +23,7 @@ const MyInfo = ({ data }) => {
         </div>
         <ul className={styles.info}>
           <div className={styles.imgContainer}>
-            <img
-              src={data.imgUrl || 'http://placekitten.com/200/200'}
-              alt="profile"
-            />
+            <img src={data.imgUrl || user_none} alt="profile" />
           </div>
           <li>
             <label>이메일</label>

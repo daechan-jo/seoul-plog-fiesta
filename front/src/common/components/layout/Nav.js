@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { BiSolidHome } from 'react-icons/bi';
-import { FaUserFriends, FaAward } from 'react-icons/fa';
-import { BiSolidUserPlus } from 'react-icons/bi';
+import { FaUserFriends, FaAward, FaWalking } from 'react-icons/fa';
 import styles from './layout.module.scss';
 
 const Nav = () => {
@@ -9,9 +8,9 @@ const Nav = () => {
 
   const navItems = [
     { to: '/', icon: <BiSolidHome /> },
-    { to: '/mynetwork', icon: <FaUserFriends /> },
-    { to: '/network', icon: <BiSolidUserPlus /> },
+    { to: '/network', icon: <FaUserFriends /> },
     { to: '/ranking', icon: <FaAward /> },
+    { to: '/recommend', icon: <FaWalking /> },
   ];
 
   return (

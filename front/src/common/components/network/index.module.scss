@@ -2,10 +2,13 @@
   height: 100%;
   display: flex;
   padding: 20px;
-  border: 2px solid #ededed;
+  background-color: #ededed;
   border-radius: 15px;
   justify-content: space-between;
   gap: 20px;
+  img {
+    width: 200px;
+  }
   .item {
     width: 100%;
     display: flex;

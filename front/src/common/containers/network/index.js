@@ -3,17 +3,18 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PageNav from '../../components/common/PageNav';
 import ItemList from '../../components/network/ItemList';
 import * as Api from '../../../api';
-import GroupMaking from '../../components/network/GroupMaking';
 
 const MyNetworkContainer = () => {
+  const [isFetching, setIsFetching] = useState(false);
   //현재 페이지의 Nav 정적값을 결정함
-  const lists = ['groups', 'users'];
+  const lists = ['group', 'user'];
   //Nav 값에 따른 view를 설정함
   const [view, setView] = useState('group');
   const [datas, setDatas] = useState();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+
   // URL의 query에서 view를 가져옴
   const queryView = searchParams.get('view');
   const navigate = useNavigate();
@@ -22,29 +23,34 @@ const MyNetworkContainer = () => {
   const handleViewChange = (newView) => {
     navigate(`/network?view=${newView}`);
   };
+
   //view가 변경되면 새로 렌더링
   useEffect(() => {
     const getData = async (view) => {
       try {
-        const res = await Api.get(`/${view}/my${view}`);
-        //setDatas(res);
+        setIsFetching(true);
+        const res = await Api.get(`/${view}`);
+        console.log(res.data);
+        setDatas(res.data);
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
+      } finally {
+        setIsFetching(false);
       }
     };
-    if (queryView) {
-      setView(queryView);
-      getData(queryView);
-    }
+
+    setView(queryView || 'group');
+    getData(queryView);
   }, [queryView]);
+
+  if (isFetching) {
+    return <div>로딩중</div>;
+  }
 
   return (
     <main>
       <PageNav view={view} lists={lists} onViewChange={handleViewChange} />
-      <ItemList
-        datas={view === 'groups' ? mockupGroup : mockupUser}
-        view={view}
-      />
+      <ItemList datas={datas} view={view} />
     </main>
   );
 };

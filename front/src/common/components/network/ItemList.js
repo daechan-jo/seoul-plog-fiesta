@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import Paging from '../myNetwork/Pagenation';
 import Item from './Item';
 import GroupMaking from './GroupMaking';
 
 const ItemList = ({ datas, view }) => {
   const [isModal, setIsModal] = useState(false);
+
+  if (!datas) {
+    return <div>로딩중</div>;
+  }
   return (
     <div className="gContainer  gList">
       {isModal && <GroupMaking setIsModal={setIsModal} />}
@@ -20,11 +23,12 @@ const ItemList = ({ datas, view }) => {
         </button>
       </div>
       <div className="contentListContainer">
-        {datas.map((data) => (
-          <Item data={data} key={data.id} view={view} />
-        ))}
+        {datas?.length === 0 ? (
+          <div>데이터가 없습니다.</div>
+        ) : (
+          datas.map((data) => <Item data={data} key={data.id} view={view} />)
+        )}
       </div>
-      <Paging />
     </div>
   );
 };
