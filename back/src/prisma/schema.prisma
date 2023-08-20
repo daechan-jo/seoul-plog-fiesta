@@ -43,8 +43,8 @@ model User {
 	createdGroups Group[]
 	posts         Post[]
 	comments      Comment[]
-	profileImage   UserProfileImage?
-	certPosts certPost[]
+	profileImage  UserProfileImage?
+	certPosts			CertPost[]
 }
 
 model UserProfileImage {
@@ -55,16 +55,24 @@ model UserProfileImage {
 }
 
 model Group {
-	id        Int         @id @default(autoincrement())
-	name      String
-	manager   User        @relation(fields: [managerId], references: [id])
-	managerId Int
-	posts     Post[]
-	goal 		  String?
-	region 		String?
-	introduction String?
-	memberLimit  Int        @default(50)
-	GroupUser GroupUser[]
+	id        		Int         @id @default(autoincrement())
+	name      		String
+	manager   		User        @relation(fields: [managerId], references: [id])
+	managerId 		Int
+	posts     		Post[]
+	goal 		  		String?
+	region 				String?
+	introduction 	String?
+	memberLimit  	Int        @default(50)
+	GroupUser 		GroupUser[]
+	images 				GroupImage[]
+}
+
+model GroupImage {
+	id           Int          @id @default(autoincrement())
+	imageUrl     String
+	group 			 Group @relation(fields: [groupId], references: [id])
+	groupId 		 Int
 }
 
 model GroupUser {
@@ -101,6 +109,12 @@ model Post {
 	comments  Comment[]
 	images    PostImage[]
 }
+model PostImage {
+	id				  Int      @id @default(autoincrement())
+	imageUrl 		String
+	post 				Post @relation(fields: [postId], references: [id])
+	postId 			Int
+}
 
 model Comment {
 	id         Int       @id @default(autoincrement())
@@ -111,37 +125,32 @@ model Comment {
 	writerId   Int
 	post       Post?     @relation(fields: [postId], references: [id])
 	postId     Int?
-	certPost   certPost? @relation(fields: [certPostId], references: [id])
+	certPost   CertPost? @relation(fields: [certPostId], references: [id])
 	certPostId Int?
 	parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
 	parentId   Int?
 	children   Comment[] @relation("CommentToComment")
 }
 
-model PostImage {
-	id				 Int      @id @default(autoincrement())
-	imageUrl String
-	post Post @relation(fields: [postId], references: [id])
-	postId Int
+
+
+
+model CertPost {
+	id        	Int              @id @default(autoincrement())
+	writer    	User             @relation(fields: [writerId], references: [id])
+	writerId  	Int
+	title     	String
+	borough  		String
+	distance  	Float
+	content   	String
+	createdAt 	DateTime         @default(now())
+	comments    Comment[]
+	images    	CertPostImage[]
 }
 
-
-model certPost {
-	id        Int              @id @default(autoincrement())
-	writer    User             @relation(fields: [writerId], references: [id])
-	writerId  Int
-	title     String
-	borough  String
-	distance  Float
-	content   String
-	createdAt DateTime         @default(now())
-	comments      Comment[]
-	images    certPostImage[]
-}
-
-model certPostImage {
+model CertPostImage {
 	id           Int          @id @default(autoincrement())
 	imageUrl     String
-	certPost certPost @relation(fields: [certPostId], references: [id])
-	certPostId Int
+	certPost 		 CertPost @relation(fields: [certPostId], references: [id])
+	certPostId 	 Int
 }
