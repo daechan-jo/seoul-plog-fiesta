@@ -1,9 +1,17 @@
 import { Link } from 'react-router-dom';
 import styles from './layout.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../../features/user/userSlice';
 
 const Header = ({ isModalOpen, setIsModalOpen }) => {
+  const dispatch = useDispatch();
   const openModal = () => {
     setIsModalOpen(true);
+  };
+  const user = useSelector((state) => state.user);
+
+  const handleLogoutClick = () => {
+    dispatch(logout());
   };
 
   return (
@@ -17,9 +25,13 @@ const Header = ({ isModalOpen, setIsModalOpen }) => {
         <Link to="/mypage">
           <button>마이 페이지</button>
         </Link>
-        <Link to="/login">
-          <button>로그인</button>
-        </Link>
+        {user.email ? (
+          <button onClick={handleLogoutClick}>로그아웃</button>
+        ) : (
+          <Link to="/login">
+            <button>로그인</button>
+          </Link>
+        )}
       </nav>
     </header>
   );

@@ -4,10 +4,10 @@ import Layout from './Layout';
 import { useNavigate } from 'react-router-dom';
 
 const NetworkPage = () => {
-  const navigaor = useNavigate();
+  const navigator = useNavigate();
   useEffect(() => {
-    navigaor('/network?view=groups');
-  }, [navigaor]);
+    navigator('/network?view=groups');
+  }, [navigator]);
   return (
     <Layout>
       <NetworkContainer />

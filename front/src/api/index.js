@@ -13,8 +13,8 @@ const get = async (endpoint, params = '') => {
 
 const post = async (endpoint, data) => {
   try {
-    console.log(`POST: /${endpoint}`);
-    console.log(`DATA: ${data}`);
+    console.log(`POST: ${endpoint}`);
+    console.log(`DATA: ${JSON.stringify(data)}`);
     const res = await instance.get(endpoint, data);
     return res;
   } catch (err) {
@@ -26,7 +26,7 @@ const post = async (endpoint, data) => {
 const postForm = async (endpoint, data) => {
   try {
     console.log(`POST: /${endpoint}`);
-    console.log(`DATA: ${data}`);
+    console.log(`DATA: ${JSON.stringify(data)}`);
     const res = await formDataInstance.get(endpoint, data);
     return res;
   } catch (err) {
@@ -38,7 +38,7 @@ const postForm = async (endpoint, data) => {
 const put = async (endpoint, data) => {
   try {
     console.log(`PUH: ${endpoint}`);
-    console.log(`DATA: ${data}`);
+    console.log(`DATA: ${JSON.stringify(data)}`);
     const filteredData = {};
     for (const key in data) {
       if (data[key] !== '') {
