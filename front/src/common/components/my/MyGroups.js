@@ -9,7 +9,7 @@ const MyGroups = ({ datas }) => {
       </div>
       <div className={styles.shortBox}>
         {datas.map((data) => (
-          <MyGroup data={data} />
+          <MyGroup key={data.id} data={data} />
         ))}
       </div>
     </div>

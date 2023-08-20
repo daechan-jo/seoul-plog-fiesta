@@ -3,8 +3,11 @@ import Map from '../../components/home/Map';
 import MyGroup from '../../components/home/MyGroup';
 import MyUser from '../../components/home/MyUser';
 import * as Api from '../../../api';
+import PageNav from '../../components/common/PageNav';
 
 const HomeContainer = () => {
+  const lists = ['main', 'myposts'];
+
   const [map, setMap] = useState(null);
   const [groups, setGroups] = useState(mockupGroup);
   const [users, setUsers] = useState(mockupUser);
@@ -12,9 +15,11 @@ const HomeContainer = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const resMap = await Api.get('/auth');
-        const resGroups = await Api.get('/group/recent/posts');
-        const resUsers = await Api.get('/user/recent/posts');
+        const [resMap, resGroups, resUsers] = await Promise.all([
+          Api.get('/auth'),
+          Api.get('/group/recent/posts'),
+          Api.get('/user/recent/posts'),
+        ]);
         //setMap(resMap);
         //setGroups(resGroups);
         //setUsers(resUsers);
@@ -28,6 +33,7 @@ const HomeContainer = () => {
 
   return (
     <main>
+      <PageNav lists={lists} />
       <div className="threeContainer">
         <Map />
         <div className="box">

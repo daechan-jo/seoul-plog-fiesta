@@ -12,7 +12,7 @@ const IntroPage = () => {
     if (user.email) {
       navigate('/');
     }
-  });
+  }, [navigate, user]);
   return <IntroContainer />;
 };
 

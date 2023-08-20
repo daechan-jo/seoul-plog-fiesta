@@ -9,7 +9,7 @@ const ItemList = ({ datas, view }) => {
       </div>
       <div className="contentListContainer">
         {datas.map((data) => (
-          <Item data={data} view={view} />
+          <Item data={data} key={data.id} view={view} />
         ))}
       </div>
       <Paging />

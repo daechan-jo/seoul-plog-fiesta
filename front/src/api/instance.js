@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const baseURL = process.env.REQUEST_URL;
+
 export const instance = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL,
   timeout: 3000,
   headers: {
     'Content-Type': 'application/json',
@@ -10,7 +12,7 @@ export const instance = axios.create({
 });
 
 export const formDataInstance = axios.create({
-  baseURL: 'http://localhost:5001/',
+  baseURL,
   timeout: 3000,
   headers: {
     'Content-Type': 'multipart/form-data',

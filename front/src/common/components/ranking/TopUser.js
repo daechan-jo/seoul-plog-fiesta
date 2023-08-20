@@ -8,7 +8,7 @@ const TopUser = ({ datas }) => {
       </div>
       <div className="contentListContainer">
         {datas.map((data) => (
-          <Item data={data} />
+          <Item key={data.id} data={data} />
         ))}
       </div>
     </div>

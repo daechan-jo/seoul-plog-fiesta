@@ -12,9 +12,11 @@ const RankingContainer = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const resMap = await Api.get('/auth');
-        const resGroups = await Api.get('/group/mygroup');
-        const resUsers = await Api.get('/user/recent/posts');
+        const [resMap, resGroups, resUsers] = await Promise.all([
+          Api.get('/auth'),
+          Api.get('/group/recent/posts'),
+          Api.get('/user/recent/posts'),
+        ]);
         //setMap(resMap);
         //setTopGroups(resGroups);
         //setTopUsers(resUsers);

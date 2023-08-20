@@ -16,9 +16,11 @@ const UserIdContainer = ({ id }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const resInfo = await Api.get('/auth');
-        const resPosts = await Api.get('/group/mygroup');
-        const resUsers = await Api.get('/user/recent/posts');
+        const [resInfo, resPosts, resUsers] = await Promise.all([
+          Api.get('/auth'),
+          Api.get('/group/recent/posts'),
+          Api.get('/user/recent/posts'),
+        ]);
         //setInfo(resInfo);
         //setPosts(resPosts);
         //setUsers(resUsers);
