@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import geojson from '../../assets/seoul_municipalities_geo_simple.json';
+import * as Api from '../../api';
 
 const mockData = {
   gangnam: 8,
@@ -30,12 +31,42 @@ const mockData = {
   jungnang: 6,
 };
 
+const initialData = {
+  gangnam: 0,
+  gangdong: 0,
+  gangbuk: 0,
+  gangseo: 0,
+  gwanak: 0,
+  gwangjin: 0,
+  guro: 0,
+  geumcheon: 0,
+  nowon: 0,
+  dobong: 0,
+  dongdaemun: 0,
+  dongjak: 0,
+  mapo: 0,
+  seodaemun: 0,
+  seocho: 0,
+  seongdong: 0,
+  seongbuk: 0,
+  songpa: 0,
+  yangcheon: 9,
+  yeongdeungpo: 0,
+  yongsan: 0,
+  eunpyeong: 0,
+  jongno: 0,
+  jung: 0,
+  jungnang: 0,
+};
+
 const Map = () => {
+  const [data, setData] = useState(initialData);
+  const [isFetching, setIsFetching] = useState(false);
+
   // svg 요소에 지도를 그리기 위해 참조를 생성함
   const svgRef = useRef();
 
-  // 렌더링되었을 때 데이터를 불러와서 지도를 그림
-  useEffect(() => {
+  const createMap = useCallback(() => {
     // 현재 참조된 요소에 지도를 그리겠다고 선언함
     const svg = d3.select(svgRef.current);
 
@@ -61,11 +92,35 @@ const Map = () => {
         const districtName = d.properties.name_eng
           .replace(/-gu/g, '')
           .toLowerCase(); // 현재 geojson의 지역 이름을 조정함
-        return colorScale(mockData[districtName] || 0); // 지역구의 값에 따라서 색상을 결정함
+        return colorScale(data[districtName] || 0); // 지역구의 값에 따라서 색상을 결정함
       })
-      .style('stroke', 'white');
+      .style('stroke', '#000000');
+  }, [data]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        setIsFetching(true);
+        const res = await Api.get(``);
+      } catch (err) {
+        console.log('지도데이터를 불러오는데 실패.', err);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    getData();
   }, []);
 
+  useEffect(() => {
+    if (!isFetching) {
+      createMap();
+    }
+  }, [isFetching, createMap]);
+
+  if (isFetching) {
+    return <div>로딩중</div>;
+  }
   return <svg ref={svgRef} width={800} height={600}></svg>;
 };
 
