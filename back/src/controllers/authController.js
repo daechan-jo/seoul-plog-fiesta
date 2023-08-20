@@ -3,6 +3,8 @@ import authService from "../services/authService";
 const createUser = async (req, res, next) => {
 	const userData = req.body;
 	try {
+		if (userData.password !== userData.confirmPassword)
+			throw new Error("비밀번호 확인 불일치");
 		const user = await authService.createUser(userData);
 		res.status(201).json({ message: "유저 생성", user });
 	} catch (error) {
