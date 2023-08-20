@@ -291,19 +291,11 @@ const removeGroupMember = async (req, res, next) => {
 
 /** @description 그룹 폭⭐파️ */
 const dropGroup = async (req, res, next) => {
-	const managerId = req.user.id;
-	const groupId = parseInt(req.params.groupid);
-
 	try {
-		if (!(await groupUtils.isUserGroupAdmin(managerId, groupId)))
-			return res.status(403).json({ message: "권한 없음" });
-
-		const isDeleted = await groupService.dropGroup(groupId);
-		if (isDeleted) {
-			res.status(200).json({ message: `그룹 삭제 : ${groupId}` });
-		} else {
-			res.status(404).json({ message: "그룹 없음" });
-		}
+		const userId = req.user.id;
+		const groupId = parseInt(req.params.groupid);
+		await groupService.dropGroup(groupId, userId);
+		res.status(200).json({ message: "삭제 완료" });
 	} catch (error) {
 		console.error(error);
 		error.status = 500;

@@ -1,6 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const groupUtils = require("../utils/groupUtils");
+const fs = require("fs");
+const path = require("path");
 
 const createGroup = async (groupData, managerId) => {
 	const { name, goal, region, introduction } = groupData;
@@ -427,44 +429,34 @@ const removeGroupMember = async (userId, groupId) => {
 	}
 };
 
-const dropGroup = async (groupId) => {
+const dropGroup = async (groupId, userId) => {
 	try {
 		const group = await prisma.group.findUnique({
-			where: {
-				id: groupId,
-			},
-			include: {
-				posts: {
-					select: {
-						id: true,
+			where: { id: groupId },
+		});
+		if (!group) throw new Error("그룹이 존재하지 않음.");
+		if (group.managerId !== userId)
+			throw new Error("그룹 관리자만 그룹을 삭제 가능.");
+
+		const posts = await prisma.post.findMany({ where: { groupId } });
+		for (const post of posts) {
+			const postImages = await prisma.postImage.findMany({
+				where: { postId: post.id },
+			});
+			for (const postImage of postImages) {
+				fs.unlink(
+					path.join(__dirname, "..", "..", postImage.imageUrl),
+					(err) => {
+						if (err) console.error(err);
 					},
-				},
-			},
-		});
-		if (!group) throw new Error("존재하지 않는 그룹");
-		if (group.managerId !== userId) throw new Error("권한이 없음");
-
-		await prisma.groupUser.deleteMany({
-			where: {
-				groupId: groupId,
-			},
-		});
-
-		const postIds = group.posts.map((post) => post.id);
-		await prisma.post.deleteMany({
-			where: {
-				id: {
-					in: postIds,
-				},
-			},
-		});
-
-		await prisma.group.delete({
-			where: {
-				id: groupId,
-			},
-		});
-		return true;
+				);
+				await prisma.postImage.delete({ where: { id: postImage.id } });
+			}
+			await prisma.comment.deleteMany({ where: { postId: post.id } });
+			await prisma.post.delete({ where: { id: post.id } });
+		}
+		await prisma.groupUser.deleteMany({ where: { groupId } });
+		await prisma.group.delete({ where: { id: groupId } });
 	} catch (error) {
 		throw error;
 	}

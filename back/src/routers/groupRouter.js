@@ -86,6 +86,10 @@ groupRouter.delete(
 	groupController.removeGroupMember,
 );
 
-groupRouter.delete("/group/drop/:groupid", groupController.dropGroup);
+groupRouter.delete(
+	"/group/drop/:groupid",
+	authenticateJWT,
+	groupController.dropGroup,
+);
 
 module.exports = groupRouter;
