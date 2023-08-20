@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
-import user_none from '../../../assets/user_none.png';
+import user_none from '../../assets/user_none.png';
 
 const MyGroup = ({ data }) => {
   const navigator = useNavigate();

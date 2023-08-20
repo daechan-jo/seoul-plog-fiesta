@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import MyContainer from '../common/containers/my';
+import MyContainer from '../containers/my';
 import Layout from './Layout';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';

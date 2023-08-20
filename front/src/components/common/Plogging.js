@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { seoulDistricts } from './exportData';
 import styles from './index.module.scss';
 import Modal from 'react-modal';
-import { handleImgChange } from '../../../utils';
+import { handleImgChange } from '../../utils';
 
 Modal.setAppElement('#root');
 

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import Layout from './Layout';
-import UserIdContainer from '../common/containers/userId';
+import UserIdContainer from '../containers/userId';
 
 const UserIdPage = () => {
   const { userId } = useParams();

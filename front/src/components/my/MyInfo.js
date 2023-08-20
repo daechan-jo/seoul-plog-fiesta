@@ -1,6 +1,6 @@
 import styles from './index.module.scss';
 import { useState } from 'react';
-import user_none from '../../../assets/user_none.png';
+import user_none from '../../assets/user_none.png';
 /*
 const myInfo = {
   imgUrl: 'http://placekitten.com/200/200',

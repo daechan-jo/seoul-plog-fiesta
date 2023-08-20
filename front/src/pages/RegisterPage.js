@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { RegisterContainer } from '../common/containers/user';
+import { RegisterContainer } from '../containers/user';
 import Layout from './Layout';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

@@ -2,9 +2,9 @@ import styles from './user.module.scss';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
-import * as Api from '../../../api';
+import * as Api from '../../api';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../../features/user/userSlice';
+import { login } from '../../features/user/userSlice';
 
 const Login = () => {
   const navigate = useNavigate();

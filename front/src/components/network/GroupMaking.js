@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss';
-import * as Api from '../../../api';
+import * as Api from '../../api';
 import { useNavigate } from 'react-router-dom';
 import { seoulDistricts } from '../common/exportData';
-import { handleImgChange } from '../../../utils';
+import { handleImgChange } from '../../utils';
 
 const GroupMaking = ({ setIsModal, setDatas }) => {
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PageNav from '../../components/common/PageNav';
 import ItemList from '../../components/network/ItemList';
-import * as Api from '../../../api';
+import * as Api from '../../api';
 
 const MyNetworkContainer = () => {
   const [isFetching, setIsFetching] = useState(false);

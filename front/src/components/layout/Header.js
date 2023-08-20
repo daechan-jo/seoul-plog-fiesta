@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styles from './layout.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../../features/user/userSlice';
+import { logout } from '../../features/user/userSlice';
 
 const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();

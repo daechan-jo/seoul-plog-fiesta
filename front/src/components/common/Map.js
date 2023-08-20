@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import geojson from '../../../assets/seoul_municipalities_geo_simple.json';
+import geojson from '../../assets/seoul_municipalities_geo_simple.json';
 
 const mockData = {
   gangnam: 8,

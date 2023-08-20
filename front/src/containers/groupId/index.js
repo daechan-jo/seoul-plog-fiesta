@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import * as Api from '../../../api';
+import * as Api from '../../api';
 import Map from '../../components/common/Map';
 import GroupUsers from '../../components/groupId/Users';
 import GroupPosts from '../../components/groupId/Posts';

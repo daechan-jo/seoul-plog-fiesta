@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Map from '../../components/ranking/Map';
 import TopGroup from '../../components/ranking/TopGroup';
 import TopUser from '../../components/ranking/TopUser';
-import * as Api from '../../../api';
+import * as Api from '../../api';
 
 const RankingContainer = () => {
   const [map, setMap] = useState();

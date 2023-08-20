@@ -2,7 +2,7 @@ import MyInfo from '../../components/my/MyInfo';
 import MyGroups from '../../components/my/MyGroups';
 import MyUsers from '../../components/my/MyUsers';
 import { useEffect, useState } from 'react';
-import * as Api from '../../../api';
+import * as Api from '../../api';
 
 const MyContainer = () => {
   const [isFetching, setIsFetching] = useState(false);

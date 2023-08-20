@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Header from '../common/components/layout/Header';
-import Nav from '../common/components/layout/Nav';
-import Plogging from '../common/components/common/Plogging';
-import ErrorModal from '../common/components/common/ErrorModal';
+import Header from '../components/layout/Header';
+import Nav from '../components/layout/Nav';
+import Plogging from '../components/common/Plogging';
+import ErrorModal from '../components/common/ErrorModal';
 
 const Layout = ({ children }) => {
   const [isWriting, setIsWriting] = useState(false);
