@@ -21,11 +21,11 @@ uploadRouter.post(
 	uploadController.uploadPostImage,
 );
 
-// uploadRouter.post(
-// 	"/upload/groupimg/:groupid",
-// 	authenticateJWT,
-// 	upload.single("postImage"),
-// 	uploadController.uploadGroupImage,
-// );
+uploadRouter.post(
+	"/upload/groupimg/:groupid",
+	authenticateJWT,
+	upload.single("groupImage"),
+	uploadController.uploadGroupImage,
+);
 
 module.exports = uploadRouter;

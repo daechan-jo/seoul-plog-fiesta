@@ -7,6 +7,7 @@ import loadController from "../controllers/loadController";
 
 loadRouter.get(
 	"/profile/image",
+	express.static(path.join(__dirname, "uploads/images")),
 	authenticateJWT,
 	loadController.loadProfileImage,
 );
@@ -16,6 +17,13 @@ loadRouter.get(
 	express.static(path.join(__dirname, "uploads/images")),
 	authenticateJWT,
 	loadController.loadPostImage,
+);
+
+loadRouter.get(
+	"/groupimg/:groupid",
+	express.static(path.join(__dirname, "uploads/images")),
+	authenticateJWT,
+	loadController.loadGroupImage,
 );
 
 module.exports = loadRouter;
