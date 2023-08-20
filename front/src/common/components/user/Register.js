@@ -46,11 +46,20 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid) {
+      setUserData((prevData) => ({
+        ...prevData,
+        password: '',
+        confirmPassword: '',
+      }));
+      return alert('입력값을 다시 확인해주세요');
+    }
 
     try {
       // "user/register" 엔드포인트로 post요청함.
-      await Api.post('/auth', userData);
+      const res = await Api.registerPost('/auth', userData);
       // 로그인 페이지로 이동함.
+      alert(res);
       navigate('/login');
     } catch (err) {
       console.log('회원가입에 실패하였습니다.', err);
@@ -64,33 +73,6 @@ const Register = () => {
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
       <AiOutlineArrowLeft className={styles.arrowLeft} onClick={goBack} />
-      <input
-        className="name"
-        type="text"
-        name="name" // input 요소와 연결된 state의 이름을 지정
-        placeholder="이름"
-        value={userData.name} // value에 state 값 연결
-        onChange={handleInputChange} // input 변경 핸들러 호출
-      />
-      {!isNameValid && (
-        <div className={styles['error-message']}>
-          이름은 2글자 이상이어야 합니다.
-        </div>
-      )}
-      <label>닉네임</label>
-      <input
-        className="nickname"
-        type="text"
-        name="nickname"
-        placeholder="닉네임"
-        value={userData.nickname}
-        onChange={handleInputChange}
-      />
-      {!isNickNameValid && (
-        <div className={styles['error-message']}>
-          별명은 2글자 이상이어야 합니다.
-        </div>
-      )}
       <label>아이디</label>
       <input
         className="id"
@@ -128,6 +110,34 @@ const Register = () => {
         value={userData.confirmPassword}
         onChange={handleInputChange}
       />
+      <label>이름</label>
+      <input
+        className="name"
+        type="text"
+        name="name"
+        placeholder="이름"
+        value={userData.name}
+        onChange={handleInputChange}
+      />
+      {!isNameValid && (
+        <div className={styles['error-message']}>
+          이름은 2글자 이상이어야 합니다.
+        </div>
+      )}
+      <label>닉네임</label>
+      <input
+        className="nickname"
+        type="text"
+        name="nickname"
+        placeholder="닉네임"
+        value={userData.nickname}
+        onChange={handleInputChange}
+      />
+      {!isNickNameValid && (
+        <div className={styles['error-message']}>
+          별명은 2글자 이상이어야 합니다.
+        </div>
+      )}
       <button type="submit">회원가입</button>
     </form>
   );
