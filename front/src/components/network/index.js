@@ -45,6 +45,7 @@ const ItemList = ({ view }) => {
           datas.map((data) => <Item data={data} key={data.id} view={view} />)
         )}
       </div>
+      <div>페이지네이션자리</div>
     </div>
   );
 };

@@ -9,29 +9,6 @@ import PageNav from '../../components/common/PageNav';
 const GroupIdContainer = ({ id }) => {
   const lists = ['main', 'notice', 'posts', 'members'];
 
-  const [map, setMap] = useState(null);
-  const [posts, setPosts] = useState();
-  const [users, setUsers] = useState();
-
-  const [view, setView] = useState('main');
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const resMap = await Api.get('/auth');
-        const resPosts = await Api.get('/group/mygroup');
-        const resUsers = await Api.get('/user/recent/posts');
-        //setMap(resMap);
-        //setPosts(resPosts);
-        //setUsers(resUsers);
-      } catch (err) {
-        console.log('데이터를 불러오는데 실패.', err);
-      }
-    };
-    console.log('데이터가져오기');
-    getData();
-  }, []);
-
   return (
     <main>
       <PageNav lists={lists} />
@@ -39,7 +16,7 @@ const GroupIdContainer = ({ id }) => {
         <GroupMap />
         <div className="box">
           <GroupUsers />
-          <GroupPosts datas={users} />
+          <GroupPosts />
         </div>
       </div>
     </main>

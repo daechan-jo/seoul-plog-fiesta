@@ -18,6 +18,8 @@ main {
   padding: 0 30px 30px 30px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: 90vh;
 }
 
@@ -53,6 +55,7 @@ main {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 20px;
   }
   .contentMapContainer {
