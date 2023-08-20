@@ -1,0 +1,14 @@
+*.env
+.idea
+*.iml
+*.iws
+logs
+*./back/src/logs
+node_modules
+.env
+package-lock.json
+yarn.lock
+.editorconfig
+main.py
+migrations
+uploads
