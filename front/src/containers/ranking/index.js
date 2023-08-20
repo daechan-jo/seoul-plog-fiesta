@@ -30,7 +30,7 @@ const RankingContainer = () => {
 
   return (
     <main>
-      <div className="threeContainer">
+      <div className="threeContainer fullVh">
         <Map />
         <div className="box">
           <TopGroup datas={topGroups} />

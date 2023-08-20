@@ -19,7 +19,9 @@ const Nav = () => {
         {navItems.map((item) => (
           <Link
             to={item.to}
-            className={location.pathname === item.to ? styles.active : ''}
+            className={
+              location.pathname === item.to.split('?')[0] ? styles.active : ''
+            }
             key={item.to}
           >
             {item.icon}

@@ -1,6 +1,7 @@
+import React from 'react';
 import Map from '../common/Map';
 
-const rankingMap = () => {
+const RankingMap = () => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
@@ -13,4 +14,4 @@ const rankingMap = () => {
   );
 };
 
-export default rankingMap;
+export default React.memo(RankingMap);

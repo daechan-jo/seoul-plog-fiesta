@@ -33,7 +33,7 @@ const ItemList = ({ view }) => {
   }, [view]);
 
   return (
-    <div className="gContainer  gList">
+    <div className="gContainer  gList navVh">
       {isModal && <GroupMaking setIsModal={setIsModal} setDatas={setDatas} />}
       <NetworkHeader setIsModal={setIsModal} />
       <div className="contentListContainer">

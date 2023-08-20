@@ -39,7 +39,7 @@ const MyContainer = () => {
 
   return (
     <main>
-      <div className="threeContainer">
+      <div className="threeContainer fullVh">
         <MyInfo data={myInfo} />
         <div className="box">
           <MyGroups datas={myGroups} />

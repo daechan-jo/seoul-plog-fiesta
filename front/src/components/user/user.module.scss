@@ -48,20 +48,3 @@
     // align-items: center;
   }
 }
-
-//일단 대충 레이아웃 볼라고 body랑 메인은 갖고 왔ㅇ서요
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-main {
-  background-color: #d9d9d9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

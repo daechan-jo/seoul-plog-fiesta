@@ -15,12 +15,18 @@ code {
 
 main {
   margin-left: $navWidth;
-  padding: 0 30px;
+  padding: 0 30px 30px 30px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
   height: 90vh;
+}
+
+.fullVh {
+  height: 100vh;
+}
+
+.navVh {
+  height: 100vh;
 }
 
 .gContainer {
@@ -89,6 +95,7 @@ main {
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 20px;
   }
 }

@@ -34,7 +34,7 @@ const HomeContainer = () => {
   return (
     <main>
       <PageNav lists={lists} />
-      <div className="threeContainer">
+      <div className="threeContainer navVh">
         <Map />
         <div className="box">
           <MyGroup datas={groups} />
