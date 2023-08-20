@@ -4,8 +4,8 @@ const path = require("path");
 const fs = require("fs");
 
 const uploadProfileImage = async (req, res, next) => {
-	const userId = req.user.id;
 	try {
+		const userId = req.user.id;
 		const imageUrl = path.join("uploads/images", req.file.filename);
 		const existingImage = await prisma.userProfileImage.findUnique({
 			where: { userId },
@@ -26,6 +26,7 @@ const uploadProfileImage = async (req, res, next) => {
 				},
 			});
 		}
+		console.log("프로필 이미지 업로드 성공");
 		res.status(201).json({
 			message: "프로필 이미지 업로드 성공",
 		});
@@ -37,8 +38,8 @@ const uploadProfileImage = async (req, res, next) => {
 };
 
 const uploadPostImage = async (req, res, next) => {
-	const postId = parseInt(req.params.postid);
 	try {
+		const postId = parseInt(req.params.postid);
 		const imageUrl = path.join("uploads/images", req.file.filename);
 		const post = await prisma.post.findUnique({
 			where: { id: postId },
@@ -65,6 +66,7 @@ const uploadPostImage = async (req, res, next) => {
 				},
 			});
 		}
+		console.log("게시글 이미지 업로드 성공");
 		res.status(201).json({ message: "게시글 이미지 업로드 성공" });
 	} catch (error) {
 		console.error(error);

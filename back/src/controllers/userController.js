@@ -4,7 +4,7 @@ import userService from "../services/userService.js";
 // const getAllUsers = async ( req, res, next ) => {
 //     try{
 //         const users = await userService.getAllUsers();
-//         res.status(200).json({ message: "모든 유저", users });
+//         res.status(200).json(users);
 //     } catch (e) {
 //         console.error(e);
 //         error.status = 500;
@@ -16,7 +16,7 @@ import userService from "../services/userService.js";
 // const searchUsers = async (req, res, next) => {
 // 	try {
 // 		const users = await userService.searchUsers();
-// 		res.status(200).json({ message: "유저 검색 결과", users });
+// 		res.status(200).json(users);
 // 	} catch (error) {
 // 		console.error(error);
 // 		error.status = 500;
@@ -28,7 +28,7 @@ import userService from "../services/userService.js";
 const getRandomUsers = async (req, res, next) => {
 	try {
 		const randomUsers = await userService.getRandomUsers();
-		res.status(200).json({ message: "랜덤 유", randomUsers });
+		res.status(200).json(randomUsers);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -46,7 +46,7 @@ const currentUser = async (req, res, next) => {
 		if (currentUserInfo.erroMessage) {
 			throw new Error(currentUserInfo.errorMessage);
 		}
-		res.status(200).json({ message: "나의 상세 정보", currentUserInfo });
+		res.status(200).json(currentUserInfo);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -59,7 +59,7 @@ const getMyFriendship = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
 		const friendship = await userService.getMyFriendship(userId);
-		res.status(200).json({ message: "친구 리스트", friendship });
+		res.status(200).json(friendship);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -74,7 +74,7 @@ const deleteMyfriendship = async (req, res, next) => {
 		const deletedMyfriendship = await userService.deleteMyfriendship(
 			friendshipId,
 		);
-		res.status(204).json({ message: "친구삭제", deletedMyfriendship });
+		res.status(204).json(deletedMyfriendship);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;

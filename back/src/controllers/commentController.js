@@ -1,12 +1,14 @@
 import commentService from "../services/commentService";
 import groupService from "../services/groupService";
 const createComment = async (req, res, next) => {
-	const postId = parseInt(req.params.postid);
-	const writerId = req.user.id;
-	const content = req.body.content;
-	const parentId = req.body.parentId; // 대댓글인 경우
-	const isCertPost = req.query.post === "false" || req.query.post === "False";
 	try {
+		const postId = parseInt(req.params.postid);
+		const writerId = req.user.id;
+		const content = req.body.content;
+		const parentId = req.body.parentId; // 대댓글인 경우
+		const isCertPost =
+			req.query.post === "false" || req.query.post === "False";
+
 		const newComment = await commentService.createComment(
 			postId,
 			writerId,
@@ -14,6 +16,7 @@ const createComment = async (req, res, next) => {
 			parentId !== undefined ? parentId : null,
 			isCertPost,
 		);
+		console.log(newComment);
 		res.status(201).json(newComment);
 	} catch (error) {
 		console.error(error);
@@ -37,6 +40,7 @@ const updateComment = async (req, res, next) => {
 			commentId,
 			content,
 		);
+		console.log(updatedComment);
 		res.json(updatedComment);
 	} catch (error) {
 		console.error(error);
@@ -85,7 +89,7 @@ const deleteComment = async (req, res, next) => {
 		}
 
 		await commentService.deleteComment(commentId);
-
+		console.log("댓글 삭제 성공");
 		res.json({ message: "댓글 삭제 성공" });
 	} catch (error) {
 		console.error(error);
