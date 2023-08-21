@@ -56,13 +56,13 @@ model UserProfileImage {
 
 model Group {
 	id            Int            @id @default(autoincrement())
-	name          String
+	name          String         @db.VarChar(50)
 	manager       User           @relation(fields: [managerId], references: [id])
 	managerId     Int
 	posts         Post[]
-	goal          String?
-	region        String?
-	introduction  String?
+	goal          String?				 @db.VarChar(1000)
+	region        String?				 @db.VarChar(1000)
+	introduction  String?				 @db.VarChar(1000)
 	memberLimit   Int            @default(50)
 	GroupUser     GroupUser[]
 	images        GroupImage[]
@@ -105,8 +105,8 @@ model Post {
 	writerId  Int
 	group     Group     @relation(fields: [groupId], references: [id])
 	groupId   Int
-	title     String
-	content   String
+	title     String		@db.VarChar(50)
+	content   String		@db.VarChar(1000)
 	isNotice  Boolean   @default(false)
 	createdAt DateTime  @default(now())
 	comments  Comment[]
