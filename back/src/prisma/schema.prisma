@@ -45,6 +45,8 @@ model User {
 	comments      Comment[]
 	profileImage  UserProfileImage?
 	certPosts			CertPost[]
+	chatRooms 		ChatRoom[] @relation("UserChatRooms")
+	messages 			Message[]
 }
 
 model UserProfileImage {
@@ -52,6 +54,22 @@ model UserProfileImage {
 	imageUrl   String
 	user       User     @relation(fields: [userId], references: [id])
 	userId     Int      @unique
+}
+
+model ChatRoom {
+	id    String @id @default(uuid())
+	users User[] @relation("UserChatRooms")
+	messages Message[]
+}
+
+model Message {
+	id        String   @id @default(uuid())
+	content   String
+	createdAt DateTime @default(now())
+	chatRoom  ChatRoom @relation(fields: [chatRoomId], references: [id])
+	chatRoomId String
+	sender    User     @relation(fields: [senderId], references: [id])
+	senderId  Int
 }
 
 model Group {
