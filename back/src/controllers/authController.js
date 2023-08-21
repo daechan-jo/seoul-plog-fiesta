@@ -1,6 +1,7 @@
 import authService from "../services/authService";
 import smtpTransport from "../config/sendEmail";
 import randomPassword from "../utils/randomPassword";
+import { text } from "express";
 
 const createUser = async (req, res, next) => {
 	try {
@@ -62,7 +63,7 @@ const findPasswordByEmail = async(req, res, next) =>{
 
 		//해당 유저의 비밀번호를 임시 비밀번호로 변경
 		const user = authService.changePassword(email, password);
-		console.log(user);
+		res.status(200).json(user); //빈 응답
 
 	} catch(error){
 		console.error(error);
