@@ -59,7 +59,7 @@ const initialData = {
   jungnang: 0,
 };
 
-const Map = () => {
+const Map = ({ endpoint }) => {
   const [data, setData] = useState(initialData);
   const [isFetching, setIsFetching] = useState(false);
 

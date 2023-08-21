@@ -6,44 +6,14 @@ import * as Api from '../../api';
 
 const MyContainer = () => {
   const [isFetching, setIsFetching] = useState(false);
-  const [myInfo, setMyInfo] = useState(mockmyInfo);
-  const [myGroups, setMyGroups] = useState([]);
-  const [myUsers, setMyUsers] = useState();
-
-  useEffect(() => {
-    const getDatas = async () => {
-      setIsFetching(true);
-      try {
-        const [resInfo, resGroups, resUsers] = await Promise.all([
-          Api.get('/auth'),
-          Api.get('/group/mygroup'),
-          Api.get('/user/recent/posts'),
-        ]);
-
-        //setMyInfo(resMyInfo)
-        setMyGroups(resGroups);
-        //setMyUsers(resMyUsers)
-      } catch (err) {
-        console.log('데이터를 불러오는데 실패.', err);
-      } finally {
-        setIsFetching(false);
-      }
-    };
-    console.log('데이터가져오기');
-    getDatas();
-  }, []);
-
-  if (isFetching) {
-    return <div>로딩중</div>;
-  }
 
   return (
     <main>
       <div className="threeContainer fullVh">
-        <MyInfo data={myInfo} />
+        <MyInfo />
         <div className="box">
-          <MyGroups datas={myGroups} />
-          <MyUsers datas={myUsers} />
+          <MyGroups datas={mockupGroup} />
+          <MyUsers datas={mockupGroup} />
         </div>
       </div>
     </main>

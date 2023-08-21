@@ -41,7 +41,7 @@ const MessageList = ({ view }) => {
   );
 };
 
-export default React.memo(MessageList);
+export default MessageList;
 
 const Item = ({ data, view }) => {
   const navigator = useNavigate();

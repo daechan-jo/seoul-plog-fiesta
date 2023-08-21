@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Map from '../common/Map';
 
 const HomeMap = () => {
@@ -8,10 +8,10 @@ const HomeMap = () => {
         <h1>나의 플로깅 지도</h1>
       </div>
       <div className="contentMapContainer">
-        <Map />
+        <Map endpoint="params" />
       </div>
     </div>
   );
 };
 
-export default React.memo(HomeMap);
+export default HomeMap;

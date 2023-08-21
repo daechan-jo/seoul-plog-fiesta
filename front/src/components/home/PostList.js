@@ -41,7 +41,7 @@ const PostList = ({ view }) => {
   );
 };
 
-export default React.memo(PostList);
+export default PostList;
 
 const Item = ({ data, view }) => {
   const navigator = useNavigate();

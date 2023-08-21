@@ -42,7 +42,7 @@ const MyGroup = () => {
   );
 };
 
-export default React.memo(MyGroup);
+export default MyGroup;
 
 const Item = ({ data }) => {
   return (
