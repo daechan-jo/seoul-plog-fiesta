@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
+import randomPassword from "../utils/randomPassword";
 
 const createUser = async (userData) => {
 	const { name, nickname, email, password } = userData;
@@ -44,4 +45,18 @@ const getUserByEmail = async (email) => {
 	if (!existingUser) throw new Error("존재하지 않는 사용자입니다.")
 	return existingUser;
 };
-module.exports = { createUser, getUserByEmail };
+
+const changePassword = async (email,password) => { //비밀번호 변경
+	console.log(email, password);
+	const hashedPassword = await bcrypt.hash(password, 10);
+	const updateUser = await prisma.user.update({
+		where:{
+			email: email,
+		},
+		data:{
+			password: hashedPassword,
+		}
+	})
+	return updateUser;
+}
+module.exports = { createUser, getUserByEmail, changePassword };

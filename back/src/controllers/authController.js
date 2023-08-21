@@ -36,8 +36,9 @@ const login = async (req, res, next) => {
 const findPasswordByEmail = async(req, res, next) =>{
 	try {
 		const email = req.body.email;
-		const existingUser = await authService.getUserByEmail(email)
-		console.log(existingUser);
+		const existingUser = await authService.getUserByEmail(email);
+		const password = randomPassword.createRandomPassword();
+		//console.log(existingUser);
 
 		const emailOptions = {
 			from: "qweasdzxc0210@naver.com",
@@ -45,7 +46,7 @@ const findPasswordByEmail = async(req, res, next) =>{
 			subject: "임시 비밀번호를 알려드립니다.",
 			html:
 			"<h1>파인애플피자에서 새로운 비밀번호를 알려드립니다.</h1>"+
-			"<h2>임시 비밀번호는 "+ randomPassword.createRandomPassword() +"입니다.</h2>"+
+			"<h2>임시 비밀번호는 "+ password +"입니다.</h2>"+
 			'<h3 style="color:crimson;">임시 비밀번호로 로그인 하신 후, 비밀번호를 수정해주세요.</h3>'+
 			'<img src="http://file3.instiz.net/data/cached_img/upload/2021/10/01/11/fcd74ebb3fc06be634475b93911b0a7f.jpg">'
 		};
@@ -58,11 +59,17 @@ const findPasswordByEmail = async(req, res, next) =>{
 				smtpTransport.close();
 			}
 		})
+
+		//해당 유저의 비밀번호를 임시 비밀번호로 변경
+		const user = authService.changePassword(email, password);
+		console.log(user);
+
 	} catch(error){
 		console.error(error);
 		error.status= 500;
 		next(error);
 	}
-
 }
+
+
 module.exports = { createUser, login , findPasswordByEmail};
