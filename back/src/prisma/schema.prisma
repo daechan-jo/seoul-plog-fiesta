@@ -107,7 +107,7 @@ model Post {
 	groupId   Int
 	title     String
 	content   String
-	isNotice  Boolean
+	isNotice  Boolean   @default(false)
 	createdAt DateTime  @default(now())
 	comments  Comment[]
 	images    PostImage[]

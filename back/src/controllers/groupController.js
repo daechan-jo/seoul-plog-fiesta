@@ -3,7 +3,6 @@ import commentService from "../services/commentService.js";
 import imageService from "../services/imageService.js";
 const groupUtils = require("../utils/groupUtils");
 
-/** @description 그룹 생성 */
 const createGroup = async (req, res, next) => {
 	try {
 		const groupData = req.body;
@@ -19,7 +18,6 @@ const createGroup = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 전체 리스트 */
 const getAllGroups = async (req, res, next) => {
 	try {
 		const groups = await groupService.getALlGroups();
@@ -32,7 +30,6 @@ const getAllGroups = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 상세 정보 */
 const getGroupDetails = async (req, res, next) => {
 	try {
 		const groupId = parseInt(req.params.groupid);
@@ -47,7 +44,6 @@ const getGroupDetails = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 가입 신청 */
 const requestToJoinGroup = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
@@ -70,7 +66,6 @@ const requestToJoinGroup = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 가입 신청 목록 */
 const getGroupJoinRequests = async (req, res, next) => {
 	try {
 		const managerId = req.user.id;
@@ -86,7 +81,6 @@ const getGroupJoinRequests = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 가입 신청 승인 */
 const acceptRegistration = async (req, res, next) => {
 	try {
 		const managerId = req.user.id;
@@ -106,7 +100,6 @@ const acceptRegistration = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 가입 신청 거절 */
 const rejectGroupJoinRequest = async (req, res, next) => {
 	try {
 		const userId = parseInt(req.params.userid);
@@ -131,7 +124,6 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 	}
 };
 
-/** @description 나의 그룹 리스트 */
 const getMyGroups = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
@@ -146,7 +138,6 @@ const getMyGroups = async (req, res, next) => {
 	}
 };
 
-/** @description 게시글 작성 */
 const createPost = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
@@ -169,7 +160,6 @@ const createPost = async (req, res, next) => {
 	}
 };
 
-/** @description 소속 그룹 최신 인증글 리스트 */
 const getRecentPosts = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
@@ -184,7 +174,6 @@ const getRecentPosts = async (req, res, next) => {
 	}
 };
 
-/** @description 게시글 전체 리스트 */
 const getAllPosts = async (req, res, next) => {
 	try {
 		const groupId = parseInt(req.params.groupid);
@@ -199,7 +188,6 @@ const getAllPosts = async (req, res, next) => {
 	}
 };
 
-/** @description 게시글 상세 정보 */
 const getPostById = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);
@@ -214,7 +202,6 @@ const getPostById = async (req, res, next) => {
 	}
 };
 
-/** @description 게시글 수정 */
 const editPost = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);
@@ -234,7 +221,6 @@ const editPost = async (req, res, next) => {
 	}
 };
 
-/** @description 게시글 삭제 */
 const deletePost = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);
@@ -249,7 +235,6 @@ const deletePost = async (req, res, next) => {
 			if (!(groupUser && groupUser.isAdmin))
 				return res.status(403).json({ message: "권한 없음" });
 		}
-		//todo 삭제진행을 알리고 삭제 후 소켓io?를 통해 상황 알리기
 		await Promise.all([
 			commentService.deleteCommentsByPostId(postId),
 			imageService.deleteImagesByPostId(postId),
@@ -264,7 +249,6 @@ const deletePost = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 탈퇴 */
 const leaveGroup = async (req, res, next) => {
 	const userId = req.user.id;
 	const groupId = parseInt(req.params.groupid);
@@ -286,7 +270,6 @@ const leaveGroup = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹원 강퇴 */
 const removeGroupMember = async (req, res, next) => {
 	try {
 		const managerId = req.user.id;
@@ -310,7 +293,6 @@ const removeGroupMember = async (req, res, next) => {
 	}
 };
 
-/** @description 그룹 폭⭐파️ */
 const dropGroup = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
