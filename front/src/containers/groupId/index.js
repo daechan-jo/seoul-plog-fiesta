@@ -39,7 +39,7 @@ const GroupIdContainer = ({ id }) => {
           </div>
         </div>
       ) : view === 'notice' ? (
-        <Notice />
+        <Notice id={id} />
       ) : view === 'posts' ? (
         <GroupPlogging />
       ) : (

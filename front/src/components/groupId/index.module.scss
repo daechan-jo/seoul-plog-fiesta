@@ -1,0 +1,30 @@
+.writing {
+  .imgContainer {
+    width: 500px;
+    height: 500px;
+    background-color: gray;
+    img {
+      width: 500px;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+    div {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+    }
+    textarea {
+      height: 150px;
+    }
+  }
+  .btns {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+  }
+}
