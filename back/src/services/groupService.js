@@ -358,7 +358,6 @@ const editPost = async (postId, userId, postData) => {
 
 const deletePost = async (postId, userId) => {
 	try {
-		console.log(postId);
 		const post = await prisma.post.findUnique({
 			where: {
 				id: postId,
