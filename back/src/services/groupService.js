@@ -227,6 +227,7 @@ const getMyGroups = async (userId) => {
 		return await prisma.groupUser.findMany({
 			where: {
 				userId: userId,
+				isAccepted: true,
 			},
 			select: {
 				groupId: true,
