@@ -16,6 +16,7 @@ const createUser = async (userData) => {
 	});
 	if (existingUser) throw new Error("이미 존재하는 이메일입니다.");
 	if (existingNickname) throw new Error("이미 존재하는 닉네임입니다.");
+
 	const hashedPassword = await bcrypt.hash(password, 10);
 	const newUser = {
 		name,
@@ -34,4 +35,13 @@ const createUser = async (userData) => {
 	}
 };
 
-module.exports = { createUser };
+const getUserByEmail = async (email) => {
+	const existingUser = await prisma.user.findUnique({
+		where: {
+			email: email
+		},
+	});
+	if (!existingUser) throw new Error("존재하지 않는 사용자입니다.")
+	return existingUser;
+};
+module.exports = { createUser, getUserByEmail };

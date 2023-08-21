@@ -1,4 +1,7 @@
 import authService from "../services/authService";
+import smtpTransport from "../config/sendEmail";
+import randomPassword from "../utils/randomPassword";
+
 const createUser = async (req, res, next) => {
 	try {
 		const userData = req.body;
@@ -30,4 +33,36 @@ const login = async (req, res, next) => {
 	}
 };
 
-module.exports = { createUser, login };
+const findPasswordByEmail = async(req, res, next) =>{
+	try {
+		const email = req.body.email;
+		const existingUser = await authService.getUserByEmail(email)
+		console.log(existingUser);
+
+		const emailOptions = {
+			from: "qweasdzxc0210@naver.com",
+			to: email,
+			subject: "임시 비밀번호를 알려드립니다.",
+			html:
+			"<h1>파인애플피자에서 새로운 비밀번호를 알려드립니다.</h1>"+
+			"<h2>임시 비밀번호는 "+ randomPassword.createRandomPassword() +"입니다.</h2>"+
+			'<h3 style="color:crimson;">임시 비밀번호로 로그인 하신 후, 비밀번호를 수정해주세요.</h3>'+
+			'<img src="http://file3.instiz.net/data/cached_img/upload/2021/10/01/11/fcd74ebb3fc06be634475b93911b0a7f.jpg">'
+		};
+		
+		smtpTransport.sendMail(emailOptions, (err,info) =>{
+			if(err){
+				console.log(err);
+			} else{
+				console.log("성공적으로 이메일을 전송하였습니다.", info.response);
+				smtpTransport.close();
+			}
+		})
+	} catch(error){
+		console.error(error);
+		error.status= 500;
+		next(error);
+	}
+
+}
+module.exports = { createUser, login , findPasswordByEmail};
