@@ -57,6 +57,7 @@ const getALlGroups = async () => {
 				GroupUser: {
 					select: {
 						userId: true,
+						isAccepted: true,
 					},
 				},
 			},
