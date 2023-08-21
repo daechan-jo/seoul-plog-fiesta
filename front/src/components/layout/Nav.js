@@ -7,7 +7,7 @@ const Nav = () => {
   const location = useLocation(); // 현재 URL 정보를 가져오는 hook
 
   const navItems = [
-    { to: '/', icon: <BiSolidHome /> },
+    { to: '/?view=main', icon: <BiSolidHome /> },
     { to: '/network?view=group', icon: <FaUserFriends /> },
     { to: '/ranking', icon: <FaAward /> },
     { to: '/recommend', icon: <FaWalking /> },

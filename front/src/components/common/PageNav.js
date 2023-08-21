@@ -1,21 +1,25 @@
+import React from 'react';
 import styles from './index.module.scss';
 
-// state값에
+//const lists = { group: 'GROUP', user: 'USER' };
+
 const PageNav = ({ view, lists, setView }) => {
+  const listKeys = Object.keys(lists);
+
   return (
     <div className={styles.pageNav}>
-      {lists.map((list) => (
+      {listKeys.map((list) => (
         <button
-          className={` ${list === view ? styles.activeNav : ''}`}
+          className={`${list === view ? styles.activeNav : ''}`}
           onClick={() => {
             setView(list);
           }}
         >
-          {list}
+          {lists[list]}
         </button>
       ))}
     </div>
   );
 };
 
-export default PageNav;
+export default React.memo(PageNav);

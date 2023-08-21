@@ -6,7 +6,7 @@ import * as Api from '../../api';
 
 const MyNetworkContainer = () => {
   //현재 페이지의 Nav 정적값을 결정함
-  const lists = ['group', 'user'];
+  const lists = { group: 'GROUP', user: 'USER' };
   //Nav 값에 따른 view를 설정함
 
   const location = useLocation();
