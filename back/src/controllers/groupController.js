@@ -54,11 +54,13 @@ const requestToJoinGroup = async (req, res, next) => {
 
 		const isMember = await groupService.isUserGroupMember(userId, groupId);
 		if (isMember)
-			return res.status(400).json({ message: "이미 가입된 그룹" });
+			return res
+				.status(400)
+				.json({ message: "이미 가입된 그룹 또는 가입 신청한 그룹" });
 
 		await groupService.requestToJoinGroup(userId, groupId);
-		console.log(groupService);
-		res.status(200).json(groupService);
+		console.log("그룹 가입 신청 성공");
+		res.status(200).json("그룹 가입 신청 성공");
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -108,8 +110,8 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 
 		const success = await groupService.rejectGroupJoinRequest(
 			managerId,
-			userId,
 			groupId,
+			userId,
 		);
 		if (success) {
 			console.log(success);
