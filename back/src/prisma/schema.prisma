@@ -121,7 +121,7 @@ model PostImage {
 
 model Comment {
 	id         Int       @id @default(autoincrement())
-	content    String
+	content    String		 @db.VarChar(200)
 	createdAt  DateTime  @default(now())
 	updatedAt  DateTime  @updatedAt
 	writer     User      @relation(fields: [writerId], references: [id])
