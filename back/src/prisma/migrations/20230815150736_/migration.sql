@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Course` MODIFY `ADIT_DC` VARCHAR(1000) NOT NULL;

@@ -12,7 +12,7 @@ const deleteImagesByPostId = async (postId) => {
 		},
 	});
 	if (!image) return;
-	const imagePath = path.join(__dirname, "..", image.imageUrl);
+	const imagePath = path.join(__dirname, "..", "..", image.imageUrl);
 	try {
 		await unlinkAsync(imagePath);
 	} catch (error) {

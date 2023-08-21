@@ -75,7 +75,50 @@ const uploadPostImage = async (req, res, next) => {
 	}
 };
 
+const uploadGroupImage = async (req, res, next) => {
+	try {
+		const userId = req.user.id;
+		const groupId = parseInt(req.params.groupid);
+		const isGroupAdmin = await prisma.group.findFirst({
+			where: {
+				AND: [{ id: groupId }, { managerId: userId }],
+			},
+		});
+		if (!isGroupAdmin) {
+			return res.status(403).json({ message: "그룹 관리자가 아님" });
+		}
+
+		const imageUrl = path.join("uploads/images", req.file.filename);
+		const existingImage = await prisma.groupImage.findFirst({
+			where: { groupId },
+		});
+
+		if (existingImage) {
+			fs.unlinkSync(existingImage.imageUrl);
+
+			await prisma.groupImage.update({
+				where: { id: existingImage.id },
+				data: { imageUrl },
+			});
+		} else {
+			await prisma.groupImage.create({
+				data: {
+					imageUrl,
+					groupId,
+				},
+			});
+		}
+		console.log("그룹 이미지 업로드 성공");
+		res.status(201).json({ message: "그룹 이미지 업로드 성공" });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 module.exports = {
 	uploadProfileImage,
 	uploadPostImage,
+	uploadGroupImage,
 };
