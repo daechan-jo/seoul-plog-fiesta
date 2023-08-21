@@ -16,7 +16,7 @@ const MyNetworkContainer = () => {
 
   return (
     <main>
-      <PageNav view={view} setView={setView} lists={lists} />
+      <PageNav view={view} setView={setView} lists={lists} params={'network'} />
       <ItemList view={view} />
     </main>
   );

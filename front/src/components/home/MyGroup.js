@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Api from '../../api';
 
 const MyGroup = () => {
@@ -21,9 +21,6 @@ const MyGroup = () => {
     getData();
   }, []);
 
-  if (isFetching) {
-    return <div>로딩중</div>;
-  }
   return (
     <div className="gContainer">
       <div className="titleContainer">
@@ -31,7 +28,9 @@ const MyGroup = () => {
         <button className="gBtn">모임 리스트 관리</button>
       </div>
       <div className="contentMinContainer">
-        {datas.length === 0 ? (
+        {isFetching ? (
+          <div>로딩중</div>
+        ) : datas.length === 0 ? (
           <div>데이터가 없습니다</div>
         ) : (
           datas.map((data) => (
@@ -43,7 +42,7 @@ const MyGroup = () => {
   );
 };
 
-export default MyGroup;
+export default React.memo(MyGroup);
 
 const Item = ({ data }) => {
   return (

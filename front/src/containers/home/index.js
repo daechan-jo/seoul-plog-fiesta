@@ -5,6 +5,8 @@ import MyUser from '../../components/home/MyUser';
 import * as Api from '../../api';
 import PageNav from '../../components/common/PageNav';
 import { useLocation } from 'react-router-dom';
+import ItemList from '../../components/home/PostList';
+import MessageList from '../../components/home/MessageList';
 
 const HomeContainer = () => {
   const [map, setMap] = useState(null);
@@ -21,17 +23,22 @@ const HomeContainer = () => {
   const searchParams = new URLSearchParams(location.search);
 
   const [view, setView] = useState(searchParams.get('view'));
-
   return (
     <main>
-      <PageNav view={view} setView={setView} lists={lists} />
-      <div className="threeContainer navVh">
-        <Map />
-        <div className="box">
-          <MyGroup datas={groups} />
-          <MyUser datas={users} />
+      <PageNav view={view} setView={setView} lists={lists} params={''} />
+      {view === 'main' ? (
+        <div className="threeContainer navVh">
+          <Map />
+          <div className="box">
+            <MyGroup datas={groups} />
+            <MyUser datas={users} />
+          </div>
         </div>
-      </div>
+      ) : view === 'myposts' ? (
+        <ItemList />
+      ) : (
+        <MessageList />
+      )}
     </main>
   );
 };

@@ -21,10 +21,6 @@ const MyUser = () => {
     getData();
   }, []);
 
-  if (isFetching) {
-    return <div>로딩중</div>;
-  }
-
   return (
     <div className="gContainer">
       <div className="titleContainer">
@@ -32,7 +28,9 @@ const MyUser = () => {
         <button className="gBtn">친구 관리</button>
       </div>
       <div className="contentContainer">
-        {datas.length === 0 ? (
+        {isFetching ? (
+          <div>로딩중</div>
+        ) : datas.length === 0 ? (
           <div>데이터가 없습니다</div>
         ) : (
           datas.map((data) => (
