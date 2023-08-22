@@ -1,57 +1,43 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-async function createChatRoom(senderId, recipientId) {
-	const roomId = [senderId, recipientId].sort().join("-");
-	const existingRoom = await prisma.chatRoom.findUnique({
-		where: { id: roomId },
-	});
-	if (!existingRoom) {
-		await prisma.chatRoom.create({
+async function createPrivateMessage(senderId, receiverId, content) {
+	try {
+		const chatRoomId = await getOrCreateChatRoomId(senderId, receiverId);
+		return await prisma.message.create({
 			data: {
-				id: roomId,
-				users: {
-					connect: [{ id: senderId }, { id: recipientId }],
-				},
+				content,
+				sender: { connect: { id: senderId } },
+				chatRoom: { connect: { id: chatRoomId } },
 			},
 		});
+	} catch (error) {
+		throw error;
 	}
-	return roomId;
 }
 
-async function getChatRoom(roomId) {
-	return prisma.chatRoom.findMany({
+async function getOrCreateChatRoomId(userId1, userId2) {
+	const chatRoom = await prisma.chatRoom.findFirst({
 		where: {
-			users: {
-				some: {
-					id: userId,
-				},
+			AND: [
+				{ users: { some: { id: userId1 } } },
+				{ users: { some: { id: userId2 } } },
+			],
+		},
+	});
+
+	if (chatRoom) {
+		return chatRoom.id;
+	} else {
+		const newChatRoom = await prisma.chatRoom.create({
+			data: {
+				users: { connect: [{ id: userId1 }, { id: userId2 }] },
 			},
-		},
-	});
-}
-
-async function getMessages(roomId) {
-	return prisma.message.findMany({
-		where: {
-			chatRoomId: roomId,
-		},
-	});
-}
-
-async function createMessage(roomId, senderId, content) {
-	return prisma.message.create({
-		data: {
-			content,
-			chatRoom: { connect: { id: roomId } },
-			sender: { connect: { id: senderId } },
-		},
-	});
+		});
+		return newChatRoom.id;
+	}
 }
 
 module.exports = {
-	createChatRoom,
-	getChatRoom,
-	getMessages,
-	createMessage,
+	createPrivateMessage,
 };

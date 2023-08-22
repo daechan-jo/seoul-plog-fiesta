@@ -46,6 +46,7 @@
 		"dotenv": "^16.0.0",
 		"nodemon": "^3.0.1",
 		"prettier": "3.0.1",
+		"socket.io-client": "^4.7.2",
 		"swagger-jsdoc": "^6.2.8",
 		"swagger-ui-express": "^5.0.0"
 	},
