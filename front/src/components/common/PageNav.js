@@ -12,7 +12,13 @@ const PageNav = ({ params, view, lists, setView }) => {
     <div className={styles.pageNav}>
       {listKeys.map((list) => (
         <button
-          className={`${list === view ? styles.activeNav : ''}`}
+          className={`${
+            !view && list === 'main'
+              ? styles.activeNav
+              : list === view
+              ? styles.activeNav
+              : ''
+          }`}
           onClick={() => {
             setView(list);
             navigator(`/${params}?view=${list}`);

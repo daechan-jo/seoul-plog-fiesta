@@ -17,17 +17,21 @@ const ItemList = ({ view }) => {
       try {
         setIsFetching(true);
 
-        if (view === 'group') {
-          const res = await Api.get(`/${view}`);
-          setDatas(res.data);
+        if (!view || view === 'group') {
           if (isCheck) {
             const res = await Api.get(`/${view}/mygroup`);
+            setDatas(res.data);
+          } else {
+            const res = await Api.get(`/${view}`);
+            setDatas(res.data);
           }
         } else {
-          const res = await Api.get(`/${view}s`);
-          setDatas(res.data);
           if (isCheck) {
             const res = await Api.get(`/user/friend`);
+            setDatas(res.data);
+          } else {
+            const res = await Api.get(`/${view}s`);
+            setDatas(res.users);
           }
         }
       } catch (err) {
@@ -47,7 +51,7 @@ const ItemList = ({ view }) => {
       <div className="contentListContainer">
         {isFetching ? (
           <div>로딩중</div>
-        ) : datas?.length === 0 ? (
+        ) : datas.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
           datas.map((data) => (

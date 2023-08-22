@@ -12,7 +12,6 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
 
   const [formData, setFormData] = useState({
     name: '',
-    managerId: loginId,
     goal: '',
     region: '',
     introduction: '',
