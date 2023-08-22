@@ -45,7 +45,7 @@ const createGroup = async (groupData, managerId) => {
 	}
 };
 
-const getALlGroups = async () => {
+const getAllGroups = async () => {
 	try {
 		const groups = await prisma.group.findMany({
 			select: {
@@ -73,16 +73,14 @@ const getALlGroups = async () => {
 					where: { groupId: group.id },
 				});
 
-				const imagesData = await Promise.all(
-					images.map(async (image) => {
-						return path.join(__dirname, '..', image.imageUrl);
-					}),
-				);
+				const imageUrls = images.map((image) => {
+					return image.imageUrl; // Just store the URLs directly
+				});
 
 				return {
 					...group,
 					memberCount,
-					images: imagesData,
+					images: imageUrls, // Use the array of image URLs
 				};
 			}),
 		);
@@ -501,7 +499,7 @@ const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
 
 module.exports = {
 	createGroup,
-	getALlGroups,
+	getAllGroups,
 	getGroupDetails,
 	isUserGroupMember,
 	requestToJoinGroup,
