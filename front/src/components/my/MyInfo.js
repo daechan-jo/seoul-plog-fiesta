@@ -18,9 +18,7 @@ const mockmyInfo = {
 const initialData = {
   name: '',
   nickname: '',
-  email: '',
   about: '',
-  authCount: '',
   region: '',
 };
 
@@ -69,11 +67,12 @@ const MyInfo = () => {
 
   const handleSubmit = async (e) => {
     try {
-      const res = await Api.post('/auth/update', formData);
+      const res = await Api.post('/auth/update', data);
       setData(res.data);
       if (img) {
-        const res = await Api.post('/upload/userimg', data);
+        const res = await Api.postForm('/upload/userimg', formData);
       }
+      setIsEditing(false);
     } catch (err) {
       console.log('데이터를 불러오는데 실패.', err);
     } finally {
@@ -118,16 +117,7 @@ const MyInfo = () => {
           )}
           <li>
             <label>이메일</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="email"
-                value={data.email}
-                onChange={handleInputChange}
-              />
-            ) : (
-              <div>{data.email}</div>
-            )}
+            <div>{data.email}</div>
           </li>
           <li>
             <label>이름</label>
