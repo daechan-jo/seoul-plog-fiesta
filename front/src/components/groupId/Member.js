@@ -35,7 +35,9 @@ const GroupMember = ({ view }) => {
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          datas.map((data) => <Item data={data} key={data.id} view={view} />)
+          datas.map((data) => (
+            <Item data={data.user} key={data.user.id} view={view} />
+          ))
         )}
       </div>
       <div>페이지네이션자리</div>
@@ -55,7 +57,7 @@ const Item = ({ data, view }) => {
       }}
     >
       <div>{data.name}</div>
-      <div>장소</div>
+      <div>{data.nickname}</div>
     </div>
   );
 };
