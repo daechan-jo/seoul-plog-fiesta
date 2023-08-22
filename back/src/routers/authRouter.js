@@ -13,6 +13,6 @@ authRouter.post("/auth/setPassword", authenticateJWT, authController.findPasswor
 
 authRouter.put("/auth/update", authenticateJWT, authController.changeInformation); //회원정보 변경
 
-
+authRouter.delete("/auth/drop", authenticateJWT, authController.removeUser); //회원 탈퇴
 
 module.exports = authRouter;

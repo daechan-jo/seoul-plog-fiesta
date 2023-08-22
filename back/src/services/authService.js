@@ -1,6 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
+const { error } = require("console");
+const { accessSync } = require("fs");
 
 const createUser = async (userData) => {
 	const { name, nickname, email, password } = userData;
@@ -65,7 +67,7 @@ const changeInformation = async (userData) => {
 	const {id, name, nickname, password, about, activity} = userData;
 	try{
 		if(!name || !nickname || !password) throw new Error("필수값들을 입력해주세요");
-		
+		const hashedPassword = await bcrypt.hash(password, 10);
 		//id는 다른데 nickname이 같은 사람이 있는경우 : nickname이 같으면 id를 대조
 		//혹은 모든 사람들의 데이터중에서 nickname이 같은 경우를 찾나 ?
 		//이미 unique라 이 전에 오류를 던지는지 => 필요 없는 코드 ?
@@ -84,7 +86,7 @@ const changeInformation = async (userData) => {
 			data:{
 				name: name,
 				nickname: nickname,
-				password: password,
+				password: hashedPassword,
 				about: about, //빈 값 허용
 				activity: activity //빈 값 허용
 			}
@@ -101,4 +103,18 @@ const changeInformation = async (userData) => {
 	activity*/
 }
 
-module.exports = { createUser, getUserByEmail, changePassword, changeInformation };
+const removeUser = async (id) =>{
+	try{
+		const deleteUser = await prisma.user.delete({
+			where:{
+				id: id,
+			},
+		})
+		console.log("탈퇴 완료");
+		return deleteUser;
+	}catch(error) {
+		throw error;
+	}
+}
+
+module.exports = { createUser, getUserByEmail, changePassword, changeInformation, removeUser };
