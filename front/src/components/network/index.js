@@ -50,7 +50,9 @@ const ItemList = ({ view }) => {
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          datas.map((data) => <Item data={data} key={data.id} view={view} />)
+          datas.map((data) => (
+            <Item data={data} key={`${view}_${data.id}`} view={view} />
+          ))
         )}
       </div>
       <div>페이지네이션자리</div>

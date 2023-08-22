@@ -1,9 +1,9 @@
 import { formDataInstance, instance } from './instance';
 const baseURL = 'http://localhost:3000';
 
-const get = async (endpoint, params = '') => {
+const get = async (endpoint) => {
   try {
-    console.log(`GET: ${baseURL}`);
+    console.log(`GET: ${baseURL}${endpoint}`);
     const res = await instance.get(endpoint);
     return res;
   } catch (err) {

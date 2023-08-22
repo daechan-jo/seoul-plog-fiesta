@@ -3,14 +3,16 @@ import styles from './index.module.scss';
 import * as Api from '../../api';
 import { useNavigate } from 'react-router-dom';
 import { seoulDistricts } from '../common/exportData';
+import { useSelector } from 'react-redux';
 
 const GroupMaking = ({ setIsModal, setDatas }) => {
   const navigate = useNavigate();
   const [img, setImg] = useState();
+  const loginId = useSelector((state) => state.user.loginId);
 
   const [formData, setFormData] = useState({
     name: '',
-    managerId: '',
+    managerId: loginId,
     goal: '',
     region: '',
     introduction: '',
@@ -55,8 +57,9 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await Api.registerPost('/group', formData);
+      const res = await Api.post('/group', formData);
       setDatas((datas) => [...datas, res]);
       if (img) {
         const res = await Api.postForm(' /upload/groupimg/:groupid', imgData);
