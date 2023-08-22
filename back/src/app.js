@@ -9,19 +9,11 @@ import groupRoutes from './routers/groupRouter';
 import uploadRouter from './routers/uploadRouter';
 import loadRouter from './routers/loadRouter';
 import commentRouter from './routers/commentRouter';
-import chatRoutes from './routers/chatRouter';
-
-import http from 'http';
-import socketIO from 'socket.io';
-
 import { local, jwt } from './config';
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const passport = require('passport');
 const app = express();
-
-const server = http.createServer(app);
-const io = socketIO(server);
 
 passport.use('local', local);
 passport.use('jwt', jwt);
@@ -32,10 +24,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(loggerMiddleware);
 app.use(passport.initialize());
-// app.use(
-// 	'/uploads/images',
-// 	express.static(path.join(__dirname, '..', 'uploads', 'images')),
-// );
 
 app.use(authRoutes);
 app.use(userRoutes);
@@ -43,7 +31,6 @@ app.use(groupRoutes);
 app.use(uploadRouter);
 app.use(loadRouter);
 app.use(commentRouter);
-app.use(chatRoutes(io));
 
 app.use(errorMiddleware);
 
