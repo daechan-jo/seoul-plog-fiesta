@@ -7,18 +7,24 @@
   align-items: center;
   justify-content: space-between;
   .imgContainer {
-    width: 50%;
+    width: 300px;
     background-color: antiquewhite;
-    height: 50%;
+    height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    img {
+      width: 300px;
+    }
   }
   li {
     width: 50%;
     display: grid;
     grid-template-columns: 1fr 3fr;
+    input {
+      height: 40px;
+    }
   }
 }
 
