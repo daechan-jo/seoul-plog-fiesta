@@ -12,6 +12,9 @@
     flex-direction: column;
     gap: 20px;
     width: 400px;
+    .check {
+      display: flex;
+    }
     div {
       display: flex;
       flex-direction: row;

@@ -54,15 +54,15 @@ const Writing = ({ setIsModal, id }) => {
               value={formData.title}
               onChange={handleInputChange}
             />
-            <label>
+            <div className={styles.check}>
               <input
                 type="checkbox"
                 name="isNotice"
                 checked={formData.isNotice}
                 onChange={handleInputChange}
               />
-              공지사항으로 하기
-            </label>
+              <span>공지사항으로 하기</span>
+            </div>
             <label>설명</label>
             <textarea
               name="content"

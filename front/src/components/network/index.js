@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 import * as Api from '../../api';
 import post_none from '../../assets/post_none.png';
+import user_none from '../../assets/user_none.png';
 
 const ItemList = ({ view }) => {
   const [isModal, setIsModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
+  const [isCheck, setIsCheck] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -18,9 +20,15 @@ const ItemList = ({ view }) => {
         if (view === 'group') {
           const res = await Api.get(`/${view}`);
           setDatas(res.data);
+          if (isCheck) {
+            const res = await Api.get(`/${view}/mygroup`);
+          }
         } else {
           const res = await Api.get(`/${view}s`);
           setDatas(res.data);
+          if (isCheck) {
+            const res = await Api.get(`/user/friend`);
+          }
         }
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
@@ -30,12 +38,12 @@ const ItemList = ({ view }) => {
     };
 
     getData();
-  }, [view]);
+  }, [view, isCheck]);
 
   return (
     <div className="gContainer  gList navVh">
       {isModal && <GroupMaking setIsModal={setIsModal} setDatas={setDatas} />}
-      <NetworkHeader setIsModal={setIsModal} />
+      <NetworkHeader setIsModal={setIsModal} setIsCheck={setIsCheck} />
       <div className="contentListContainer">
         {isFetching ? (
           <div>로딩중</div>
@@ -53,10 +61,16 @@ const ItemList = ({ view }) => {
 export default ItemList;
 
 // 재렌더링 방지
-const NetworkHeader = React.memo(({ setIsModal }) => {
+const NetworkHeader = React.memo(({ setIsModal, setIsCheck }) => {
   return (
     <div className="titleContainer">
-      <h1>유저리스트</h1>
+      <div>
+        <h1>유저리스트</h1>
+        <span>
+          <input type="checkbox" name="isMine" onClick={setIsCheck} />
+          <div>나의 그룹만 보기</div>
+        </span>
+      </div>
       <button
         className="gBtn"
         onClick={() => {
@@ -92,7 +106,10 @@ const Item = ({ data, view }) => {
       }}
     >
       <div key={data.id}>
-        <img src={data.imgUrl || post_none} alt="그룹 이미지" />
+        <img
+          src={data.imgUrl || view === 'group' ? post_none : user_none}
+          alt="그룹 이미지"
+        />
       </div>
       <ul className={styles.item}>
         <li key={data.name}>

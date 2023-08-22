@@ -39,13 +39,12 @@ const Login = () => {
     }
 }
     */
-    await Api.post('auth/login', {
+    await Api.post('/auth/login', {
       email,
       password,
     })
       .then((res) => {
-        const { token, email, nickname } = res.data.user;
-        dispatch(login({ token, email, nickname }));
+        dispatch(login(res.data));
         navigate('/', { replace: true });
       })
       .catch((err) => {
