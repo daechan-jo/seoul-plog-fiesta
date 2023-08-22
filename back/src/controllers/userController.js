@@ -26,6 +26,20 @@ const searchUsers = async (req, res, next) => {
 		error.status = 500;
 		next(error);
 	}
+};s
+
+/** @description 유저 검색(id) */
+const searchUserId = async (req, res, next) => {
+	const userId = req.params.id;
+	try {
+		const users = await userService.searchUsers(userId);
+		console.log(users);
+		res.status(200).json({ message: "유저 검색 결과", users });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
 };
 
 /** @description 랜덤 유저 */
@@ -110,9 +124,13 @@ const deleteFriend = async (req, res, next) => {
 	}
 };
 
+
+
+
 module.exports = {
 	getAllUsers,
 	searchUsers,
+	searchUserId,
 	getRandomUsers,
 	currentUser,
 	addAsFriend,

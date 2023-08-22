@@ -22,6 +22,13 @@ userRouter
         userController.searchUsers);
 
 
+/** @description 유저 찾기(id) */
+userRouter
+    .get("/user/:id",
+        authenticateJWT,
+        userController.searchUserId);
+
+
 /** @description 현재 사용자 */
 userRouter
     .get("/user",

@@ -38,6 +38,28 @@ const searchUsers = async (nickname) => {
 	}
 };
 
+
+/** @description 유저 찾기(id) */
+const searchUserId = async (userId) => {
+	try {
+		return await prisma.user.findUnique({
+			where: {
+				id: userId,
+			},
+			select: {
+				id: true,
+				nickname: true,
+				about: true,
+				activity: true,
+				// authCount: true,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+
 /** @description 랜덤 유저 */
 const getRandomUsers = async () => {
 	try {
@@ -129,9 +151,14 @@ const deleteFriend = async (userAId, userBId) => {
 /** @description 친구의 최신 게시물 */
 
 
+/** @description 나의 인증 횟수, 랭킹 */
+
+
+
 module.exports = {
 	getAllUsers,
 	searchUsers,
+	searchUserId,
 	getUserInfo,
 	addAsFriend,
 	getMyFriends,
