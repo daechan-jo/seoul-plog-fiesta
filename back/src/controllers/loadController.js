@@ -1,6 +1,6 @@
-import path from "path";
-import fs from "fs";
-import { PrismaClient } from "@prisma/client";
+import path from 'path';
+import fs from 'fs';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const loadProfileImage = async (req, res, next) => {
@@ -12,19 +12,14 @@ const loadProfileImage = async (req, res, next) => {
 		if (!userProfileImage) {
 			return res
 				.status(404)
-				.json({ message: "등록된 프로필 이미지가 없습니다" });
+				.json({ message: '등록된 프로필 이미지가 없습니다' });
 		}
-		const imagePath = path.join(
-			__dirname,
-			"..",
-			"..",
-			userProfileImage.imageUrl,
-		);
+		const imagePath = path.join(__dirname, '..', userProfileImage.imageUrl);
 
 		fs.access(imagePath, fs.constants.F_OK, (err) => {
 			if (err) {
-				console.error("파일에 접근할 수 없음:", err);
-				return res.status(404).send("이미지 파일이 없습니다.");
+				console.error('파일에 접근할 수 없음:', err);
+				return res.status(404).send('이미지 파일이 없습니다.');
 			}
 		});
 		console.log(imagePath);
@@ -44,14 +39,14 @@ const loadPostImage = async (req, res, next) => {
 		});
 
 		if (!postImage) {
-			return res.status(404).send("이미지가 없습니다");
+			return res.status(404).send('이미지가 없습니다');
 		}
-		const imagePath = path.join(__dirname, "..", "..", postImage.imageUrl);
+		const imagePath = path.join(__dirname, '..', postImage.imageUrl);
 
 		fs.access(imagePath, fs.constants.F_OK, (err) => {
 			if (err) {
-				console.error("파일에 접근할 수 없음:", err);
-				return res.status(404).send("이미지 파일이 없습니다.");
+				console.error('파일에 접근할 수 없음:', err);
+				return res.status(404).send('이미지 파일이 없습니다.');
 			}
 			console.log(imagePath);
 			res.sendFile(imagePath);
@@ -72,13 +67,13 @@ const loadGroupImage = async (req, res, next) => {
 		if (!groupImage) {
 			return res
 				.status(404)
-				.json({ message: "등록된 그룹 이미지가 없습니다." });
+				.json({ message: '등록된 그룹 이미지가 없습니다.' });
 		}
-		const imagePath = path.join(__dirname, "..", "..", groupImage.imageUrl);
+		const imagePath = path.join(__dirname, '..', groupImage.imageUrl);
 		fs.access(imagePath, fs.constants.F_OK, (err) => {
 			if (err) {
-				console.error("파일에 접근할 수 없음:", err);
-				return res.status(404).send("이미지 파일이 없습니다.");
+				console.error('파일에 접근할 수 없음:', err);
+				return res.status(404).send('이미지 파일이 없습니다.');
 			}
 		});
 		console.log(imagePath);

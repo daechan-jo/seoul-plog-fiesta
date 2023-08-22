@@ -30,7 +30,6 @@
 		"passport": "^0.6.0",
 		"passport-jwt": "^4.0.1",
 		"passport-local": "^1.0.0",
-		"prisma": "^5.1.1",
 		"socket.io": "^4.7.2",
 		"uuid": "^9.0.0",
 		"winston": "^3.10.0",
@@ -47,6 +46,7 @@
 		"dotenv": "^16.0.0",
 		"nodemon": "^3.0.1",
 		"prettier": "3.0.1",
+		"prisma": "^5.1.1",
 		"socket.io-client": "^4.7.2",
 		"swagger-jsdoc": "^6.2.8",
 		"swagger-ui-express": "^5.0.0"

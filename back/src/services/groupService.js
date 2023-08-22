@@ -1,8 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const groupUtils = require("../utils/groupUtils");
-const fs = require("fs");
-const path = require("path");
+const groupUtils = require('../utils/groupUtils');
+const fs = require('fs');
+const path = require('path');
 
 const createGroup = async (groupData, managerId) => {
 	const { name, goal, region, introduction } = groupData;
@@ -12,13 +12,13 @@ const createGroup = async (groupData, managerId) => {
 				name,
 			},
 		});
-		if (checkGroup) throw new Error("이미 존재하는 그룹 이름");
+		if (checkGroup) throw new Error('이미 존재하는 그룹 이름');
 		const userGroupCount = await prisma.group.count({
 			where: {
 				managerId: managerId,
 			},
 		});
-		if (userGroupCount >= 5) throw new Error("그룹 생성 제한 초과");
+		if (userGroupCount >= 5) throw new Error('그룹 생성 제한 초과');
 		const createdGroup = await prisma.group.create({
 			data: {
 				name,
@@ -63,10 +63,29 @@ const getALlGroups = async () => {
 			},
 		});
 
-		return groups.map((group) => ({
-			...group,
-			memberCount: group.GroupUser.length,
-		}));
+		return await Promise.all(
+			groups.map(async (group) => {
+				const memberCount = await prisma.groupUser.count({
+					where: { groupId: group.id, isAccepted: true },
+				});
+
+				const images = await prisma.groupImage.findMany({
+					where: { groupId: group.id },
+				});
+
+				const imagesData = await Promise.all(
+					images.map(async (image) => {
+						return path.join(__dirname, '..', image.imageUrl);
+					}),
+				);
+
+				return {
+					...group,
+					memberCount,
+					images: imagesData,
+				};
+			}),
+		);
 	} catch (error) {
 		throw error;
 	}
@@ -172,9 +191,8 @@ const acceptRegistration = async (managerId, groupId, userId) => {
 				group: true,
 			},
 		});
-		if (!groupUser) throw new Error("가입 신청 없음");
-		if (groupUser.group.managerId !== managerId)
-			throw new Error("권한 없음");
+		if (!groupUser) throw new Error('가입 신청 없음');
+		if (groupUser.group.managerId !== managerId) throw new Error('권한 없음');
 		return await prisma.groupUser.update({
 			where: {
 				userId_groupId: {
@@ -204,9 +222,8 @@ const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
 			},
 		});
 		console.log(groupUser);
-		if (!groupUser) throw new Error("가입 신청 없음");
-		if (groupUser.group.managerId !== managerId)
-			throw new Error("권한 없음");
+		if (!groupUser) throw new Error('가입 신청 없음');
+		if (groupUser.group.managerId !== managerId) throw new Error('권한 없음');
 
 		await prisma.groupUser.delete({
 			where: {
@@ -256,9 +273,9 @@ const createPost = async (userId, groupId, title, content, isNotice) => {
 	try {
 		console.log(userId, groupId, title, content, isNotice);
 		const groupUser = await groupUtils.getGroupUser(userId, groupId);
-		if (!groupUser) throw new Error("그룹 구성원 아님");
+		if (!groupUser) throw new Error('그룹 구성원 아님');
 		const isManager = await groupUtils.isGroupManager(userId, groupId);
-		if (isNotice && !isManager) throw new Error("권한 없음");
+		if (isNotice && !isManager) throw new Error('권한 없음');
 		const postData = {
 			writer: {
 				connect: { id: userId },
@@ -325,7 +342,7 @@ const getRecentPosts = async (userId) => {
 				groupId: { in: groupIds },
 			},
 			orderBy: {
-				createdAt: "desc",
+				createdAt: 'desc',
 			},
 		});
 	} catch (error) {
@@ -336,8 +353,8 @@ const getRecentPosts = async (userId) => {
 const editPost = async (postId, userId, postData) => {
 	try {
 		const post = await prisma.post.findUnique({ where: { id: postId } });
-		if (!post) throw new Error("존재하지 않는 게시글");
-		if (post.writerId !== userId) throw new Error("권한이 없음");
+		if (!post) throw new Error('존재하지 않는 게시글');
+		if (post.writerId !== userId) throw new Error('권한이 없음');
 		const filteredData = Object.entries(postData).reduce(
 			(acc, [key, value]) => {
 				if (value !== null) {
@@ -369,10 +386,9 @@ const deletePost = async (postId, userId) => {
 				group: true,
 			},
 		});
-		if (!post) throw new Error("존재하지 않는 게시글");
+		if (!post) throw new Error('존재하지 않는 게시글');
 		const isAdmin = await groupUtils.isUserGroupAdmin(userId, post.groupId);
-		if (post.writerId !== userId && !isAdmin)
-			throw new Error("권한이 없음");
+		if (post.writerId !== userId && !isAdmin) throw new Error('권한이 없음');
 
 		await prisma.comment.deleteMany({
 			where: {
@@ -438,9 +454,9 @@ const dropGroup = async (groupId, userId) => {
 		const group = await prisma.group.findUnique({
 			where: { id: groupId },
 		});
-		if (!group) throw new Error("그룹이 존재하지 않음.");
+		if (!group) throw new Error('그룹이 존재하지 않음.');
 		if (group.managerId !== userId)
-			throw new Error("그룹 관리자만 그룹을 삭제 가능.");
+			throw new Error('그룹 관리자만 그룹을 삭제 가능.');
 
 		const posts = await prisma.post.findMany({ where: { groupId } });
 		for (const post of posts) {
@@ -449,7 +465,7 @@ const dropGroup = async (groupId, userId) => {
 			});
 			for (const postImage of postImages) {
 				fs.unlink(
-					path.join(__dirname, "..", "..", postImage.imageUrl),
+					path.join(__dirname, '..', '..', postImage.imageUrl),
 					(err) => {
 						if (err) console.error(err);
 					},
