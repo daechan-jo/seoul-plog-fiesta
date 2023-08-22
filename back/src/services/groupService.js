@@ -30,10 +30,11 @@ const createGroup = async (groupData, managerId) => {
 				introduction,
 			},
 		});
+		const groupId = createdGroup.id;
 		await prisma.groupUser.create({
 			data: {
 				userId: managerId,
-				groupId: createdGroup.id,
+				groupId: groupId,
 				isAdmin: true,
 				isAccepted: true,
 			},
@@ -53,10 +54,10 @@ const getALlGroups = async () => {
 				goal: true,
 				region: true,
 				memberLimit: true,
-				posts: true,
 				GroupUser: {
 					select: {
 						userId: true,
+						isAccepted: true,
 					},
 				},
 			},
@@ -192,17 +193,17 @@ const acceptRegistration = async (managerId, groupId, userId) => {
 
 const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
 	try {
-		const groupUser = await prisma.groupUser.findUnique({
+		const groupUser = await prisma.groupUser.findFirst({
 			where: {
-				userId_groupId: {
-					groupId: groupId,
-					userId: userId,
-				},
+				groupId: groupId,
+				userId: userId,
+				isAccepted: false,
 			},
 			include: {
 				group: true,
 			},
 		});
+		console.log(groupUser);
 		if (!groupUser) throw new Error("가입 신청 없음");
 		if (groupUser.group.managerId !== managerId)
 			throw new Error("권한 없음");
@@ -226,6 +227,7 @@ const getMyGroups = async (userId) => {
 		return await prisma.groupUser.findMany({
 			where: {
 				userId: userId,
+				isAccepted: true,
 			},
 			select: {
 				groupId: true,
@@ -252,22 +254,25 @@ const getMyGroups = async (userId) => {
 
 const createPost = async (userId, groupId, title, content, isNotice) => {
 	try {
+		console.log(userId, groupId, title, content, isNotice);
 		const groupUser = await groupUtils.getGroupUser(userId, groupId);
 		if (!groupUser) throw new Error("그룹 구성원 아님");
 		const isManager = await groupUtils.isGroupManager(userId, groupId);
 		if (isNotice && !isManager) throw new Error("권한 없음");
-		return await prisma.post.create({
-			data: {
-				writer: {
-					connect: { id: userId },
-				},
-				group: {
-					connect: { id: groupId },
-				},
-				title,
-				content,
-				isNotice,
+		const postData = {
+			writer: {
+				connect: { id: userId },
 			},
+			group: {
+				connect: { id: groupId },
+			},
+			title,
+			content,
+		};
+		if (isNotice !== undefined) postData.isNotice = isNotice;
+
+		return await prisma.post.create({
+			data: postData,
 		});
 	} catch (error) {
 		throw error;
@@ -355,7 +360,6 @@ const editPost = async (postId, userId, postData) => {
 
 const deletePost = async (postId, userId) => {
 	try {
-		console.log(postId);
 		const post = await prisma.post.findUnique({
 			where: {
 				id: postId,

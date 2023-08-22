@@ -21,8 +21,8 @@ const App = () => {
       <Route path="/network" element={<NetworkPage />} />
       <Route path="/ranking" element={<RankingPage />} />
       <Route path="/setpassword" element={<PasswordPage />} />
-      <Route path="/group/:groupId" element={<GroupIdPage />} />
-      <Route path="/user/:userId" element={<UserIdPage />} />
+      <Route path="/groups/:groupId" element={<GroupIdPage />} />
+      <Route path="/users/:userId" element={<UserIdPage />} />
       <Route path="*" element={<IntroPage />} />
     </Routes>
   );

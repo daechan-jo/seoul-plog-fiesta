@@ -5,15 +5,15 @@ const GroupUsers = () => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
-        <h1>멤버 리스트</h1>
-        <button className="gBtn">모임 리스트 관리</button>
-        <List />
+        <h1>인증 현황</h1>
+        <button className="gBtn">인증글 바로가기</button>
       </div>
+      <List />
     </div>
   );
 };
 
-export default React.memo(GroupUsers);
+export default GroupUsers;
 
 const List = () => {
   const [datas, setDatas] = useState([]);
@@ -24,7 +24,7 @@ const List = () => {
       try {
         setIsFetching(true);
         const res = await Api.get('');
-        setDatas(res.data);
+        //setDatas(res.data);
       } catch (err) {
         console.log('그룹유저데이터불러오기 실패', err);
       } finally {
@@ -36,9 +36,11 @@ const List = () => {
   }, []);
 
   return (
-    <div className="contentMinContainer">
+    <div className="contentContainer">
       {isFetching ? (
         <div>로딩중</div>
+      ) : datas.length === 0 ? (
+        <div>데이터가 없습니다</div>
       ) : (
         datas.map((data) => (
           <Item key={`group_page ${data.groupId}`} data={data} />

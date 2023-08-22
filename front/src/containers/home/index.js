@@ -4,43 +4,41 @@ import MyGroup from '../../components/home/MyGroup';
 import MyUser from '../../components/home/MyUser';
 import * as Api from '../../api';
 import PageNav from '../../components/common/PageNav';
+import { useLocation } from 'react-router-dom';
+import ItemList from '../../components/home/PostList';
+import MessageList from '../../components/home/MessageList';
 
 const HomeContainer = () => {
-  const lists = ['main', 'myposts'];
-
   const [map, setMap] = useState(null);
   const [groups, setGroups] = useState(mockupGroup);
   const [users, setUsers] = useState(mockupUser);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const [resMap, resGroups, resUsers] = await Promise.all([
-          Api.get('/auth'),
-          Api.get('/group/recent/posts'),
-          Api.get('/user/recent/posts'),
-        ]);
-        //setMap(resMap);
-        //setGroups(resGroups);
-        //setUsers(resUsers);
-      } catch (err) {
-        console.log('데이터를 불러오는데 실패.', err);
-      }
-    };
-    console.log('데이터가져오기');
-    getData();
-  }, []);
+  const lists = {
+    main: '홈',
+    myposts: '나의 인증글',
+    mymessage: '나의 쪽지함',
+  };
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const [view, setView] = useState(searchParams.get('view'));
   return (
     <main>
-      <PageNav lists={lists} />
-      <div className="threeContainer navVh">
-        <Map />
-        <div className="box">
-          <MyGroup datas={groups} />
-          <MyUser datas={users} />
+      <PageNav view={view} setView={setView} lists={lists} params={''} />
+      {view === 'main' ? (
+        <div className="threeContainer navVh">
+          <Map />
+          <div className="box">
+            <MyGroup datas={groups} />
+            <MyUser datas={users} />
+          </div>
         </div>
-      </div>
+      ) : view === 'myposts' ? (
+        <ItemList />
+      ) : (
+        <MessageList />
+      )}
     </main>
   );
 };

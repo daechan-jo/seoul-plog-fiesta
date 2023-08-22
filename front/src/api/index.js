@@ -1,9 +1,10 @@
 import { formDataInstance, instance } from './instance';
+const baseURL = 'http://localhost:3000';
 
 const get = async (endpoint, params = '') => {
   try {
-    console.log(`GET: /${endpoint}/params`);
-    const res = await instance.get(endpoint + '/' + params);
+    console.log(`GET: ${baseURL}`);
+    const res = await instance.get(endpoint);
     return res;
   } catch (err) {
     console.error('GET ERROR', err);
@@ -13,7 +14,7 @@ const get = async (endpoint, params = '') => {
 
 const post = async (endpoint, data) => {
   try {
-    console.log(`POST: ${process.env.REQUEST_URL}${endpoint}`);
+    console.log(`POST: ${baseURL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
     const res = await instance.post(endpoint, data);
     return res;
@@ -25,7 +26,7 @@ const post = async (endpoint, data) => {
 
 const registerPost = async (endpoint, data) => {
   try {
-    console.log(`POST: ${process.env.REQUEST_URL}${endpoint}`);
+    console.log(`POST: ${baseURL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
     const res = await instance.post(endpoint, data);
     return res;
@@ -37,7 +38,7 @@ const registerPost = async (endpoint, data) => {
 
 const postForm = async (endpoint, data) => {
   try {
-    console.log(`POST: ${process.env.REQUEST_URL}${endpoint}`);
+    console.log(`POST: ${baseURL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
     const res = await formDataInstance.post(endpoint, data);
     return res;
@@ -49,7 +50,7 @@ const postForm = async (endpoint, data) => {
 
 const put = async (endpoint, data) => {
   try {
-    console.log(`PUH: ${process.env.REQUEST_URL}${endpoint}`);
+    console.log(`PUH: ${baseURL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
     const filteredData = {};
     for (const key in data) {
@@ -68,7 +69,7 @@ const put = async (endpoint, data) => {
 
 const del = async (endpoint, params = '') => {
   try {
-    console.log(`DELTE: ${process.env.REQUEST_URL}${endpoint}/params`);
+    console.log(`DELTE: ${baseURL}${endpoint}/params`);
     const res = await instance.delete(endpoint + '/' + params);
     return res;
   } catch (err) {
