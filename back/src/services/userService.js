@@ -151,7 +151,7 @@ const deleteFriend = async (userAId, userBId) => {
 
 /** @description 나의 인증 횟수, 랭킹 */
 
-// 아 진짜 깃 짜증나네
+// 아 진짜 깃 짜증나네 chdofhsdiofh ioewhfio
 
 module.exports = {
 	getAllUsers,
