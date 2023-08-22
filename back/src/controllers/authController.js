@@ -21,6 +21,7 @@ const createUser = async (req, res, next) => {
 const login = async (req, res, next) => {
 	try {
 		const user = {
+			id: req.user.id,
 			token: req.token,
 			email: req.user.email,
 			nickname: req.user.nickname,
@@ -51,7 +52,7 @@ const findPasswordByEmail = async(req, res, next) =>{
 			'<h3 style="color:crimson;">임시 비밀번호로 로그인 하신 후, 비밀번호를 수정해주세요.</h3>'+
 			'<img src="http://file3.instiz.net/data/cached_img/upload/2021/10/01/11/fcd74ebb3fc06be634475b93911b0a7f.jpg">'
 		};
-		
+
 		smtpTransport.sendMail(emailOptions, (err,info) =>{
 			if(err){
 				console.log(err);
@@ -72,5 +73,19 @@ const findPasswordByEmail = async(req, res, next) =>{
 	}
 }
 
+/*
+const changeInformation = async (req, res, next) =>{
+	try {
+		const userData = req.body
+		const user = authService.changeInformation(userData);
+		console.log(user)
+		res.status(200).json(user);
+	} catch(error){
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+}
+*/
 
 module.exports = { createUser, login , findPasswordByEmail};
