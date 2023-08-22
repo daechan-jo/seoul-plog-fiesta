@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 
 const GroupMember = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
+  const { groupId } = useParams();
+
   useEffect(() => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(``);
-        //setDatas(res.data);
+        const res = await Api.get(`/group/${groupId}`);
+        setDatas(res.data.GroupUser);
       } catch (err) {
         console.log('멤버 리스트 데이터를 불러오는데 실패.', err);
       } finally {
@@ -20,7 +22,7 @@ const GroupMember = ({ view }) => {
     };
 
     getData();
-  }, [view]);
+  }, [groupId]);
 
   return (
     <div className="gContainer  gList navVh">
@@ -33,7 +35,9 @@ const GroupMember = ({ view }) => {
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          datas.map((data) => <Item data={data} key={data.id} view={view} />)
+          datas.map((data) => (
+            <Item data={data.user} key={data.user.id} view={view} />
+          ))
         )}
       </div>
       <div>페이지네이션자리</div>
@@ -52,8 +56,8 @@ const Item = ({ data, view }) => {
         navigator(`/users/${data.id}`);
       }}
     >
-      <div>그룹 인증1</div>
-      <div>장소</div>
+      <div>{data.name}</div>
+      <div>{data.nickname}</div>
     </div>
   );
 };

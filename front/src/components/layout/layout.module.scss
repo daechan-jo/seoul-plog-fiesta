@@ -5,12 +5,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px 60px;
+  padding: 40px;
+  margin-left: $navWidth;
   background-color: #ededed;
   .logoContainer {
     width: 10%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    .min {
+      font-size: 40px;
+      font-weight: 700;
+    }
+    .full {
+      font-size: 30px;
+      font-weight: 700;
+      span {
+        margin: 0 5px;
+        font-size: 30px;
+        color: $point;
+        font-weight: 700;
+      }
+    }
   }
   .navContainer {
     width: 25%;

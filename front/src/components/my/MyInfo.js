@@ -74,7 +74,7 @@ const MyInfo = () => {
       }
       setIsEditing(false);
     } catch (err) {
-      console.log('데이터를 불러오는데 실패.', err);
+      console.log('데이터 수정 실패.', err);
     } finally {
       setIsFetching(false);
     }
@@ -103,11 +103,7 @@ const MyInfo = () => {
       </div>
       <ul className={`${styles.info} ${isEditing ? styles.editing : ''}`}>
         <div className={styles.imgContainer}>
-          <img
-            id="myInfoPreviewImg"
-            src={data.imgUrl || user_none}
-            alt="profile"
-          />
+          <img id="myInfoPreviewImg" src={img || user_none} alt="profile" />
         </div>
         <>
           {isEditing && (
@@ -163,7 +159,7 @@ const MyInfo = () => {
             {isEditing ? (
               <select
                 name="region"
-                value={formData.region}
+                value={data.region}
                 onChange={handleInputChange}
               >
                 {Object.keys(seoulDistricts).map((region) => (

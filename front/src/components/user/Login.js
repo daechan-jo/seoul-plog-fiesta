@@ -45,7 +45,7 @@ const Login = () => {
     })
       .then((res) => {
         dispatch(login(res.data));
-        navigate('/', { replace: true });
+        navigate('/?view=main', { replace: true });
       })
       .catch((err) => {
         alert(err);

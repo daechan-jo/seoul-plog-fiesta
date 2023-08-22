@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Api from '../../api';
 import styles from './index.module.scss';
+import { useLocation, useParams } from 'react-router-dom';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -16,10 +17,15 @@ const Info = () => {
   const [data, setData] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const handleClick = async () => {
     try {
       setIsFetching(true);
-      const res = await Api.get(`/user/add/:id`);
+      const res = await Api.get(
+        `/user/add/${currentPath.split('/')[2].split('?')[0]}`,
+      );
       //setData(res.data);
     } catch (err) {
       console.log('친구추가 실패.', err);
@@ -57,23 +63,23 @@ const Info = () => {
             alt="profile"
           />
         </div>
-        <li>
+        <li key="myEmail">
           <label>이메일</label>
           <div>{data.email}</div>
         </li>
-        <li>
+        <li key="myName">
           <label>이름</label>
           <div>{data.name}</div>
         </li>
-        <li>
+        <li key="myNickName">
           <label>별명</label>
           <div>{data.nickname}</div>
         </li>
-        <li>
+        <li key="myAbout">
           <label>소개</label>
           <div>{data.about}</div>
         </li>
-        <li>
+        <li key="activity">
           <label>지역구</label>
           <div>강동구</div>
         </li>
