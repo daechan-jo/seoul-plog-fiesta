@@ -33,9 +33,10 @@ const Writing = ({ setIsModal, id }) => {
     e.preventDefault();
 
     try {
-      await Api.post(`/group/post/${id}`);
+      await Api.post(`/group/post/${id}`, formData);
       setIsError(true);
       setErrorMessage('그룹 글을 생성했습니다.');
+      setIsModal(false);
     } catch (err) {
       console.log('그룹 글생성 실패.', err);
     }

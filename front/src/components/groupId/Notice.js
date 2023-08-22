@@ -12,8 +12,9 @@ const Notice = ({ id }) => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(``);
-        //setDatas(res.data);
+        const res = await Api.get(`/group/posts/${id}`);
+        console.log(res);
+        setDatas(res.data);
       } catch (err) {
         console.log('공지사항 데이터를 불러오는데 실패.', err);
       } finally {
@@ -22,7 +23,7 @@ const Notice = ({ id }) => {
     };
 
     getData();
-  }, []);
+  }, [id]);
 
   return (
     <>

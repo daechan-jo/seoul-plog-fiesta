@@ -14,8 +14,10 @@ const Header = ({ setIsWriting }) => {
   return (
     <header className={styles.header}>
       <div className={styles.logoContainer}>
-        <div>로고이미지</div>
-        <div>logo</div>
+        <div className={styles.min}>SPF;</div>
+        <div className={styles.full}>
+          Seoul<span>Plog</span>Fiesta
+        </div>
       </div>
       <nav className={styles.navContainer}>
         <button
