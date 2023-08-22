@@ -9,6 +9,7 @@ const userSlice = createSlice({
       //const { email, nickName } = action.payload;
       // action의 payload속성에 접근
       const { token, email, nickName } = action.payload;
+      console.log(action.payload);
       state.email = email;
       state.nickName = nickName;
       sessionStorage.setItem('userToken', token);
@@ -25,6 +26,7 @@ const userSlice = createSlice({
       //api요청 후 state를 삭제함
       state.email = '';
       state.nickName = '';
+      sessionStorage.removeItem('userToken');
     },
   },
 });

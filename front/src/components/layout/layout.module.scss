@@ -38,12 +38,32 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    a {
-      padding: 15px;
+    div {
+      display: flex;
+      justify-content: center;
+    }
+    .icon {
       font-size: 35px;
     }
+    .text {
+      font-weight: 700;
+    }
+    .just {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
     .active {
-      padding: 15px;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       border-radius: 50%;
       background-color: #cccccc;
     }

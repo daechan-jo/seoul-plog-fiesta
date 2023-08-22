@@ -27,20 +27,3 @@
     }
   }
 }
-
-.shortBox {
-  width: 100%;
-  height: 30vh;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  background-color: gray;
-}
-
-.myGroup {
-  overflow: hidden;
-  .imgContainer {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-}

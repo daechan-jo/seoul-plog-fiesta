@@ -25,30 +25,32 @@ const Notice = ({ id }) => {
   }, []);
 
   return (
-    <div className="gContainer  gList navVh">
-      <div className="titleContainer">
-        <h1>그룹게시판</h1>
-        <button
-          className="gBtn"
-          onClick={() => {
-            setIsModal(true);
-          }}
-        >
-          글쓰기
-        </button>
-        {isModal && <Writing setIsModal={setIsModal} id={id} />}
+    <>
+      {isModal && <Writing setIsModal={setIsModal} id={id} />}
+      <div className="gContainer  gList navVh">
+        <div className="titleContainer">
+          <h1>그룹게시판</h1>
+          <button
+            className="gBtn"
+            onClick={() => {
+              setIsModal(true);
+            }}
+          >
+            글쓰기
+          </button>
+        </div>
+        <div className="contentListContainer">
+          {isFetching ? (
+            <div>로딩중</div>
+          ) : datas?.length === 0 ? (
+            <div>데이터가 없습니다.</div>
+          ) : (
+            datas.map((data) => <Item data={data} key={data.id} />)
+          )}
+        </div>
+        <div>페이지네이션자리</div>
       </div>
-      <div className="contentListContainer">
-        {isFetching ? (
-          <div>로딩중</div>
-        ) : datas?.length === 0 ? (
-          <div>데이터가 없습니다.</div>
-        ) : (
-          datas.map((data) => <Item data={data} key={data.id} />)
-        )}
-      </div>
-      <div>페이지네이션자리</div>
-    </div>
+    </>
   );
 };
 

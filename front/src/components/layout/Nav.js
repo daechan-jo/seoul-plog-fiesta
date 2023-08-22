@@ -20,11 +20,18 @@ const Nav = () => {
           <Link
             to={item.to}
             className={
-              location.pathname === item.to.split('?')[0] ? styles.active : ''
+              location.pathname === item.to.split('?')[0]
+                ? styles.active
+                : styles.just
             }
             key={item.to}
           >
-            {item.icon}
+            <div className={styles.icon}>{item.icon}</div>
+            <div className={styles.text}>
+              {item.to === '/?view=main'
+                ? 'home'
+                : item.to.split('?')[0].split('/')[1]}
+            </div>
           </Link>
         ))}
       </nav>

@@ -5,8 +5,8 @@ const GroupUsers = () => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
-        <h1>멤버 리스트</h1>
-        <button className="gBtn">모임 리스트 관리</button>
+        <h1>인증 현황</h1>
+        <button className="gBtn">인증글 바로가기</button>
       </div>
       <List />
     </div>
