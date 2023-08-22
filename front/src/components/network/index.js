@@ -28,10 +28,10 @@ const ItemList = ({ view }) => {
         } else {
           if (isCheck) {
             const res = await Api.get(`/user/friend`);
-            setDatas(res.data);
+            setDatas(res.data.searchNickname);
           } else {
             const res = await Api.get(`/${view}s`);
-            setDatas(res.users);
+            setDatas(res.data.users);
           }
         }
       } catch (err) {
@@ -55,7 +55,7 @@ const ItemList = ({ view }) => {
           <div>데이터가 없습니다.</div>
         ) : (
           datas.map((data) => (
-            <Item data={data} key={`${view}_${data.id}`} view={view} />
+            <Item view={view} data={data} key={`${view}_${data.id}`} />
           ))
         )}
       </div>
@@ -66,28 +66,35 @@ const ItemList = ({ view }) => {
 
 export default ItemList;
 
-// 재렌더링 방지
-const NetworkHeader = React.memo(({ setIsModal, setIsCheck }) => {
+const NetworkHeader = ({ view, setIsModal, setIsCheck }) => {
   return (
     <div className="titleContainer">
       <div>
         <h1>유저리스트</h1>
         <span>
-          <input type="checkbox" name="isMine" onClick={setIsCheck} />
-          <div>나의 그룹만 보기</div>
+          <input
+            type="checkbox"
+            name="isMine"
+            onClick={() => {
+              setIsCheck((isCheck) => !isCheck);
+            }}
+          />
+          <div>나의 {view === 'group' ? '그룹' : '유저'}만 보기</div>
         </span>
       </div>
-      <button
-        className="gBtn"
-        onClick={() => {
-          setIsModal(true);
-        }}
-      >
-        모임 만들기
-      </button>
+      {
+        <button
+          className="gBtn"
+          onClick={() => {
+            setIsModal(true);
+          }}
+        >
+          모임 만들기
+        </button>
+      }
     </div>
   );
-});
+};
 
 const Item = ({ data, view }) => {
   const navigator = useNavigate();
@@ -118,22 +125,24 @@ const Item = ({ data, view }) => {
         />
       </div>
       <ul className={styles.item}>
-        <li key={data.name}>
-          <label>{view} 이름</label>
-          <div>{data.name}</div>
+        <li key={view === 'group' ? data.name : data.nickname}>
+          <label>{view === 'group' ? '그룹이름' : '유저별명'}</label>
+          <div>{view === 'group' ? data.name : data.nickname}</div>
         </li>
-        <li key={data.goal}>
-          <label>그룹 목표</label>
-          <div>{data.goal}</div>
+        <li key={view === 'group' ? data.goal : data.about}>
+          <label>{view === 'group' ? '그룹목표' : '유저소개'}</label>
+          <div>{view === 'group' ? data.goal : data.about}</div>
         </li>
-        <li key={data.region}>
-          <label>그룹지역</label>
-          <div>{data.region}</div>
+        <li key={view === 'group' ? data.region : data.activity}>
+          <label>{view === 'group' ? '그룹지역' : '유저활동'}</label>
+          <div>{view === 'group' ? data.region : data.activity}</div>
         </li>
         <div>
-          <div>
-            {data.memberCount} / {data.memberLimit}
-          </div>
+          {view === 'group' && (
+            <div>
+              {data.memberCount} / {data.memberLimit}
+            </div>
+          )}
         </div>
       </ul>
     </div>

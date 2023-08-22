@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
 import Writing from './Writing';
+import styles from './index.module.scss';
 
 const Notice = ({ id }) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -63,13 +64,20 @@ const Item = ({ data }) => {
 
   return (
     <div
+      className={styles.notice}
       onClick={() => {
         setIsModal(true);
       }}
     >
-      {isModal && <PostItem id={data.id} setIsModal={setIsModal} />}
-      <div>나의 인증1</div>
-      <div>장소</div>
+      {isModal && (
+        <PostItem
+          key={`group_post_${data.id}`}
+          id={data.id}
+          setIsModal={setIsModal}
+        />
+      )}
+      <div>{data.title}</div>
+      <div>{data.content}</div>
     </div>
   );
 };
