@@ -26,7 +26,7 @@ const searchUsers = async (req, res, next) => {
 		error.status = 500;
 		next(error);
 	}
-};s
+};
 
 /** @description 유저 검색(id) */
 const searchUserId = async (req, res, next) => {
