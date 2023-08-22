@@ -94,10 +94,12 @@ const addAsFriend = async (userAId, userBId ) => {
 
 
 /** @description 친구 목록 */
-const getMyFriends = async (userId) => {
+const getMyFriends = async (userAId) => {
 	try {
 		return await prisma.friendship.findMany({
-
+			where: {
+				userAId: userAId,
+			},
 			select: {
 				userBId: true,
 			},

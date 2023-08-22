@@ -76,17 +76,16 @@ const addAsFriend = async ( req, res, next ) => {
 }
 
 
-/** @description 친구 리스트 */
+/** @description 친구 목록 */
 const getMyFriends = async (req, res, next) => {
 	// const userId = req.user.id;
 	try {
-		const userId = req.user.id;s
-
-		const myFriendship = await userService.getMyFriends(userId);
+		const userAId = req.user.id;
+		const myFriendship = await userService.getMyFriends(userAId);
 		console.log(myFriendship);
-		res.status(200).json({ message: "친구 목록", myFriendship });
+		res.status(200).json({ message: "친구 목록", myFriendship});
 	} catch (error) {
-		console.error(error);ㄴ
+		console.error(error);
 		error.status = 500;
 		next(error);
 	}
