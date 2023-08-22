@@ -60,43 +60,45 @@ const changePassword = async (email,password) => { //비밀번호 변경
 	})
 	return updateUser;
 }
-/*
+
 const changeInformation = async (userData) => {
-	const {name, nickname, password, about, activity} = userData;
+	const {id, name, nickname, password, about, activity} = userData;
 	try{
 		if(!name || !nickname || !password) throw new Error("필수값들을 입력해주세요");
 		
 		//id는 다른데 nickname이 같은 사람이 있는경우 : nickname이 같으면 id를 대조
 		//혹은 모든 사람들의 데이터중에서 nickname이 같은 경우를 찾나 ?
 		//이미 unique라 이 전에 오류를 던지는지 => 필요 없는 코드 ?
-
-		//userData를 받을때 id를 받는게 아니라 알아서 꺼내와야 ..? 요청에 id가 있어야하나
-		const user = await prisma.user.findUnique({
+		/*const sameNicknameUser = await prisma.user.findUnique({
 			where: {
-				nickname:nickname,
-			}
-		})
-
-		const sameNicknameUser = await prisma.user.findUnique({
-			where: {
-				id : { not:id },
+				id : {not:id} ,
 				nickname: nickname,
 			}
 		})
 		if (sameNicknameUser) throw new Error("이미 존재하는 닉네임입니다.");
-
+		*/
 		const updateUser = await prisma.user.update({
 			where:{
-				
+				id : id,
+			},
+			data:{
+				name: name,
+				nickname: nickname,
+				password: password,
+				about: about, //빈 값 허용
+				activity: activity //빈 값 허용
 			}
-		})
+		});
+		console.log('유저의 정보를 업데이트했습니다');
+		return updateUser;
+	}catch (error) {
+		throw error;
 	}
-	
+	/*
 	email - 고유값이어야 함
 	password = not null
 	about
-	activity
-	
-}*/
+	activity*/
+}
 
-module.exports = { createUser, getUserByEmail, changePassword };
+module.exports = { createUser, getUserByEmail, changePassword, changeInformation };

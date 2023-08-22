@@ -11,7 +11,7 @@ authRouter.post("/auth/login", authenticateLocal, authController.login); //로�
 
 authRouter.post("/auth/setPassword", authenticateJWT, authController.findPasswordByEmail); //임시비밀번호 발급
 
-//authRouter.post("/auth/update", )
+authRouter.put("/auth/update", authenticateJWT, authController.changeInformation); //회원정보 변경
 
 
 

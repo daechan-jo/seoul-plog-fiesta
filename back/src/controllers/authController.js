@@ -73,11 +73,11 @@ const findPasswordByEmail = async(req, res, next) =>{
 	}
 }
 
-/*
+
 const changeInformation = async (req, res, next) =>{
 	try {
 		const userData = req.body
-		const user = authService.changeInformation(userData);
+		const user = await authService.changeInformation(userData);
 		console.log(user)
 		res.status(200).json(user);
 	} catch(error){
@@ -86,6 +86,6 @@ const changeInformation = async (req, res, next) =>{
 		next(error);
 	}
 }
-*/
 
-module.exports = { createUser, login , findPasswordByEmail};
+
+module.exports = { createUser, login , findPasswordByEmail, changeInformation };
