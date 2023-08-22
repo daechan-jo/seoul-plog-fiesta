@@ -1,7 +1,7 @@
 import router from "express";
 import authenticateJWT from "../middlewares/authenticateJWT";
 import groupController from "../controllers/groupController";
-import groupValidate from "../middlewares/groupValidate";
+import groupValidate from "../middlewares/validates/groupValidate";
 const groupRouter = router();
 
 /** @description 그룹 생성 */
@@ -57,6 +57,7 @@ groupRouter.get(
 groupRouter.post(
 	"/group/post/:groupid",
 	authenticateJWT,
+	groupValidate.validateGroupPostCreation,
 	groupController.createPost,
 );
 
@@ -84,6 +85,7 @@ groupRouter.get(
 /** @description 그룹 게시글 수정 */
 groupRouter.put(
 	"/group/post/put/:postid",
+	groupValidate.validateGroupPostUpdate,
 	authenticateJWT,
 	groupController.editPost,
 );

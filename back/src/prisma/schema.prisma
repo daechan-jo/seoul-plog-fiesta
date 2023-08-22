@@ -45,6 +45,8 @@ model User {
 	comments      Comment[]
 	profileImage  UserProfileImage?
 	certPosts			CertPost[]
+	chatRooms 		ChatRoom[] @relation("UserChatRooms")
+	messages 			Message[]
 }
 
 model UserProfileImage {
@@ -54,15 +56,31 @@ model UserProfileImage {
 	userId     Int      @unique
 }
 
+model ChatRoom {
+	id    		String @id @default(uuid())
+	users 		User[] @relation("UserChatRooms")
+	messages  Message[]
+}
+
+model Message {
+	id         String   @id @default(uuid())
+	content  	 String
+	createdAt	 DateTime @default(now())
+	chatRoom 	 ChatRoom @relation(fields: [chatRoomId], references: [id])
+	chatRoomId String
+	sender   	 User     @relation(fields: [senderId], references: [id])
+	senderId   Int
+}
+
 model Group {
 	id            Int            @id @default(autoincrement())
-	name          String
+	name          String         @db.VarChar(50)
 	manager       User           @relation(fields: [managerId], references: [id])
 	managerId     Int
 	posts         Post[]
-	goal          String?
-	region        String?
-	introduction  String?
+	goal          String?				 @db.VarChar(1000)
+	region        String?				 @db.VarChar(1000)
+	introduction  String?				 @db.VarChar(1000)
 	memberLimit   Int            @default(50)
 	GroupUser     GroupUser[]
 	images        GroupImage[]
@@ -105,8 +123,8 @@ model Post {
 	writerId  Int
 	group     Group     @relation(fields: [groupId], references: [id])
 	groupId   Int
-	title     String
-	content   String
+	title     String		@db.VarChar(50)
+	content   String		@db.VarChar(1000)
 	isNotice  Boolean   @default(false)
 	createdAt DateTime  @default(now())
 	comments  Comment[]
@@ -121,7 +139,7 @@ model PostImage {
 
 model Comment {
 	id         Int       @id @default(autoincrement())
-	content    String
+	content    String		 @db.VarChar(200)
 	createdAt  DateTime  @default(now())
 	updatedAt  DateTime  @updatedAt
 	writer     User      @relation(fields: [writerId], references: [id])

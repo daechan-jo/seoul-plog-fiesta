@@ -19,7 +19,7 @@ const createComment = async (
 			where: { id: postId },
 		});
 		if (!certPostExists) {
-			throw new Error("Cert post not found");
+			throw new Error("인증게시글을 찾을 수 없음");
 		}
 		commentData.certPost = {
 			connect: { id: postId },
@@ -29,7 +29,7 @@ const createComment = async (
 			where: { id: postId },
 		});
 		if (!postExists) {
-			throw new Error("Post not found");
+			throw new Error("게시글을 찾을 수 없");
 		}
 		commentData.post = {
 			connect: { id: postId },
