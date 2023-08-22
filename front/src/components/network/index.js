@@ -88,7 +88,7 @@ const Item = ({ data, view }) => {
     <div
       className={styles.itemContainer}
       onClick={() => {
-        navigator(`/${view}/${data.id}`);
+        navigator(`/${view}s/${data.id}?view=main`);
       }}
     >
       <div key={data.id}>
