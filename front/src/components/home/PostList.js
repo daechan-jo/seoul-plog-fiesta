@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
+import { useSelector } from 'react-redux';
 
 const PostList = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
+  const userId = useSelector((state) => state.userId);
+
   useEffect(() => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(``);
-        //setDatas(res.data);
+        const res = await Api.get(`/plo/board/${userId}`);
+        setDatas(res.data);
       } catch (err) {
         console.log('나의 인증글 데이터를 불러오는데 실패.', err);
       } finally {
@@ -20,7 +23,7 @@ const PostList = ({ view }) => {
     };
 
     getData();
-  }, [view]);
+  }, [view, userId]);
 
   return (
     <div className="gContainer  gList navVh">
