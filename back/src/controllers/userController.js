@@ -18,9 +18,9 @@ const getAllUsers = async ( req, res, next ) => {
 const searchUsers = async (req, res, next) => {
 	const nickname = req.params.name;
 	try {
-		const users = await userService.searchUsers(nickname);
-		console.log(users);
-		res.status(200).json({ message: "유저 검색 결과", users });
+		const searchNickname = await userService.searchUsers(nickname);
+		console.log(searchNickname);
+		res.status(200).json({ message: "유저 검색 결과", searchNickname });
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -28,13 +28,13 @@ const searchUsers = async (req, res, next) => {
 	}
 };
 
-/** @description 유저 검색(id) */
+/** @description 유저 찬기(id) */
 const searchUserId = async (req, res, next) => {
-	const userId = req.params.id;
+	const userId = parseInt(req.params.id);
 	try {
-		const users = await userService.searchUsers(userId);
-		console.log(users);
-		res.status(200).json({ message: "유저 검색 결과", users });
+		const searchId = await userService.searchUserId(userId);
+		console.log(searchId);
+		res.status(200).json({ message: "유저 검색 결과(id)", searchId });
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -95,9 +95,9 @@ const getMyFriends = async (req, res, next) => {
 	// const userId = req.user.id;
 	try {
 		const userAId = req.user.id;
-		const myFriendship = await userService.getMyFriends(userAId);
-		console.log(myFriendship);
-		res.status(200).json({ message: "친구 목록", myFriendship});
+		const myFriendList = await userService.getMyFriends(userAId);
+		console.log(myFriendList);
+		res.status(200).json({ message: "친구 목록", myFriendList});
 	} catch (error) {
 		console.error(error);
 		error.status = 500;

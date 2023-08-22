@@ -24,7 +24,7 @@ userRouter
 
 /** @description 유저 찾기(id) */
 userRouter
-    .get("/user/:id",
+    .get("/search/:id",
         authenticateJWT,
         userController.searchUserId);
 

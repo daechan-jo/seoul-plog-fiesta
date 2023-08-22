@@ -30,7 +30,6 @@ const searchUsers = async (nickname) => {
 				nickname: true,
 				about: true,
 				activity: true,
-				// authCount: true,
 			},
 		});
 	} catch (error) {
@@ -42,7 +41,7 @@ const searchUsers = async (nickname) => {
 /** @description 유저 찾기(id) */
 const searchUserId = async (userId) => {
 	try {
-		return await prisma.user.findUnique({
+		return await prisma.user.findMany({
 			where: {
 				id: userId,
 			},
@@ -51,7 +50,6 @@ const searchUserId = async (userId) => {
 				nickname: true,
 				about: true,
 				activity: true,
-				// authCount: true,
 			},
 		});
 	} catch (error) {
@@ -90,7 +88,7 @@ const getUserInfo = async (userId) => {
 		return await prisma.user.findUnique({
 			where: {
 				id: userId,
-			}
+			},
 		});
 	} catch (error) {
 		throw error;
