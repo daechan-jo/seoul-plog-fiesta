@@ -105,6 +105,14 @@ io.on('connection', (socket) => {
 		socket.leave(roomId);
 	});
 
+	socket.on('messageViewed', async (messageId) => {
+		// isRead 를 true로 업데이트
+		await prisma.chatMessage.update({
+			where: { id: messageId },
+			data: { isRead: true },
+		});
+	});
+
 	socket.on('disconnect', () => {
 		console.log(`User ${loggedInUserId} disconnected`);
 	});
