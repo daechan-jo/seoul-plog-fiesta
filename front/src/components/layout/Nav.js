@@ -2,9 +2,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { BiSolidHome } from 'react-icons/bi';
 import { FaUserFriends, FaAward, FaWalking } from 'react-icons/fa';
 import styles from './layout.module.scss';
+import { useEffect, useState } from 'react';
+import * as Api from '../../api';
+import ChatList from '../chat/ChatList';
 
 const Nav = () => {
   const location = useLocation(); // 현재 URL 정보를 가져오는 hook
+  const [datas, setDatas] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
     { to: '/?view=main', icon: <BiSolidHome /> },
@@ -12,6 +17,27 @@ const Nav = () => {
     { to: '/ranking', icon: <FaAward /> },
     { to: '/recommend', icon: <FaWalking /> },
   ];
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await Api.get('/chat/unread');
+        setDatas(res.data);
+      } catch (err) {
+        console.log('채팅방 리스트를 불러오는데 실패.', err);
+      }
+    };
+
+    getData();
+
+    const intervalId = setInterval(() => {
+      getData();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <div className={styles.LeftNav}>
@@ -35,6 +61,15 @@ const Nav = () => {
           </Link>
         ))}
       </nav>
+      {isOpen && <ChatList datas={datas} setIsOpen={setIsOpen} />}
+      <button
+        className="gBtn"
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        채팅목록
+      </button>
     </div>
   );
 };
