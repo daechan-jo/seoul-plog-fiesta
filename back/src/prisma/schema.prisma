@@ -10,26 +10,6 @@ datasource db {
 	url      = env("DATABASE_URL")
 }
 
-// 언젠가 쓸 일이 있겠찌..?
-// model Course {
-//   id                 Int    @id @default(autoincrement())
-//   WLK_COURS_FLAG_NM  String
-//   WLK_COURS_NM       String
-//   COURS_DC           String
-//   SIGNGU_NM          String
-//   COURS_LEVEL_NM     String
-//   COURS_LT_CN        Float
-//   COURS_DETAIL_LT_CN String
-//   ADIT_DC            String @db.VarChar(1000)
-//   COURS_TIME_CN      String
-//   OPTN_DC            String
-//   TOILET_DC          String
-//   CVNTL_NM           String
-//   LNM_ADDR           String
-//   COURS_SPOT_LA      Float
-//   COURS_SPOT_LO      Float
-// }
-
 model User {
 	id            Int               @id @default(autoincrement())
 	name          String
