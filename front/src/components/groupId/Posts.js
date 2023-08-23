@@ -1,12 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
+import { useNavigate } from 'react-router-dom';
+import { GroupIdContext } from '../../context/groupIdContext';
 
 const GroupPosts = () => {
+  const navigator = useNavigate();
+
+  const { groupId } = useContext(GroupIdContext);
+
   return (
     <div className="gContainer">
       <div className="titleContainer">
         <h1>공지사항</h1>
-        <button className="gBtn">게시판 바로가기</button>
+        <button
+          className="gBtn"
+          onClick={() => {
+            navigator(`/groups${groupId}?view=notice`);
+          }}
+        >
+          게시판 바로가기
+        </button>
       </div>
       <List />
     </div>
@@ -19,21 +32,24 @@ const List = () => {
   const [datas, setDatas] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
+  const { groupId } = useContext(GroupIdContext);
+
   useEffect(() => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get('');
-        //setDatas(res.data);
+        const res = await Api.get(`/group/posts/${groupId}`);
+        console.log(res);
+        setDatas(res.data);
       } catch (err) {
-        console.log('그룹공지사항데이터불러오기 실패', err);
+        console.log('공지사항 데이터를 불러오는데 실패.', err);
       } finally {
         setIsFetching(false);
       }
     };
 
     getData();
-  }, []);
+  }, [groupId]);
 
   return (
     <div className="contentContainer">

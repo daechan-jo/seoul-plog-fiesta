@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
+import { GroupIdContext } from '../../context/groupIdContext';
 
 const GroupUsers = () => {
   return (
@@ -16,6 +17,8 @@ const GroupUsers = () => {
 export default GroupUsers;
 
 const List = () => {
+  const { groupId } = useContext(GroupIdContext);
+
   const [datas, setDatas] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
@@ -23,17 +26,17 @@ const List = () => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get('');
-        //setDatas(res.data);
+        const res = await Api.get(`/group/${groupId}`);
+        setDatas(res.data.GroupUser);
       } catch (err) {
-        console.log('그룹유저데이터불러오기 실패', err);
+        console.log('멤버 리스트 데이터를 불러오는데 실패.', err);
       } finally {
         setIsFetching(false);
       }
     };
 
     getData();
-  }, []);
+  }, [groupId]);
 
   return (
     <div className="contentContainer">
