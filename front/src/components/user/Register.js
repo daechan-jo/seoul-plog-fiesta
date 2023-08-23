@@ -59,9 +59,9 @@ const Register = () => {
 
     try {
       // "user/register" 엔드포인트로 post요청함.
-      const res = await Api.registerPost('/auth', userData);
+      await Api.registerPost('/auth', userData);
       // 로그인 페이지로 이동함.
-      alert(res);
+      alert('회원가입 성공! 로그인해주세요');
       navigate('/login');
     } catch (err) {
       console.log('회원가입에 실패하였습니다.', err);

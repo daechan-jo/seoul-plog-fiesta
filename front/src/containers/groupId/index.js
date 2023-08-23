@@ -3,7 +3,7 @@ import GroupUsers from '../../components/groupId/Users';
 import GroupPosts from '../../components/groupId/Posts';
 import GroupMap from '../../components/groupId/Map';
 import PageNav from '../../components/common/PageNav';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Notice from '../../components/groupId/Notice';
 import GroupPlogging from '../../components/groupId/Plogging';
 import GroupMember from '../../components/groupId/Member';
@@ -17,7 +17,11 @@ const GroupIdContainer = () => {
     members: '멤버보기',
   };
 
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
+
+  const { setGroupId } = useContext(GroupIdContext);
+
+  setGroupId(groupId);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
