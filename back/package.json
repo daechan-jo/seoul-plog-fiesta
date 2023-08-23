@@ -1,5 +1,64 @@
 {
-  "dependencies": {
-    "@prisma/client": "^5.2.0"
-  }
+	"name": "express-mysql-boilerplate",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon index.js --exec babel-node",
+		"test": "jest --setupFiles dotenv/config"
+	},
+	"author": "daechanJo",
+	"license": "ISC",
+	"dependencies": {
+		"@prisma/client": "^5.1.1",
+		"@sindresorhus/is": "^6.0.0",
+		"bcrypt": "^5.1.1",
+		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
+		"csv-parser": "^3.0.0",
+		"express": "^4.18.2",
+		"fs": "^0.0.1-security",
+		"global": "^4.4.0",
+		"jest": "^27.3.1",
+		"joi": "^17.9.2",
+		"jsonwebtoken": "^9.0.1",
+		"morgan": "^1.10.0",
+		"multer": "^1.4.5-lts.1",
+		"mysql2": "^3.6.0",
+		"nodemailer": "^6.9.4",
+		"nunjucks": "^3.2.4",
+		"passport": "^0.6.0",
+		"passport-jwt": "^4.0.1",
+		"passport-local": "^1.0.0",
+		"socket.io": "^4.7.2",
+		"socketio-jwt": "^4.6.2",
+		"uuid": "^9.0.0",
+		"winston": "^3.10.0",
+		"winston-daily-rotate-file": "^4.7.1",
+		"yarn": "^1.22.19"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.17.0",
+		"@babel/core": "^7.17.0",
+		"@babel/node": "^7.22.6",
+		"@babel/plugin-transform-runtime": "^7.17.0",
+		"@babel/preset-env": "^7.16.4",
+		"csv-parse": "^5.4.0",
+		"dotenv": "^16.0.0",
+		"nodemon": "^3.0.1",
+		"prettier": "3.0.1",
+		"prisma": "^5.1.1",
+		"socket.io-client": "^4.7.2",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^5.0.0"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"coveragePathIgnorePatterns": [
+			"/node_modules/"
+		],
+		"modulePathIgnorePatterns": [
+			"__config__"
+		]
+	}
 }
