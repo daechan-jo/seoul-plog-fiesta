@@ -26,7 +26,7 @@ model User {
   posts         Post[]
   comments      Comment[]
   profileImage  UserProfileImage?
-  certPosts     certPost[]
+  certPosts     CertPost[]
   ChatRoomUser  ChatRoomUser[]
   ChatMessage   ChatMessage[]
 }
@@ -87,6 +87,7 @@ model GroupUser {
   isAdmin    Boolean @default(false)
   isAccepted Boolean @default(false)
 
+
   @@id([userId, groupId])
 }
 
@@ -131,7 +132,7 @@ model Comment {
   writerId   Int
   post       Post?     @relation(fields: [postId], references: [id])
   postId     Int?
-  certPost   certPost? @relation(fields: [certPostId], references: [id])
+  certPost   CertPost? @relation(fields: [certPostId], references: [id])
   certPostId Int?
   parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
   parentId   Int?
@@ -145,22 +146,36 @@ model PostImage {
   postId   Int
 }
 
-model certPost {
-  id        Int             @id @default(autoincrement())
-  writer    User            @relation(fields: [writerId], references: [id])
-  writerId  Int
-  title     String
-  borough   String
-  distance  Float
-  content   String
-  createdAt DateTime        @default(now())
-  comments  Comment[]
-  images    certPostImage[]
+model CertPost {
+  id        	Int             @id @default(autoincrement())
+  writer    	User            @relation(fields: [writerId], references: [id])
+  writerId  	Int
+  title     	String
+  region   		String
+  location  	String
+	distance  	String
+	trashAmount String
+	averagePace String
+  description String
+	startTime 	DateTime
+	endTime   	DateTime
+  createdAt 	DateTime        @default(now())
+  comments  	Comment[]
+  images    	CertPostImage[]
+	isGroupPost  Boolean      @default(false)
+	groupName    String?
+	participants CertPostParticipant[]
+}
+model CertPostParticipant {
+	id            Int         @id @default(autoincrement())
+	certPost      CertPost    @relation(fields: [certPostId], references: [id])
+	certPostId    Int
+	participant   String
 }
 
-model certPostImage {
+model CertPostImage {
   id         Int      @id @default(autoincrement())
   imageUrl   String
-  certPost   certPost @relation(fields: [certPostId], references: [id])
+  certPost   CertPost @relation(fields: [certPostId], references: [id])
   certPostId Int
 }
