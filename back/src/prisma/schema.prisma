@@ -76,6 +76,7 @@ model Group {
 	introduction String?
 	memberLimit  Int         @default(50)
 	GroupUser    GroupUser[]
+	GroupImage   GroupImage[]
 }
 
 model GroupUser {
@@ -87,6 +88,13 @@ model GroupUser {
 	isAccepted Boolean @default(false)
 
 	@@id([userId, groupId])
+}
+
+model GroupImage {
+	id       Int    @id @default(autoincrement())
+	imageUrl String
+	group    Group  @relation(fields: [groupId], references: [id])
+	groupId  Int
 }
 
 model Friendship {
