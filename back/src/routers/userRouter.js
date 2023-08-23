@@ -78,6 +78,13 @@ userRouter
         userController.getMyFriends);
 
 
+/** @description 나의 친구 목록 */
+userRouter
+    .get("/myfriends",
+        authenticateJWT,
+        userController.getFriends);
+
+
 /** @description 친구 삭제 */
 userRouter
     .delete("/user/drop/:id",

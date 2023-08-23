@@ -198,6 +198,27 @@ const getMyFriends = async (userAId) => {
 	}
 };
 
+const getFriends = async  (userId) => {
+	try {
+		return await prisma.friendship.findMany({
+			where: {
+				OR: [
+					{ userAId: userId },
+					{ userBId: userId },
+				],
+				isAccepted: true,
+			},
+			select:{
+					userAId: true,
+					userBId: true,
+			},
+		});
+	} catch (error) {
+		throw  error;
+	}
+}
+
+
 
 
 /** @description 친구 삭제 */
@@ -234,6 +255,7 @@ module.exports = {
 	acceptFriend,
 	rejectFriend,
 	getMyFriends,
+	getFriends,
 	deleteFriend,
 	getRandomUsers,
 };

@@ -95,7 +95,7 @@ const friendRequest = async ( req, res, next ) => {
 	try {
 		const userAId = req.user.id;
 		const userBId = parseInt(req.params.id);
-		// if (userAId == userBId) return res.status(404).json({ message: "나 자신과는 친구가 될 수 없어!"});
+		if (userAId == userBId) return res.status(404).json({ message: "나 자신과는 친구가 될 수 없어!"});
 		const request = await userService.friendRequest(userAId, userBId)
 		console.log("친구 요청 완료");
 		res.status(200).json({ message: "친구 요청 완료", request});
@@ -168,6 +168,18 @@ const getMyFriends = async (req, res, next) => {
 	}
 };
 
+const getFriends = async ( req, res, next ) => {
+	try {
+		const userId = req.user.id;
+		const friendsList = await userService.getFriends(userId);
+		console.log(friendsList);
+		res.status(200).json({ message: "나의 친구 리스트", friendsList});
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+}
 
 /** @description 친구 삭제 */
 const deleteFriend = async (req, res, next) => {
@@ -201,5 +213,6 @@ module.exports = {
 	acceptFriend,
 	rejectFriend,
 	getMyFriends,
+	getFriends,
 	deleteFriend,
 };
