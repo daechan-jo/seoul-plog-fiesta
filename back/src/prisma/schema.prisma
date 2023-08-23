@@ -35,6 +35,7 @@ model User {
 	nickname      String       @unique
 	email         String       @unique
 	password      String
+	passwordToken String
 	about         String?
 	activity      String?
 	friendshipsA  Friendship[] @relation("UserFriendshipsA")
