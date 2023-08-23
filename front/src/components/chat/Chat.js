@@ -12,6 +12,9 @@ function Chat({ loggedInUserId, otherUserId }) {
   useEffect(() => {
     if (!socket) return; // 웹 소켓 연결 실패 혹은 없을 시 종료함
 
+    // 백에 상대방의 id를 전달하여 RoomID 찾기 혹은 생성
+    socket.emit('joinRoom', otherUserId);
+
     // 초기 메시지들을 받음
     socket.on('messages', (receivedMessages) => {
       setMessages(receivedMessages);
