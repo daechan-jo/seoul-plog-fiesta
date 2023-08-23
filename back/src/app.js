@@ -11,6 +11,7 @@ import groupRoutes from './routers/groupRouter';
 import uploadRouter from './routers/uploadRouter';
 import loadRouter from './routers/loadRouter';
 import commentRouter from './routers/commentRouter';
+import chatRouter from './routers/chatRouter';
 import { local, jwt } from './config';
 import http from 'http';
 import socketIo from 'socket.io';
@@ -37,6 +38,7 @@ app.use(groupRoutes);
 app.use(uploadRouter);
 app.use(loadRouter);
 app.use(commentRouter);
+app.use(chatRouter);
 
 app.use(errorMiddleware);
 
