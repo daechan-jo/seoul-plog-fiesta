@@ -97,23 +97,6 @@ const getUserInfo = async (userId) => {
 };
 
 
-
-// /** @description 친구 추가 */
-// const addAsFriend = async (userAId, userBId ) => {
-// 	try {
-// 		await prisma.friendship.create({
-// 			data: {
-// 					userAId,
-// 					userBId,
-// 					},
-// 		});
-// 		return addAsFriend;
-// 	} catch (error) {
-// 		throw error;
-// 	}
-// }
-
-
 /** @description 친구 요청 */
 const friendRequest = async (userAId, userBId ) => {
 	try {
@@ -182,23 +165,25 @@ const rejectFriend = async  (userId, requestId) => {
 }
 
 
-/** @description 친구 목록 */
-const getMyFriends = async (userAId) => {
-	try {
-		return await prisma.friendship.findMany({
-			where: {
-				userAId: userAId,
-			},
-			select: {
-				userBId: true,
-				},
-		});
-	} catch (error) {
-		throw error;
-	}
-};
+// /** @description 친구 목록 */
+// const getMyFriends = async (userAId) => {
+// 	try {
+// 		return await prisma.friendship.findMany({
+// 			where: {
+// 				userAId: userAId,
+// 			},
+// 			select: {
+// 				userBId: true,
+// 				},
+// 		});
+// 	} catch (error) {
+// 		throw error;
+// 	}
+// };
 
-const getFriends = async  (userId) => {
+
+/** @description 친구 목록 */
+const getMyFriends = async  (userId) => {
 	try {
 		return await prisma.friendship.findMany({
 			where: {
@@ -237,7 +222,26 @@ const deleteFriend = async (userAId, userBId) => {
 	}
 };
 
-/** @description 친구의 최신 게시물 */
+// /** @description 친구의 최신 게시물 */
+// const friendsPost = async  (userId) => {
+// 	try {
+// 		return await prisma.friendship.findMany({
+// 			where: {
+// 				OR: [
+// 					{ userAId: userId },
+// 					{ userBId: userId },
+// 				],
+// 				isAccepted: true,
+// 			},
+// 			select:{
+// 					userAId: true,
+// 					userBId: true,
+// 			},
+// 		});
+// 	} catch (error) {
+// 		throw  error;
+// 	}
+// }
 
 
 /** @description 나의 인증 횟수, 랭킹 */
@@ -249,13 +253,11 @@ module.exports = {
 	searchUsers,
 	searchUserId,
 	getUserInfo,
-	// addAsFriend,
 	friendRequest,
 	friendRequestList,
 	acceptFriend,
 	rejectFriend,
 	getMyFriends,
-	getFriends,
 	deleteFriend,
 	getRandomUsers,
 };

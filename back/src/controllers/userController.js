@@ -71,25 +71,6 @@ const currentUser = async (req, res, next) => {
 };
 
 
-
-
-/** @description 친구 추가 */
-// const addAsFriend = async ( req, res, next ) => {
-// 	try {
-// 		const userAId = req.user.id;
-// 		const userBId = parseInt(req.params.id);
-// 		if (userAId == userBId) return res.status(404).json({ message: "나 자신과는 친구가 될 수 없어!"});
-// 		const addAsFriend = await userService.addAsFriend(userAId, userBId)
-// 		console.log(addAsFriend);
-// 		res.status(200).json({ message: "친구 요청", addAsFriend});
-// 	} catch (error) {
-// 		console.error(error);
-// 		error.status = 500;
-// 		next(error);
-// 	}
-// }
-
-
 /** @description 친구 요청 */
 const friendRequest = async ( req, res, next ) => {
 	try {
@@ -152,28 +133,28 @@ const rejectFriend = async ( req, res, next ) => {
 	}
 }
 
-/** @description 친구 목록 */
-const getMyFriends = async (req, res, next) => {
-	// const userId = req.user.id;
-	try {
-		const userAId = req.user.id;
-		// const friendshipId = req.friendship.id;
-		const myFriendList = await userService.getMyFriends(userAId);
-		console.log(myFriendList);
-		res.status(200).json({ message: "친구 목록", myFriendList});
-	} catch (error) {
-		console.error(error);
-		error.status = 500;
-		next(error);
-	}
-};
+// /** @description 친구 목록 */
+// const getMyFriends = async (req, res, next) => {
+// 	// const userId = req.user.id;
+// 	try {
+// 		const userAId = req.user.id;
+// 		// const friendshipId = req.friendship.id;
+// 		const myFriendList = await userService.getMyFriends(userAId);
+// 		console.log(myFriendList);
+// 		res.status(200).json({ message: "친구 목록", myFriendList});
+// 	} catch (error) {
+// 		console.error(error);
+// 		error.status = 500;
+// 		next(error);s
+// 	}
+// };
 
-const getFriends = async ( req, res, next ) => {
+const getMyFriends = async ( req, res, next ) => {
 	try {
 		const userId = req.user.id;
-		const friendsList = await userService.getFriends(userId);
+		const friendsList = await userService.getMyFriends(userId);
 		console.log(friendsList);
-		res.status(200).json({ message: "나의 친구 리스트", friendsList});
+		res.status(200).json({ message: "나의 목록", friendsList});
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -207,12 +188,10 @@ module.exports = {
 	searchUserId,
 	getRandomUsers,
 	currentUser,
-	// addAsFriend,
 	friendRequest,
 	friendRequestList,
 	acceptFriend,
 	rejectFriend,
 	getMyFriends,
-	getFriends,
 	deleteFriend,
 };

@@ -36,13 +36,6 @@ userRouter
         userController.currentUser);
 
 
-/** @description 친구 추가 */
-// userRouter
-//     .post("/user/add/:id",
-//         authenticateJWT,
-//         userController.addAsFriend);
-
-
 /** @description 친구 요청 */
 userRouter
     .post("/req/:id",
@@ -76,13 +69,6 @@ userRouter
     .get("/friends",
         authenticateJWT,
         userController.getMyFriends);
-
-
-/** @description 나의 친구 목록 */
-userRouter
-    .get("/myfriends",
-        authenticateJWT,
-        userController.getFriends);
 
 
 /** @description 친구 삭제 */
