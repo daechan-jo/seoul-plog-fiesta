@@ -37,15 +37,43 @@ userRouter
 
 
 /** @description 친구 추가 */
+// userRouter
+//     .post("/user/add/:id",
+//         authenticateJWT,
+//         userController.addAsFriend);
+
+
+/** @description 친구 요청 */
 userRouter
-    .post("/user/add/:id",
+    .post("/req/:id",
         authenticateJWT,
-        userController.addAsFriend);
+        userController.friendRequest);
+
+
+/** @description 친구 요청 리스트 */
+userRouter
+    .get("/req/list",
+        authenticateJWT,
+        userController.friendRequestList);
+
+
+/** @description 친구 수락 */
+userRouter
+    .post("/accept/:id",
+        authenticateJWT,
+        userController.acceptFriend);
+
+
+/** @description 친구 거절 */
+userRouter
+    .delete("/reject/:id",
+        authenticateJWT,
+        userController.rejectFriend);
 
 
 /** @description 친구 목록 */
 userRouter
-    .get("/user/friends",
+    .get("/friends",
         authenticateJWT,
         userController.getMyFriends);
 
