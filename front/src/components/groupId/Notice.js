@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
 import Writing from './Writing';
 import styles from './index.module.scss';
+import { GroupIdContext } from '../../context/groupIdContext';
 
-const Notice = ({ id }) => {
+const Notice = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
   const [isModal, setIsModal] = useState(false);
+
+  const { groupId } = useContext(GroupIdContext);
 
   useEffect(() => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(`/group/posts/${id}`);
+        const res = await Api.get(`/group/posts/${groupId}`);
         console.log(res);
         setDatas(res.data);
       } catch (err) {
@@ -24,11 +27,11 @@ const Notice = ({ id }) => {
     };
 
     getData();
-  }, [id]);
+  }, [groupId]);
 
   return (
     <>
-      {isModal && <Writing setIsModal={setIsModal} id={id} />}
+      {isModal && <Writing setIsModal={setIsModal} />}
       <div className="gContainer  gList navVh">
         <div className="titleContainer">
           <h1>그룹게시판</h1>
