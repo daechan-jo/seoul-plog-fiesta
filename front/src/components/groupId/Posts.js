@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react';
 import * as Api from '../../api';
+import { useNavigate } from 'react-router-dom';
 
 const GroupPosts = () => {
+  const navigator = useNavigate();
+
   return (
     <div className="gContainer">
       <div className="titleContainer">
         <h1>공지사항</h1>
-        <button className="gBtn">게시판 바로가기</button>
+        <button
+          className="gBtn"
+          onClick={() => {
+            navigator('/groups/1?view=notice');
+          }}
+        >
+          게시판 바로가기
+        </button>
       </div>
       <List />
     </div>

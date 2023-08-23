@@ -6,6 +6,14 @@
   border-radius: 15px;
   justify-content: space-between;
   gap: 20px;
+  .imgContainer {
+    width: 400px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
   img {
     width: 200px;
   }
