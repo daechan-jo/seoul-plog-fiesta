@@ -36,6 +36,7 @@ model User {
 	nickname      String            @unique
 	email         String            @unique
 	password      String
+	passwordToken String?
 	about         String?
 	activity      String?
 	friendshipsA  Friendship[]      @relation("UserFriendshipsA")
@@ -74,6 +75,7 @@ model ChatMessage {
 	senderId  Int
 	message   String
 	createdAt DateTime @default(now())
+	isRead    Boolean   @default(false)
 }
 
 model UserProfileImage {
