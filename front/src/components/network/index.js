@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import GroupMaking from './GroupMaking';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 import * as Api from '../../api';
 import post_none from '../../assets/post_none.png';
 import user_none from '../../assets/user_none.png';
 
-const ItemList = ({ view }) => {
+const ItemList = () => {
   const [isModal, setIsModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
   const [isCheck, setIsCheck] = useState(false);
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const view = searchParams.get('view');
+  console.log(view);
   useEffect(() => {
     const getData = async () => {
       try {
@@ -28,7 +33,11 @@ const ItemList = ({ view }) => {
         } else {
           if (isCheck) {
             const res = await Api.get(`/user/friend`);
-            setDatas(res.data.searchNickname);
+            if (!res.data.searchNickname) {
+              setDatas([]);
+            } else {
+              setDatas(res.data.searchNickname);
+            }
           } else {
             const res = await Api.get(`/${view}s`);
             setDatas(res.data.users);
@@ -47,7 +56,11 @@ const ItemList = ({ view }) => {
   return (
     <div className="gContainer  gList navVh">
       {isModal && <GroupMaking setIsModal={setIsModal} setDatas={setDatas} />}
-      <NetworkHeader setIsModal={setIsModal} setIsCheck={setIsCheck} />
+      <NetworkHeader
+        view={view}
+        setIsModal={setIsModal}
+        setIsCheck={setIsCheck}
+      />
       <div className="contentListContainer">
         {isFetching ? (
           <div>로딩중</div>
@@ -70,7 +83,7 @@ const NetworkHeader = ({ view, setIsModal, setIsCheck }) => {
   return (
     <div className="titleContainer">
       <div>
-        <h1>유저리스트</h1>
+        <h1>{view === 'group' ? '그룹' : '유저'}리스트</h1>
         <span>
           <input
             type="checkbox"
@@ -82,7 +95,7 @@ const NetworkHeader = ({ view, setIsModal, setIsCheck }) => {
           <div>나의 {view === 'group' ? '그룹' : '유저'}만 보기</div>
         </span>
       </div>
-      {
+      {view === 'group' && (
         <button
           className="gBtn"
           onClick={() => {
@@ -91,7 +104,7 @@ const NetworkHeader = ({ view, setIsModal, setIsCheck }) => {
         >
           모임 만들기
         </button>
-      }
+      )}
     </div>
   );
 };
@@ -118,9 +131,15 @@ const Item = ({ data, view }) => {
         navigator(`/${view}s/${data.id}?view=main`);
       }}
     >
-      <div key={data.id}>
+      <div className={styles.imgContainer} key={data.id}>
         <img
-          src={data.imgUrl || view === 'group' ? post_none : user_none}
+          src={
+            data.images
+              ? `http://localhost:3002${data.images[0]}`
+              : view === 'group'
+              ? post_none
+              : user_none
+          }
           alt="그룹 이미지"
         />
       </div>

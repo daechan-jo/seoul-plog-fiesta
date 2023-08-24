@@ -1,5 +1,5 @@
 import { formDataInstance, instance } from './instance';
-const baseURL = 'http://localhost:3000';
+const baseURL = 'http://localhost:3002';
 const userToken = sessionStorage.getItem('userToken');
 
 const get = async (endpoint) => {
@@ -70,7 +70,7 @@ const put = async (endpoint, data) => {
 
 const del = async (endpoint, params = '') => {
   try {
-    console.log(`DELTE: ${baseURL}${endpoint} ${userToken}/params`);
+    console.log(`DELTE: ${baseURL}${endpoint} ${userToken}`);
     const res = await instance.delete(endpoint + '/' + params);
     return res;
   } catch (err) {

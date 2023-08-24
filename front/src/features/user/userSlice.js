@@ -2,15 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: { email: '', nickName: '', loginId: '' },
+  initialState: { email: '', nickname: '', loginId: '' },
   reducers: {
     login(state, action) {
       //api요청 후 반환값을 state에 넣기
       //const { email, nickName } = action.payload;
       // action의 payload속성에 접근
-      const { token, id, email, nickName } = action.payload;
+      const { token, id, email, nickname } = action.payload;
       state.email = email;
-      state.nickName = nickName;
+      state.nickName = nickname;
       state.loginId = id;
       sessionStorage.setItem('userToken', token);
     },

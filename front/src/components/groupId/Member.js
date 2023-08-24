@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
+import { GroupIdContext } from '../../context/groupIdContext';
 
 const GroupMember = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
-  const { groupId } = useParams();
-
+  const { groupId } = useContext(GroupIdContext);
   useEffect(() => {
     const getData = async () => {
       try {

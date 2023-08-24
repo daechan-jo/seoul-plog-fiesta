@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styles from './index.module.scss';
 import * as Api from '../../api';
 import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
 import { useNavigate } from 'react-router-dom';
+import { GroupIdContext } from '../../context/groupIdContext';
 
-const Writing = ({ setIsModal, id }) => {
-  const [isError, setIsError] = useRecoilState(isErrorState);
-  const [errorMessage, setErrorMessage] = useRecoilState(errorMessageState);
+const Writing = ({ setIsModal }) => {
+  const [, setIsError] = useRecoilState(isErrorState);
+  const [, setErrorMessage] = useRecoilState(errorMessageState);
   const navigator = useNavigate();
+
+  const { groupId } = useContext(GroupIdContext);
+
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -34,7 +38,7 @@ const Writing = ({ setIsModal, id }) => {
     e.preventDefault();
 
     try {
-      await Api.post(`/group/post/${id}`, formData);
+      await Api.post(`/group/post/${groupId}`, formData);
       setIsError(true);
       navigator('/groups/1?view=notice');
       setErrorMessage('그룹 글을 생성했습니다.');

@@ -45,11 +45,17 @@ const Login = () => {
     })
       .then((res) => {
         dispatch(login(res.data));
+        alert('로그인 성공!');
         navigate('/?view=main', { replace: true });
       })
       .catch((err) => {
-        alert(err);
-        console.error(err);
+        if (err.response && err.response.status === 401) {
+          alert('입력하신 회원정보가 없습니다.');
+          console.error('입력하신 회원정보가 없습니다.');
+        } else {
+          alert('로그인 중 오류가 발생했습니다.');
+          console.error('로그인 에러 발생', err.message);
+        }
       });
   };
 

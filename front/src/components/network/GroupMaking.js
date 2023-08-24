@@ -4,11 +4,16 @@ import * as Api from '../../api';
 import { useNavigate } from 'react-router-dom';
 import { seoulDistricts } from '../common/exportData';
 import { useSelector } from 'react-redux';
+import { useRecoilState } from 'recoil';
+import { errorMessageState, isErrorState } from '../../features/recoilState';
 
 const GroupMaking = ({ setIsModal, setDatas }) => {
   const navigate = useNavigate();
   const [img, setImg] = useState();
   const loginId = useSelector((state) => state.user.loginId);
+
+  const [isError, setIsError] = useRecoilState(isErrorState);
+  const [errorMessage, setErrorMessage] = useRecoilState(errorMessageState);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -58,12 +63,19 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
     e.preventDefault();
 
     try {
-      const res = await Api.post('/group', formData);
-      setDatas((datas) => [...datas, res]);
+      const postRes = await Api.post('/group', formData);
       if (img) {
-        const res = await Api.postForm(' /upload/groupimg/:groupid', imgData);
+        const res = await Api.postForm(
+          `/upload/groupimg/${postRes.data.id}`,
+          imgData,
+        );
+        postRes.data['images'] = res;
+        postRes.data['memberCount'] = 1;
       }
+      setDatas((datas) => [...datas, postRes.data]);
       setIsModal(false);
+      setErrorMessage('생성되었습니다.');
+      setIsError(true);
     } catch (err) {
       console.log('에 실패하였습니다.', err);
     }
