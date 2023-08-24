@@ -7,4 +7,6 @@ ploRouter.post('/plo/post', authenticateJWT, ploController.postPlo);
 
 ploRouter.get('/plo/post', ploController.getAllCertPosts);
 
+ploRouter.get('/plo/post/:postid', ploController.getCertPost);
+
 module.exports = ploRouter;
