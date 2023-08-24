@@ -6,8 +6,8 @@ const getUnreadChatList = async (userId) => {
 		return await prisma.chatMessage.findMany({
 			where: {
 				OR: [
-					{ roomId: { endsWith: `_${userId}` } },
 					{ roomId: { startsWith: `${userId}_` } },
+					{ roomId: { startsWith: `_${userId}` } },
 				],
 				isRead: false,
 			},
