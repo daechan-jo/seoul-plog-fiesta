@@ -14,8 +14,7 @@ const createComment = async (
 		},
 		content,
 	};
-	console.log(isCertPost);
-	console.log(postId);
+
 	if (isCertPost) {
 		const certPostExists = await prisma.certPost.findUnique({
 			where: { id: postId },
