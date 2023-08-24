@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useWebSocket from './useWebSocket';
+import io from 'socket.io-client';
 import styles from './index.module.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isChatOpenState, isChatWiState } from '../../features/recoilState';
@@ -15,7 +16,7 @@ function Chat() {
   const [chatId] = useRecoilState(isChatWiState);
 
   // 웹 소켓을 연결함
-  const socket = useWebSocket('ws://chat');
+  const socket = io.connect('ws://localhost:3001/chat');
 
   console.log(chatId);
   useEffect(() => {

@@ -5,7 +5,7 @@ const useWebSocket = (url) => {
 
   useEffect(() => {
     socketRef.current = new WebSocket(url);
-
+    console.log('연결신청');
     return () => {
       socketRef.current.close();
     };

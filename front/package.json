@@ -23,6 +23,7 @@
     "recoil": "^0.7.7",
     "redux": "^4.2.1",
     "sass": "^1.65.1",
+    "socket.io-client": "^4.7.2",
     "web-vitals": "^2.1.4",
     "yarn": "^1.22.19"
   },
