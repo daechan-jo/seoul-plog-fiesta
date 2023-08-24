@@ -9,11 +9,19 @@ const initialData = {
   name: '',
   nickname: '',
   about: '',
-  region: '',
+  activity: '',
 };
 
 //{ id, name, nickname, password, about, activity }
-
+/*
+const user = {
+      id: req.user.id,
+      nickname: req.body.nickname,
+      name: req.body.name,
+      about: req.body.about,
+      activity: req.body.activity,
+    };
+*/
 const MyInfo = () => {
   const [img, setImg] = useState();
   const [isEditing, setIsEditing] = useState(false);
@@ -63,7 +71,7 @@ const MyInfo = () => {
         name: data.name,
         nickname: data.nickname,
         about: data.about,
-        region: data.region,
+        activity: data.activity,
       });
       setData(res.data);
       if (img) {
@@ -88,7 +96,7 @@ const MyInfo = () => {
             name: res.data.currentUserInfo.name,
             nickname: res.data.currentUserInfo.nickname,
             about: res.data.currentUserInfo.about,
-            region: res.data.currentUserInfo.activity,
+            activity: res.data.currentUserInfo.activity,
           });
         });
         await Api.get('/profile/image').then((res) => setImg(res.data));
@@ -164,18 +172,18 @@ const MyInfo = () => {
             <label>지역구</label>
             {isEditing ? (
               <select
-                name="region"
-                value={data.region}
+                name="activity"
+                value={data.activity}
                 onChange={handleInputChange}
               >
-                {Object.keys(seoulDistricts).map((region) => (
-                  <option key={region} value={region}>
-                    {seoulDistricts[region]}
+                {Object.keys(seoulDistricts).map((activity) => (
+                  <option key={activity} value={activity}>
+                    {seoulDistricts[activity]}
                   </option>
                 ))}
               </select>
             ) : (
-              <div>{seoulDistricts[data.region]}</div>
+              <div>{seoulDistricts[data.activity]}</div>
             )}
           </li>
         </>
