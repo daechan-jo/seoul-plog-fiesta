@@ -89,52 +89,29 @@ const getCertPostDetails = async (certPostId) => {
 	}
 };
 
-const updateCertPost = async (userId, certPostId, updatedFields) => {
+const updateCertPost = async (certPostId, certPostData) => {
 	try {
-		const certPost = await prisma.certPost.findUnique({
-			where: { id: certPostId },
-		});
+		const { participants, ...updatedFields } = certPostData;
+		const updateData = { ...updatedFields };
 
-		if (certPost.writerId !== userId) {
-			return null;
+		if (participants !== undefined) {
+			await prisma.certPostParticipant.deleteMany({
+				where: { certPostId: certPostId },
+			});
+
+			const newParticipants = participants.map((participant) => ({
+				participant: participant,
+				certPostId: certPostId,
+			}));
+
+			await prisma.certPostParticipant.createMany({
+				data: newParticipants,
+			});
 		}
-
-		const currentParticipants = await prisma.certPostParticipant.findMany({
-			where: { certPostId },
-		});
-		const updatedParticipants = updatedFields.participants || [];
-
-		const upsertParticipants = updatedParticipants.map((participant) => {
-			const currentParticipant = currentParticipants.find(
-				(p) => p.participant === participant,
-			);
-			if (currentParticipant) {
-				return {
-					where: { id: currentParticipant.id },
-					update: { participant },
-				};
-			} else {
-				return {
-					where: { participant },
-					create: { participant, certPostId },
-					update: {},
-				};
-			}
-		});
-
-		delete updatedFields.participants;
 
 		return await prisma.certPost.update({
 			where: { id: certPostId },
-			data: {
-				...updatedFields,
-				participants: {
-					upsert: upsertParticipants,
-				},
-			},
-			include: {
-				participants: true,
-			},
+			data: updateData,
 		});
 	} catch (error) {
 		throw error;

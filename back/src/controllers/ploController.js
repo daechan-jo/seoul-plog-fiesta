@@ -44,20 +44,13 @@ const getCertPost = async (req, res, next) => {
 
 const updateCertPost = async (req, res, next) => {
 	try {
-		const userId = req.user.id;
-		const certPostId = parseInt(req.params.postid);
-		const updatedFields = req.body;
-
+		const certPostId = parseInt(req.params.postid); // Assuming the ID is passed as a parameter
+		const certPostData = req.body;
 		const updatedCertPost = await ploService.updateCertPost(
-			userId,
 			certPostId,
-			updatedFields,
+			certPostData,
 		);
-		//todo
-		if (!updatedCertPost) {
-			return res.status(403).json({ message: '권한 없음' });
-		}
-
+		console.log(updatedCertPost);
 		res.status(200).json(updatedCertPost);
 	} catch (error) {
 		console.error(error);
