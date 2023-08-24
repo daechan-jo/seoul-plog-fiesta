@@ -42,22 +42,29 @@ const Header = ({ setIsWriting }) => {
         </div>
       </div>
       <nav className={styles.navContainer}>
-        {isGroupPage(currentPath) ? (
-          <button onClick={handleGroupClick}>가입요청하기</button>
-        ) : isUserPage(currentPath) ? (
-          <button>친구요청하기</button>
+        {user.email &&
+          (isGroupPage(currentPath) ? (
+            <button onClick={handleGroupClick}>가입요청하기</button>
+          ) : isUserPage(currentPath) ? (
+            <button>친구요청하기</button>
+          ) : (
+            <button
+              onClick={() => {
+                setIsWriting(true);
+              }}
+            >
+              인증하러가기
+            </button>
+          ))}
+        {user.email ? (
+          <Link to="/mypage">
+            <button>마이 페이지</button>
+          </Link>
         ) : (
-          <button
-            onClick={() => {
-              setIsWriting(true);
-            }}
-          >
-            인증하러가기
-          </button>
+          <Link to="/register">
+            <button>회원가입</button>
+          </Link>
         )}
-        <Link to="/mypage">
-          <button>마이 페이지</button>
-        </Link>
         {user.email ? (
           <button onClick={handleLogoutClick}>로그아웃</button>
         ) : (

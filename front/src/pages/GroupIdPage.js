@@ -6,18 +6,12 @@ import useIsLogin from '../hooks/useIsLogin';
 import { GroupIdContext, GroupIdProvider } from '../context/groupIdContext';
 
 const GroupIdPage = () => {
-  const { groupId } = useParams();
-
-  const { setGroupId } = useContext(GroupIdContext);
-
-  setGroupId(groupId);
-
   useIsLogin();
 
   return (
     <GroupIdProvider>
       <Layout>
-        <GroupIdContainer id={groupId} />
+        <GroupIdContainer />
       </Layout>
     </GroupIdProvider>
   );
