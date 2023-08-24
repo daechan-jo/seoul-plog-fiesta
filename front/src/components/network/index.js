@@ -126,11 +126,12 @@ const Item = ({ data, view }) => {
   },
   */
 
+  console.log(data);
   return (
     <div
       className={styles.itemContainer}
       onClick={() => {
-        navigator(`/${view}s/${data.id}?view=main`);
+        navigator(`/${view}s/${data.id}?admin=${data.managerId}&view=main`);
       }}
     >
       <div className={styles.imgContainer} key={data.id}>

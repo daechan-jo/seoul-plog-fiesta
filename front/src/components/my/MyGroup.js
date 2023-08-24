@@ -8,7 +8,9 @@ const MyGroup = ({ data }) => {
     <div
       className={styles.myGroup}
       onClick={() => {
-        navigator(`/groups/${data.groupId}?view=main`);
+        navigator(
+          `/groups/${data.groupId}?admin=${data.group.managerId}&view=main`,
+        );
       }}
     >
       <div className={styles.imgContainer}>
