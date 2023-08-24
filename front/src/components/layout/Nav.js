@@ -21,14 +21,12 @@ const Nav = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await Api.get('/chat/unread');
+        const res = await Api.get('/unread');
         setDatas(res.data);
       } catch (err) {
         console.log('채팅방 리스트를 불러오는데 실패.', err);
       }
     };
-
-    getData();
 
     const intervalId = setInterval(() => {
       getData();

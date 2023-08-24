@@ -1,5 +1,5 @@
 import { formDataInstance, instance } from './instance';
-const baseURL = 'http://localhost:3002';
+const baseURL = 'http://localhost:3001';
 const userToken = sessionStorage.getItem('userToken');
 
 const get = async (endpoint) => {
