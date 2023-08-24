@@ -78,5 +78,11 @@ userRouter
         userController.deleteFriend);
 
 
+/** @description 나의 인증 */
+userRouter
+    .get("/user/count",
+        authenticateJWT,
+        userController.myCertPost);
+
 
 module.exports = userRouter;

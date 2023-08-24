@@ -98,20 +98,27 @@ const getUserInfo = async (userId) => {
 
 
 /** @description 친구 요청 */
-const friendRequest = async (userAId, userBId ) => {
+const friendRequest = async (userId,  requestId ) => {
 	try {
-		await prisma.friendship.create({
-			data: {
-					userAId: userAId,
-					userBId: userBId,
+		await prisma.friendship.createMany({
+			data: [
+					{
+					userAId: userId,
+					userBId: requestId,
 					isAccepted: false,
 					},
+					{
+					userAId: requestId,
+					userBId: userId,
+					isAccepted: false,
+					},
+				],
 		});
 		return friendRequest;
 	} catch (error) {
 		throw error;
 	}
-}
+};
 
 /** @description 친구 요청 목록 */
 const friendRequestList = async  (userId) => {
@@ -125,61 +132,44 @@ const friendRequestList = async  (userId) => {
 	} catch (error) {
 		throw  error;
 	}
-}
+};
 
 
 /** @description 친구 수락 */
 const acceptFriend = async  (userId, requestId) => {
 	try {
-		return await prisma.friendship.update({
+		return await prisma.friendship.updateMany({
 			where: {
-				userAId_userBId: {
-					userAId: requestId,
-					userBId: userId,
+				OR : [
+						{userAId: requestId, userBId: userId},
+						{userAId: userId, userBId: requestId},
+				],
+			},
+			data:{
+					isAccepted: true
 				},
-			},
-			data: {
-				isAccepted: true,
-			},
 		});
 	} catch (error) {
 		throw  error;
 	}
-}
+};
 
 
 /** @description 친구 거절 */
 const rejectFriend = async  (userId, requestId) => {
 	try {
-		return await prisma.friendship.delete({
-			where: {
-				userAId_userBId: {
-					userAId: requestId,
-					userBId: userId,
-				},
+		return await prisma.friendship.deleteMany({
+		where: {
+				OR : [
+						{userAId: requestId, userBId: userId},
+						{userAId: userId, userBId: requestId},
+				],
 			},
 		});
 	} catch (error) {
 		throw  error;
 	}
-}
-
-
-// /** @description 친구 목록 */
-// const getMyFriends = async (userAId) => {
-// 	try {
-// 		return await prisma.friendship.findMany({
-// 			where: {
-// 				userAId: userAId,
-// 			},
-// 			select: {
-// 				userBId: true,
-// 				},
-// 		});
-// 	} catch (error) {
-// 		throw error;
-// 	}
-// };
+};
 
 
 /** @description 친구 목록 */
@@ -201,51 +191,66 @@ const getMyFriends = async  (userId) => {
 	} catch (error) {
 		throw  error;
 	}
-}
-
-
+};
 
 
 /** @description 친구 삭제 */
-const deleteFriend = async (userAId, userBId) => {
+const deleteFriend = async (userId, friendId) => {
 	try {
-		return await prisma.friendship.delete({
+		return await prisma.friendship.deleteMany({
 			where: {
-					userAId_userBId: {
-						userAId: userAId,
-						userBId: userBId,
-					},
+					OR: [
+						{userAId: userId, userBId: friendId},
+						{userAId: friendId, userBId: userId}
+					],
 			},
 		});
 	} catch (error) {
 		throw error;
 	}
-};
+}
 
-// /** @description 친구의 최신 게시물 */
-// const friendsPost = async  (userId) => {
-// 	try {
-// 		return await prisma.friendship.findMany({
-// 			where: {
-// 				OR: [
-// 					{ userAId: userId },
-// 					{ userBId: userId },
-// 				],
-// 				isAccepted: true,
-// 			},
-// 			select:{
-// 					userAId: true,
-// 					userBId: true,
-// 			},
-// 		});
-// 	} catch (error) {
-// 		throw  error;
-// 	}
-// }
+
+
+
+/** @description 친구의 최신 게시물 */
+const friendsPost = async  (userId) => {
+	try {
+		return await prisma.friendship.findMany({
+			where: {
+				OR: [
+					{ userAId: userId },
+					{ userBId: userId },
+				],
+				isAccepted: true,
+			},
+			select:{
+					userAId: true,
+					userBId: true,
+			},
+		});
+	} catch (error) {
+		throw  error;
+	}
+}
 
 
 /** @description 나의 인증 횟수, 랭킹 */
-
+const myCertPost = async (userId) => {
+	try {
+		return await prisma.user.count({
+			where: {
+				writerId: userId,
+				certPost: true,
+				},
+			include: {
+				certPostImage: true,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+}
 
 
 module.exports = {
@@ -260,4 +265,5 @@ module.exports = {
 	getMyFriends,
 	deleteFriend,
 	getRandomUsers,
+	myCertPost,
 };
