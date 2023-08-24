@@ -7,7 +7,7 @@ function Chat({ loggedInUserId, otherUserId }) {
   const [messageText, setMessageText] = useState(''); // 메시지 input값을 저장
 
   // 웹 소켓을 연결함
-  const socket = useWebSocket('ws://your-websocket-server-url');
+  const socket = useWebSocket('ws://chat');
 
   useEffect(() => {
     if (!socket) return; // 웹 소켓 연결 실패 혹은 없을 시 종료함
