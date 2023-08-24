@@ -90,10 +90,10 @@ const changeInformation = async (userData) => {
 
     const sameNicknameUser = await prisma.user.findUnique({
       where: {
+        NOT: {
+          id: id,
+        },
         nickname: nickname,
-      },
-      NOT: {
-        id: id,
       },
     });
     if (sameNicknameUser) throw new Error('이미 존재하는 닉네임입니다.');
