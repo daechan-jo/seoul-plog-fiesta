@@ -3,18 +3,19 @@ const prisma = new PrismaClient();
 
 const getUnreadChatList = async (userId) => {
 	try {
-		return await prisma.chatMessage.findMany({
+		const chatMessages = await prisma.chatMessage.findMany({
 			where: {
-				OR: [
-					{ roomId: { startsWith: `${userId}_` } },
-					{ roomId: { startsWith: `_${userId}` } },
-				],
 				isRead: false,
 			},
 			orderBy: {
 				createdAt: 'asc',
 			},
 		});
+		return chatMessages.filter(
+			(message) =>
+				message.roomId.startsWith(`${userId}_`) ||
+				message.roomId.startsWith(`_${userId}`),
+		);
 	} catch (error) {
 		throw error;
 	}
