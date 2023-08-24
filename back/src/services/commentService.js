@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const createComment = async (
@@ -14,12 +14,14 @@ const createComment = async (
 		},
 		content,
 	};
+	console.log(isCertPost);
+	console.log(postId);
 	if (isCertPost) {
 		const certPostExists = await prisma.certPost.findUnique({
 			where: { id: postId },
 		});
 		if (!certPostExists) {
-			throw new Error("인증게시글을 찾을 수 없음");
+			throw new Error('인증게시글을 찾을 수 없음');
 		}
 		commentData.certPost = {
 			connect: { id: postId },
@@ -29,7 +31,7 @@ const createComment = async (
 			where: { id: postId },
 		});
 		if (!postExists) {
-			throw new Error("게시글을 찾을 수 없");
+			throw new Error('게시글을 찾을 수 없');
 		}
 		commentData.post = {
 			connect: { id: postId },

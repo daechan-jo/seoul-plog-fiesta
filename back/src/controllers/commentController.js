@@ -1,13 +1,12 @@
-import commentService from "../services/commentService";
-import groupService from "../services/groupService";
+import commentService from '../services/commentService';
+import groupService from '../services/groupService';
 const createComment = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);
 		const writerId = req.user.id;
 		const content = req.body.content;
 		const parentId = req.body.parentId; // 대댓글인 경우
-		const isCertPost =
-			req.query.post === "false" || req.query.post === "False";
+		const isCertPost = req.query.cert === 'true';
 
 		const newComment = await commentService.createComment(
 			postId,
@@ -32,9 +31,9 @@ const updateComment = async (req, res, next) => {
 		const content = req.body.content;
 
 		const comment = await commentService.getCommentById(commentId);
-		if (!comment) return res.status(404).json({ message: "댓글 없음" });
+		if (!comment) return res.status(404).json({ message: '댓글 없음' });
 		if (comment.writerId !== userId)
-			return res.status(403).json({ message: "권한 없음" });
+			return res.status(403).json({ message: '권한 없음' });
 
 		const updatedComment = await commentService.updateComment(
 			commentId,
@@ -55,7 +54,7 @@ const deleteComment = async (req, res, next) => {
 		const userId = req.user.id;
 		const comment = await commentService.getCommentById(commentId);
 
-		if (!comment) return res.status(404).json({ error: "댓글 없음" });
+		if (!comment) return res.status(404).json({ error: '댓글 없음' });
 		if (comment.writerId !== userId) {
 			const group = await groupService.getGroupByPostId(comment.postId);
 			//todo 인증게시판 로직
@@ -69,28 +68,27 @@ const deleteComment = async (req, res, next) => {
 			//     });
 			// };
 			if (group) {
-				const groupUser =
-					await groupService.getGroupUserByUserIdAndGroupId(
-						userId,
-						group.id,
-					);
+				const groupUser = await groupService.getGroupUserByUserIdAndGroupId(
+					userId,
+					group.id,
+				);
 				if (!(groupUser && groupUser.isAdmin)) {
 					return res.status(403).json({
-						error: "작성자 또는 그룹관리자만 삭제 가능",
+						error: '작성자 또는 그룹관리자만 삭제 가능',
 					});
 				}
 			} /*else if (certPost) {
 				나중에 인증게시판 구현되면 추가
 			} */ else {
 				return res.status(404).json({
-					error: "찾을 수 없음",
+					error: '찾을 수 없음',
 				});
 			}
 		}
 
 		await commentService.deleteComment(commentId);
-		console.log("댓글 삭제 성공");
-		res.json({ message: "댓글 삭제 성공" });
+		console.log('댓글 삭제 성공');
+		res.json({ message: '댓글 삭제 성공' });
 	} catch (error) {
 		console.error(error);
 		error.status = 500;

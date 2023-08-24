@@ -117,10 +117,42 @@ const updateCertPost = async (certPostId, certPostData) => {
 		throw error;
 	}
 };
+const deleteCertPostImages = async (certPostId) => {
+	try {
+		await prisma.certPostImage.deleteMany({
+			where: { certPostId: certPostId },
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const deleteCertPostParticipants = async (certPostId) => {
+	try {
+		await prisma.certPostParticipant.deleteMany({
+			where: { certPostId: certPostId },
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const deleteCertPost = async (certPostId) => {
+	try {
+		await prisma.certPost.delete({
+			where: { id: certPostId },
+		});
+	} catch (error) {
+		throw error;
+	}
+};
 
 module.exports = {
 	createCertPost,
 	getAllCertPosts,
 	getCertPostDetails,
 	updateCertPost,
+	deleteCertPostImages,
+	deleteCertPostParticipants,
+	deleteCertPost,
 };

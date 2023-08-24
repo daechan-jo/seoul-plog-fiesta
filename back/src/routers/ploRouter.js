@@ -15,4 +15,10 @@ ploRouter.put(
 	ploController.updateCertPost,
 );
 
+ploRouter.delete(
+	'/plo/post/:postid',
+	authenticateJWT,
+	ploController.deleteCertPost,
+);
+
 module.exports = ploRouter;

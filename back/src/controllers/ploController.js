@@ -59,4 +59,31 @@ const updateCertPost = async (req, res, next) => {
 	}
 };
 
-module.exports = { postPlo, getAllCertPosts, getCertPost, updateCertPost };
+const deleteCertPost = async (req, res, next) => {
+	try {
+		const userId = req.user.id;
+		const certPostId = parseInt(req.params.postid);
+		const certPost = await ploService.getCertPostDetails(certPostId);
+		if (!certPost || certPost.writerId !== userId)
+			return res.status(403).json({ message: '권한이 없음' });
+
+		await Promise.all([
+			ploService.deleteCertPostImages(certPostId),
+			ploService.deleteCertPostParticipants(certPostId),
+			ploService.deleteCertPost(certPostId),
+		]);
+		res.status(200).json({ message: '삭제 완료' });
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
+module.exports = {
+	postPlo,
+	getAllCertPosts,
+	getCertPost,
+	updateCertPost,
+	deleteCertPost,
+};
