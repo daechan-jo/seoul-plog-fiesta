@@ -27,7 +27,7 @@ const Info = () => {
 
   const handleChat = () => {
     setChatId(2);
-    setIsChatOpen(true);
+    setIsChatOpen(!isChatOpen);
   };
   const handleClick = async () => {
     try {
