@@ -3,7 +3,7 @@ import styles from './index.module.scss';
 import * as Api from '../../api';
 import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GroupIdContext } from '../../context/groupIdContext';
 
 const Writing = ({ setIsModal }) => {
@@ -11,7 +11,7 @@ const Writing = ({ setIsModal }) => {
   const [, setErrorMessage] = useRecoilState(errorMessageState);
   const navigator = useNavigate();
 
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
 
   const [formData, setFormData] = useState({
     title: '',
