@@ -44,7 +44,7 @@ const Header = ({ setIsWriting }) => {
         </div>
       </div>
       <nav className={styles.navContainer}>
-        {user.email &&
+        {token &&
           (isGroupPage(currentPath) ? (
             <button onClick={handleGroupClick}>가입요청하기</button>
           ) : isUserPage(currentPath) ? (

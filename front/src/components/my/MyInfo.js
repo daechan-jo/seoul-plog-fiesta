@@ -5,22 +5,14 @@ import * as Api from '../../api';
 import { handleImgChange } from '../../utils';
 import { seoulDistricts } from '../common/exportData';
 
-const mockmyInfo = {
-  imgUrl: 'http://placekitten.com/200/200',
-  name: '이름',
-  nickname: '별명',
-  email: 'dlapdlf@nave.rcom',
-  password: '12345',
-  about: '소개입니다. 조금 길면서 한줄입니다.',
-  authCount: '인증카운터',
-};
-
 const initialData = {
   name: '',
   nickname: '',
   about: '',
   region: '',
 };
+
+//{ id, name, nickname, password, about, activity }
 
 const MyInfo = () => {
   const [img, setImg] = useState();
@@ -67,7 +59,12 @@ const MyInfo = () => {
 
   const handleSubmit = async (e) => {
     try {
-      const res = await Api.post('/auth/update', data);
+      const res = await Api.post('/auth/update', {
+        name: data.name,
+        nickname: data.nickname,
+        about: data.about,
+        region: data.region,
+      });
       setData(res.data);
       if (img) {
         const res = await Api.postForm('/upload/userimg', formData);
@@ -86,7 +83,13 @@ const MyInfo = () => {
       try {
         await Api.get('/user').then((res) => {
           console.log(res.data.currentUserInfo);
-          setData(res.data.currentUserInfo);
+          setData({
+            email: res.data.currentUserInfo.email,
+            name: res.data.currentUserInfo.name,
+            nickname: res.data.currentUserInfo.nickname,
+            about: res.data.currentUserInfo.about,
+            region: res.data.currentUserInfo.activity,
+          });
         });
         await Api.get('/profile/image').then((res) => setImg(res.data));
       } catch (err) {
@@ -172,7 +175,7 @@ const MyInfo = () => {
                 ))}
               </select>
             ) : (
-              <div>{data.region}</div>
+              <div>{seoulDistricts[data.region]}</div>
             )}
           </li>
         </>
