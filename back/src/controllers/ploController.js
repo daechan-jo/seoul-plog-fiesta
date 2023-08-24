@@ -42,4 +42,28 @@ const getCertPost = async (req, res, next) => {
 	}
 };
 
-module.exports = { postPlo, getAllCertPosts, getCertPost };
+const updateCertPost = async (req, res, next) => {
+	try {
+		const userId = req.user.id;
+		const certPostId = parseInt(req.params.postid);
+		const updatedFields = req.body;
+
+		const updatedCertPost = await ploService.updateCertPost(
+			userId,
+			certPostId,
+			updatedFields,
+		);
+		//todo
+		if (!updatedCertPost) {
+			return res.status(403).json({ message: '권한 없음' });
+		}
+
+		res.status(200).json(updatedCertPost);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
+module.exports = { postPlo, getAllCertPosts, getCertPost, updateCertPost };

@@ -89,4 +89,61 @@ const getCertPostDetails = async (certPostId) => {
 	}
 };
 
-module.exports = { createCertPost, getAllCertPosts, getCertPostDetails };
+const updateCertPost = async (userId, certPostId, updatedFields) => {
+	try {
+		const certPost = await prisma.certPost.findUnique({
+			where: { id: certPostId },
+		});
+
+		if (certPost.writerId !== userId) {
+			return null;
+		}
+
+		const currentParticipants = await prisma.certPostParticipant.findMany({
+			where: { certPostId },
+		});
+		const updatedParticipants = updatedFields.participants || [];
+
+		const upsertParticipants = updatedParticipants.map((participant) => {
+			const currentParticipant = currentParticipants.find(
+				(p) => p.participant === participant,
+			);
+			if (currentParticipant) {
+				return {
+					where: { id: currentParticipant.id },
+					update: { participant },
+				};
+			} else {
+				return {
+					where: { participant },
+					create: { participant, certPostId },
+					update: {},
+				};
+			}
+		});
+
+		delete updatedFields.participants;
+
+		return await prisma.certPost.update({
+			where: { id: certPostId },
+			data: {
+				...updatedFields,
+				participants: {
+					upsert: upsertParticipants,
+				},
+			},
+			include: {
+				participants: true,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+module.exports = {
+	createCertPost,
+	getAllCertPosts,
+	getCertPostDetails,
+	updateCertPost,
+};
