@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 import * as Api from '../../api';
 import post_none from '../../assets/post_none.png';
 import user_none from '../../assets/user_none.png';
+import { seoulDistricts } from '../common/exportData';
 
 const ItemList = () => {
   const [isModal, setIsModal] = useState(false);
@@ -25,7 +26,8 @@ const ItemList = () => {
         if (!view || view === 'group') {
           if (isCheck) {
             const res = await Api.get(`/${view}/mygroup`);
-            setDatas(res.data);
+            const resGroupIds = res.data.map((data) => data.groupId);
+            setDatas(datas.filter((data) => resGroupIds.includes(data.id)));
           } else {
             const res = await Api.get(`/${view}`);
             setDatas(res.data);
@@ -51,7 +53,7 @@ const ItemList = () => {
     };
 
     getData();
-  }, [view, isCheck]);
+  }, [view, isCheck, setIsCheck]);
 
   return (
     <div className="gContainer  gList navVh">
@@ -154,7 +156,11 @@ const Item = ({ data, view }) => {
         </li>
         <li key={view === 'group' ? data.region : data.activity}>
           <label>{view === 'group' ? '그룹지역' : '유저활동'}</label>
-          <div>{view === 'group' ? data.region : data.activity}</div>
+          <div>
+            {view === 'group'
+              ? seoulDistricts[data.region]
+              : seoulDistricts[data.activity]}
+          </div>
         </li>
         <div>
           {view === 'group' && (

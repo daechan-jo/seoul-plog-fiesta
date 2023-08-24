@@ -70,8 +70,8 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
           imgData,
         );
         postRes.data['images'] = res;
-        postRes.data['memberCount'] = 1;
       }
+      postRes.data['memberCount'] = 1;
       setDatas((datas) => [...datas, postRes.data]);
       setIsModal(false);
       setErrorMessage('생성되었습니다.');
