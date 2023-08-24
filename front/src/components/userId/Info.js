@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import * as Api from '../../api';
 import styles from './index.module.scss';
 import { useLocation, useParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { isChatOpenState, isChatWiState } from '../../features/recoilState';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -20,6 +22,13 @@ const Info = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
+  const [isChatOpen, setIsChatOpen] = useRecoilState(isChatOpenState);
+  const [, setChatId] = useRecoilState(isChatWiState);
+
+  const handleChat = () => {
+    setChatId(2);
+    setIsChatOpen(true);
+  };
   const handleClick = async () => {
     try {
       setIsFetching(true);
@@ -86,6 +95,9 @@ const Info = () => {
       </ul>
       <button className="gBtn" onClick={handleClick}>
         친구추가
+      </button>
+      <button className="gBtn" onClick={handleChat}>
+        채팅보내기
       </button>
     </div>
   );

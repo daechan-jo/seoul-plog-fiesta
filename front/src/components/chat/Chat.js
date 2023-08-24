@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import useWebSocket from './useWebSocket';
-import styles from './layout.module.scss';
+import styles from './index.module.scss';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isChatOpenState, isChatWiState } from '../../features/recoilState';
+import { useSelector } from 'react-redux';
 
-function Chat({ loggedInUserId, otherUserId }) {
+function Chat() {
   const [messages, setMessages] = useState([]); // 받은 채팅 메시지를 저장함
   const [messageText, setMessageText] = useState(''); // 메시지 input값을 저장
+
+  const user = useSelector((state) => state.user);
+
+  const [, setIsChatOpen] = useRecoilState(isChatOpenState);
+  const { chatId } = useRecoilValue(isChatWiState);
 
   // 웹 소켓을 연결함
   const socket = useWebSocket('ws://chat');
 
   useEffect(() => {
-    if (!socket) return; // 웹 소켓 연결 실패 혹은 없을 시 종료함
+    if (!socket) {
+      console.log('socket 생성 에러');
+      return;
+    } // 웹 소켓 연결 실패 혹은 없을 시 종료함
 
     // 백에 상대방의 id를 전달하여 RoomID 찾기 혹은 생성
-    socket.emit('joinRoom', otherUserId);
+    socket.emit('joinRoom', chatId);
 
     // 초기 메시지들을 받음
     socket.on('messages', (receivedMessages) => {
@@ -28,16 +39,16 @@ function Chat({ loggedInUserId, otherUserId }) {
 
     return () => {
       // 컴포넌트를 나가면 방을 나감
-      socket.emit('leaveRoom', otherUserId);
+      socket.emit('leaveRoom', chatId);
     };
-  }, [socket, otherUserId]);
+  }, [socket, chatId]);
 
   // 클라에서 메시지를 전송하는 함수
   const sendMessage = () => {
     if (!socket || !messageText.trim()) return; // 연결이 실패 및 없음 혹은 빈 메시지면 종료함
 
     // 메시지를 서버에 전송
-    socket.emit('sendMessage', otherUserId, messageText);
+    socket.emit('sendMessage', chatId, messageText);
 
     // 전송 후 input을 초기화함
     setMessageText('');
@@ -48,9 +59,9 @@ function Chat({ loggedInUserId, otherUserId }) {
       <div>
         {messages.map((message, index) => (
           <div key={index}>
-            {message.senderId === loggedInUserId
+            {message.senderId === user.loginId
               ? '나의 메시지: '
-              : `${otherUserId}의 메시지: `}
+              : `${chatId}의 메시지: `}
             {message.message}
           </div>
         ))}

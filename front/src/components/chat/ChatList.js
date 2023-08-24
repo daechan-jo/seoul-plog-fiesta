@@ -1,14 +1,25 @@
 import styles from './index.module.scss';
 
-const ChatList = ({ datas }) => {
+const ChatList = ({ isFetching, datas }) => {
   return (
     <div className={styles.chatList}>
-      <div>채팅방1</div>
-      <div>채팅방2</div>
-      <div>채팅방3</div>
-      <div>채팅방4</div>
+      {isFetching ? (
+        <div>로딩중</div>
+      ) : datas.length === 0 ? (
+        <div>새로운 채팅을 시작하세요</div>
+      ) : (
+        datas.map((data) => <Item data={data} />)
+      )}
     </div>
   );
 };
 
 export default ChatList;
+
+const Item = ({ data }) => {
+  return (
+    <div>
+      <div>_님과의 채팅</div>
+    </div>
+  );
+};
