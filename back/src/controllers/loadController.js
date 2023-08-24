@@ -30,7 +30,7 @@ const loadPostImage = async (req, res, next) => {
 		});
 
 		if (!postImage) {
-			return res.status(404).send('게시글 찾을 수 없음');
+			return res.status(404).json({ message: '게시글 찾을 수 없음' });
 		}
 		const imageUrl = postImage.imageUrl;
 		console.log(imageUrl);
@@ -64,4 +64,29 @@ const loadGroupImage = async (req, res, next) => {
 	}
 };
 
-module.exports = { loadProfileImage, loadPostImage, loadGroupImage };
+const loadCertPostImage = async (req, res, next) => {
+	try {
+		const certPostId = parseInt(req.params.certid);
+		const certPostImage = await prisma.certPostImage.findFirst({
+			where: { certPostId },
+		});
+
+		if (!certPostImage) {
+			return res.status(404).json({ message: '게시글 찾을 수 없음' });
+		}
+		const imageUrl = certPostImage.imageUrl;
+		console.log(imageUrl);
+		res.json(imageUrl);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+module.exports = {
+	loadProfileImage,
+	loadPostImage,
+	loadGroupImage,
+	loadCertPostImage,
+};

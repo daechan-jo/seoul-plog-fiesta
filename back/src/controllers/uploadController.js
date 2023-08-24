@@ -83,6 +83,49 @@ const uploadPostImage = async (req, res, next) => {
 	}
 };
 
+const uploadCertImage = async (req, res, next) => {
+	try {
+		const certPostId = parseInt(req.params.postid);
+		const imageUrl = path.join('/public/upload', req.file.filename);
+		const certPost = await prisma.certPost.findUnique({
+			where: { id: certPostId },
+		});
+		console.log(certPost);
+		if (!certPost) {
+			return res.status(404).json({ message: 'Cert post not found' });
+		}
+
+		const existingImage = await prisma.certPostImage.findFirst({
+			where: { certPostId: certPost.id },
+		});
+
+		if (existingImage) {
+			// Delete the existing image file
+			fs.unlinkSync(path.join(__dirname, '..', existingImage.imageUrl));
+
+			// Update the image URL
+			await prisma.certPostImage.update({
+				where: { id: existingImage.id },
+				data: { imageUrl },
+			});
+		} else {
+			// Create a new certPostImage record
+			await prisma.certPostImage.create({
+				data: {
+					imageUrl,
+					certPost: { connect: { id: certPostId } },
+				},
+			});
+		}
+		console.log('인증 이미지 업로드 성공');
+		res.status(201).json({ message: '인증 이미지 업로드 성공' });
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 const uploadGroupImage = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
@@ -134,4 +177,5 @@ module.exports = {
 	uploadProfileImage,
 	uploadPostImage,
 	uploadGroupImage,
+	uploadCertImage,
 };

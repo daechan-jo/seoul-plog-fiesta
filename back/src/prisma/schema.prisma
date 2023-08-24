@@ -157,8 +157,8 @@ model CertPost {
 	trashAmount String
 	averagePace String
   description String
-	startTime 	DateTime
-	endTime   	DateTime
+	startTime 	String
+	endTime   	String
   createdAt 	DateTime        @default(now())
   comments  	Comment[]
   images    	CertPostImage[]

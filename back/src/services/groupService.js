@@ -74,7 +74,7 @@ const getAllGroups = async () => {
 				});
 
 				const imageUrls = images.map((image) => {
-					return image.imageUrl; // Just store the URLs directly
+					return image.imageUrl;
 				});
 
 				return {

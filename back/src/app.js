@@ -9,6 +9,7 @@ import groupRoutes from './routers/groupRouter';
 import uploadRouter from './routers/uploadRouter';
 import loadRouter from './routers/loadRouter';
 import commentRouter from './routers/commentRouter';
+import ploRouter from './routers/ploRouter';
 import { local, jwt } from './config';
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -32,6 +33,7 @@ app.use(groupRoutes);
 app.use(uploadRouter);
 app.use(loadRouter);
 app.use(commentRouter);
+app.use(ploRouter);
 
 app.use(errorMiddleware);
 

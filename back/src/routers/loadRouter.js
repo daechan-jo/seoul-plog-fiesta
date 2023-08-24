@@ -22,4 +22,10 @@ loadRouter.get(
 	loadController.loadGroupImage,
 );
 
+loadRouter.get(
+	'/certimg/:certid',
+	express.static(path.join(__dirname, 'upload')),
+	loadController.loadCertPostImage,
+);
+
 module.exports = loadRouter;
