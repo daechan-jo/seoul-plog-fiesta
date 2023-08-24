@@ -10,6 +10,7 @@ const userSlice = createSlice({
       // action의 payload속성에 접근
       const { token, id, email, nickname } = action.payload;
       state.email = email;
+      console.log(action.payload);
       state.nickName = nickname;
       state.loginId = id;
       sessionStorage.setItem('userToken', token);

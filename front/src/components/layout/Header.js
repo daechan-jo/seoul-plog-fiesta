@@ -11,7 +11,14 @@ const Header = ({ setIsWriting }) => {
   const token = sessionStorage.getItem('userToken');
 
   const location = useLocation();
+
   const currentPath = location.pathname;
+
+  const searchParams = new URLSearchParams(location.search);
+
+  const adminValue = searchParams.get('admin');
+
+  const isAdmin = adminValue == user.loginId;
 
   const handleLogoutClick = () => {
     dispatch(logout());
@@ -44,7 +51,16 @@ const Header = ({ setIsWriting }) => {
         </div>
       </div>
       <nav className={styles.navContainer}>
-        {user.email &&
+        {isAdmin ? (
+          <button
+            onClick={() => {
+              alert('가입요청목록출력');
+            }}
+          >
+            가입요청목록
+          </button>
+        ) : (
+          token &&
           (isGroupPage(currentPath) ? (
             <button onClick={handleGroupClick}>가입요청하기</button>
           ) : isUserPage(currentPath) ? (
@@ -57,7 +73,8 @@ const Header = ({ setIsWriting }) => {
             >
               인증하러가기
             </button>
-          ))}
+          ))
+        )}
         {token ? (
           <Link to="/mypage">
             <button>마이 페이지</button>

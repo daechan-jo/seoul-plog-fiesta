@@ -50,6 +50,7 @@ export default GroupMember;
 const Item = ({ data, view }) => {
   const navigator = useNavigate();
 
+  console.log(data);
   return (
     <div
       onClick={() => {

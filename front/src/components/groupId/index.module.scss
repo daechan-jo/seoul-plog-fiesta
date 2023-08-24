@@ -30,5 +30,22 @@
 }
 
 .notice {
-  background-color: gray;
+  background-color: pink;
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+  }
+  .isNotice {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    background-color: red;
+    color: white;
+  }
 }
