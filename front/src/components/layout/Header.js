@@ -8,6 +8,8 @@ const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
+  const token = sessionStorage.getItem('userToken');
+
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -56,7 +58,7 @@ const Header = ({ setIsWriting }) => {
               인증하러가기
             </button>
           ))}
-        {user.email ? (
+        {token ? (
           <Link to="/mypage">
             <button>마이 페이지</button>
           </Link>
@@ -65,7 +67,7 @@ const Header = ({ setIsWriting }) => {
             <button>회원가입</button>
           </Link>
         )}
-        {user.email ? (
+        {token ? (
           <button onClick={handleLogoutClick}>로그아웃</button>
         ) : (
           <Link to="/login">

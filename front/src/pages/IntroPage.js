@@ -5,11 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import useIsLogin from '../hooks/useIsLogin';
 
 const IntroPage = () => {
-  const navigate = useNavigate();
+  const navigator = useNavigate();
   const user = useSelector((state) => state.user);
+  const token = sessionStorage.getItem('userToken');
 
-  useIsLogin();
-
+  useEffect(() => {
+    if (token) {
+      navigator('/');
+    }
+  });
   return <IntroContainer />;
 };
 

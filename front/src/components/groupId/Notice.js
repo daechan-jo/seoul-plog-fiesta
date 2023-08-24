@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 import Writing from './Writing';
 import styles from './index.module.scss';
-import { GroupIdContext } from '../../context/groupIdContext';
 
 const Notice = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
   const [isModal, setIsModal] = useState(false);
 
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
 
   useEffect(() => {
     const getData = async () => {

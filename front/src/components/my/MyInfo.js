@@ -84,7 +84,10 @@ const MyInfo = () => {
     const getDatas = async () => {
       setIsFetching(true);
       try {
-        await Api.get('/user').then((res) => setData(res.data));
+        await Api.get('/user').then((res) => {
+          console.log(res.data.currentUserInfo);
+          setData(res.data.currentUserInfo);
+        });
         await Api.get('/profile/image').then((res) => setImg(res.data));
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
