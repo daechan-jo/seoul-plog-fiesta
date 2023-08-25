@@ -1,10 +1,16 @@
 import router from 'express';
 import authenticateJWT from '../middlewares/authenticateJWT';
 import ploController from '../controllers/ploController';
+import ploValidate from '../middlewares/validates/ploValidate';
 const ploRouter = router();
 
 /** @description 인증게시글 작성 */
-ploRouter.post('/plo/post', authenticateJWT, ploController.postPlo);
+ploRouter.post(
+	'/plo/post',
+	authenticateJWT,
+	ploValidate.validateCertCreation,
+	ploController.postPlo,
+);
 
 /** @description 모든 인증 게시글 */
 ploRouter.get('/plo/post', ploController.getAllCertPosts);
@@ -16,6 +22,7 @@ ploRouter.get('/plo/post/:postid', ploController.getCertPost);
 ploRouter.put(
 	'/plo/post/:postid',
 	authenticateJWT,
+	ploValidate.validateCertUpdateCreation,
 	ploController.updateCertPost,
 );
 
