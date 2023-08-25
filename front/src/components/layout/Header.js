@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './layout.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
@@ -6,6 +6,7 @@ import * as Api from '../../api';
 
 const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
+  const navigator = useNavigate();
   const user = useSelector((state) => state.user);
 
   const token = sessionStorage.getItem('userToken');
@@ -22,6 +23,7 @@ const Header = ({ setIsWriting }) => {
 
   const handleLogoutClick = () => {
     dispatch(logout());
+    navigator('intro');
   };
   const handleGroupClick = async () => {
     try {
