@@ -67,14 +67,14 @@ model UserProfileImage {
 
 model Group {
   id           Int          @id @default(autoincrement())
-  name         String				@unique
-  manager      User         @relation(fields: [managerId], references: [id])
+  name         String				@unique @db.VarChar(50)
+	manager      User         @relation(fields: [managerId], references: [id])
   managerId    Int
   posts        Post[]
 	certposts    CertPost[]
-  goal         String?
-  region       String?
-  introduction String?
+  goal         String?			@db.VarChar(1000)
+	region       String?			@db.VarChar(1000)
+	introduction String?			@db.VarChar(1000)
   memberLimit  Int          @default(50)
   GroupUser    GroupUser[]
   GroupImage   GroupImage[]
@@ -116,8 +116,8 @@ model Post {
   writerId  Int
   group     Group       @relation(fields: [groupId], references: [id])
   groupId   Int
-  title     String
-  content   String
+  title     String			@db.VarChar(50)
+	content   String			@db.VarChar(1000)
   isNotice  Boolean
   createdAt DateTime    @default(now())
   comments  Comment[]
@@ -126,7 +126,7 @@ model Post {
 
 model Comment {
   id         Int       @id @default(autoincrement())
-  content    String
+  content    String		 @db.VarChar(200)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   writer     User      @relation(fields: [writerId], references: [id])
@@ -151,15 +151,15 @@ model CertPost {
   id        	Int             @id @default(autoincrement())
   writer    	User            @relation(fields: [writerId], references: [id])
   writerId  	Int
-  title     	String
-  region   		String
-  location  	String
-	distance  	String
-	trashAmount String
-	averagePace String
-  description String
-	startTime 	String
-	endTime   	String
+  title     	String			@db.VarChar(50)
+  region   		String			@db.VarChar(50)
+  location  	String			@db.VarChar(50)
+	distance  	String			@db.VarChar(50)
+	trashAmount String			@db.VarChar(50)
+	averagePace String			@db.VarChar(50)
+  description String			@db.VarChar(50)
+	startTime 	String			@db.VarChar(50)
+	endTime   	String		  @db.VarChar(50)
   createdAt 	DateTime        @default(now())
   comments  	Comment[]
   images    	CertPostImage[]
