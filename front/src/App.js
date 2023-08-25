@@ -9,6 +9,7 @@ import GroupIdPage from './pages/GroupIdPage';
 import UserIdPage from './pages/UserIdPage';
 import LoginPage from './pages/LoginPage';
 import RegistePage from './pages/RegisterPage';
+import RecommendPage from './pages/RecommendPage';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/network" element={<NetworkPage />} />
       <Route path="/ranking" element={<RankingPage />} />
+      <Route path="/recommend" element={<RecommendPage />} />
       <Route path="/setpassword" element={<PasswordPage />} />
       <Route path="/groups/:groupId" element={<GroupIdPage />} />
       <Route path="/users/:userId" element={<UserIdPage />} />

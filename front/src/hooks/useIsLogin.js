@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 const useIsLogin = () => {
   const user = useSelector((state) => state.user);
   const navigator = useNavigate();
-
+  const token = sessionStorage.getItem('userToken');
   console.log(user);
   useEffect(() => {
-    if (!user.email) {
+    if (!token) {
       navigator('/intro');
     }
-  }, [navigator, user]);
+  }, [navigator, token]);
 };
 
 export default useIsLogin;

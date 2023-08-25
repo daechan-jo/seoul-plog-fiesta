@@ -1,5 +1,5 @@
 import { formDataInstance, instance } from './instance';
-const baseURL = 'http://localhost:3000';
+const baseURL = 'http://localhost:3001';
 const userToken = sessionStorage.getItem('userToken');
 
 const get = async (endpoint) => {
@@ -26,15 +26,15 @@ const post = async (endpoint, data) => {
 };
 
 const registerPost = async (endpoint, data) => {
-	try {
-		console.log(`POST: ${baseURL}${endpoint} ${userToken}`);
-		console.log(`DATA: ${JSON.stringify(data)}`);
-		const res = await instance.post(endpoint, data);
-		return res;
-	} catch (err) {
-		console.error('POST ERROR', err);
-		throw err;
-	}
+  try {
+    console.log(`POST: ${baseURL}${endpoint} ${userToken}`);
+    console.log(`DATA: ${JSON.stringify(data)}`);
+    const res = await instance.post(endpoint, data);
+    return res;
+  } catch (err) {
+    console.error('POST ERROR', err);
+    throw err;
+  }
 };
 
 const postForm = async (endpoint, data) => {

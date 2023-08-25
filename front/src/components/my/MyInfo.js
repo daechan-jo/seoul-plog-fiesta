@@ -5,23 +5,23 @@ import * as Api from '../../api';
 import { handleImgChange } from '../../utils';
 import { seoulDistricts } from '../common/exportData';
 
-const mockmyInfo = {
-  imgUrl: 'http://placekitten.com/200/200',
-  name: '이름',
-  nickname: '별명',
-  email: 'dlapdlf@nave.rcom',
-  password: '12345',
-  about: '소개입니다. 조금 길면서 한줄입니다.',
-  authCount: '인증카운터',
-};
-
 const initialData = {
   name: '',
   nickname: '',
   about: '',
-  region: '',
+  activity: '',
 };
 
+//{ id, name, nickname, password, about, activity }
+/*
+const user = {
+      id: req.user.id,
+      nickname: req.body.nickname,
+      name: req.body.name,
+      about: req.body.about,
+      activity: req.body.activity,
+    };
+*/
 const MyInfo = () => {
   const [img, setImg] = useState();
   const [isEditing, setIsEditing] = useState(false);
@@ -67,7 +67,12 @@ const MyInfo = () => {
 
   const handleSubmit = async (e) => {
     try {
-      const res = await Api.post('/auth/update', data);
+      const res = await Api.post('/auth/update', {
+        name: data.name,
+        nickname: data.nickname,
+        about: data.about,
+        activity: data.activity,
+      });
       setData(res.data);
       if (img) {
         const res = await Api.postForm('/upload/userimg', formData);
@@ -84,7 +89,16 @@ const MyInfo = () => {
     const getDatas = async () => {
       setIsFetching(true);
       try {
-        await Api.get('/user').then((res) => setData(res.data));
+        await Api.get('/user').then((res) => {
+          console.log(res.data.currentUserInfo);
+          setData({
+            email: res.data.currentUserInfo.email,
+            name: res.data.currentUserInfo.name,
+            nickname: res.data.currentUserInfo.nickname,
+            about: res.data.currentUserInfo.about,
+            activity: res.data.currentUserInfo.activity,
+          });
+        });
         await Api.get('/profile/image').then((res) => setImg(res.data));
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
@@ -158,18 +172,18 @@ const MyInfo = () => {
             <label>지역구</label>
             {isEditing ? (
               <select
-                name="region"
-                value={data.region}
+                name="activity"
+                value={data.activity}
                 onChange={handleInputChange}
               >
-                {Object.keys(seoulDistricts).map((region) => (
-                  <option key={region} value={region}>
-                    {seoulDistricts[region]}
+                {Object.keys(seoulDistricts).map((activity) => (
+                  <option key={activity} value={activity}>
+                    {seoulDistricts[activity]}
                   </option>
                 ))}
               </select>
             ) : (
-              <div>{data.region}</div>
+              <div>{seoulDistricts[data.activity]}</div>
             )}
           </li>
         </>

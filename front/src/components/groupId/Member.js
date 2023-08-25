@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
-import { GroupIdContext } from '../../context/groupIdContext';
 
 const GroupMember = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -50,6 +50,7 @@ export default GroupMember;
 const Item = ({ data, view }) => {
   const navigator = useNavigate();
 
+  console.log(data);
   return (
     <div
       onClick={() => {

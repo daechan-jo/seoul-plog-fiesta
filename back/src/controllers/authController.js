@@ -3,6 +3,7 @@ import smtpTransport from '../config/sendEmail';
 import randomPassword from '../utils/randomPassword';
 import { text } from 'express';
 
+/** @description 새로운 유저를 생성 */
 const createUser = async (req, res, next) => {
   try {
     const userData = req.body;
@@ -18,6 +19,7 @@ const createUser = async (req, res, next) => {
   }
 };
 
+/** @description 로그인 -> token값을 반환 */
 const login = async (req, res, next) => {
   try {
     const user = {
@@ -35,7 +37,8 @@ const login = async (req, res, next) => {
   }
 };
 
-const findPasswordByEmail = async (req, res, next) => {
+/** @description 비밀번호 변경 1. TokenUrl이 담긴 이메일 전송*/
+const sendEmailWithTokenUrl = async (req, res, next) => {
   try {
     const email = req.body.email;
     const existingUser = await authService.getUserByEmail(email);
@@ -49,7 +52,7 @@ const findPasswordByEmail = async (req, res, next) => {
       html:
         '<h2>안녕하세요. SeoulPlogFiesta입니다.</h2>' +
         '<h2>고객님의 비밀번호 변경을 위해 아래의 링크를 클릭해주세요.</h2>' +
-        '<a href= "http://localhost:3000/passwordChange?token=' +
+        '<a href= "http://localhost:3000/auth/changePassword?token=' +
         token +
         '">비밀번호 재설정 링크<a>',
     };
@@ -63,7 +66,7 @@ const findPasswordByEmail = async (req, res, next) => {
       }
     });
 
-    const user = await authService.updateTokenByEmail(email, token);
+    const user = await authService.updatePasswordTokenByEmail(email, token);
     //해당 유저의 비밀번호를 임시 비밀번호로 변경
     //const user = authService.changePassword(email, token);
     res.status(200).json(user); //빈 응답
@@ -74,12 +77,47 @@ const findPasswordByEmail = async (req, res, next) => {
   }
 };
 
+/*
+const getUserByPasswordToken = async (req, res, next) => {
+  const token = req.query.token;
+  try {
+    const user = authService.getUserByPasswordToken(token);
+    //유저 특정
+    const email = user.email;
+    const passwordToken =  user.passwordToken
+    res.redirect("/realChangePassword?" + email + passwordToken)
+  } catch (error) {
+    console.error(error);
+    error.status = 500;
+    next(error);
+  }
+};
+
+const changePassword = async (req, res, next) => {
+  try{
+    const email = req.query=
+  }
+}
+*/
+
+/** @description 회원정보 변경
+ * id는 req.user에서 받아오고
+ * nickname, name, about, activity는 req.body에서 받아옴
+ * 다 같이 묶어 변경
+ */
 const changeInformation = async (req, res, next) => {
   try {
-    const userData = req.body;
-    const user = await authService.changeInformation(userData);
+    const user = {
+      id: req.user.id,
+      nickname: req.body.nickname,
+      name: req.body.name,
+      about: req.body.about,
+      activity: req.body.activity,
+    };
     console.log(user);
-    res.status(200).json(user);
+    const changedUser = await authService.changeInformation(user);
+    //console.log(user);
+    res.status(200).json(changedUser);
   } catch (error) {
     console.error(error);
     error.status = 500;
@@ -100,10 +138,21 @@ const removeUser = async (req, res, next) => {
   }
 };
 
+/** @description 로그아웃 -> 토큰 쿠키 삭제*/
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie('token').send('로그아웃 됨');
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createUser,
   login,
-  findPasswordByEmail,
+  sendEmailWithTokenUrl,
   changeInformation,
   removeUser,
+  logout,
+  //getUserByPasswordToken,
 };

@@ -7,7 +7,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import Notice from '../../components/groupId/Notice';
 import GroupPlogging from '../../components/groupId/Plogging';
 import GroupMember from '../../components/groupId/Member';
-import { GroupIdContext } from '../../context/groupIdContext';
+import { GroupIdContext, GroupIdProvider } from '../../context/groupIdContext';
 
 const GroupIdContainer = () => {
   const lists = {
@@ -19,39 +19,37 @@ const GroupIdContainer = () => {
 
   const { groupId } = useParams();
 
-  const { setGroupId } = useContext(GroupIdContext);
-
-  setGroupId(groupId);
-
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
   const [view, setView] = useState(searchParams.get('view'));
 
   return (
-    <main>
-      <PageNav
-        view={view}
-        setView={setView}
-        lists={lists}
-        params={`groups/${groupId}`}
-      />
-      {view === 'main' ? (
-        <div className="threeContainer navVh">
-          <GroupMap />
-          <div className="box">
-            <GroupUsers />
-            <GroupPosts />
+    <GroupIdProvider>
+      <main>
+        <PageNav
+          view={view}
+          setView={setView}
+          lists={lists}
+          params={`groups/${groupId}`}
+        />
+        {view === 'main' ? (
+          <div className="threeContainer navVh">
+            <GroupMap />
+            <div className="box">
+              <GroupUsers />
+              <GroupPosts />
+            </div>
           </div>
-        </div>
-      ) : view === 'notice' ? (
-        <Notice />
-      ) : view === 'posts' ? (
-        <GroupPlogging />
-      ) : (
-        <GroupMember />
-      )}
-    </main>
+        ) : view === 'notice' ? (
+          <Notice />
+        ) : view === 'posts' ? (
+          <GroupPlogging />
+        ) : (
+          <GroupMember />
+        )}
+      </main>
+    </GroupIdProvider>
   );
 };
 

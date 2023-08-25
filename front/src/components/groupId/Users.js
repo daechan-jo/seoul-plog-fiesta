@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
 import { GroupIdContext } from '../../context/groupIdContext';
+import { useParams } from 'react-router-dom';
 
 const GroupUsers = () => {
   return (
@@ -17,7 +18,7 @@ const GroupUsers = () => {
 export default GroupUsers;
 
 const List = () => {
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
 
   const [datas, setDatas] = useState([]);
   const [isFetching, setIsFetching] = useState(false);

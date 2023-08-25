@@ -10,7 +10,7 @@
 	"author": "daechanJo",
 	"license": "ISC",
 	"dependencies": {
-		"@prisma/client": "^5.1.1",
+		"@prisma/client": "^5.2.0",
 		"@sindresorhus/is": "^6.0.0",
 		"bcrypt": "^5.1.1",
 		"cookie-parser": "^1.4.6",

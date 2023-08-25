@@ -9,7 +9,11 @@ authRouter.post('/auth', authController.createUser); //회원가입
 
 authRouter.post('/auth/login', authenticateLocal, authController.login); //로그인
 
-authRouter.post('/auth/setPassword', authController.findPasswordByEmail); //임시비밀번호 발급
+authRouter.post('/auth/setPassword', authController.sendEmailWithTokenUrl); //비밀번호 찾기 -> 이메일 보냄
+
+//authRouter.get('/auth/changePassword',authController.getUserByPasswordToken ); //비밀번호 토큰을 확인하고 비밀번호 페이지로 이동
+
+//authRouter.post('/auth/realChangePassword, ') //비밀번호 변경
 
 authRouter.put(
   '/auth/update',
@@ -19,4 +23,5 @@ authRouter.put(
 
 authRouter.delete('/auth/drop', authenticateJWT, authController.removeUser); //회원 탈퇴
 
+authRouter.delete('/auth/logout', authenticateJWT, authController.logout);
 module.exports = authRouter;

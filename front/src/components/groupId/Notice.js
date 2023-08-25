@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 import Writing from './Writing';
 import styles from './index.module.scss';
-import { GroupIdContext } from '../../context/groupIdContext';
 
 const Notice = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
   const [isModal, setIsModal] = useState(false);
 
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
 
   useEffect(() => {
     const getData = async () => {
@@ -66,50 +65,20 @@ const Item = ({ data }) => {
   const [isModal, setIsModal] = useState(false);
 
   return (
-    <div
-      className={styles.notice}
-      onClick={() => {
-        setIsModal(true);
-      }}
-    >
-      {isModal && (
-        <PostItem
-          key={`group_post_${data.id}`}
-          id={data.id}
-          setIsModal={setIsModal}
-        />
-      )}
-      <div>{data.title}</div>
-      <div>{data.content}</div>
-    </div>
-  );
-};
-
-const PostItem = ({ id, setIsModal }) => {
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setIsFetching(true);
-        const res = await Api.get(``);
-        //setDatas(res.data);
-      } catch (err) {
-        console.log('공지사항 데이터를 불러오는데 실패.', err);
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
-    getData();
-  }, []);
-
-  return (
-    <div className="modal">
-      <div>나의 인증1</div>
-      <div>장소</div>
-      <button>back</button>
-      <button>뒤로가기</button>
+    <div className={styles.notice}>
+      {data.isNotice && <div className={styles.isNotice}>공지사항</div>}
+      <div className={styles.content}>
+        <label>제목</label>
+        <div>{data.title}</div>
+      </div>
+      <div className={styles.content}>
+        <label>날짜</label>
+        <div>{data.createdAt.split('T')[0]}</div>
+      </div>
+      <div className={styles.content}>
+        <label>내용</label>
+        <div>{data.content}</div>
+      </div>
     </div>
   );
 };

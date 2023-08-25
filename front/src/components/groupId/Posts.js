@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GroupIdContext } from '../../context/groupIdContext';
 
 const GroupPosts = () => {
   const navigator = useNavigate();
 
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
 
   return (
     <div className="gContainer">
@@ -15,7 +15,7 @@ const GroupPosts = () => {
         <button
           className="gBtn"
           onClick={() => {
-            navigator(`/groups${groupId}?view=notice`);
+            navigator(`/groups/${groupId}?view=notice`);
           }}
         >
           게시판 바로가기
@@ -32,7 +32,7 @@ const List = () => {
   const [datas, setDatas] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
-  const { groupId } = useContext(GroupIdContext);
+  const { groupId } = useParams();
 
   useEffect(() => {
     const getData = async () => {
@@ -43,6 +43,7 @@ const List = () => {
         setDatas(res.data);
       } catch (err) {
         console.log('공지사항 데이터를 불러오는데 실패.', err);
+        setDatas([]);
       } finally {
         setIsFetching(false);
       }

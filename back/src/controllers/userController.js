@@ -74,10 +74,10 @@ const currentUser = async (req, res, next) => {
 /** @description 친구 요청 */
 const friendRequest = async ( req, res, next ) => {
 	try {
-		const userAId = req.user.id;
-		const userBId = parseInt(req.params.id);
-		if (userAId == userBId) return res.status(404).json({ message: "나 자신과는 친구가 될 수 없어!"});
-		const request = await userService.friendRequest(userAId, userBId)
+		const userId = req.user.id;
+		const requestId = parseInt(req.params.id);
+		if (userId == requestId) return res.status(404).json({ message: "나 자신과는 친구가 될 수 없어!"});
+		const request = await userService.friendRequest(userId, requestId)
 		console.log("친구 요청 완료");
 		res.status(200).json({ message: "친구 요청 완료", request});
 	} catch (error) {
@@ -85,7 +85,7 @@ const friendRequest = async ( req, res, next ) => {
 		error.status = 500;
 		next(error);
 	}
-}
+};
 
 
 /** @description 친구 요청 목록 */
@@ -100,7 +100,7 @@ const friendRequestList = async ( req, res, next ) => {
 		error.status = 500;
 		next(error);
 	}
-}
+};
 
 
 /** @description 친구 수락 */
@@ -119,6 +119,7 @@ const acceptFriend = async ( req, res, next ) => {
 }
 
 
+/** @description 친구 거절 */
 const rejectFriend = async ( req, res, next ) => {
 	try {
 		const userId = req.user.id;
@@ -131,46 +132,33 @@ const rejectFriend = async ( req, res, next ) => {
 		error.status = 500;
 		next(error);
 	}
-}
+};
 
-// /** @description 친구 목록 */
-// const getMyFriends = async (req, res, next) => {
-// 	// const userId = req.user.id;
-// 	try {
-// 		const userAId = req.user.id;
-// 		// const friendshipId = req.friendship.id;
-// 		const myFriendList = await userService.getMyFriends(userAId);
-// 		console.log(myFriendList);
-// 		res.status(200).json({ message: "친구 목록", myFriendList});
-// 	} catch (error) {
-// 		console.error(error);
-// 		error.status = 500;
-// 		next(error);s
-// 	}
-// };
 
+/** @description 친구 목록 */
 const getMyFriends = async ( req, res, next ) => {
 	try {
 		const userId = req.user.id;
 		const friendsList = await userService.getMyFriends(userId);
 		console.log(friendsList);
-		res.status(200).json({ message: "나의 목록", friendsList});
+		res.status(200).json({ message: "친구 목록", friendsList});
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
 		next(error);
 	}
-}
+};
+
 
 /** @description 친구 삭제 */
-const deleteFriend = async (req, res, next) => {
+const deleteFriend = async ( req, res, next ) => {
 	try {
-		// const userId = req.user.id;
+		const userId = req.user.id;
 		// const friendId = parseInt(req.params.id);
-		const userAId = req.user.id;
-		const userBId = parseInt(req.params.id);
+		// const userAId = req.user.id;
+		const friendId = parseInt(req.params.id);
 		const deleteFriend = await userService.deleteFriend(
-			userAId, userBId
+			userId, friendId
 		);
 		res.status(200).json({ message: "친구 삭제", deleteFriend});
 	} catch (error) {
@@ -181,6 +169,18 @@ const deleteFriend = async (req, res, next) => {
 };
 
 
+/** @description 나의 인증 */
+const myCertPost = async ( req, res, next ) => {
+	try {
+		const userId = req.user.id;
+		const myCertPost = await userService.myCertPost(userId);
+		res.status(200).json({ message: "나의 인증", myCertPost});
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
 
 module.exports = {
 	getAllUsers,
@@ -194,4 +194,5 @@ module.exports = {
 	rejectFriend,
 	getMyFriends,
 	deleteFriend,
+	myCertPost,
 };

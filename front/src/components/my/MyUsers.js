@@ -3,69 +3,6 @@ import styles from './index.module.scss';
 import { useEffect, useState } from 'react';
 import * as Api from '../../api';
 
-const mockupUser = [
-  {
-    id: '1',
-    name: '유저이름1',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 250,
-  },
-  {
-    id: '2',
-    name: '유저이름2',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 180,
-  },
-  {
-    id: '3',
-    name: '유저이름3',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 300,
-  },
-  {
-    id: '4',
-    name: '유저이름4',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 150,
-  },
-  {
-    id: '5',
-    name: '유저이름5',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 220,
-  },
-  {
-    id: '6',
-    name: '유저이름6',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 170,
-  },
-  {
-    id: '7',
-    name: '유저이름7',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 280,
-  },
-  {
-    id: '8',
-    name: '유저이름8',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 200,
-  },
-  {
-    id: '9',
-    name: '유저이름9',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 230,
-  },
-  {
-    id: '10',
-    name: '유저이름10',
-    imgUrl: 'http://placekitten.com/200/200',
-    score: 210,
-  },
-];
-
 const MyUsers = () => {
   const [datas, setDatas] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -74,12 +11,16 @@ const MyUsers = () => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(`/user/friend`);
-        setDatas(res.data);
+        const res = await Api.get(`/friend`);
+        console.log('res', res);
+        if (res.data) {
+          setDatas(res.data);
+        } else {
+          setDatas([]);
+        }
       } catch (err) {
         console.log('모임데이터를 불러오는데 실패.', err);
       } finally {
-        setDatas(mockupUser);
         setIsFetching(false);
       }
     };

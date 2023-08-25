@@ -8,14 +8,15 @@ const MyGroup = ({ data }) => {
     <div
       className={styles.myGroup}
       onClick={() => {
-        navigator(`/groups/${data.id}?view=main`);
+        navigator(
+          `/groups/${data.groupId}?admin=${data.group.managerId}&view=main`,
+        );
       }}
     >
       <div className={styles.imgContainer}>
-        <img src={data.imgUrl || user_none} alt="이미지" />
+        <img src={user_none} alt="이미지" />
       </div>
-      <div>{data.name}</div>
-      <div>{data.score}</div>
+      <div>{data.group.name}</div>
     </div>
   );
 };
