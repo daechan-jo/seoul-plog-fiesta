@@ -138,21 +138,11 @@ const removeUser = async (req, res, next) => {
   }
 };
 
-/** @description 로그아웃 -> 토큰 쿠키 삭제*/
-const logout = async (req, res, next) => {
-  try {
-    res.clearCookie('token').send('로그아웃 됨');
-  } catch (error) {
-    next(error);
-  }
-};
-
 module.exports = {
   createUser,
   login,
   sendEmailWithTokenUrl,
   changeInformation,
   removeUser,
-  logout,
   //getUserByPasswordToken,
 };
