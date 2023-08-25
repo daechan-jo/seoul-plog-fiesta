@@ -1,6 +1,7 @@
 @import '../../styles/variables.scss';
 
 .header {
+  min-width: 1200px;
   height: $headerHeight;
   display: flex;
   justify-content: space-between;
