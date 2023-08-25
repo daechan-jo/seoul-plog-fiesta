@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import * as Api from '../../api';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../features/user/userSlice';
+import { addInfo, login } from '../../features/user/userSlice';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -45,6 +45,9 @@ const Login = () => {
     })
       .then((res) => {
         dispatch(login(res.data));
+      })
+      .then((res) => {
+        handleInfoAdd();
         alert('로그인 성공!');
         navigate('/?view=main', { replace: true });
       })
@@ -57,6 +60,16 @@ const Login = () => {
           console.error('로그인 에러 발생', err.message);
         }
       });
+  };
+
+  const handleInfoAdd = async () => {
+    try {
+      await Api.get('/group/mygroup').then((res) => {
+        dispatch(addInfo(res.data));
+      });
+    } catch (err) {
+      console.log('데이터를 불러오는데 실패.', err);
+    }
   };
 
   return (

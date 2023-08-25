@@ -1,224 +1,213 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
 
 .IntroContainer {
-    // 배경용!
-    background-color: #00821d;
-    width: 100%;
-    height: 100vh;
+  // 배경용!
+  background-color: #00821d;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: white;
+
+  @media (max-width: 800px) {
+    padding: 20px;
+    height: auto;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes opacity0to100 {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .TextContainer {
+    padding: 40px;
+
+    // Plogging 타이틀
+    .title {
+      font-size: 100px;
+      font-weight: 100em;
+      animation: fadeIn 1s ease-in-out;
+      margin-top: 200px;
+      font-family: 'Playfair Display', serif;
+
+      @media (max-width: 800px) {
+        margin-top: 20px;
+      }
+    }
+
+    span {
+      color: white;
+      font-style: italic;
+      font-weight: bold;
+      font-family: 'Playfair Display', serif;
+    }
+
+    //Plogging 설명
+    .summary {
+      // $font medium 적용방법을 몰라 확인 후 추가...
+      font-size: 16px;
+      padding: 30px;
+      animation: fadeIn 1s ease-in-out;
+      line-height: 20px;
+    }
+  }
+
+  .sideImage {
+    // 색 대충 잡고 내일 수정할 것
+    background-color: white;
+    width: 40vw;
+    height: 100%;
+    margin-left: 60%;
+    animation: fadeIn 2s ease-in-out;
+    position: fixed;
+    animation: opacity0to100 1s ease-in-out;
+
+    @media (max-width: 800px) {
+      width: 100%;
+      height: 90vh;
+      position: relative;
+      margin-left: 0;
+      margin-top: 0px;
+      border-radius: 30px;
+    }
+
+    .rankBox {
+      padding: 30px;
+
+      @media (max-width: 800px) {
+        padding: 10px;
+      }
+    }
+
+    .rankTitle {
+      margin: 15px;
+      padding: 10px;
+      background-color: gold;
+      border-bottom: 3px solid gray;
+      font-size: 24px;
+      font-weight: bolder;
+      color: black;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .profile {
+      background-image: url('http://placekitten.com/70/70');
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+
+      @media (max-width: 800px) {
+        background-image: url('http://placekitten.com/50/50');
+        // width: 50px;
+        // height: 50px;
+      }
+    }
+
+    .ranks {
+      margin: 10px;
+      padding: 10px;
+      background-color: lightgray;
+      border-bottom: 3px solid gray;
+      color: white;
+      border-radius: 30px;
+      animation: fadeIn 1s ease-in-out;
+      display: flex;
+      justify-content: space-between;
+      // text-align: center;
+
+      @media (max-width: 800px) {
+        padding: 15px;
+      }
+
+      .rankBack {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bolder;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-color: pink;
+        justify-content: center;
+        align-items: center;
+        padding: 15px 0;
+
+        @media (max-width: 800px) {
+          width: 70px;
+          height: 70px;
+        }
+      }
+    }
+  }
+
+  .ButtonContainer {
     display: flex;
     flex-direction: column;
-    color: white;
+    /* 세로 방향으로 정렬 */
+    align-items: center;
 
-    @media (max-width:800px) {
-        padding: 20px;
-        height: auto;
-
+    @media (max-width: 800px) {
+      background-color: #00821d;
+      padding: 15px;
     }
 
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
+    /* 가운데 정렬 */
+    button {
+      margin: 5px;
+      /* 버튼 사이에 여백 추가 */
+      padding: 15px;
+      background-color: white;
+      color: #00821d;
+      border-radius: 20px;
+      cursor: pointer;
+      animation: fadeIn 1s ease-in-out;
+      font-weight: bold;
+      width: 10%;
 
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
+      @media (max-width: 800px) {
+        width: 30%;
+      }
     }
 
-    @keyframes opacity0to100 {
-        0% {
-            opacity: 0;
-        }
+    .login {
+      width: 10%;
+      background-color: lightgray;
+      color: black;
 
-        100% {
-            opacity: 1;
-        }
+      @media (max-width: 800px) {
+        width: 30%;
+      }
     }
 
-    .TextContainer {
-        padding: 40px;
+    .register {
+      width: 10%;
+      background-color: gray;
+      color: white;
 
-        // Plogging 타이틀
-        .title {
-
-            font-size: 100px;
-            font-weight: 100em;
-            animation: fadeIn 1s ease-in-out;
-            margin-top: 200px;
-            font-family: 'Playfair Display', serif;
-
-
-
-            @media (max-width:800px) {
-                margin-top: 20px;
-            }
-        }
-
-        span {
-            color: white;
-            font-style: italic;
-            font-weight: bold;
-            font-family: 'Playfair Display', serif;
-        }
-
-        //Plogging 설명
-        .summary {
-            // $font medium 적용방법을 몰라 확인 후 추가...
-            font-size: 16px;
-            padding: 30px;
-            animation: fadeIn 1s ease-in-out;
-            line-height: 20px;
-        }
+      @media (max-width: 800px) {
+        width: 30%;
+      }
     }
-
-    .sideImage {
-        // 색 대충 잡고 내일 수정할 것
-        background-color: white;
-        width: 40vw;
-        height: 100%;
-        margin-left: 60%;
-        animation: fadeIn 2s ease-in-out;
-        position: fixed;
-        animation: opacity0to100 1s ease-in-out;
-
-        @media (max-width:800px) {
-            width: 100%;
-            height: 90vh;
-            position: relative;
-            margin-left: 0;
-            margin-top: 0px;
-            border-radius: 30px;
-        }
-
-        .rankBox {
-            padding: 30px;
-
-            @media (max-width:800px) {
-                padding: 10px;
-            }
-        }
-
-        .rankTitle {
-            margin: 15px;
-            padding: 10px;
-            background-color: gold;
-            border-bottom: 3px solid gray;
-            font-size: 24px;
-            font-weight: bolder;
-            color: black;
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .profile {
-            background-image: url('http://placekitten.com/70/70');
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-
-            @media (max-width:800px) {
-                background-image: url('http://placekitten.com/50/50');
-                // width: 50px;
-                // height: 50px;
-            }
-        }
-
-        .ranks {
-            margin: 10px;
-            padding: 10px;
-            background-color: lightgray;
-            border-bottom: 3px solid gray;
-            color: white;
-            border-radius: 30px;
-            animation: fadeIn 1s ease-in-out;
-            display: flex;
-            justify-content: space-between;
-            // text-align: center;
-
-
-            @media (max-width:800px) {
-                padding: 15px;
-
-            }
-
-            .rankBack {
-                text-align: center;
-                font-size: 24px;
-                font-weight: bolder;
-                width: 70px;
-                height: 70px;
-                border-radius: 50%;
-                background-color: pink;
-                justify-content: center;
-                align-items: center;
-                padding: 15px 0;
-
-                @media (max-width:800px) {
-                    width: 70px;
-                    height: 70px;
-                }
-
-            }
-        }
-    }
-
-
-
-
-    .ButtonContainer {
-        display: flex;
-        flex-direction: column;
-        /* 세로 방향으로 정렬 */
-        align-items: center;
-
-        @media (max-width:800px) {
-            background-color: #00821d;
-            padding: 15px;
-        }
-
-        /* 가운데 정렬 */
-        button {
-            margin: 5px;
-            /* 버튼 사이에 여백 추가 */
-            padding: 15px;
-            background-color: white;
-            color: #00821d;
-            border-radius: 20px;
-            cursor: pointer;
-            animation: fadeIn 1s ease-in-out;
-            font-weight: bold;
-            width: 10%;
-
-            @media (max-width:800px) {
-                width: 30%;
-            }
-        }
-
-        .login {
-            width: 10%;
-            background-color: lightgray;
-            color: black;
-
-            @media (max-width:800px) {
-                width: 30%;
-            }
-        }
-
-        .register {
-            width: 10%;
-            background-color: gray;
-            color: white;
-
-            @media (max-width:800px) {
-                width: 30%;
-
-            }
-        }
-    }
-
-
-
-
+  }
 }

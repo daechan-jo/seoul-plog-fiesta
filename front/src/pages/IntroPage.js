@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import IntroContainer from '../containers/intro';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useIsLogin from '../hooks/useIsLogin';
+import Intro from '../components/intro/Intro';
 
 const IntroPage = () => {
   const navigator = useNavigate();
@@ -14,7 +14,7 @@ const IntroPage = () => {
       navigator('/');
     }
   });
-  return <IntroContainer />;
+  return <Intro />;
 };
 
 export default IntroPage;

@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './layout.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
@@ -6,6 +6,7 @@ import * as Api from '../../api';
 
 const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
+  const navigator = useNavigate();
   const user = useSelector((state) => state.user);
 
   const token = sessionStorage.getItem('userToken');
@@ -20,8 +21,10 @@ const Header = ({ setIsWriting }) => {
 
   const isAdmin = adminValue == user.loginId;
 
+  console.log(user);
   const handleLogoutClick = () => {
     dispatch(logout());
+    navigator('intro');
   };
   const handleGroupClick = async () => {
     try {
@@ -51,21 +54,8 @@ const Header = ({ setIsWriting }) => {
         </div>
       </div>
       <nav className={styles.navContainer}>
-        {isAdmin ? (
-          <button
-            onClick={() => {
-              alert('가입요청목록출력');
-            }}
-          >
-            가입요청목록
-          </button>
-        ) : (
-          token &&
-          (isGroupPage(currentPath) ? (
-            <button onClick={handleGroupClick}>가입요청하기</button>
-          ) : isUserPage(currentPath) ? (
-            <button>친구요청하기</button>
-          ) : (
+        {isGroupPage(currentPath) ? (
+          user.groups.includes(currentPath.split('/')[2]) ? (
             <button
               onClick={() => {
                 setIsWriting(true);
@@ -73,7 +63,19 @@ const Header = ({ setIsWriting }) => {
             >
               인증하러가기
             </button>
-          ))
+          ) : (
+            <button onClick={handleGroupClick}>가입요청하기</button>
+          )
+        ) : isUserPage(currentPath) ? (
+          <button>친구요청하기</button>
+        ) : (
+          <button
+            onClick={() => {
+              setIsWriting(true);
+            }}
+          >
+            인증하러가기
+          </button>
         )}
         {token ? (
           <Link to="/mypage">

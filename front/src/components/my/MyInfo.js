@@ -242,4 +242,4 @@ const MyInfo = () => {
   );
 };
 
-export default React.memo(MyInfo);
+export default MyInfo;
