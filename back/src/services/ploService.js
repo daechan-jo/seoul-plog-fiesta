@@ -240,7 +240,6 @@ const getTopCertPostContributorsGroups = async () => {
 					goal: true,
 				},
 			});
-
 			if (groupDetails) {
 				groupDetails.score = groupCounts[groupName] * 578;
 				groupDetails.rank = i;
@@ -248,13 +247,108 @@ const getTopCertPostContributorsGroups = async () => {
 				topGroups.push(groupDetails);
 			}
 		}
-
 		return topGroups;
 	} catch (error) {
 		throw error;
 	}
 };
 
+const allCertPosts = async () => {
+	return prisma.certPost.findMany({
+		where: { isGroupPost: false },
+		select: { writerId: true },
+	});
+};
+
+const getTopUsers = async () => {
+	try {
+		const certPosts = await allCertPosts();
+
+		const userCounts = certPosts.reduce((acc, post) => {
+			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
+			return acc;
+		}, {});
+
+		const sortedUserIds = Object.keys(userCounts).sort(
+			(a, b) => userCounts[b] - userCounts[a],
+		);
+
+		const topUsers = [];
+		for (let i = 0; i < sortedUserIds.length; i++) {
+			let userId = sortedUserIds[i];
+			let userDetails = await prisma.user.findUnique({
+				where: { id: Number(userId) },
+				select: {
+					id: true,
+					nickname: true,
+					activity: true,
+				},
+			});
+
+			if (userDetails) {
+				userDetails.score = userCounts[userId] * 350;
+				userDetails.rank = i + 1;
+				userDetails.postCount = userCounts[userId];
+				topUsers.push(userDetails);
+			}
+			if (i === 99) {
+				break;
+			}
+		}
+		return topUsers;
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getUserRank = async (userId) => {
+	try {
+		const certPosts = await allCertPosts();
+		const userCounts = certPosts.reduce((acc, post) => {
+			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
+			return acc;
+		}, {});
+		const sortedUserIds = Object.keys(userCounts).sort(
+			(a, b) => userCounts[b] - userCounts[a],
+		);
+		let loggedInUserRank;
+		for (let i = 0; i < sortedUserIds.length; i++) {
+			if (Number(sortedUserIds[i]) === userId) {
+				loggedInUserRank = i + 1;
+				break;
+			}
+		}
+		return loggedInUserRank;
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getGroupRank = async (groupName) => {
+	try {
+		const groupPosts = await prisma.certPost.findMany({
+			where: { isGroupPost: true },
+			select: { groupName: true },
+		});
+		const groupCounts = groupPosts.reduce((acc, post) => {
+			acc[post.groupName] = (acc[post.groupName] || 0) + 1;
+			return acc;
+		}, {});
+		const sortedGroupNames = Object.keys(groupCounts).sort(
+			(a, b) => groupCounts[b] - groupCounts[a],
+		);
+		let groupRank;
+		for (let i = 0; i < sortedGroupNames.length; i++) {
+			if (sortedGroupNames[i] === groupName) {
+				groupRank = i + 1;
+				break;
+			}
+		}
+		return groupRank;
+	} catch (error) {
+		throw error;
+	}
+};
 module.exports = {
 	createCertPost,
 	getAllCertPosts,
@@ -265,4 +359,7 @@ module.exports = {
 	deleteCertPost,
 	getTopCertPostContributorsUsers,
 	getTopCertPostContributorsGroups,
+	getTopUsers,
+	getUserRank,
+	getGroupRank,
 };

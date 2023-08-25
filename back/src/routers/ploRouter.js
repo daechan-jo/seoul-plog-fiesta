@@ -27,6 +27,15 @@ ploRouter.delete(
 );
 
 /** @description top5 인증 게시글 */
-ploRouter.get('/plo/topfive', ploController.getTopCertPostContributors);
+ploRouter.get('/plo/five', ploController.getTopCertPostContributors);
+
+/** @description top100 인증 게시글 */
+ploRouter.get('/plo/hundred', ploController.getTopUsers);
+
+/** @description 유저 순위 */
+ploRouter.get('/plo/rank/user', authenticateJWT, ploController.getUserRank);
+
+/** @description 그룹 순위 */
+ploRouter.get('/plo/rank/:groupname', ploController.getGroupRank);
 
 module.exports = ploRouter;

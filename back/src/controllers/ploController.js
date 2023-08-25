@@ -93,6 +93,41 @@ const getTopCertPostContributors = async (req, res, next) => {
 	}
 };
 
+const getTopUsers = async (req, res, next) => {
+	try {
+		const topUsers = await ploService.getTopUsers();
+		res.status(200).json(topUsers);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
+const getUserRank = async (req, res, next) => {
+	try {
+		const userId = req.user.id ? Number(req.query.id) : req.user.id;
+		const rank = await ploService.getUserRank(userId);
+		res.status(200).json(rank);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
+const getGroupRank = async (req, res, next) => {
+	try {
+		const groupName = req.params.groupname;
+		const groupRank = await ploService.getGroupRank(groupName);
+		res.status(200).json(groupRank);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
 module.exports = {
 	postPlo,
 	getAllCertPosts,
@@ -100,4 +135,7 @@ module.exports = {
 	updateCertPost,
 	deleteCertPost,
 	getTopCertPostContributors,
+	getTopUsers,
+	getUserRank,
+	getGroupRank,
 };
