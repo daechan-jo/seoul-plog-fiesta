@@ -67,10 +67,11 @@ model UserProfileImage {
 
 model Group {
   id           Int          @id @default(autoincrement())
-  name         String
+  name         String				@unique
   manager      User         @relation(fields: [managerId], references: [id])
   managerId    Int
   posts        Post[]
+	certposts    CertPost[]
   goal         String?
   region       String?
   introduction String?
@@ -163,6 +164,7 @@ model CertPost {
   comments  	Comment[]
   images    	CertPostImage[]
 	isGroupPost  Boolean      @default(false)
+	group       Group?       @relation(fields: [groupName], references: [name])
 	groupName    String?
 	participants CertPostParticipant[]
 }
