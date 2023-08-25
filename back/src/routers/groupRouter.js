@@ -47,11 +47,7 @@ groupRouter.delete(
 groupRouter.get('/group/mygroup', authenticateJWT, groupController.getMyGroups);
 
 /** @description 그룹 상세정보 */
-groupRouter.get(
-	'/group/:groupid',
-	authenticateJWT,
-	groupController.getGroupDetails,
-);
+groupRouter.get('/group/:groupid', groupController.getGroupDetails);
 
 /** @description 그룹 게시글 작성 */
 groupRouter.post(
@@ -69,11 +65,7 @@ groupRouter.get(
 );
 
 /** @description 해당 게시글 상세정보 */
-groupRouter.get(
-	'/group/post/:postid',
-	authenticateJWT,
-	groupController.getPostById,
-);
+groupRouter.get('/group/post/:postid', groupController.getPostById);
 
 /** @description 내가 속한 그룹 최근 게시글 목록 */
 groupRouter.get(
