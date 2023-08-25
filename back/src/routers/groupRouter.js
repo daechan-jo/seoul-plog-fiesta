@@ -47,11 +47,7 @@ groupRouter.delete(
 groupRouter.get('/group/mygroup', authenticateJWT, groupController.getMyGroups);
 
 /** @description 그룹 상세정보 */
-groupRouter.get(
-	'/group/:groupid',
-	authenticateJWT,
-	groupController.getGroupDetails,
-);
+groupRouter.get('/group/:groupid', groupController.getGroupDetails);
 
 /** @description 그룹 게시글 작성 */
 groupRouter.post(
