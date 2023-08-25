@@ -26,7 +26,7 @@ const Info = () => {
   const [, setChatId] = useRecoilState(isChatWiState);
 
   const handleChat = () => {
-    setChatId(2);
+    setChatId(currentPath.split('/')[2].split('?')[0]);
     setIsChatOpen(!isChatOpen);
   };
   const handleClick = async () => {

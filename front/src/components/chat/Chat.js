@@ -19,8 +19,8 @@ function Chat() {
   // 웹 소켓을 연결함
   const socket = io.connect('ws://localhost:3001', {
     path: '/chat',
-    query: {
-      token: userToken, // JWT 토큰을 전달
+    extraHeaders: {
+      Authorization: `Bearer ${userToken}`, // JWT 토큰을 전달
     },
   });
 
@@ -52,12 +52,14 @@ function Chat() {
 
     // 초기 메시지들을 받음
     socket.on('messages', (receivedMessages) => {
+      console.log('초기메시지: ', receivedMessages);
       setMessages(receivedMessages);
     });
 
     // 새로운 메시지를 받음
     socket.on('message', (newMessage) => {
       // 기존 메시지리스트에 받은 메시지를 추가함
+      console.log('보낸 메시지: ', newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
