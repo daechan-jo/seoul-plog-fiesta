@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon index.js --exec babel-node",
+		"start": "npx prisma generate --schema=./src/prisma/schema.prisma && nodemon index.js --exec babel-node",
+		"start:prod": "npx prisma generate --schema=./src/prisma/schema.prisma && index.js --exec babel-node",
 		"test": "jest --setupFiles dotenv/config"
 	},
 	"author": "daechanJo",

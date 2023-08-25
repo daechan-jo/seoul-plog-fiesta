@@ -178,26 +178,33 @@ const getTopCertPostContributorsUsers = async () => {
 				writerId: true,
 			},
 		});
-
 		const userCounts = certPosts.reduce((acc, post) => {
 			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
 			return acc;
 		}, {});
 
-		// Get the top 5 users
 		const topUserIds = Object.keys(userCounts)
 			.sort((a, b) => userCounts[b] - userCounts[a])
 			.slice(0, 5);
 
 		const topUsers = [];
-		for (let userId of topUserIds) {
+		for (let i = 0; i < topUserIds.length; i++) {
+			let userId = topUserIds[i];
 			const userDetails = await prisma.user.findUnique({
 				where: { id: parseInt(userId) },
+				select: {
+					id: true,
+					name: true,
+					nickname: true,
+					activity: true,
+					profileImage: true,
+				},
 			});
-			userDetails.score = userCounts[userId] * 350;
+			userDetails.score = userCounts[userId] * 353;
+			userDetails.rank = i + 1;
+			userDetails.postCount = userCounts[userId];
 			topUsers.push(userDetails);
 		}
-
 		return topUsers;
 	} catch (error) {
 		throw error;
@@ -211,27 +218,37 @@ const getTopCertPostContributorsGroups = async () => {
 				groupName: true,
 			},
 		});
-
 		const groupCounts = certPosts.reduce((acc, post) => {
 			acc[post.groupName] = (acc[post.groupName] || 0) + 1;
 			return acc;
 		}, {});
 
+		// 여기서 왜 0번째 인덱스에 null이 들어갈까..
 		const topGroupNames = Object.keys(groupCounts)
 			.sort((a, b) => groupCounts[b] - groupCounts[a])
-			.slice(0, 5);
+			.slice(0, 6);
 
 		const topGroups = [];
-		for (let groupName of topGroupNames) {
+		for (let i = 0; i < topGroupNames.length; i++) {
+			let groupName = topGroupNames[i];
 			let groupDetails = await prisma.group.findUnique({
 				where: { name: groupName },
+				select: {
+					id: true,
+					name: true,
+					managerId: true,
+					goal: true,
+				},
 			});
 
 			if (groupDetails) {
-				groupDetails.score = groupCounts[groupName] * 350;
+				groupDetails.score = groupCounts[groupName] * 578;
+				groupDetails.rank = i;
+				groupDetails.postCount = groupCounts[groupName];
 				topGroups.push(groupDetails);
 			}
 		}
+
 		return topGroups;
 	} catch (error) {
 		throw error;
