@@ -45,9 +45,11 @@ const Login = () => {
     })
       .then((res) => {
         dispatch(login(res.data));
+      })
+      .then((res) => {
+        handleInfoAdd();
         alert('로그인 성공!');
         navigate('/?view=main', { replace: true });
-        handleInfoAdd();
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {

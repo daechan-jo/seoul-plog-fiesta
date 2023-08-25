@@ -21,6 +21,7 @@ const Header = ({ setIsWriting }) => {
 
   const isAdmin = adminValue == user.loginId;
 
+  console.log(user);
   const handleLogoutClick = () => {
     dispatch(logout());
     navigator('intro');
@@ -53,21 +54,8 @@ const Header = ({ setIsWriting }) => {
         </div>
       </div>
       <nav className={styles.navContainer}>
-        {isAdmin ? (
-          <button
-            onClick={() => {
-              alert('가입요청목록출력');
-            }}
-          >
-            가입요청목록
-          </button>
-        ) : (
-          token &&
-          (isGroupPage(currentPath) ? (
-            <button onClick={handleGroupClick}>가입요청하기</button>
-          ) : isUserPage(currentPath) ? (
-            <button>친구요청하기</button>
-          ) : (
+        {isGroupPage(currentPath) ? (
+          user.groups.includes(currentPath.split('/')[2]) ? (
             <button
               onClick={() => {
                 setIsWriting(true);
@@ -75,7 +63,19 @@ const Header = ({ setIsWriting }) => {
             >
               인증하러가기
             </button>
-          ))
+          ) : (
+            <button onClick={handleGroupClick}>가입요청하기</button>
+          )
+        ) : isUserPage(currentPath) ? (
+          <button>친구요청하기</button>
+        ) : (
+          <button
+            onClick={() => {
+              setIsWriting(true);
+            }}
+          >
+            인증하러가기
+          </button>
         )}
         {token ? (
           <Link to="/mypage">

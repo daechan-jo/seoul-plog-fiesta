@@ -10,7 +10,7 @@ const GroupPlogging = ({ view }) => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(``);
+        //const res = await Api.get(``);
         //setDatas(res.data);
       } catch (err) {
         console.log('인증글 데이터를 불러오는데 실패.', err);
@@ -66,7 +66,7 @@ const PostItem = ({ id, setIsModal }) => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(``);
+        //const res = await Api.get(``);
         //setDatas(res.data);
       } catch (err) {
         console.log('공지사항 데이터를 불러오는데 실패.', err);
