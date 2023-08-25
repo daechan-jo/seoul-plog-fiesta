@@ -42,7 +42,7 @@ const searchUsers = async (nickname) => {
 /** @description 유저 찾기(id) */
 const searchUserId = async (userId) => {
 	try {
-		return await prisma.user.findMany({
+		return await prisma.user.findUnique({
 			where: {
 				id: userId,
 			},
@@ -177,22 +177,24 @@ const getMyFriends = async  (userId) => {
 	try {
 		return await prisma.friendship.findMany({
 			where: {
-				OR: [
-					{ userAId: userId },
-					{ userBId: userId },
-				],
+				userAId: userId,
 				isAccepted: true,
 			},
 			select:{
-					userAId: true,
-					userBId: true,
+				userB : {
+					select : {
+						id: true,
+						nickname: true,
+						about: true,
+						activity: true,
+					}
+				}
 			},
 		});
 	} catch (error) {
 		throw  error;
 	}
 };
-
 
 /** @description 친구 삭제 */
 const deleteFriend = async (userId, friendId) => {
@@ -218,15 +220,18 @@ const friendsPost = async  (userId) => {
 	try {
 		return await prisma.friendship.findMany({
 			where: {
-				OR: [
-					{ userAId: userId },
-					{ userBId: userId },
-				],
+				userAId: userId,
 				isAccepted: true,
 			},
-			select:{
-					userAId: true,
-					userBId: true,
+			include:{
+				userB : {
+					select : {
+						id: true,
+						nickname: true,
+						about: true,
+						activity: true,
+					}
+				}
 			},
 		});
 	} catch (error) {

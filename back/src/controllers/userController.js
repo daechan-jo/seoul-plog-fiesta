@@ -3,13 +3,13 @@ import userService from "../services/userService.js";
 /** @description 모든 유저  */
 const getAllUsers = async ( req, res, next ) => {
     try{
-        const users = await userService.getAllUsers();
-		console.log(users);
-        res.status(200).json({ message: "모든 유저", users });
+			const users = await userService.getAllUsers();
+			console.log(users);
+			res.status(200).json({ message: "모든 유저", users });
     } catch (error) {
-        console.error(error);
-        error.status = 500;
-        next(error);
+			console.error(error);
+			error.status = 500;
+			next(error);
     }
 };
 
@@ -19,6 +19,7 @@ const searchUsers = async (req, res, next) => {
 	const nickname = req.params.name;
 	try {
 		const searchNickname = await userService.searchUsers(nickname);
+		if (!searchNickname) return res.status(404).json({ message: "검색 결과 없음"});
 		console.log(searchNickname);
 		res.status(200).json({ message: "유저 검색 결과", searchNickname });
 	} catch (error) {
@@ -30,9 +31,10 @@ const searchUsers = async (req, res, next) => {
 
 /** @description 유저 찬기(id) */
 const searchUserId = async (req, res, next) => {
-	const userId = parseInt(req.params.id);
 	try {
+		const userId = parseInt(req.params.id);
 		const searchId = await userService.searchUserId(userId);
+		if (!searchId) {return res.status(404).json({ message: "검색 결과 없음"});}
 		console.log(searchId);
 		res.status(200).json({ message: "유저 검색 결과(id)", searchId });
 	} catch (error) {
@@ -76,7 +78,9 @@ const friendRequest = async ( req, res, next ) => {
 	try {
 		const userId = req.user.id;
 		const requestId = parseInt(req.params.id);
-		if (userId == requestId) return res.status(404).json({ message: "나 자신과는 친구가 될 수 없어!"});
+		if (userId == requestId) {return res.status(400).json({ message: "나 자신과는 친구가 될 수 없어!"});}
+		// const weAreFriends = await userService.getMyFriends(userId, requestId);
+		// if (weAreFriends) return res.status(400).json({ message: "우린 이미 친구야!"});
 		const request = await userService.friendRequest(userId, requestId)
 		console.log("친구 요청 완료");
 		res.status(200).json({ message: "친구 요청 완료", request});
@@ -154,8 +158,6 @@ const getMyFriends = async ( req, res, next ) => {
 const deleteFriend = async ( req, res, next ) => {
 	try {
 		const userId = req.user.id;
-		// const friendId = parseInt(req.params.id);
-		// const userAId = req.user.id;
 		const friendId = parseInt(req.params.id);
 		const deleteFriend = await userService.deleteFriend(
 			userId, friendId
