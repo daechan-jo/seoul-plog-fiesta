@@ -46,6 +46,13 @@ groupRouter.delete(
 /** @description 내가 가입한 그룹 조회 */
 groupRouter.get('/group/mygroup', authenticateJWT, groupController.getMyGroups);
 
+/** @description 나의 그룹 최신 인증글 */
+groupRouter.get(
+	'/group/certpost',
+	authenticateJWT,
+	groupController.getGroupCertPosts,
+);
+
 /** @description 그룹 상세정보 */
 groupRouter.get('/group/:groupid', groupController.getGroupDetails);
 

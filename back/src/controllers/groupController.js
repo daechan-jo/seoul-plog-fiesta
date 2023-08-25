@@ -1,4 +1,5 @@
 import groupService from '../services/groupService.js';
+import ploService from '../services/ploService.js';
 import commentService from '../services/commentService.js';
 import imageService from '../services/imageService.js';
 const groupUtils = require('../utils/groupUtils');
@@ -305,6 +306,19 @@ const dropGroup = async (req, res, next) => {
 	}
 };
 
+const getGroupCertPosts = async (req, res, next) => {
+	try {
+		const userId = req.user.id;
+		const posts = await ploService.getUserGroupCertPosts(userId);
+		console.log(posts);
+		res.status(200).json(posts);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 module.exports = {
 	createGroup,
 	getAllGroups,
@@ -323,4 +337,5 @@ module.exports = {
 	dropGroup,
 	getGroupJoinRequests,
 	getRecentPosts,
+	getGroupCertPosts,
 };

@@ -38,4 +38,16 @@ ploRouter.get('/plo/rank/user', authenticateJWT, ploController.getUserRank);
 /** @description 그룹 순위 */
 ploRouter.get('/plo/rank/:groupname', ploController.getGroupRank);
 
+ploRouter.get(
+	'/plo/count/user/:userid',
+	ploController.getUserCertPostsRegionCount,
+);
+
+ploRouter.get(
+	'/plo/count/group/:groupname',
+	ploController.getGroupCertPostsRegionCount,
+);
+
+ploRouter.get('/plo/count/all', ploController.getAllCertPostsRegionCount);
+
 module.exports = ploRouter;

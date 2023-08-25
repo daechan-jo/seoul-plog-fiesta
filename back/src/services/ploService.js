@@ -223,7 +223,7 @@ const getTopCertPostContributorsGroups = async () => {
 			return acc;
 		}, {});
 
-		// 여기서 왜 0번째 인덱스에 null이 들어갈까..
+		//todo 여기서 왜 0번째 인덱스에 null이 들어갈까..
 		const topGroupNames = Object.keys(groupCounts)
 			.sort((a, b) => groupCounts[b] - groupCounts[a])
 			.slice(0, 6);
@@ -263,16 +263,13 @@ const allCertPosts = async () => {
 const getTopUsers = async () => {
 	try {
 		const certPosts = await allCertPosts();
-
 		const userCounts = certPosts.reduce((acc, post) => {
 			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
 			return acc;
 		}, {});
-
 		const sortedUserIds = Object.keys(userCounts).sort(
 			(a, b) => userCounts[b] - userCounts[a],
 		);
-
 		const topUsers = [];
 		for (let i = 0; i < sortedUserIds.length; i++) {
 			let userId = sortedUserIds[i];
@@ -284,7 +281,6 @@ const getTopUsers = async () => {
 					activity: true,
 				},
 			});
-
 			if (userDetails) {
 				userDetails.score = userCounts[userId] * 350;
 				userDetails.rank = i + 1;
@@ -349,6 +345,80 @@ const getGroupRank = async (groupName) => {
 		throw error;
 	}
 };
+
+const getUserGroupCertPosts = async (userId) => {
+	try {
+		const userGroups = await prisma.groupUser.findMany({
+			where: { userId: userId },
+			select: { groupId: true },
+		});
+		const groupIds = userGroups.map((group) => group.groupId);
+		const groups = await prisma.group.findMany({
+			where: { id: { in: groupIds } },
+			select: { name: true },
+		});
+		const groupNames = groups.map((group) => group.name);
+		return await prisma.certPost.findMany({
+			where: { groupName: { in: groupNames }, isGroupPost: true },
+			orderBy: { createdAt: 'desc' },
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getUserCertPostsRegionCount = async (userId) => {
+	try {
+		const userCertPosts = await prisma.certPost.findMany({
+			where: { writerId: userId },
+		});
+		const regionCount = {};
+		for (let post of userCertPosts) {
+			if (!regionCount[post.region]) {
+				regionCount[post.region] = 0;
+			}
+			regionCount[post.region]++;
+		}
+		return regionCount;
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getGroupCertPostsRegionCount = async (groupName) => {
+	try {
+		const groupCertPosts = await prisma.certPost.findMany({
+			where: { groupName: groupName },
+		});
+		const regionCount = {};
+		for (let post of groupCertPosts) {
+			if (!regionCount[post.region]) {
+				regionCount[post.region] = 0;
+			}
+			regionCount[post.region]++;
+		}
+		return regionCount;
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getAllCertPostsRegions = async () => {
+	try {
+		const allCertPosts = await prisma.certPost.findMany();
+		const regionCount = {};
+		for (let post of allCertPosts) {
+			if (!regionCount[post.region]) {
+				regionCount[post.region] = 0;
+			}
+			regionCount[post.region]++;
+		}
+		return regionCount;
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	createCertPost,
 	getAllCertPosts,
@@ -362,4 +432,8 @@ module.exports = {
 	getTopUsers,
 	getUserRank,
 	getGroupRank,
+	getUserGroupCertPosts,
+	getUserCertPostsRegionCount,
+	getGroupCertPostsRegionCount,
+	getAllCertPostsRegions,
 };

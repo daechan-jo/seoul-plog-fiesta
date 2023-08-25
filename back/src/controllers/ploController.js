@@ -128,6 +128,43 @@ const getGroupRank = async (req, res, next) => {
 	}
 };
 
+const getUserCertPostsRegionCount = async (req, res, next) => {
+	try {
+		const userId = parseInt(req.params.userid);
+		const regionCount = await ploService.getUserCertPostsRegionCount(userId);
+		res.status(200).json(regionCount);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
+const getGroupCertPostsRegionCount = async (req, res, next) => {
+	try {
+		const groupName = req.params.groupname;
+		const regionCount = await ploService.getGroupCertPostsRegionCount(
+			groupName,
+		);
+		res.json(regionCount);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
+const getAllCertPostsRegionCount = async (req, res, next) => {
+	try {
+		const regions = await ploService.getAllCertPostsRegions();
+		res.json(regions);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
 module.exports = {
 	postPlo,
 	getAllCertPosts,
@@ -138,4 +175,7 @@ module.exports = {
 	getTopUsers,
 	getUserRank,
 	getGroupRank,
+	getUserCertPostsRegionCount,
+	getGroupCertPostsRegionCount,
+	getAllCertPostsRegionCount,
 };
