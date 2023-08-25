@@ -25,6 +25,8 @@ const Nav = () => {
     { to: '/recommend', icon: <FaWalking /> },
   ];
 
+  // 채팅방 리스트를 불러오는 프리플라이트(실제 채팅방 구현 후 주석풀예정, 작동확인)
+  /*
   useEffect(() => {
     const getData = async () => {
       try {
@@ -47,6 +49,7 @@ const Nav = () => {
       clearInterval(intervalId);
     };
   }, []);
+ */
 
   return (
     <div className={styles.LeftNav}>
