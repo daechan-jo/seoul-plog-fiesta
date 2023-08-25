@@ -50,10 +50,10 @@ const getAllGroups = async () => {
 		const groups = await prisma.group.findMany({
 			select: {
 				id: true,
+				managerId: true,
 				name: true,
 				goal: true,
 				region: true,
-				memberLimit: true,
 				GroupUser: {
 					select: {
 						userId: true,
