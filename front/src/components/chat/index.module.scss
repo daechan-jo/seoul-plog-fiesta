@@ -1,9 +1,11 @@
 .chat {
   position: fixed;
-  right: 300px;
+  left: 150px;
   top: 500px;
   width: 500px;
   height: 700px;
+  display: flex;
+  flex-direction: column;
   background-color: pink;
 }
 

@@ -32,7 +32,7 @@ const PasswordChange = () => {
         onChange={(e) => {
           setName(e.target.value);
         }}
-        value={email}
+        value={name}
       />
       <label>이메일</label>
       <input
@@ -41,7 +41,7 @@ const PasswordChange = () => {
         onChange={(e) => {
           setEmail(e.target.value);
         }}
-        value={name}
+        value={email}
       />
       <button type="submit">제출</button>
     </form>

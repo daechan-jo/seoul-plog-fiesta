@@ -10,6 +10,7 @@ import UserIdPage from './pages/UserIdPage';
 import LoginPage from './pages/LoginPage';
 import RegistePage from './pages/RegisterPage';
 import RecommendPage from './pages/RecommendPage';
+import NotFoundPage from './pages/NotPage';
 
 const App = () => {
   return (
@@ -25,7 +26,7 @@ const App = () => {
       <Route path="/setpassword" element={<PasswordPage />} />
       <Route path="/groups/:groupId" element={<GroupIdPage />} />
       <Route path="/users/:userId" element={<UserIdPage />} />
-      <Route path="*" element={<IntroPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

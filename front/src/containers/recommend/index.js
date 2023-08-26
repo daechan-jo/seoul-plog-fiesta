@@ -1,7 +1,10 @@
 const RecommendContainer = () => {
   return (
     <main>
-      <div className="gContainer  gList navVh">
+      <div
+        className="gContainer  gList navVh"
+        style={{ justifyContent: 'space-between' }}
+      >
         <div className="titleContainer">
           <h1>추천 경로</h1>
         </div>
@@ -10,7 +13,7 @@ const RecommendContainer = () => {
           style={{
             width: '80vw',
             minWidth: '1550px',
-            minHeight: '600px',
+            minHeight: '700px',
             height: '70vh',
             overflow: 'hidden',
           }}
@@ -19,7 +22,7 @@ const RecommendContainer = () => {
             style={{
               width: '80vw',
               minWidth: '1550px',
-              minHeight: '600px',
+              minHeight: '700px',
               height: '70vw',
             }}
             src="/seoul_course_map.html"

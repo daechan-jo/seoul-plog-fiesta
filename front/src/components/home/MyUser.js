@@ -28,7 +28,7 @@ const MyUser = () => {
         <h1>나의 친구들 현황</h1>
         <button className="gBtn">친구 관리</button>
       </div>
-      <div className="contentContainer">
+      <div className="contentMinContainer">
         {isFetching ? (
           <div>로딩중</div>
         ) : datas.length === 0 ? (

@@ -2,8 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { BiSolidHome } from 'react-icons/bi';
 import { FaUserFriends, FaAward, FaWalking } from 'react-icons/fa';
 import styles from './layout.module.scss';
-import { useEffect, useState } from 'react';
-import * as Api from '../../api';
+import { useState } from 'react';
 import ChatList from '../chat/ChatList';
 import { useRecoilState } from 'recoil';
 import { isChatOpenState, isChatWiState } from '../../features/recoilState';
@@ -11,9 +10,7 @@ import Chat from '../chat/Chat';
 
 const Nav = () => {
   const location = useLocation(); // 현재 URL 정보를 가져오는 hook
-  const [datas, setDatas] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
 
   const [isChatOpen, setIsChatOpen] = useRecoilState(isChatOpenState);
   const [, setErrorMessage] = useRecoilState(isChatWiState);
@@ -26,30 +23,6 @@ const Nav = () => {
   ];
 
   // 채팅방 리스트를 불러오는 프리플라이트(실제 채팅방 구현 후 주석풀예정, 작동확인)
-  /*
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setIsFetching(true);
-        const res = await Api.get('/unread');
-        setDatas(res.data);
-        console.log(res);
-      } catch (err) {
-        console.log('채팅방 리스트를 불러오는데 실패.', err);
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
-    const intervalId = setInterval(() => {
-      getData();
-    }, 5000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
- */
 
   return (
     <div className={styles.LeftNav}>
@@ -73,9 +46,7 @@ const Nav = () => {
           </Link>
         ))}
       </nav>
-      {isOpen && (
-        <ChatList isFetching={isFetching} datas={datas} setIsOpen={setIsOpen} />
-      )}
+      {isOpen && <ChatList />}
       {isChatOpen && <Chat />}
       <button
         className="gBtn"

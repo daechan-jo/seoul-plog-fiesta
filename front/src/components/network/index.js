@@ -8,6 +8,7 @@ import user_none from '../../assets/user_none.png';
 import { seoulDistricts } from '../common/exportData';
 import { handlePagenation } from '../../utils/pagenation';
 import Pagination from '../common/Pagenation';
+import { handleImgUrl } from '../../utils/handleImgUrl';
 
 const ItemList = () => {
   const [isModal, setIsModal] = useState(false);
@@ -158,8 +159,8 @@ const Item = ({ data, view }) => {
       <div className={styles.imgContainer} key={data.id}>
         <img
           src={
-            data.images
-              ? `http://localhost:3002${data.images[0]}`
+            data.images && data.images.length !== 0
+              ? `${handleImgUrl(data.images[0])}`
               : view === 'group'
               ? post_none
               : user_none
