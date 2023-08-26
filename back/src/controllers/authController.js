@@ -53,7 +53,7 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
       html:
         '<h2>안녕하세요. SeoulPlogFiesta입니다.</h2>' + //todo: 버튼으로 변경
         '<h2>고객님의 비밀번호 변경을 위해 아래의 링크를 클릭해주세요.</h2>' +
-        '<a href= "http://localhost:3000/auth/checkEmail?token=' +
+        '<a href= "http://localhost:3001/auth/checkEmail?token=' +
         token +
         '">비밀번호 재설정 링크<a>',
     };
