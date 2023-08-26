@@ -13,7 +13,7 @@ const GroupMember = ({ view }) => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/group/${groupId}`);
-        setDatas(res.data.GroupUser);
+        setDatas(res.data.groupUser);
       } catch (err) {
         console.log('멤버 리스트 데이터를 불러오는데 실패.', err);
       } finally {

@@ -165,3 +165,32 @@ model CertPostImage {
   certPost   CertPost @relation(fields: [certPostId], references: [id])
   certPostId Int
 }
+
+model plogging_certification_board {
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(256)
+  writerUser      Int    
+  startDt         DateTime
+  endDt           DateTime
+  description     String    @db.VarChar(256)
+  groupYn         String    @db.VarChar(1) @default("N")
+  groupName       String?   @db.VarChar(60)
+  groupId         Int?
+  createDt        DateTime  @default(now())
+  modifyDt        DateTime  @updatedAt
+  region          String
+  location        String
+  distance        Float
+  trashAmount     Int
+  averagePace     Float
+}
+
+// 플로깅 인증 점수
+model plogging_score {
+  score_id     Int     @id @default(autoincrement())
+  certification_id    Int
+  user_id     Int         
+  group_yn     String       @db.VarChar(1) @default("N")
+  group_id     String?         @db.VarChar(60)
+  create_dt     DateTime        @default(now())  
+}
