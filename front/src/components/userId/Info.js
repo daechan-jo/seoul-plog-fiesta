@@ -22,20 +22,6 @@ const Info = () => {
 
   const ownerId = currentPath.split('/')[2].split('?')[0];
 
-  console.log(ownerId);
-  const handleClick = async () => {
-    try {
-      setIsFetching(true);
-      const res = await Api.get(`/user/add/${ownerId}`);
-      //setData(res.data);
-    } catch (err) {
-      console.log('친구추가 실패.', err);
-    } finally {
-      setIsFetching(false);
-      setData(mockmyInfo);
-    }
-  };
-
   useEffect(() => {
     const getData = async () => {
       try {
@@ -78,9 +64,6 @@ const Info = () => {
           <div>{data.searchId?.activity}</div>
         </li>
       </ul>
-      <button className="gBtn" onClick={handleClick}>
-        친구추가
-      </button>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import styles from './layout.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
 import * as Api from '../../api';
+import { useEffect } from 'react';
 
 const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const Header = ({ setIsWriting }) => {
   console.log(user);
   const handleLogoutClick = () => {
     dispatch(logout());
-    navigator('intro');
+    navigator('/intro');
   };
   const handleGroupClick = async () => {
     try {
@@ -43,6 +44,17 @@ const Header = ({ setIsWriting }) => {
   const isUserPage = (path) => {
     const pathSegments = path.split('/');
     return pathSegments.length === 3 && pathSegments[1] === 'users';
+  };
+
+  const handleUserClick = async () => {
+    try {
+      await Api.post(`/req/${currentPath.split('/')[2]}`, {
+        id: currentPath.split('/')[2],
+      });
+      alert('가입 요청 성공');
+    } catch (err) {
+      alert(err.message ? err.message : '가입 요청 실패.');
+    }
   };
 
   return (
@@ -67,7 +79,7 @@ const Header = ({ setIsWriting }) => {
             <button onClick={handleGroupClick}>가입요청하기</button>
           )
         ) : isUserPage(currentPath) ? (
-          <button>친구요청하기</button>
+          <button onClick={handleUserClick}>친구요청하기</button>
         ) : (
           <button
             onClick={() => {
