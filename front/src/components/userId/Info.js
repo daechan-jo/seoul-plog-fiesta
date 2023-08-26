@@ -22,6 +22,7 @@ const Info = () => {
 
   const ownerId = currentPath.split('/')[2].split('?')[0];
 
+  console.log(ownerId);
   const handleClick = async () => {
     try {
       setIsFetching(true);
@@ -41,6 +42,7 @@ const Info = () => {
         setIsFetching(true);
         const res = await Api.get(`/search/${ownerId}`);
         setData(res.data);
+        console.log(res);
       } catch (err) {
         console.log('상위모임데이터를 불러오는데 실패.', err);
       } finally {
@@ -65,15 +67,15 @@ const Info = () => {
         </div>
         <li key="myNickName">
           <label>별명</label>
-          <div>{data.searchId.nickname}</div>
+          <div>{data.searchId?.nickname}</div>
         </li>
         <li key="myAbout">
           <label>소개</label>
-          <div>{data.searchId.about}</div>
+          <div>{data.searchId?.about}</div>
         </li>
         <li key="activity">
           <label>지역구</label>
-          <div>{data.searchId.activity}</div>
+          <div>{data.searchId?.activity}</div>
         </li>
       </ul>
       <button className="gBtn" onClick={handleClick}>
