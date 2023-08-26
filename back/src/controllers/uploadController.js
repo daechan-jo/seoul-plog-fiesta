@@ -6,7 +6,7 @@ const fs = require('fs');
 const uploadProfileImage = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
-		const imageUrl = path.join('/public/upload', req.file.filename);
+		const imageUrl = path.join('/public/image', req.file.filename);
 		const existingImage = await prisma.userProfileImage.findUnique({
 			where: { userId },
 		});
@@ -45,7 +45,7 @@ const uploadProfileImage = async (req, res, next) => {
 const uploadPostImage = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);
-		const imageUrl = path.join('/public/upload', req.file.filename);
+		const imageUrl = path.join('/public/image', req.file.filename);
 		const post = await prisma.post.findUnique({
 			where: { id: postId },
 			include: { group: true },
@@ -66,6 +66,7 @@ const uploadPostImage = async (req, res, next) => {
 				where: { id: existingImage.id },
 				data: { imageUrl },
 			});
+			console.log(imageUrl);
 		} else {
 			await prisma.postImage.create({
 				data: {
@@ -96,17 +97,19 @@ const uploadGroupImage = async (req, res, next) => {
 			return res.status(403).json({ message: '관리자 권한' });
 		}
 
-		const imageUrl = path.join('/public/upload', req.file.filename);
+		const imageUrl = path.join('src/public/image', req.file.filename);
 		const existingImage = await prisma.groupImage.findFirst({
 			where: { groupId },
 		});
-
+		console.log(imageUrl, '===저장주소');
 		if (existingImage) {
 			const absoluteImagePath = path.join(
 				__dirname,
 				'..',
+				'..',
 				existingImage.imageUrl,
 			);
+			console.log(absoluteImagePath, '===삭제주소');
 			fs.unlinkSync(absoluteImagePath);
 
 			await prisma.groupImage.update({
