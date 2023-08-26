@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import useIsLogin from '../hooks/useIsLogin';
 import Intro from '../components/intro/Intro';
 
 const IntroPage = () => {
@@ -10,7 +9,7 @@ const IntroPage = () => {
   const token = sessionStorage.getItem('userToken');
 
   useEffect(() => {
-    if (token) {
+    if (token && !user.email === '') {
       navigator('/');
     }
   });
