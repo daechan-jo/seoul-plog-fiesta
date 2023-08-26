@@ -8,7 +8,7 @@ const useIsLogin = () => {
   const token = sessionStorage.getItem('userToken');
   console.log(user);
   useEffect(() => {
-    if (!token || !user.email) {
+    if (!token || user.email === '') {
       navigator('/intro');
     }
   }, [navigator, token, user]);

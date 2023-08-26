@@ -6,6 +6,8 @@ import * as Api from '../../api';
 import post_none from '../../assets/post_none.png';
 import user_none from '../../assets/user_none.png';
 import { seoulDistricts } from '../common/exportData';
+import { handlePagenation } from '../../utils/pagenation';
+import Pagination from '../common/Pagenation';
 
 const ItemList = () => {
   const [isModal, setIsModal] = useState(false);
@@ -17,7 +19,16 @@ const ItemList = () => {
   const searchParams = new URLSearchParams(location.search);
 
   const view = searchParams.get('view');
-  console.log(view);
+
+  const itemsPerPage = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
+
+  const handlePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -69,12 +80,18 @@ const ItemList = () => {
         ) : datas.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          datas.map((data) => (
+          paginatedData.map((data) => (
             <Item view={view} data={data} key={`${view}_${data.id}`} />
           ))
         )}
       </div>
-      <div>페이지네이션자리</div>
+      <div>
+        <Pagination
+          totalPages={Math.ceil(datas.length / itemsPerPage)}
+          currentPage={currentPage}
+          handlePage={handlePage}
+        />
+      </div>
     </div>
   );
 };
