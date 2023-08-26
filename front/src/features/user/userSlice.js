@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: { email: '', nickName: '', loginId: '' },
+  initialState: { email: '', nickName: '', loginId: '', groups: [], users: [] },
   reducers: {
     login(state, action) {
       //api요청 후 반환값을 state에 넣기
