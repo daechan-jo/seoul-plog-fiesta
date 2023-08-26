@@ -40,7 +40,6 @@ function Chat() {
     console.log('소켓이 연결이 끊어졌습니다. 사유:', reason);
   });
 
-  console.log(chatId);
   useEffect(() => {
     if (!socket) {
       console.log('socket 생성 에러');
@@ -52,15 +51,22 @@ function Chat() {
 
     // 초기 메시지들을 받음
     socket.on('messages', (receivedMessages) => {
-      console.log('초기메시지: ', receivedMessages);
-      setMessages(receivedMessages);
+      try {
+        console.log('초기메시지: ', receivedMessages);
+        setMessages(receivedMessages);
+      } catch (error) {
+        console.log('Error in messages event:', error);
+      }
     });
-
     // 새로운 메시지를 받음
     socket.on('message', (newMessage) => {
-      // 기존 메시지리스트에 받은 메시지를 추가함
-      console.log('보낸 메시지: ', newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      try {
+        console.log('보낸 메시지: ', newMessage);
+        // 기존 메시지리스트에 받은 메시지를 추가함
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      } catch (error) {
+        console.log('Error in message event:', error);
+      }
     });
 
     return () => {
@@ -70,14 +76,18 @@ function Chat() {
   }, [socket, chatId]);
 
   // 클라에서 메시지를 전송하는 함수
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!socket || !messageText.trim()) return; // 연결이 실패 및 없음 혹은 빈 메시지면 종료함
 
+    console.log('메시지를 보냄: ', messageText);
     // 메시지를 서버에 전송
-    socket.emit('sendMessage', chatId, messageText);
-
-    // 전송 후 input을 초기화함
-    setMessageText('');
+    try {
+      const res = await socket.emit('sendMessage', chatId, messageText);
+      console.log('백에서 받은값: ', res);
+      setMessageText('');
+    } catch (err) {
+      console.log('메시지 보내기 실패', err);
+    }
   };
 
   return (
