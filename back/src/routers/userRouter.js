@@ -15,17 +15,19 @@ userRouter
         userController.getRandomUsers);
 
 
-/** @description 유저 찾기 */
+/**
+ * @description 유저 찾기
+ * @CHANGED authenticateJWT 인가 삭제*/
 userRouter
     .get("/user/:name",
-        authenticateJWT,
         userController.searchUsers);
 
 
-/** @description 유저 찾기(id) */
+/**
+ * @description 유저 찾기(id)
+ * @CHANGED authenticateJWT 인가 삭제 */
 userRouter
     .get("/search/:id",
-        authenticateJWT,
         userController.searchUserId);
 
 
@@ -43,7 +45,9 @@ userRouter
         userController.friendRequest);
 
 
-/** @description 친구 요청 리스트 */
+/**
+ * @description 친구 요청 리스트 */
+
 userRouter
     .get("/req/list",
         authenticateJWT,
