@@ -16,7 +16,7 @@ model User {
   nickname      String            @unique
   email         String            @unique
   password      String
-  passwordToken String?
+  passwordToken String?           @unique
   passwordValid DateTime?
   about         String?
   activity      String?
