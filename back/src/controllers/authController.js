@@ -27,6 +27,8 @@ const login = async (req, res, next) => {
       token: req.token,
       email: req.user.email,
       nickname: req.user.nickname,
+      groups: req.user.groups, //todo : group 확인
+      friendshipsA: req.user.friendshipsA,
     };
     console.log(user);
     res.status(200).json(user);
