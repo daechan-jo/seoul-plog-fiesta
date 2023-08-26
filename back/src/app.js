@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
 const passport = require('passport');
 const app = express();
 
-app.use('/image', express.static('public'));
+app.use('/images', express.static('public'));
 passport.use('local', local);
 passport.use('jwt', jwt);
 

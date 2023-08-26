@@ -80,7 +80,7 @@ const getAllGroups = async () => {
 				return {
 					...group,
 					memberCount,
-					images: imageUrls, // Use the array of image URLs
+					images: imageUrls, // Use the array of images URLs
 				};
 			}),
 		);
