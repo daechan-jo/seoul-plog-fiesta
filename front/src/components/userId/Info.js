@@ -22,6 +22,15 @@ const Info = () => {
 
   const ownerId = currentPath.split('/')[2].split('?')[0];
 
+  const handleFriendRequest = async () => {
+    try {
+      await Api.get(`/req/${ownerId}`);
+      alert('친구요청성공');
+    } catch (err) {
+      console.log('친구요청실패', err);
+    }
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -63,6 +72,9 @@ const Info = () => {
           <label>지역구</label>
           <div>{data.searchId?.activity}</div>
         </li>
+        <button onClick={handleFriendRequest} className="gBtn">
+          친구추가
+        </button>
       </ul>
     </div>
   );

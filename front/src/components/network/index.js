@@ -148,7 +148,11 @@ const Item = ({ data, view }) => {
     <div
       className={styles.itemContainer}
       onClick={() => {
-        navigator(`/${view}s/${data.id}?admin=${data.managerId}&view=main`);
+        if (view === 'group') {
+          navigator(`/${view}s/${data.id}?admin=${data.managerId}&view=main`);
+        } else {
+          navigator(`/${view}s/${data.id}?view=main`);
+        }
       }}
     >
       <div className={styles.imgContainer} key={data.id}>

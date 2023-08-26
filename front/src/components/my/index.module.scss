@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .info {
   width: 100%;
   height: 100%;
@@ -45,5 +47,18 @@
     width: 100px;
     height: 100px;
     overflow: hidden;
+  }
+}
+
+.requestItem {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    background-color: $point;
+    color: white;
+    padding: 5px;
+    margin-left: 5px;
   }
 }
