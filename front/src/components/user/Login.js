@@ -39,26 +39,23 @@ const Login = () => {
     }
 }
     */
-    await Api.post('/auth/login', {
-      email,
-      password,
-    })
-      .then((res) => {
-        dispatch(login(res.data));
-      })
-      .then((res) => {
-        alert('로그인 성공!');
-        navigate('/?view=main', { replace: true });
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          alert('입력하신 회원정보가 없습니다.');
-          console.error('입력하신 회원정보가 없습니다.');
-        } else {
-          alert('로그인 중 오류가 발생했습니다.');
-          console.error('로그인 에러 발생', err.message);
-        }
+    try {
+      const res = await Api.post('/auth/login', {
+        email,
+        password,
       });
+      dispatch(login(res.data));
+      alert('로그인 성공!');
+      navigate('/?view=main', { replace: true });
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        alert('입력하신 회원정보가 없습니다.');
+        console.error('입력하신 회원정보가 없습니다.');
+      } else {
+        alert('로그인 중 오류가 발생했습니다.');
+        console.error('로그인 에러 발생', err.message);
+      }
+    }
   };
 
   return (

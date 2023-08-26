@@ -183,7 +183,7 @@ const Item = ({ data, view }) => {
         <div>
           {view === 'group' && (
             <div>
-              {data.memberCount} / {data.memberLimit}
+              {data.memberCount} / {data.memberLimit || 50}
             </div>
           )}
         </div>

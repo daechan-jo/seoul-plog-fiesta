@@ -4,6 +4,10 @@ import userService from "../services/userService.js";
 const getAllUsers = async ( req, res, next ) => {
     try{
 			const users = await userService.getAllUsers();
+
+			if (users == 0) {
+				return res.status(404).json({ message: "유저 없음" }); }
+
 			console.log(users);
 			res.status(200).json({ message: "모든 유저", users });
     } catch (error) {
@@ -19,7 +23,10 @@ const searchUsers = async (req, res, next) => {
 	const nickname = req.params.name;
 	try {
 		const searchNickname = await userService.searchUsers(nickname);
-		if (!searchNickname) return res.status(404).json({ message: "검색 결과 없음"});
+
+		if (!searchNickname) {
+			return res.status(404).json({ message: "검색 결과 없음" }); }
+
 		console.log(searchNickname);
 		res.status(200).json({ message: "유저 검색 결과", searchNickname });
 	} catch (error) {
@@ -34,7 +41,11 @@ const searchUserId = async (req, res, next) => {
 	try {
 		const userId = parseInt(req.params.id);
 		const searchId = await userService.searchUserId(userId);
-		if (!searchId) {return res.status(404).json({ message: "검색 결과 없음"});}
+
+		if (!searchId) {
+			return res.status(404).json({ message: "검색 결과 없음" });
+		}
+
 		console.log(searchId);
 		res.status(200).json({ message: "유저 검색 결과(id)", searchId });
 	} catch (error) {
@@ -78,11 +89,16 @@ const friendRequest = async ( req, res, next ) => {
 	try {
 		const userId = req.user.id;
 		const requestId = parseInt(req.params.id);
-		if (userId == requestId) {return res.status(400).json({ message: "나 자신과는 친구가 될 수 없어!"});}
-		// const weAreFriends = await userService.getMyFriends(userId, requestId);
-		// if (weAreFriends) return res.status(400).json({ message: "우린 이미 친구야!"});
-		const request = await userService.friendRequest(userId, requestId)
-		console.log("친구 요청 완료");
+
+		if (userId == requestId) {
+			return res.status(400).json({ message: "나 자신과는 친구가 될 수 없어!" }); }
+
+		const weAreFriends = await userService.weAreFriends(userId, requestId);
+		if (weAreFriends) {
+			return res.status(400).json({ message: "이미 요청 했거나 우린 친구!" }); }
+
+		const request = await userService.friendRequest(userId, requestId);
+		console.log(request);
 		res.status(200).json({ message: "친구 요청 완료", request});
 	} catch (error) {
 		console.error(error);
@@ -120,7 +136,7 @@ const acceptFriend = async ( req, res, next ) => {
 		error.status = 500;
 		next(error);
 	}
-}
+};
 
 
 /** @description 친구 거절 */
@@ -184,6 +200,21 @@ const myCertPost = async ( req, res, next ) => {
 	}
 };
 
+
+/** @description 친구 최신 게시물 */
+const friendsRecentPost = async ( req, res, next ) => {
+	try {
+		const userId = req.user.id;
+		const friendsRecentPost = await userService.friendsRecentPost(userId);
+		res.status(200).json({ message: "친구 최신 게시물", friendsRecentPost});
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+
 module.exports = {
 	getAllUsers,
 	searchUsers,
@@ -197,4 +228,5 @@ module.exports = {
 	getMyFriends,
 	deleteFriend,
 	myCertPost,
+	friendsRecentPost,
 };

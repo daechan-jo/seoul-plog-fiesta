@@ -1,4 +1,4 @@
-import authService from '../services/authService';
+import authService, { getUserByEmail } from '../services/authService';
 import smtpTransport from '../config/sendEmail';
 import randomPassword from '../utils/randomPassword';
 import { text } from 'express';
@@ -27,6 +27,8 @@ const login = async (req, res, next) => {
       token: req.token,
       email: req.user.email,
       nickname: req.user.nickname,
+      groups: req.user.groups, //todo : group 확인
+      friendshipsA: req.user.friendshipsA,
     };
     console.log(user);
     res.status(200).json(user);
@@ -37,7 +39,8 @@ const login = async (req, res, next) => {
   }
 };
 
-/** @description 비밀번호 변경 1. TokenUrl이 담긴 이메일 전송*/
+/** @description 비밀번호 변경
+ * 1. TokenUrl이 담긴 이메일 전송*/
 const sendEmailWithTokenUrl = async (req, res, next) => {
   try {
     const email = req.body.email;
@@ -46,13 +49,13 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     //console.log(existingUser);
 
     const emailOptions = {
-      from: 'qweasdzxc0210@naver.com',
+      from: process.env.USER,
       to: email,
       subject: '[SeoulPlogFiesta] 비밀번호 변경 안내',
       html:
-        '<h2>안녕하세요. SeoulPlogFiesta입니다.</h2>' +
+        '<h2>안녕하세요. SeoulPlogFiesta입니다.</h2>' + //todo: 버튼으로 변경
         '<h2>고객님의 비밀번호 변경을 위해 아래의 링크를 클릭해주세요.</h2>' +
-        '<a href= "http://localhost:3000/auth/changePassword?token=' +
+        '<a href= "http://localhost:3001/auth/checkEmail?token=' +
         token +
         '">비밀번호 재설정 링크<a>',
     };
@@ -67,8 +70,6 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     });
 
     const user = await authService.updatePasswordTokenByEmail(email, token);
-    //해당 유저의 비밀번호를 임시 비밀번호로 변경
-    //const user = authService.changePassword(email, token);
     res.status(200).json(user); //빈 응답
   } catch (error) {
     console.error(error);
@@ -77,15 +78,21 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
   }
 };
 
-/*
-const getUserByPasswordToken = async (req, res, next) => {
+const checkEmail = async (req, res, next) => {
   const token = req.query.token;
   try {
-    const user = authService.getUserByPasswordToken(token);
-    //유저 특정
-    const email = user.email;
-    const passwordToken =  user.passwordToken
-    res.redirect("/realChangePassword?" + email + passwordToken)
+    const user = await authService.getUserByPasswordToken(token); //유저 특정
+    const updatedUser = await authService.updatePasswordValidByEmail(
+      user.email,
+    ); // 유저에 email_auth_at 날짜를 기록
+
+    const passwordToken = updatedUser.passwordToken;
+    const email = updatedUser.email;
+
+    // 유저 이메일 인증 처리후 리다이렉트
+    res.redirect(
+      '/auth/changePassword?email=' + email + '&token=' + passwordToken,
+    );
   } catch (error) {
     console.error(error);
     error.status = 500;
@@ -94,11 +101,35 @@ const getUserByPasswordToken = async (req, res, next) => {
 };
 
 const changePassword = async (req, res, next) => {
-  try{
-    const email = req.query=
+  try {
+    const { passwordToken, email, password } = req.body; //token, email, 변경될 password를 받음
+    const user = await authService.getUserByEmail(email);
+
+    if (!passwordToken || !email || !password) {
+      throw new Error('요청 데이터가 부족합니다.');
+    }
+
+    if (!user.passwordToken) {
+      throw new Error('인증이 확인되지 않았습니다.');
+    }
+    const currentTime = new Date();
+    let diff = Math.abs(currentTime.getTime() - user.passwordValid.getTime());
+    diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+    if (user.passwordToken == passwordToken && diff > 3) {
+      throw new Error('비밀번호 인증 기간이 지났습니다.');
+    }
+    if (!user.passwordToken == passwordToken) {
+      throw new Error('권한이 없습니다.');
+    }
+    const updatedUser = await authService.changePassword(email, password);
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    error.status = 500;
+    next(error);
   }
-}
-*/
+};
 
 /** @description 회원정보 변경
  * id는 req.user에서 받아오고
@@ -144,5 +175,7 @@ module.exports = {
   sendEmailWithTokenUrl,
   changeInformation,
   removeUser,
+  checkEmail,
+  changePassword,
   //getUserByPasswordToken,
 };

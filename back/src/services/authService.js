@@ -66,6 +66,22 @@ const updatePasswordTokenByEmail = async (email, token) => {
   }
 };
 
+const updatePasswordValidByEmail = async (email) => {
+  try {
+    const user = await prisma.user.update({
+      where: {
+        email: email,
+      },
+      data: {
+        passwordValid: new Date(),
+      },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const changePassword = async (email, password) => {
   //비밀번호 변경
   //console.log(email, password);
@@ -144,4 +160,5 @@ module.exports = {
   removeUser,
   updatePasswordTokenByEmail,
   getUserByPasswordToken,
+  updatePasswordValidByEmail,
 };

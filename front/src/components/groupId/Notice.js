@@ -7,7 +7,7 @@ import styles from './index.module.scss';
 const Notice = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
-  const [isModal, setIsModal] = useState(false);
+  const [isModal, setIsModalOpen] = useState(false);
 
   const { groupId } = useParams();
 
@@ -30,14 +30,14 @@ const Notice = () => {
 
   return (
     <>
-      {isModal && <Writing setIsModal={setIsModal} />}
+      {isModal && <Writing setIsModalOpen={setIsModalOpen} />}
       <div className="gContainer  gList navVh">
         <div className="titleContainer">
           <h1>그룹게시판</h1>
           <button
             className="gBtn"
             onClick={() => {
-              setIsModal(true);
+              setIsModalOpen(true);
             }}
           >
             글쓰기
@@ -62,7 +62,7 @@ export default Notice;
 
 const Item = ({ data }) => {
   const navigator = useNavigate();
-  const [isModal, setIsModal] = useState(false);
+  const [isModal, setIsModalOpen] = useState(false);
 
   return (
     <div className={styles.notice}>

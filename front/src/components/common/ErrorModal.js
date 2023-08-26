@@ -8,11 +8,11 @@ const ErrorModal = () => {
   const [errorMessage, setErrorMessage] = useRecoilState(errorMessageState);
 
   useEffect(() => {
-    setTimeout(() => {
+    const toast = setTimeout(() => {
       setIsError(false);
     }, 2000);
 
-    return clearTimeout(() => {});
+    return () => clearTimeout(toast);
   });
 
   return (

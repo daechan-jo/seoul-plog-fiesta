@@ -97,6 +97,23 @@ const getUserInfo = async (userId) => {
 };
 
 
+/** @description 친구 여부 */
+const weAreFriends = async (userId, requestId) => {
+	try {
+		return await prisma.friendship.findUnique({
+			where: {
+				userAId_userBId : {
+					userAId : userId,
+					userBId : requestId,
+				},
+			},
+		});
+	} catch (error) {
+		throw  error;
+	}
+};
+
+
 /** @description 친구 요청 */
 const friendRequest = async (userId,  requestId ) => {
 	try {
@@ -128,6 +145,16 @@ const friendRequestList = async  (userId) => {
 					userBId : userId,
 					isAccepted: false,
 				},
+				select:{
+				userA : {
+					select : {
+						id: true,
+						nickname: true,
+						about: true,
+						activity: true,
+					}
+				}
+			},
 		});
 	} catch (error) {
 		throw  error;
@@ -210,34 +237,7 @@ const deleteFriend = async (userId, friendId) => {
 	} catch (error) {
 		throw error;
 	}
-}
-
-
-
-
-/** @description 친구의 최신 게시물 */
-const friendsPost = async  (userId) => {
-	try {
-		return await prisma.friendship.findMany({
-			where: {
-				userAId: userId,
-				isAccepted: true,
-			},
-			include:{
-				userB : {
-					select : {
-						id: true,
-						nickname: true,
-						about: true,
-						activity: true,
-					}
-				}
-			},
-		});
-	} catch (error) {
-		throw  error;
-	}
-}
+};
 
 
 /** @description 나의 인증 횟수, 랭킹 */
@@ -255,7 +255,33 @@ const myCertPost = async (userId) => {
 	} catch (error) {
 		throw error;
 	}
-}
+};
+
+
+/** @description 친구 최신 게시물 */
+const friendsRecentPost = async  (userId) => {
+	try {
+		return await prisma.friendship.findMany({
+			where: {
+				userAId: userId,
+				isAccepted: true,
+			},
+			select:{
+				userB : {
+					include : {
+						certPost: true,
+					},
+				},
+			},
+			take: 5,
+			orderBy: {
+				createdAt: "desc",
+			},
+		});
+	} catch (error) {
+		throw  error;
+	}
+};
 
 
 module.exports = {
@@ -263,6 +289,7 @@ module.exports = {
 	searchUsers,
 	searchUserId,
 	getUserInfo,
+	weAreFriends,
 	friendRequest,
 	friendRequestList,
 	acceptFriend,
@@ -270,5 +297,6 @@ module.exports = {
 	getMyFriends,
 	deleteFriend,
 	getRandomUsers,
+	friendsRecentPost,
 	myCertPost,
 };

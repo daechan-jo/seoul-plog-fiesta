@@ -16,7 +16,8 @@ model User {
   nickname      String            @unique
   email         String            @unique
   password      String
-  passwordToken String?
+  passwordToken String?           @unique
+  passwordValid DateTime?
   about         String?
   activity      String?
   friendshipsA  Friendship[]      @relation("UserFriendshipsA")
@@ -27,8 +28,8 @@ model User {
   comments      Comment[]
   profileImage  UserProfileImage?
   certPosts     CertPost[]
-  ChatRoomUser  ChatRoomUser[]
-  ChatMessage   ChatMessage[]
+  chatRoomUser  ChatRoomUser[]
+  chatMessage   ChatMessage[]
 }
 
 model ChatRoom {
@@ -76,8 +77,8 @@ model Group {
 	region       String?			@db.VarChar(1000)
 	introduction String?			@db.VarChar(1000)
   memberLimit  Int          @default(50)
-  GroupUser    GroupUser[]
-  GroupImage   GroupImage[]
+  groupUser    GroupUser[]
+  groupImage   GroupImage[]
 }
 
 model GroupUser {

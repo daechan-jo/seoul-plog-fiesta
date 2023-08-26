@@ -29,6 +29,13 @@ groupRouter.get(
 	groupController.getGroupJoinRequests,
 );
 
+/** @description 개별 그룹 가입 신청 목록 조회 */
+groupRouter.get(
+	'/group/join/req/:groupid',
+	authenticateJWT,
+	groupController.getGroupJoinRequestsByGroupId,
+);
+
 /** @description 그룹 가입 신청 수락 */
 groupRouter.post(
 	'/group/accept/:groupid/:userid',
