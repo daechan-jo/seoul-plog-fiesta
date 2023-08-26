@@ -54,7 +54,7 @@ const getAllGroups = async () => {
 				name: true,
 				goal: true,
 				region: true,
-				GroupUser: {
+				groupUser: {
 					select: {
 						userId: true,
 						isAccepted: true,
@@ -96,7 +96,7 @@ const getGroupDetails = async (groupId) => {
 				id: groupId,
 			},
 			include: {
-				GroupUser: {
+				groupUser: {
 					include: {
 						user: true,
 					},
@@ -152,7 +152,7 @@ const getGroupJoinRequests = async (managerId) => {
 		return await prisma.group.findMany({
 			where: {
 				managerId: managerId,
-				GroupUser: {
+				groupUser: {
 					some: {
 						isAccepted: false,
 						isAdmin: false,
@@ -160,7 +160,7 @@ const getGroupJoinRequests = async (managerId) => {
 				},
 			},
 			include: {
-				GroupUser: {
+				groupUser: {
 					where: {
 						isAccepted: false,
 						isAdmin: false,
@@ -232,6 +232,31 @@ const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
 			},
 		});
 		return true;
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
+	try {
+		const group = await prisma.group.findUnique({
+			where: { id: groupId },
+			include: {
+				groupUser: {
+					where: { isAccepted: false },
+					include: {
+						user: {
+							select: {
+								id: true,
+								nickname: true,
+							},
+						},
+					},
+				},
+			},
+		});
+		if (!group || group.managerId !== managerId) return null;
+		return group.GroupUser.map((groupUser) => groupUser.user);
 	} catch (error) {
 		throw error;
 	}
@@ -520,4 +545,5 @@ module.exports = {
 	getRecentPosts,
 	getGroupByPostId,
 	getGroupUserByUserIdAndGroupId,
+	getGroupJoinRequestsByGroupId,
 };

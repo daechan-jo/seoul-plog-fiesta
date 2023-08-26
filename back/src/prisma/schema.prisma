@@ -27,9 +27,9 @@ model User {
   posts         Post[]
   comments      Comment[]
   profileImage  UserProfileImage?
-  certPosts     certPost[]
-  ChatRoomUser  ChatRoomUser[]
-  ChatMessage   ChatMessage[]
+  certPosts     CertPost[]
+  chatRoomUser  ChatRoomUser[]
+  chatMessage   ChatMessage[]
 }
 
 model ChatRoom {
@@ -76,8 +76,8 @@ model Group {
   region       String?
   introduction String?
   memberLimit  Int          @default(50)
-  GroupUser    GroupUser[]
-  GroupImage   GroupImage[]
+  groupUser    GroupUser[]
+  groupImage   GroupImage[]
 }
 
 model GroupUser {
@@ -132,7 +132,7 @@ model Comment {
   writerId   Int
   post       Post?     @relation(fields: [postId], references: [id])
   postId     Int?
-  certPost   certPost? @relation(fields: [certPostId], references: [id])
+  certPost   CertPost? @relation(fields: [certPostId], references: [id])
   certPostId Int?
   parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
   parentId   Int?
@@ -146,7 +146,7 @@ model PostImage {
   postId   Int
 }
 
-model certPost {
+model CertPost {
   id        Int             @id @default(autoincrement())
   writer    User            @relation(fields: [writerId], references: [id])
   writerId  Int
@@ -156,12 +156,12 @@ model certPost {
   content   String
   createdAt DateTime        @default(now())
   comments  Comment[]
-  images    certPostImage[]
+  images    CertPostImage[]
 }
 
-model certPostImage {
+model CertPostImage {
   id         Int      @id @default(autoincrement())
   imageUrl   String
-  certPost   certPost @relation(fields: [certPostId], references: [id])
+  certPost   CertPost @relation(fields: [certPostId], references: [id])
   certPostId Int
 }

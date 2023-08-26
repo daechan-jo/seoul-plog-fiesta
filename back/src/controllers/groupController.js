@@ -102,6 +102,26 @@ const acceptRegistration = async (req, res, next) => {
 	}
 };
 
+const getGroupJoinRequestsByGroupId = async (req, res, next) => {
+	try {
+		const groupId = parseInt(req.params.groupid);
+		const managerId = req.user.id;
+		const groupJoinRequests = await groupService.getGroupJoinRequestsByGroupId(
+			groupId,
+			managerId,
+		);
+		if (!groupJoinRequests) {
+			return res.status(403).json({ message: '권한 없음' });
+		}
+		console.log(groupJoinRequests);
+		res.status(200).json(groupJoinRequests);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 const rejectGroupJoinRequest = async (req, res, next) => {
 	try {
 		const userId = parseInt(req.params.userid);
@@ -323,4 +343,5 @@ module.exports = {
 	dropGroup,
 	getGroupJoinRequests,
 	getRecentPosts,
+	getGroupJoinRequestsByGroupId,
 };
