@@ -47,7 +47,7 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     //console.log(existingUser);
 
     const emailOptions = {
-      from: 'qweasdzxc0210@naver.com',
+      from: process.env.USER,
       to: email,
       subject: '[SeoulPlogFiesta] 비밀번호 변경 안내',
       html:
