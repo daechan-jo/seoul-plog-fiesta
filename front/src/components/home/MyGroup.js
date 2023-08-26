@@ -33,9 +33,7 @@ const MyGroup = () => {
         ) : datas.length === 0 ? (
           <div>데이터가 없습니다</div>
         ) : (
-          datas.map((data) => (
-            <Item key={`group_post_${data.id}`} data={data} />
-          ))
+          datas.map((data) => <Item key={data.id} data={data} />)
         )}
       </div>
     </div>

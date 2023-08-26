@@ -6,7 +6,7 @@ import { errorMessageState, isErrorState } from '../../features/recoilState';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GroupIdContext } from '../../context/groupIdContext';
 
-const Writing = ({ setIsModal }) => {
+const Writing = ({ setIsModalOpen }) => {
   const [, setIsError] = useRecoilState(isErrorState);
   const [, setErrorMessage] = useRecoilState(errorMessageState);
   const navigator = useNavigate();
@@ -42,7 +42,7 @@ const Writing = ({ setIsModal }) => {
       setIsError(true);
       navigator('/groups/1?view=notice');
       setErrorMessage('그룹 글을 생성했습니다.');
-      setIsModal(false);
+      setIsModalOpen(false);
     } catch (err) {
       console.log('그룹 글생성 실패.', err);
     }
@@ -85,7 +85,7 @@ const Writing = ({ setIsModal }) => {
           <button
             type="button"
             onClick={() => {
-              setIsModal(false);
+              setIsModalOpen(false);
             }}
             className={styles.back}
           >

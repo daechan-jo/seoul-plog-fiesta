@@ -203,6 +203,7 @@ const MyInfo = () => {
             <button
               className="gBtn"
               onClick={() => {
+                setData(initialData);
                 setIsEditing(false);
               }}
             >
