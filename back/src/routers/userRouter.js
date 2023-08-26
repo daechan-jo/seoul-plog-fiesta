@@ -85,4 +85,11 @@ userRouter
         userController.myCertPost);
 
 
+/** @description 친구 최신 게시물 */
+userRouter
+    .get("/user/list/info",
+        authenticateJWT,
+        userController.friendsRecentPost);
+
+
 module.exports = userRouter;
