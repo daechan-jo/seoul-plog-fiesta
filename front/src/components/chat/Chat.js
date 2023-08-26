@@ -83,7 +83,7 @@ function Chat() {
     // 메시지를 서버에 전송
     try {
       const res = await socket.emit('sendMessage', chatId, messageText);
-      console.log('백에서 받은값: ', res.data);
+      console.log('백에서 받은값: ', res);
       setMessageText('');
     } catch (err) {
       console.log('메시지 보내기 실패', err);

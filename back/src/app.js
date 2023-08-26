@@ -63,45 +63,41 @@ io.on('connection', (socket) => {
   const loggedInUserId = socket.decoded_token.id;
   console.log(`User ${loggedInUserId} connected`);
 
-  try {
-    socket.on('joinRoom', async (otherUserId) => {
-      // 나와 상대방 ID를 기반으로 고유한 방 ID를 생성
-      const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
-        loggedInUserId,
-        otherUserId,
-      )}`;
+  socket.on('joinRoom', async (otherUserId) => {
+    // 나와 상대방 ID를 기반으로 고유한 방 ID를 생성
+    const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
+      loggedInUserId,
+      otherUserId,
+    )}`;
 
-      // 방 들어가기
-      socket.join(roomId);
+    // 방 들어가기
+    socket.join(roomId);
 
-      // roomId에 해당하는 기존 채팅 메시지가 있는 경우 검색하고 내보냄
-      const messages = await prisma.chatMessage.findMany({
-        where: { roomId },
-      });
-
-      socket.emit('messages', messages);
+    // roomId에 해당하는 기존 채팅 메시지가 있는 경우 검색하고 내보냄
+    const messages = await prisma.chatMessage.findMany({
+      where: { roomId },
     });
 
-    socket.on('sendMessage', async (otherUserId, message) => {
-      // 마찬가지로 나와 상대방 ID를 기반으로 룸 ID를 만든 다음 보낼 메시지를 데이터베이스에 저장하고 상대방에게 보낸다.
-      const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
-        loggedInUserId,
-        otherUserId,
-      )}`;
+    socket.emit('messages', messages);
+  });
 
-      await prisma.chatMessage.create({
-        data: {
-          roomId,
-          message,
-          senderId: loggedInUserId,
-        },
-      });
-      // 상대방에게 브로드캐스팅
-      io.to(roomId).emit('message', { senderId: loggedInUserId, message });
+  socket.on('sendMessage', async (otherUserId, message) => {
+    // 마찬가지로 나와 상대방 ID를 기반으로 룸 ID를 만든 다음 보낼 메시지를 데이터베이스에 저장하고 상대방에게 보낸다.
+    const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
+      loggedInUserId,
+      otherUserId,
+    )}`;
+
+    await prisma.chatMessage.create({
+      data: {
+        roomId,
+        message,
+        senderId: loggedInUserId,
+      },
     });
-  } catch (err) {
-    console.error(err);
-  }
+    // 상대방에게 브로드캐스팅
+    io.to(roomId).emit('message', { senderId: loggedInUserId, message });
+  });
 
   socket.on('leaveRoom', async (otherUserId) => {
     const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
