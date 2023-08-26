@@ -24,16 +24,6 @@ export function handleImgChange(e) {
   }
 }
 
-export function handlePagenation(datas, currentPage, itemsPerPage) {
-  const page = Math.max(1, currentPage);
-
-  const startIndex = (page - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsOnPage = datas.slice(startIndex, endIndex);
-
-  return itemsOnPage;
-}
-
 //이메일이 abc@example.com 형태인지 regex를 이용해 확인함.
 export const validateEmail = (email) => {
   return email

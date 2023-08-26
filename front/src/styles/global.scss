@@ -67,6 +67,7 @@ main {
   }
   .contentListContainer {
     width: 100%;
+    max-width: 1550px;
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

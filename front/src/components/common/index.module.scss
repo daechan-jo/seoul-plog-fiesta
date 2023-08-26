@@ -88,6 +88,7 @@
   align-items: center;
   ul {
     display: flex;
+    gap: 10px;
     width: 50%;
     justify-content: space-between;
     align-items: center;
@@ -99,14 +100,14 @@
       border-radius: 50%;
       cursor: pointer;
     }
-    li.active {
+    .active {
       color: $point;
       font-size: 22px;
     }
     li:hover {
       color: $point;
     }
-    li.disabled {
+    .disabled {
       font-size: 15px;
       cursor: not-allowed;
       color: gray;
