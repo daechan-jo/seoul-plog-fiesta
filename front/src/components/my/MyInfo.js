@@ -2,7 +2,6 @@ import styles from './index.module.scss';
 import React, { useEffect, useState } from 'react';
 import user_none from '../../assets/user_none.png';
 import * as Api from '../../api';
-import { handleImgChange } from '../../utils';
 import { seoulDistricts } from '../common/exportData';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
@@ -12,18 +11,10 @@ const initialData = {
   nickname: '',
   about: '',
   activity: '',
+  password: '',
+  confirmPassword: '',
 };
 
-//{ id, name, nickname, password, about, activity }
-/*
-const user = {
-      id: req.user.id,
-      nickname: req.body.nickname,
-      name: req.body.name,
-      about: req.body.about,
-      activity: req.body.activity,
-    };
-*/
 const MyInfo = () => {
   const [img, setImg] = useState();
   const [isEditing, setIsEditing] = useState(false);
@@ -75,9 +66,12 @@ const MyInfo = () => {
         nickname: data.nickname,
         about: data.about,
         activity: data.activity,
+        password: data.password,
+        confirmPassword: data.passwordConfirm,
       });
       setData(res.data);
       if (img) {
+        console.log('이미지업로드', img);
         const res = await Api.postForm('/images/userimg', {
           profileImage: formData,
         });
@@ -137,15 +131,15 @@ const MyInfo = () => {
         </div>
         <>
           {isEditing && (
-            <li>
+            <li key="img">
               <input type="file" accept="image/*" onChange={handleImgChange} />
             </li>
           )}
-          <li>
+          <li key="email">
             <label>이메일</label>
             <div>{data.email}</div>
           </li>
-          <li>
+          <li key="name">
             <label>이름</label>
             {isEditing ? (
               <input
@@ -158,7 +152,7 @@ const MyInfo = () => {
               <div>{data.name}</div>
             )}
           </li>
-          <li>
+          <li key="nickname">
             <label>별명</label>
             {isEditing ? (
               <input
@@ -171,7 +165,7 @@ const MyInfo = () => {
               <div>{data.nickname}</div>
             )}
           </li>
-          <li>
+          <li key="about">
             <label>소개</label>
             {isEditing ? (
               <input
@@ -184,7 +178,7 @@ const MyInfo = () => {
               <div>{data.about}</div>
             )}
           </li>
-          <li>
+          <li key="region">
             <label>지역구</label>
             {isEditing ? (
               <select
@@ -202,6 +196,28 @@ const MyInfo = () => {
               <div>{seoulDistricts[data.activity]}</div>
             )}
           </li>
+          {isEditing && (
+            <li key="pw">
+              <label>비밀번호 입력</label>
+              <input
+                type="password"
+                name="password"
+                value={data.password}
+                onChange={handleInputChange}
+              />
+            </li>
+          )}
+          {isEditing && (
+            <li key="passwordConfirm">
+              <label>비밀번호 확인</label>
+              <input
+                type="password"
+                name="passwordConfirm"
+                value={data.passwordConfirm}
+                onChange={handleInputChange}
+              />
+            </li>
+          )}
         </>
       </ul>
       <div>

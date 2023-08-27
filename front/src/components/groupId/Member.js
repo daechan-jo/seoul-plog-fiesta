@@ -18,9 +18,11 @@ const GroupMember = ({ view }) => {
   const adminValue = searchParams.get('admin');
   const isGroupAdmin = parseInt(adminValue) === user.loginId;
 
+  const navigator = useNavigate();
+
   const handleGroupDelete = async () => {
     try {
-      await Api.get(`/group/drop/${groupId}`);
+      await Api.delete(`/group/drop/${groupId}`);
       navigator('/network?view=group');
     } catch (err) {
       console.log('그룹 삭제 실패.', err);

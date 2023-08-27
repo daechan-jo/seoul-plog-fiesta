@@ -1,27 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Api from '../../api';
-import { useNavigate, useParams } from 'react-router-dom';
-import { GroupIdContext } from '../../context/groupIdContext';
+import { useParams } from 'react-router-dom';
 import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import styles from './index.module.scss';
 
-const GroupPosts = () => {
-  const navigator = useNavigate();
-
-  const { groupId } = useParams();
-
+const GroupPosts = ({ setView }) => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
         <h1>공지사항</h1>
-        <button
-          className="gBtn"
-          onClick={() => {
-            navigator(`/groups/${groupId}?view=notice`);
-          }}
-        >
-          게시판 바로가기
-        </button>
       </div>
       <List />
     </div>

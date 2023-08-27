@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Api from '../../api';
-import { GroupIdContext } from '../../context/groupIdContext';
 import { useParams } from 'react-router-dom';
 
 const GroupUsers = () => {
@@ -8,7 +7,6 @@ const GroupUsers = () => {
     <div className="gContainer">
       <div className="titleContainer">
         <h1>인증 현황</h1>
-        <button className="gBtn">인증글 바로가기</button>
       </div>
       <List />
     </div>

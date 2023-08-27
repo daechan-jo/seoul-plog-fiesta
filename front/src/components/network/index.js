@@ -131,20 +131,7 @@ const NetworkHeader = ({ view, setIsModal, setIsCheck }) => {
 
 const Item = ({ data, view }) => {
   const navigator = useNavigate();
-  /*
-  {
-     imgUrl: 'http://placekitten.com/200/200',
-    id: 8,
-    name: 'group test1',
-    managerId: 7,
-    goal: '잘먹고잘자기',
-    region: '써울',
-    memberLimit: 50,
-    data.: 2,
-  },
-  */
 
-  console.log(data);
   return (
     <div
       className={styles.itemContainer}
@@ -169,15 +156,15 @@ const Item = ({ data, view }) => {
         />
       </div>
       <ul className={styles.item}>
-        <li key={view === 'group' ? data.name : data.nickname}>
+        <li key="1">
           <label>{view === 'group' ? '그룹이름' : '유저별명'}</label>
           <div>{view === 'group' ? data.name : data.nickname}</div>
         </li>
-        <li key={view === 'group' ? data.goal : data.about}>
+        <li key="2">
           <label>{view === 'group' ? '그룹목표' : '유저소개'}</label>
           <div>{view === 'group' ? data.goal : data.about}</div>
         </li>
-        <li key={view === 'group' ? data.region : data.activity}>
+        <li key="3">
           <label>{view === 'group' ? '그룹지역' : '유저활동'}</label>
           <div>
             {view === 'group'

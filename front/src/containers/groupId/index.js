@@ -46,7 +46,7 @@ const GroupIdContainer = () => {
             <GroupMap />
             <div className="box">
               <GroupUsers />
-              <GroupPosts />
+              <GroupPosts setView={setView} />
             </div>
           </div>
         ) : view === 'notice' ? (
