@@ -45,7 +45,7 @@ const ItemList = () => {
           }
         } else {
           if (isCheck) {
-            const res = await Api.get(`/user/friend`);
+            const res = await Api.get(`/user/friends`);
             if (!res.data.searchNickname) {
               setDatas([]);
             } else {
