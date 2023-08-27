@@ -74,13 +74,13 @@ const getAllGroups = async () => {
 				});
 
 				const imageUrls = images.map((image) => {
-					return image.imageUrl; // Just store the URLs directly
+					return image.imageUrl;
 				});
 
 				return {
 					...group,
 					memberCount,
-					images: imageUrls, // Use the array of images URLs
+					images: imageUrls,
 				};
 			}),
 		);
@@ -310,7 +310,7 @@ const getMyGroups = async (userId) => {
 			region: group.group.region,
 			introduction: group.group.introduction,
 			memberLimit: group.group.memberLimit,
-			memberCount: group.group.groupUser.length, // Count of accepted group members
+			memberCount: group.group.groupUser.length,
 			manager: {
 				id: group.group.manager.id,
 				name: group.group.manager.name,
