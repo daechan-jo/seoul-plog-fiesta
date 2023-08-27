@@ -20,6 +20,7 @@ model User {
   passwordValid DateTime?
   about         String?
   activity      String?
+  provider      String?
   friendshipsA  Friendship[]      @relation("UserFriendshipsA")
   friendshipsB  Friendship[]      @relation("UserFriendshipsB")
   groups        GroupUser[]
