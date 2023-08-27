@@ -187,10 +187,12 @@ const getTopMainCertPostContributors = async () => {
 				writerId: true,
 			},
 		});
+
 		const userCounts = certPosts.reduce((acc, post) => {
 			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
 			return acc;
 		}, {});
+
 		const topUserIds = Object.keys(userCounts)
 			.sort((a, b) => userCounts[b] - userCounts[a])
 			.slice(0, 5);
@@ -204,12 +206,20 @@ const getTopMainCertPostContributors = async () => {
 				select: {
 					id: true,
 					nickname: true,
-					profileImage: true,
+					profileImage: {
+						select: {
+							imageUrl: true,
+						},
+					},
 				},
 			});
 
+			userDetails.imageUrl = userDetails.profileImage?.imageUrl || null;
 			userDetails.score = userCounts[userId] * 353;
 			userDetails.rank = i + 1;
+
+			// Remove the 'profileImage' property from the user object
+			delete userDetails.profileImage;
 
 			topUsers.push(userDetails);
 		}
