@@ -11,19 +11,20 @@ const RecommendContainer = () => {
         <div
           className="iframeContainer"
           style={{
-            width: '80vw',
-            minWidth: '1550px',
-            minHeight: '700px',
-            height: '70vh',
+            width: '75vw',
+            maxWidth: '1200px',
+            maxHeight: '750px',
+            height: '80vh',
             overflow: 'hidden',
+            overflowX: 'hidden',
           }}
         >
           <iframe
             style={{
-              width: '80vw',
-              minWidth: '1550px',
-              minHeight: '700px',
-              height: '70vw',
+              width: '75vw',
+              maxWidth: '1200px',
+              maxHeight: '750px',
+              height: '80vw',
             }}
             src="/seoul_course_map.html"
             title="Seoul Course Map"
