@@ -58,7 +58,7 @@ const GroupMember = ({ view }) => {
           <div>데이터가 없습니다.</div>
         ) : (
           datas.map((data) => (
-            <Item data={data.user} key={data.user.id} view={view} />
+            <Item data={data.user} key={data.name} view={view} />
           ))
         )}
       </div>
