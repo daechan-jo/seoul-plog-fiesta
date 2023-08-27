@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .writing {
   .imgContainer {
     width: 500px;
@@ -47,5 +49,18 @@
     padding: 10px;
     background-color: red;
     color: white;
+  }
+}
+
+.requestItem {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    background-color: $point;
+    color: white;
+    padding: 5px;
+    margin-left: 5px;
   }
 }
