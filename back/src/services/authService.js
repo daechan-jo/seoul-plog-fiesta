@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { error } = require('console');
 const { accessSync } = require('fs');
 
+/** @description 유저 생성*/
 const createUser = async (userData) => {
   const { name, nickname, email, password } = userData;
   const existingUser = await prisma.user.findUnique({
@@ -19,8 +20,8 @@ const createUser = async (userData) => {
   if (existingUser) throw new Error('이미 존재하는 이메일입니다.');
   if (existingNickname) throw new Error('이미 존재하는 닉네임입니다.');
 
+  //비밀번호 해쉬화
   const hashedPassword = await bcrypt.hash(password, 10);
-
   const newUser = {
     name,
     nickname,
@@ -48,7 +49,7 @@ const getUserByEmail = async (email) => {
   return existingUser;
 };
 
-//이메일로 유저 찾아 유저의 토큰 업데이트
+/** @description 이메일로 유저 찾아 패스워드 토큰 업데이트*/
 const updatePasswordTokenByEmail = async (email, token) => {
   try {
     const user = await prisma.user.update({
@@ -59,13 +60,13 @@ const updatePasswordTokenByEmail = async (email, token) => {
         passwordToken: token,
       },
     });
-    console.log(user);
     return user;
   } catch (error) {
     throw error;
   }
 };
 
+/** @description 이메일로 유저 찾아 패스워드 유효기간 업데이트*/
 const updatePasswordValidByEmail = async (email) => {
   try {
     const user = await prisma.user.update({
@@ -133,7 +134,6 @@ const changeInformation = async (user) => {
         activity: activity, //빈 값 허용
       },
     });
-    console.log('유저의 정보를 업데이트했습니다');
     return updateUser;
   } catch (error) {
     throw error;
@@ -147,13 +147,13 @@ const removeUser = async (id) => {
         id: id,
       },
     });
-    console.log('탈퇴 완료');
     return deleteUser;
   } catch (error) {
     throw error;
   }
 };
 
+/** @description 아이디로 가입된 모임 아이디들 찾기 -> 배열 반환*/
 const findGroupsById = async (id) => {
   try {
     const user = await prisma.user.findUnique({
@@ -171,6 +171,7 @@ const findGroupsById = async (id) => {
   }
 };
 
+/** @description 아이디로 친구 관계인 친구 아이디들 찾기 -> 배열 반환*/
 const findFriendIdsById = async (id) => {
   try {
     const user = await prisma.user.findUnique({
@@ -196,8 +197,6 @@ const findFriendIdsById = async (id) => {
     const friendIds = user.friendshipsA.map(
       (friendship) => friendship.userB.id,
     );
-    console.log(friendIds);
-
     return friendIds;
   } catch (error) {
     throw error;
