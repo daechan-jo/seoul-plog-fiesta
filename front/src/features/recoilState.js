@@ -24,3 +24,8 @@ export const isRequestListOpenState = atom({
   key: 'isRequestListOpen',
   default: false,
 });
+
+export const isGroupRequestListOpenState = atom({
+  key: 'isGroupRequestListOpen',
+  default: false,
+});

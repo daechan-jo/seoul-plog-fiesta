@@ -80,7 +80,7 @@ const getAllGroups = async () => {
 				return {
 					...group,
 					memberCount,
-					images: imageUrls, // Use the array of images URLs
+					images: imageUrls,
 				};
 			}),
 		);
@@ -256,7 +256,7 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 			},
 		});
 		if (!group || group.managerId !== managerId) return null;
-		return group.GroupUser.map((groupUser) => groupUser.user);
+		return group.groupUser.map((groupUser) => groupUser.user);
 	} catch (error) {
 		throw error;
 	}
@@ -276,6 +276,10 @@ const getMyGroups = async (userId) => {
 						id: true,
 						name: true,
 						managerId: true,
+						goal: true,
+						region: true,
+						introduction: true,
+						memberLimit: true,
 						manager: {
 							select: {
 								id: true,
@@ -288,14 +292,25 @@ const getMyGroups = async (userId) => {
 								imageUrl: true,
 							},
 						},
+						groupUser: {
+							where: {
+								isAccepted: true,
+							},
+						},
 					},
 				},
 			},
 		});
+
 		return groups.map((group) => ({
 			id: group.group.id,
 			name: group.group.name,
 			managerId: group.group.managerId,
+			goal: group.group.goal,
+			region: group.group.region,
+			introduction: group.group.introduction,
+			memberLimit: group.group.memberLimit,
+			memberCount: group.group.groupUser.length,
 			manager: {
 				id: group.group.manager.id,
 				name: group.group.manager.name,

@@ -5,7 +5,10 @@ import { logout } from '../../features/user/userSlice';
 import * as Api from '../../api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { isRequestListOpenState } from '../../features/recoilState';
+import {
+  isGroupRequestListOpenState,
+  isRequestListOpenState,
+} from '../../features/recoilState';
 
 const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
@@ -18,7 +21,7 @@ const Header = ({ setIsWriting }) => {
   const searchParams = new URLSearchParams(location.search);
 
   const adminValue = searchParams.get('admin');
-  const isGroupAdmin = adminValue == user.loginId;
+  const isGroupAdmin = parseInt(adminValue) === user.loginId;
 
   const id = currentPath.split('/')[2];
 
@@ -26,6 +29,9 @@ const Header = ({ setIsWriting }) => {
 
   const [isRequestListOpen, setIsRequestListOpen] = useRecoilState(
     isRequestListOpenState,
+  );
+  const [isGroupRequestListOpen, setIsGroupRequestListOpen] = useRecoilState(
+    isGroupRequestListOpenState,
   );
 
   const handleJoinGroup = useCallback(async () => {
@@ -54,15 +60,8 @@ const Header = ({ setIsWriting }) => {
   }, [setIsRequestListOpen]);
 
   const handleGroupRequestList = useCallback(async () => {
-    try {
-      await Api.post(`/group/join`, {
-        id: id,
-      });
-      alert('친구 요청 성공');
-    } catch (err) {
-      alert(err.message ? err.message : '친구 요청 실패.');
-    }
-  }, [id]);
+    setIsGroupRequestListOpen(true);
+  }, [setIsGroupRequestListOpen]);
 
   const buttons = useMemo(
     () => [

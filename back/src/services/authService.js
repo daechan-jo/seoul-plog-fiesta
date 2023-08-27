@@ -108,7 +108,7 @@ const getUserByPasswordToken = async (passwordToken) => {
 };
 
 const changeInformation = async (user) => {
-  const { id, name, nickname, about, activity } = user;
+  const { id, name, nickname, about, activity, password } = user;
   try {
     if (!name || !nickname) throw new Error('필수값들을 입력해주세요');
 
@@ -120,6 +120,7 @@ const changeInformation = async (user) => {
     });
     if (sameNicknameUser) throw new Error('이미 존재하는 닉네임입니다.');
 
+    const hashedPassword = await bcrypt.hash(password, 10);
     const updateUser = await prisma.user.update({
       where: {
         id: id,
@@ -127,6 +128,7 @@ const changeInformation = async (user) => {
       data: {
         name: name,
         nickname: nickname,
+        password: hashedPassword,
         about: about, //빈 값 허용
         activity: activity, //빈 값 허용
       },
@@ -152,6 +154,56 @@ const removeUser = async (id) => {
   }
 };
 
+const findGroupsById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        groups: true,
+      },
+    });
+    const groupIds = user.groups.map((group) => group.groupId);
+    return groupIds;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const findFriendIdsById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        friendshipsA: {
+          where: {
+            isAccepted: true,
+          },
+          select: {
+            userB: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const friendIds = user.friendshipsA.map(
+      (friendship) => friendship.userB.id,
+    );
+    console.log(friendIds);
+
+    return friendIds;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -161,4 +213,6 @@ module.exports = {
   updatePasswordTokenByEmail,
   getUserByPasswordToken,
   updatePasswordValidByEmail,
+  findGroupsById,
+  findFriendIdsById,
 };

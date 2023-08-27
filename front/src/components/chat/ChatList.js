@@ -3,12 +3,28 @@ import styles from './index.module.scss';
 import { useRecoilState } from 'recoil';
 import { isChatOpenState } from '../../features/recoilState';
 import * as Api from '../../api';
+import { useNavigate } from 'react-router-dom';
 
 const ChatList = () => {
   const [datas, setDatas] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
 
+  const [searchText, setSearchText] = useState('');
+  const [searchResult, setSearchResult] = useState(null);
+
   const [isChatOpen, setIsChatOpen] = useRecoilState(isChatOpenState);
+
+  const handleInputChange = async (event) => {
+    const newSearchText = event.target.value;
+    setSearchText(newSearchText);
+
+    try {
+      const res = await Api.get(`/user/${newSearchText}`);
+      setSearchResult(res.data.searchNickname);
+    } catch (err) {
+      console.log('이름 검색데이터를 불러오는데 실패.', err);
+    }
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -37,6 +53,13 @@ const ChatList = () => {
 
   return (
     <div className={styles.chatList}>
+      <input
+        type="text"
+        value={searchText}
+        onChange={handleInputChange}
+        placeholder="유저의 별명을 검색하세요"
+      />
+      {searchResult && <UserItem data={searchResult} />}
       {isFetching ? (
         <div>로딩중</div>
       ) : !datas || datas.length === 0 ? (
@@ -55,6 +78,22 @@ const Item = ({ data }) => {
     <div>
       <div>_님과의 채팅</div>
       <div>{data}</div>
+    </div>
+  );
+};
+
+const UserItem = ({ data }) => {
+  const navigator = useNavigate();
+
+  return (
+    <div>
+      <div
+        onClick={() => {
+          navigator(`/users/${data.id}?view=main`);
+        }}
+      >
+        {data.nickname}
+      </div>
     </div>
   );
 };

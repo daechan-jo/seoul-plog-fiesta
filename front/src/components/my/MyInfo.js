@@ -70,7 +70,7 @@ const MyInfo = () => {
 
   const handleSubmit = async (e) => {
     try {
-      const res = await Api.post('/auth/update', {
+      const res = await Api.put('/auth/update', {
         name: data.name,
         nickname: data.nickname,
         about: data.about,
@@ -92,7 +92,7 @@ const MyInfo = () => {
 
   const handleDelete = async () => {
     try {
-      await Api.get('/auth/drop');
+      await Api.delete('/auth/drop');
       alert('계정 삭제 완료');
       dispatch(logout());
       navigator('/intro');

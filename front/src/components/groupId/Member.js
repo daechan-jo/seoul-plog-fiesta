@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
+import { useSelector } from 'react-redux';
 
 const GroupMember = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -8,6 +9,22 @@ const GroupMember = ({ view }) => {
 
   const { groupId } = useParams();
 
+  const user = useSelector((state) => state.user);
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const adminValue = searchParams.get('admin');
+  const isGroupAdmin = parseInt(adminValue) === user.loginId;
+
+  const handleGroupDelete = async () => {
+    try {
+      await Api.get(`/group/drop/${groupId}`);
+      navigator('/network?view=group');
+    } catch (err) {
+      console.log('그룹 삭제 실패.', err);
+    }
+  };
   useEffect(() => {
     const getData = async () => {
       try {
@@ -28,6 +45,11 @@ const GroupMember = ({ view }) => {
     <div className="gContainer  gList navVh">
       <div className="titleContainer">
         <h1>멤버 리스트</h1>
+        {isGroupAdmin && (
+          <button className="gBtn" onClick={handleGroupDelete}>
+            그룹 삭제하기
+          </button>
+        )}
       </div>
       <div className="contentListContainer">
         {isFetching ? (
@@ -36,7 +58,7 @@ const GroupMember = ({ view }) => {
           <div>데이터가 없습니다.</div>
         ) : (
           datas.map((data) => (
-            <Item data={data.user} key={data.user.id} view={view} />
+            <Item data={data.user} key={data.name} view={view} />
           ))
         )}
       </div>

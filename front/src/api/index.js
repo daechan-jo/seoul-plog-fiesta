@@ -50,22 +50,22 @@ const postForm = async (endpoint, data) => {
 };
 
 const put = async (endpoint, data) => {
-	try {
-		console.log(`PUH: ${baseURL}${endpoint} ${userToken}`);
-		console.log(`DATA: ${JSON.stringify(data)}`);
-		const filteredData = {};
-		for (const key in data) {
-			if (data[key] !== '') {
-				filteredData[key] = data[key];
-			}
-		}
-		console.log(`FILTERED DATA: ${filteredData}`);
-		const res = await instance.put(endpoint, filteredData);
-		return res;
-	} catch (err) {
-		console.error('PUT ERROR', err);
-		throw err;
-	}
+  try {
+    console.log(`PUH: ${baseURL}${endpoint} ${userToken}`);
+    console.log(`DATA: ${JSON.stringify(data)}`);
+    const filteredData = {};
+    for (const key in data) {
+      if (data[key] !== '') {
+        filteredData[key] = data[key];
+      }
+    }
+    console.log(`FILTERED DATA: ${JSON.stringify(filteredData)}`);
+    const res = await instance.put(endpoint, filteredData);
+    return res;
+  } catch (err) {
+    console.error('PUT ERROR', err);
+    throw err;
+  }
 };
 
 const del = async (endpoint, params = '') => {

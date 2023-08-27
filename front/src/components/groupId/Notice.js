@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 import Writing from './Writing';
 import styles from './index.module.scss';
+import { useSelector } from 'react-redux';
 
 const Notice = () => {
   const [isFetching, setIsFetching] = useState(false);
@@ -30,7 +31,9 @@ const Notice = () => {
 
   return (
     <>
-      {isModal && <Writing setIsModalOpen={setIsModalOpen} />}
+      {isModal && (
+        <Writing setIsModalOpen={setIsModalOpen} setDatas={setDatas} />
+      )}
       <div className="gContainer  gList navVh">
         <div className="titleContainer">
           <h1>그룹게시판</h1>

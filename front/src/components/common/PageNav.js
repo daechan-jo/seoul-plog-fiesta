@@ -18,6 +18,7 @@ const PageNav = ({ params, view, lists, setView }) => {
     <div className={styles.pageNav}>
       {listKeys.map((list) => (
         <button
+          key={list}
           className={`${
             !view && list === 'main'
               ? styles.activeNav
