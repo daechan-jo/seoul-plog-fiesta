@@ -154,6 +154,56 @@ const removeUser = async (id) => {
   }
 };
 
+const findGroupsById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        groups: true,
+      },
+    });
+    const groupIds = user.groups.map((group) => group.groupId);
+    return groupIds;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const findFriendIdsById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        friendshipsA: {
+          where: {
+            isAccepted: true,
+          },
+          select: {
+            userB: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const friendIds = user.friendshipsA.map(
+      (friendship) => friendship.userB.id,
+    );
+    console.log(friendIds);
+
+    return friendIds;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -163,4 +213,6 @@ module.exports = {
   updatePasswordTokenByEmail,
   getUserByPasswordToken,
   updatePasswordValidByEmail,
+  findGroupsById,
+  findFriendIdsById,
 };
