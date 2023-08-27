@@ -68,7 +68,7 @@ model UserProfileImage {
 
 model Group {
   id           Int          @id @default(autoincrement())
-  name         String
+  name         String				@unique
   manager      User         @relation(fields: [managerId], references: [id])
   managerId    Int
   posts        Post[]
