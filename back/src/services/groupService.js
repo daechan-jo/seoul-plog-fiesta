@@ -97,6 +97,9 @@ const getGroupDetails = async (groupId) => {
 			},
 			include: {
 				groupUser: {
+					where: {
+						isAccepted: true,
+					},
 					include: {
 						user: true,
 					},

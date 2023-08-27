@@ -60,7 +60,7 @@ groupRouter.get(
 	groupController.getGroupCertPosts,
 );
 
-/** @description 그룹 상세정보 */
+/** @description 그룹 상세정보(멤버 정보) */
 groupRouter.get('/group/:groupid', groupController.getGroupDetails);
 
 /** @description 그룹 게시글 작성 */
