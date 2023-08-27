@@ -187,18 +187,14 @@ const getTopMainCertPostContributors = async () => {
 				writerId: true,
 			},
 		});
-
 		const userCounts = certPosts.reduce((acc, post) => {
 			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
 			return acc;
 		}, {});
-
 		const topUserIds = Object.keys(userCounts)
 			.sort((a, b) => userCounts[b] - userCounts[a])
 			.slice(0, 5);
-
 		const topUsers = [];
-
 		for (let i = 0; i < topUserIds.length; i++) {
 			let userId = topUserIds[i];
 			const userDetails = await prisma.user.findUnique({
@@ -213,14 +209,10 @@ const getTopMainCertPostContributors = async () => {
 					},
 				},
 			});
-
 			userDetails.imageUrl = userDetails.profileImage?.imageUrl || null;
 			userDetails.score = userCounts[userId] * 353;
 			userDetails.rank = i + 1;
-
-			// Remove the 'profileImage' property from the user object
 			delete userDetails.profileImage;
-
 			topUsers.push(userDetails);
 		}
 
