@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 import { useSelector } from 'react-redux';
+import { seoulDistricts } from '../common/exportData';
 
 const GroupMember = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -79,8 +80,9 @@ const Item = ({ data, view }) => {
         navigator(`/users/${data.id}`);
       }}
     >
-      <div>{data.name}</div>
       <div>{data.nickname}</div>
+      <div>{data.about}</div>
+      <div>{seoulDistricts[data.activity]}</div>
     </div>
   );
 };

@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GroupIdContext } from '../../context/groupIdContext';
+import { handleCreatedDate } from '../../utils/handleCreatedDate';
+import styles from './index.module.scss';
 
 const GroupPosts = () => {
   const navigator = useNavigate();
@@ -59,12 +61,20 @@ const List = () => {
       ) : datas.length === 0 ? (
         <div>데이터가 없습니다</div>
       ) : (
-        datas.map((data) => <Item key={`${data.groupId}`} data={data} />)
+        datas
+          .filter((data) => data.isNotice === true)
+          .map((data) => <Item key={data.id} data={data} />)
       )}
     </div>
   );
 };
 
 const Item = ({ data }) => {
-  return <div>{data.title}</div>;
+  const date = handleCreatedDate(data.createdAt);
+  return (
+    <div className={styles.notices}>
+      <div>{data.title}</div>
+      <div>{date}</div>
+    </div>
+  );
 };
