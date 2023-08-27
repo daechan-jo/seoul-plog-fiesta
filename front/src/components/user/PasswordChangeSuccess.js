@@ -1,6 +1,6 @@
 import styles from './user.module.scss';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import * as Api from '../../api';
 import { validateEmail } from '../../utils';
@@ -12,13 +12,20 @@ const PasswordChangeSuccess = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const isEmailValid = validateEmail(email);
-
   const isPasswordValid = password.length >= 4;
-
   const isPasswordSame = password === passwordConfirm;
-
   const isValidForm = isEmailValid && isPasswordSame && isPasswordValid;
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const pwToken = searchParams.get('token');
+
+  useEffect(() => {
+    if (!pwToken) {
+      navigate('/setpassword');
+    }
+  }, [navigate, pwToken]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,10 +34,11 @@ const PasswordChangeSuccess = () => {
       return;
     }
     try {
-      await Api.post(`토큰 비밀번호 변경 요청`, {
+      await Api.post(`/auth/changePassword`, {
         email,
         password,
         passwordConfirm,
+        passwordToken: pwToken,
       });
       alert('비밀번호 변경 성공! 다시 로그인해주세요');
       navigate('/login');

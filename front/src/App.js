@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage';
 import RegistePage from './pages/RegisterPage';
 import RecommendPage from './pages/RecommendPage';
 import NotFoundPage from './pages/NotPage';
+import PasswordEmailSuccessPage from './pages/ChangePWPage';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
       <Route path="/ranking" element={<RankingPage />} />
       <Route path="/recommend" element={<RecommendPage />} />
       <Route path="/setpassword" element={<PasswordPage />} />
+      <Route path="/changepassword" element={<PasswordEmailSuccessPage />} />
       <Route path="/groups/:groupId" element={<GroupIdPage />} />
       <Route path="/users/:userId" element={<UserIdPage />} />
       <Route path="*" element={<NotFoundPage />} />

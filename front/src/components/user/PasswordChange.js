@@ -13,7 +13,7 @@ const PasswordChange = () => {
     e.preventDefault();
 
     try {
-      await Api.post(`/auth/setpassword`, { email, name });
+      await Api.post(`/auth/findpassword`, { email, name });
       alert('비밀번호 변경 요청 성공! 이메일을 확인해주세요');
       navigate('/login');
     } catch (err) {
