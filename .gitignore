@@ -11,3 +11,4 @@ yarn.lock
 .editorconfig
 migrations
 images
+/back/src/test.html
