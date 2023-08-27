@@ -180,6 +180,45 @@ const deleteCertPost = async (certPostId) => {
 	}
 };
 
+const getTopMainCertPostContributors = async () => {
+	try {
+		const certPosts = await prisma.certPost.findMany({
+			select: {
+				writerId: true,
+			},
+		});
+		const userCounts = certPosts.reduce((acc, post) => {
+			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
+			return acc;
+		}, {});
+		const topUserIds = Object.keys(userCounts)
+			.sort((a, b) => userCounts[b] - userCounts[a])
+			.slice(0, 5);
+
+		const topUsers = [];
+
+		for (let i = 0; i < topUserIds.length; i++) {
+			let userId = topUserIds[i];
+			const userDetails = await prisma.user.findUnique({
+				where: { id: parseInt(userId) },
+				select: {
+					id: true,
+					nickname: true,
+					profileImage: true,
+				},
+			});
+
+			userDetails.score = userCounts[userId] * 353;
+			userDetails.rank = i + 1;
+
+			topUsers.push(userDetails);
+		}
+
+		return topUsers;
+	} catch (error) {
+		throw error;
+	}
+};
 const getTopCertPostContributorsUsers = async () => {
 	try {
 		const certPosts = await prisma.certPost.findMany({
@@ -445,4 +484,5 @@ module.exports = {
 	getUserCertPostsRegionCount,
 	getGroupCertPostsRegionCount,
 	getAllCertPostsRegions,
+	getTopMainCertPostContributors,
 };

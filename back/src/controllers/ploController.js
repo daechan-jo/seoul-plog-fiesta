@@ -80,6 +80,17 @@ const deleteCertPost = async (req, res, next) => {
 	}
 };
 
+const getTopMainCertPostContributors = async (req, res, next) => {
+	try {
+		const topUsers = await ploService.getTopMainCertPostContributors();
+		res.status(200).json(topUsers);
+	} catch (error) {
+		console.error(error);
+		res.status(500);
+		next(error);
+	}
+};
+
 const getTopCertPostContributors = async (req, res, next) => {
 	try {
 		const topUsers = await ploService.getTopCertPostContributorsUsers();
@@ -178,4 +189,5 @@ module.exports = {
 	getUserCertPostsRegionCount,
 	getGroupCertPostsRegionCount,
 	getAllCertPostsRegionCount,
+	getTopMainCertPostContributors,
 };

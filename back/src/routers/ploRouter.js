@@ -33,7 +33,10 @@ ploRouter.delete(
 	ploController.deleteCertPost,
 );
 
-/** @description top5 인증 게시글 */
+/** @description 메인화면 top5 유저 */
+ploRouter.get('/plo/main/five', ploController.getTopMainCertPostContributors);
+
+/** @description top5 유저, 그룹 */
 ploRouter.get('/plo/five', ploController.getTopCertPostContributors);
 
 /** @description top100 인증 게시글 */
