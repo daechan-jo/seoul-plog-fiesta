@@ -1,0 +1,73 @@
+@import '../../styles/variables.scss';
+
+.writing {
+  .imgContainer {
+    width: 500px;
+    height: 500px;
+    background-color: gray;
+    img {
+      width: 500px;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+    div {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+    }
+    textarea {
+      height: 150px;
+    }
+  }
+  .btns {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+  }
+}
+
+.notice {
+  background-color: $grayBack;
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+  }
+  .isNotice {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    background-color: red;
+    color: white;
+  }
+}
+
+.requestItem {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    background-color: $point;
+    color: white;
+    padding: 5px;
+    margin-left: 5px;
+  }
+}
+
+.notices {
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+}

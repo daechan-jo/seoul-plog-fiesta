@@ -1,11 +1,12 @@
 @import './variables.scss';
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 body {
-  margin: 0;
+  max-width: 1800px;
+  margin: 0 auto;
   font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #ededed;
+  background-color: $grayBack;
   height: 100vh;
 }
 
@@ -15,9 +16,12 @@ code {
 
 main {
   margin-left: $navWidth;
+  min-width: 1200px;
   padding: 0 30px 30px 30px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: 90vh;
 }
 
@@ -42,6 +46,19 @@ main {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    div {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 20px;
+    }
+    span {
+      display: flex;
+      gap: 10px;
+      input {
+        width: 20px;
+      }
+    }
   }
   .contentContainer {
     width: 100%;
@@ -52,7 +69,8 @@ main {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 20px;
   }
   .contentMapContainer {
@@ -62,7 +80,7 @@ main {
   }
   .contentMinContainer {
     width: 100%;
-    height: 100%;
+    height: 28vh;
     padding: 20px;
   }
 }
@@ -167,6 +185,7 @@ ul.pagination li a.active {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
   form {
     border-radius: 5px;
     display: flex;

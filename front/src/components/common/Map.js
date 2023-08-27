@@ -59,7 +59,7 @@ const initialData = {
   jungnang: 0,
 };
 
-const Map = () => {
+const Map = ({ endpoint }) => {
   const [data, setData] = useState(initialData);
   const [isFetching, setIsFetching] = useState(false);
 
@@ -101,7 +101,7 @@ const Map = () => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(``);
+        //const res = await Api.get(``);
       } catch (err) {
         console.log('지도데이터를 불러오는데 실패.', err);
       } finally {

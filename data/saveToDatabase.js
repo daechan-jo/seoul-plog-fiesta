@@ -1,12 +1,10 @@
-//db에 넣어둠
-
-// const { PrismaClient } = require("@prisma/client");
-// const fs = require("fs");
-// const csvParser = require("csv-parser");
+// const { PrismaClient } = require('@prisma/client');
+// const fs = require('fs');
+// const csvParser = require('csv-parser');
 //
 // const prisma = new PrismaClient();
 //
-// const csvFilePath = "new_seoul_plogging.csv";
+// const csvFilePath = 'new_seoul_plogging.csv';
 //
 // async function saveDataToDatabase() {
 // 	return new Promise((resolve, reject) => {
@@ -14,10 +12,10 @@
 //
 // 		fs.createReadStream(csvFilePath)
 // 			.pipe(csvParser())
-// 			.on("data", (record) => {
+// 			.on('data', (record) => {
 // 				rows.push(record);
 // 			})
-// 			.on("end", async () => {
+// 			.on('end', async () => {
 // 				for (const record of rows) {
 // 					await prisma.course.create({
 // 						data: {
@@ -41,7 +39,7 @@
 // 				}
 // 				resolve();
 // 			})
-// 			.on("error", (error) => {
+// 			.on('error', (error) => {
 // 				reject(error);
 // 			});
 // 	});
@@ -50,9 +48,9 @@
 // async function main() {
 // 	try {
 // 		await saveDataToDatabase();
-// 		console.log("Data saved to database");
+// 		console.log('Data saved to database');
 // 	} catch (error) {
-// 		console.error("Error:", error);
+// 		console.error('Error:', error);
 // 	} finally {
 // 		await prisma.$disconnect();
 // 	}

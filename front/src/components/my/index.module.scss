@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .info {
   width: 100%;
   height: 100%;
@@ -7,34 +9,74 @@
   align-items: center;
   justify-content: space-between;
   .imgContainer {
-    width: 50%;
+    width: 300px;
     background-color: antiquewhite;
-    height: 50%;
+    height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    img {
+      width: 300px;
+    }
   }
   li {
     width: 50%;
     display: grid;
     grid-template-columns: 1fr 3fr;
+    input {
+      height: 40px;
+    }
   }
 }
 
 .shortBox {
   width: 100%;
-  height: 30vh;
+  height: 31vh;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  background-color: gray;
+  grid-template-rows: repeat(2, 1fr);
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .myGroup {
   overflow: hidden;
+  position: relative;
   .imgContainer {
-    width: 100%;
-    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
     overflow: hidden;
+  }
+
+  .delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+}
+
+.requestItem {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    background-color: $point;
+    color: white;
+    padding: 5px;
+    margin-left: 5px;
   }
 }

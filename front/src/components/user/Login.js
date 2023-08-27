@@ -1,9 +1,9 @@
 import styles from './user.module.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import * as Api from '../../api';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../../features/user/userSlice';
 
 const Login = () => {
@@ -39,19 +39,23 @@ const Login = () => {
     }
 }
     */
-    await Api.post('auth/login', {
-      email,
-      password,
-    })
-      .then((res) => {
-        const { token, email, nickname } = res.data.user;
-        dispatch(login({ token, email, nickname }));
-        navigate('/', { replace: true });
-      })
-      .catch((err) => {
-        alert(err);
-        console.error(err);
+    try {
+      const res = await Api.post('/auth/login', {
+        email,
+        password,
       });
+      dispatch(login(res.data));
+      alert('로그인 성공!');
+      navigate('/?view=main', { replace: true });
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        alert('입력하신 회원정보가 없습니다.');
+        console.error('입력하신 회원정보가 없습니다.');
+      } else {
+        alert('로그인 중 오류가 발생했습니다.');
+        console.error('로그인 에러 발생', err.message);
+      }
+    }
   };
 
   return (

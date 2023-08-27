@@ -1,21 +1,20 @@
-import path from "path";
-import fs from "fs";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const loadProfileImage = async (req, res, next) => {
 	try {
-		const userId = req.user.id;
+		const userId = parseInt(req.params.userid);
 		const userProfileImage = await prisma.userProfileImage.findUnique({
 			where: { userId },
 		});
+
 		if (!userProfileImage) {
-			return res
-				.status(404)
-				.json({ message: "등록된 프로필 이미지가 없습니다" });
+			return res.status(404).json({ message: '등록된 프로필 이미지 없음' });
 		}
-		console.log(userProfileImage);
-		res.status(200).json({ imageUrl: userProfileImage.imageUrl });
+
+		const imageUrl = userProfileImage.imageUrl;
+		console.log(imageUrl);
+		res.json(imageUrl);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -31,18 +30,11 @@ const loadPostImage = async (req, res, next) => {
 		});
 
 		if (!postImage) {
-			return res.status(404).send("이미지가 없습니다");
+			return res.status(404).json({ message: '게시글 찾을 수 없음' });
 		}
-		const imagePath = path.join(__dirname, "..", "..", postImage.imageUrl);
-
-		fs.access(imagePath, fs.constants.F_OK, (err) => {
-			if (err) {
-				console.error("파일에 접근할 수 없음:", err);
-				return res.status(404).send("이미지 파일이 없습니다.");
-			}
-			console.log(imagePath);
-			res.sendFile(imagePath);
-		});
+		const imageUrl = postImage.imageUrl;
+		console.log(imageUrl);
+		res.json(imageUrl);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -50,4 +42,51 @@ const loadPostImage = async (req, res, next) => {
 	}
 };
 
-module.exports = { loadProfileImage, loadPostImage };
+const loadGroupImage = async (req, res, next) => {
+	try {
+		const groupId = parseInt(req.params.groupid);
+		const groupImage = await prisma.groupImage.findFirst({
+			where: { groupId },
+		});
+
+		if (!groupImage) {
+			return res
+				.status(404)
+				.json({ message: '등록된 그룹 이미지 찾을 수 없음' });
+		}
+		const imageUrl = groupImage.imageUrl;
+		console.log(imageUrl);
+		res.json(imageUrl);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+const loadCertPostImage = async (req, res, next) => {
+	try {
+		const certPostId = parseInt(req.params.certid);
+		const certPostImage = await prisma.certPostImage.findFirst({
+			where: { certPostId },
+		});
+
+		if (!certPostImage) {
+			return res.status(404).json({ message: '게시글 찾을 수 없음' });
+		}
+		const imageUrl = certPostImage.imageUrl;
+		console.log(imageUrl);
+		res.json(imageUrl);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+module.exports = {
+	loadProfileImage,
+	loadPostImage,
+	loadGroupImage,
+	loadCertPostImage,
+};

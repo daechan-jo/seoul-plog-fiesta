@@ -31,22 +31,26 @@ const getGroupUser = async (userId, groupId) => {
 				userId: userId,
 				groupId: groupId,
 			},
-			isAccepted: true,
 		},
 	});
 };
 
 const isGroupManager = async (userId, groupId) => {
 	try {
-		const groupUser = await prisma.groupUser.findFirst({
+		const groupManager = await prisma.group.findUnique({
 			where: {
-				userId: userId,
-				groupId: groupId,
-				isAccepted: true,
+				id: groupId,
+			},
+			select: {
+				manager: {
+					select: {
+						id: true,
+					},
+				},
 			},
 		});
 
-		return groupUser ? groupUser.isAdmin : false;
+		return groupManager && groupManager.manager.id === userId;
 	} catch (error) {
 		throw error;
 	}

@@ -1,48 +1,63 @@
-import { useEffect, useState } from 'react';
-import * as Api from '../../api';
-import Map from '../../components/common/Map';
+import { useContext, useState } from 'react';
 import GroupUsers from '../../components/groupId/Users';
 import GroupPosts from '../../components/groupId/Posts';
 import GroupMap from '../../components/groupId/Map';
 import PageNav from '../../components/common/PageNav';
+import { useLocation, useParams } from 'react-router-dom';
+import Notice from '../../components/groupId/Notice';
+import GroupPlogging from '../../components/groupId/Plogging';
+import GroupMember from '../../components/groupId/Member';
+import { GroupIdContext, GroupIdProvider } from '../../context/groupIdContext';
+import { useRecoilState } from 'recoil';
+import { isGroupRequestListOpenState } from '../../features/recoilState';
+import GroupRequestList from '../../components/groupId/GroupRequest';
 
-const GroupIdContainer = ({ id }) => {
-  const lists = ['main', 'notice', 'posts', 'members'];
+const GroupIdContainer = () => {
+  const lists = {
+    main: '홈',
+    notice: '그룹게시판',
+    posts: '인증글',
+    members: '멤버보기',
+  };
 
-  const [map, setMap] = useState(null);
-  const [posts, setPosts] = useState();
-  const [users, setUsers] = useState();
+  const [isGroupRequestListOpen, setIsGroupRequestListOpen] = useRecoilState(
+    isGroupRequestListOpenState,
+  );
 
-  const [view, setView] = useState('main');
+  const { groupId } = useParams();
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const resMap = await Api.get('/auth');
-        const resPosts = await Api.get('/group/mygroup');
-        const resUsers = await Api.get('/user/recent/posts');
-        //setMap(resMap);
-        //setPosts(resPosts);
-        //setUsers(resUsers);
-      } catch (err) {
-        console.log('데이터를 불러오는데 실패.', err);
-      }
-    };
-    console.log('데이터가져오기');
-    getData();
-  }, []);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const [view, setView] = useState(searchParams.get('view'));
 
   return (
-    <main>
-      <PageNav lists={lists} />
-      <div className="threeContainer">
-        <GroupMap />
-        <div className="box">
-          <GroupUsers />
-          <GroupPosts datas={users} />
-        </div>
-      </div>
-    </main>
+    <GroupIdProvider>
+      <main>
+        {isGroupRequestListOpen && <GroupRequestList />}
+        <PageNav
+          view={view}
+          setView={setView}
+          lists={lists}
+          params={`groups/${groupId}`}
+        />
+        {view === 'main' ? (
+          <div className="threeContainer navVh">
+            <GroupMap />
+            <div className="box">
+              <GroupUsers />
+              <GroupPosts setView={setView} />
+            </div>
+          </div>
+        ) : view === 'notice' ? (
+          <Notice />
+        ) : view === 'posts' ? (
+          <GroupPlogging />
+        ) : (
+          <GroupMember />
+        )}
+      </main>
+    </GroupIdProvider>
   );
 };
 

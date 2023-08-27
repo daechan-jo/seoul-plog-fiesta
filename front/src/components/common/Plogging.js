@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { seoulDistricts } from './exportData';
 import styles from './index.module.scss';
-import Modal from 'react-modal';
-import { handleImgChange } from '../../utils';
-
-Modal.setAppElement('#root');
 
 const Plogging = ({ setIsWriting }) => {
   const [formData, setFormData] = useState({
@@ -14,14 +10,46 @@ const Plogging = ({ setIsWriting }) => {
     trashAmount: '',
     averagePace: '',
     description: '',
+    title: '',
+    StartAt: '',
   });
 
+  /*
+  {title, startDt, endDt, description, groupYn, groupName
+  , groupId,  ,,,region, location, distance, trashAmount, averagePace} 
+*/
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleImgChange = (e) => {
+    const img = e.target.files[0];
+
+    if (!img) {
+      alert('JPG 확장자의 이미지 파일을 넣어주세요.');
+      return;
+    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
+      alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
+      return;
+    }
+    if (img) {
+      try {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const previewImg = document.getElementById('proggingPreviewImg');
+          previewImg.src = reader.result;
+        };
+
+        reader.readAsDataURL(img);
+      } catch (e) {
+        alert(e);
+      }
+    }
   };
 
   const handleSubmit = (event) => {
@@ -37,7 +65,7 @@ const Plogging = ({ setIsWriting }) => {
         <div className="container">
           <div className="img">
             <div className={styles.imgContainer}>
-              <img id="previewImg" alt="인증이미지" />
+              <img id="proggingPreviewImg" alt="인증이미지" />
             </div>
             <input type="file" name="file" onChange={handleImgChange} />
           </div>

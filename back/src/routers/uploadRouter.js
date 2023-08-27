@@ -1,24 +1,38 @@
-import router from "express";
-import multer from "multer";
-import uploadController from "../controllers/uploadController";
-import authenticateJWT from "../middlewares/authenticateJWT";
-import storage from "../utils/storage";
+import router from 'express';
+import multer from 'multer';
+import uploadController from '../controllers/uploadController';
+import authenticateJWT from '../middlewares/authenticateJWT';
+import storage from '../utils/storage';
 
 const uploadRouter = router();
 const upload = multer({ storage });
 
 uploadRouter.post(
-	"/upload/profile",
+	'/upload/profile',
 	authenticateJWT,
-	upload.single("profileImage"),
+	upload.single('profileImage'),
 	uploadController.uploadProfileImage,
 );
 
 uploadRouter.post(
-	"/upload/postimg/:postid",
+	'/upload/postimg/:postid',
 	authenticateJWT,
-	upload.single("postImage"),
+	upload.single('postImage'),
 	uploadController.uploadPostImage,
+);
+
+uploadRouter.post(
+	'/upload/groupimg/:groupid',
+	authenticateJWT,
+	upload.single('groupImage'),
+	uploadController.uploadGroupImage,
+);
+
+uploadRouter.post(
+	'/upload/certimg/:postid',
+	authenticateJWT,
+	upload.single('certImage'),
+	uploadController.uploadCertImage,
 );
 
 module.exports = uploadRouter;

@@ -1,13 +1,18 @@
 import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
 import styles from './index.module.scss';
+import { useEffect } from 'react';
 
 const ErrorModal = () => {
   const [isError, setIsError] = useRecoilState(isErrorState);
   const [errorMessage, setErrorMessage] = useRecoilState(errorMessageState);
 
-  setTimeout(() => {
-    setIsError(false);
+  useEffect(() => {
+    const toast = setTimeout(() => {
+      setIsError(false);
+    }, 2000);
+
+    return () => clearTimeout(toast);
   });
 
   return (

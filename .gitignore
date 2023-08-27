@@ -9,6 +9,6 @@ node_modules
 package-lock.json
 yarn.lock
 .editorconfig
-main.py
 migrations
-uploads
+images
+/back/src/test.html

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import * as Api from '../../api';
+import { validateEmail } from '../../utils';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,15 +15,6 @@ const Register = () => {
     name: '',
     nickname: '',
   });
-
-  //이메일이 abc@example.com 형태인지 regex를 이용해 확인함.
-  const validateEmail = (email) => {
-    return email
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
-  };
 
   //위 validateEmail 함수를 통해 이메일 형태 적합 여부를 확인함.
   const isEmailValid = validateEmail(userData.email);
@@ -59,9 +51,9 @@ const Register = () => {
 
     try {
       // "user/register" 엔드포인트로 post요청함.
-      const res = await Api.registerPost('/auth', userData);
+      await Api.registerPost('/auth', userData);
       // 로그인 페이지로 이동함.
-      alert(res);
+      alert('회원가입 성공! 로그인해주세요');
       navigate('/login');
     } catch (err) {
       console.log('회원가입에 실패하였습니다.', err);
