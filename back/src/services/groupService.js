@@ -256,7 +256,7 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 			},
 		});
 		if (!group || group.managerId !== managerId) return null;
-		return group.GroupUser.map((groupUser) => groupUser.user);
+		return group.groupUser.map((groupUser) => groupUser.user);
 	} catch (error) {
 		throw error;
 	}

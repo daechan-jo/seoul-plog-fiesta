@@ -22,13 +22,17 @@ const createUser = async (req, res, next) => {
 /** @description 로그인 -> token값을 반환 */
 const login = async (req, res, next) => {
   try {
+    const id = req.user.id;
+    const groups = await authService.findGroupsById(id);
+    const friendships = await authService.findFriendIdsById(id);
+
     const user = {
-      id: req.user.id,
+      id: id,
       token: req.token,
       email: req.user.email,
       nickname: req.user.nickname,
-      groups: req.user.groups, //todo : group 확인
-      friendshipsA: req.user.friendshipsA,
+      groups: groups,
+      friendshipsA: friendships,
     };
     console.log(user);
     res.status(200).json(user);
@@ -186,5 +190,4 @@ module.exports = {
   removeUser,
   checkEmail,
   changePassword,
-  //getUserByPasswordToken,
 };
