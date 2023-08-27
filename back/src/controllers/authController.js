@@ -40,7 +40,8 @@ const login = async (req, res, next) => {
 };
 
 /** @description 비밀번호 변경
- * 1. TokenUrl이 담긴 이메일 전송*/
+ * 1. TokenUrl이 담긴 이메일 전송
+ * */
 const sendEmailWithTokenUrl = async (req, res, next) => {
   try {
     const email = req.body.email;
@@ -146,7 +147,13 @@ const changeInformation = async (req, res, next) => {
       name: req.body.name,
       about: req.body.about,
       activity: req.body.activity,
+      password: req.body.password,
+      confirmPassword: req.body.confirmPassword,
     };
+
+    if (user.password !== user.confirmPassword)
+      throw new Error('비밀번호 확인 불일치');
+
     console.log(user);
     const changedUser = await authService.changeInformation(user);
     //console.log(user);
