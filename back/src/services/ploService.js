@@ -58,6 +58,7 @@ const getAllCertPosts = async () => {
 						participant: true,
 					},
 				},
+				comments: true,
 			},
 		});
 
@@ -66,8 +67,15 @@ const getAllCertPosts = async () => {
 			const participants = certPost.participants.map(
 				(participant) => participant.participant,
 			);
+			const comments = certPost.comments.map((comment) => ({
+				id: comment.id,
+				content: comment.content,
+				writerId: comment.writerId,
+				createdAt: comment.createdAt,
+			}));
 			return {
 				...certPost,
+				comments: comments,
 				images: imageUrls,
 				participants: participants,
 			};
@@ -94,6 +102,7 @@ const getCertPostDetails = async (certPostId) => {
 						participant: true,
 					},
 				},
+				comments: true,
 			},
 		});
 		if (!certPost) {
