@@ -70,7 +70,7 @@ const MyInfo = () => {
 
   const handleSubmit = async (e) => {
     try {
-      const res = await Api.post('/auth/update', {
+      const res = await Api.put('/auth/update', {
         name: data.name,
         nickname: data.nickname,
         about: data.about,
