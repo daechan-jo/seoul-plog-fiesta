@@ -15,7 +15,8 @@ const MyUsers = () => {
         const res = await Api.get(`/friends`);
         console.log('res', res);
         if (res.data.friendsList) {
-          setDatas(res.data.friendsList.map((data) => data.userB));
+          //{"message":"친구 목록","friendsList":[{"userB":{"id":1,"nickname":"끼룩끼룩","about":null,"activity":null}}]}
+          setDatas(res.data.friendsList);
         } else {
           setDatas([]);
         }
