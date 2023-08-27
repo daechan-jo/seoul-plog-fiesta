@@ -11,6 +11,7 @@ const Notice = () => {
 
   const { groupId } = useParams();
 
+  console.log(groupId);
   useEffect(() => {
     const getData = async () => {
       try {

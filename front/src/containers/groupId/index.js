@@ -8,6 +8,9 @@ import Notice from '../../components/groupId/Notice';
 import GroupPlogging from '../../components/groupId/Plogging';
 import GroupMember from '../../components/groupId/Member';
 import { GroupIdContext, GroupIdProvider } from '../../context/groupIdContext';
+import { useRecoilState } from 'recoil';
+import { isGroupRequestListOpenState } from '../../features/recoilState';
+import GroupRequestList from '../../components/groupId/GroupRequest';
 
 const GroupIdContainer = () => {
   const lists = {
@@ -16,6 +19,10 @@ const GroupIdContainer = () => {
     posts: '인증글',
     members: '멤버보기',
   };
+
+  const [isGroupRequestListOpen, setIsGroupRequestListOpen] = useRecoilState(
+    isGroupRequestListOpenState,
+  );
 
   const { groupId } = useParams();
 
@@ -27,6 +34,7 @@ const GroupIdContainer = () => {
   return (
     <GroupIdProvider>
       <main>
+        {isGroupRequestListOpen && <GroupRequestList />}
         <PageNav
           view={view}
           setView={setView}
