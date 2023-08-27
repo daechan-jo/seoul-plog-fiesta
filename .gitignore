@@ -10,4 +10,5 @@ package-lock.json
 yarn.lock
 .editorconfig
 migrations
-uploads
+images
+/back/src/test.html

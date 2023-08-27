@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
 import * as Api from '../../api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { isRequestListOpenState } from '../../features/recoilState';
 
 const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
@@ -21,6 +23,10 @@ const Header = ({ setIsWriting }) => {
   const id = currentPath.split('/')[2];
 
   const [visibleButton, setVisibleButton] = useState(null);
+
+  const [isRequestListOpen, setIsRequestListOpen] = useRecoilState(
+    isRequestListOpenState,
+  );
 
   const handleJoinGroup = useCallback(async () => {
     if (user.groups)
@@ -43,16 +49,9 @@ const Header = ({ setIsWriting }) => {
     }
   }, [id]);
 
-  const handleFriendRequestList = useCallback(async () => {
-    try {
-      await Api.post(`/req/${id}`, {
-        id: id,
-      });
-      alert('친구 요청 성공');
-    } catch (err) {
-      alert(err.message ? err.message : '친구 요청 실패.');
-    }
-  }, [id]);
+  const handleFriendRequestList = useCallback(() => {
+    setIsRequestListOpen(true);
+  }, [setIsRequestListOpen]);
 
   const handleGroupRequestList = useCallback(async () => {
     try {

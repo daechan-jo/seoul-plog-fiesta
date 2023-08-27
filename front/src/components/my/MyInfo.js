@@ -4,6 +4,8 @@ import user_none from '../../assets/user_none.png';
 import * as Api from '../../api';
 import { handleImgChange } from '../../utils';
 import { seoulDistricts } from '../common/exportData';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../features/user/userSlice';
 
 const initialData = {
   name: '',
@@ -27,6 +29,7 @@ const MyInfo = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(initialData);
+  const dispatch = useDispatch();
 
   const formData = new FormData();
 
@@ -36,7 +39,7 @@ const MyInfo = () => {
     if (!img) {
       alert('JPG 확장자의 이미지 파일을 넣어주세요.');
       return;
-    } else if (img.type !== 'image/jpeg' && img.type !== 'image/jpg') {
+    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
       alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
@@ -75,13 +78,26 @@ const MyInfo = () => {
       });
       setData(res.data);
       if (img) {
-        const res = await Api.postForm('/upload/userimg', formData);
+        const res = await Api.postForm('/images/userimg', {
+          profileImage: formData,
+        });
       }
       setIsEditing(false);
     } catch (err) {
       console.log('데이터 수정 실패.', err);
     } finally {
       setIsFetching(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Api.get('/auth/drop');
+      alert('계정 삭제 완료');
+      dispatch(logout());
+      navigator('/intro');
+    } catch (err) {
+      console.log('계정삭제 실패.', err);
     }
   };
 
@@ -228,12 +244,7 @@ const MyInfo = () => {
             >
               수정하기
             </button>
-            <button
-              className="gBtn"
-              onClick={() => {
-                setData(data);
-              }}
-            >
+            <button className="gBtn" onClick={handleDelete}>
               탈퇴하기
             </button>
           </>

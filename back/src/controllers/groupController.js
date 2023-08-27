@@ -152,6 +152,7 @@ const getMyGroups = async (req, res, next) => {
 		const userId = req.user.id;
 
 		const groups = await groupService.getMyGroups(userId);
+
 		console.log(groups);
 		res.status(200).json(groups);
 	} catch (error) {

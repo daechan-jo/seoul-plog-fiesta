@@ -9,3 +9,18 @@ export const errorMessageState = atom({
   key: 'errorMessage',
   default: '',
 });
+
+export const isChatOpenState = atom({
+  key: 'isChatOpen',
+  default: false,
+});
+
+export const isChatWiState = atom({
+  key: 'chatId',
+  default: 0,
+});
+
+export const isRequestListOpenState = atom({
+  key: 'isRequestListOpen',
+  default: false,
+});

@@ -10,8 +10,14 @@ const Plogging = ({ setIsWriting }) => {
     trashAmount: '',
     averagePace: '',
     description: '',
+    title: '',
+    StartAt: '',
   });
 
+  /*
+  {title, startDt, endDt, description, groupYn, groupName
+  , groupId,  ,,,region, location, distance, trashAmount, averagePace} 
+*/
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -26,7 +32,7 @@ const Plogging = ({ setIsWriting }) => {
     if (!img) {
       alert('JPG 확장자의 이미지 파일을 넣어주세요.');
       return;
-    } else if (img.type !== 'image/jpeg' && img.type !== 'image/jpg') {
+    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
       alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }

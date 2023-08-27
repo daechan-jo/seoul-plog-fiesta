@@ -38,7 +38,7 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
     if (!img) {
       alert('JPG 확장자의 이미지 파일을 넣어주세요.');
       return;
-    } else if (img.type !== 'image/jpeg' && img.type !== 'image/jpg') {
+    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
       alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
@@ -64,12 +64,12 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
 
     try {
       const postRes = await Api.post('/group', formData);
+      console.log(postRes);
       if (img) {
-        const res = await Api.postForm(
-          `/upload/groupimg/${postRes.data.id}`,
-          imgData,
-        );
-        postRes.data['images'] = res;
+        const res = await Api.postForm(`/upload/groupimg/${postRes.data.id}`, {
+          groupImage: imgData,
+        });
+        postRes.data['images'] = img;
       }
       postRes.data['memberCount'] = 1;
       setDatas((datas) => [...datas, postRes.data]);

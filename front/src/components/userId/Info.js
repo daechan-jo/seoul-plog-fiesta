@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import * as Api from '../../api';
 import styles from './index.module.scss';
 import { useLocation, useParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { isChatOpenState, isChatWiState } from '../../features/recoilState';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -22,6 +24,23 @@ const Info = () => {
 
   const ownerId = currentPath.split('/')[2].split('?')[0];
 
+  const [isChatOpen, setIsChatOpen] = useRecoilState(isChatOpenState);
+  const [, setChatId] = useRecoilState(isChatWiState);
+
+  const handleChat = () => {
+    setChatId(currentPath.split('/')[2].split('?')[0]);
+    setIsChatOpen(!isChatOpen);
+  };
+
+  const handleClick = async () => {
+    try {
+      await Api.get(`/req/${ownerId}`);
+      alert('친구요청성공');
+    } catch (err) {
+      console.log('친구요청실패', err);
+    }
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -37,7 +56,7 @@ const Info = () => {
     };
 
     getData();
-  }, []);
+  }, [ownerId]);
 
   return (
     <div className={`gContainer`}>
@@ -64,6 +83,12 @@ const Info = () => {
           <div>{data.searchId?.activity}</div>
         </li>
       </ul>
+      <button className="gBtn" onClick={handleClick}>
+        친구추가
+      </button>
+      <button className="gBtn" onClick={handleChat}>
+        채팅보내기
+      </button>
     </div>
   );
 };

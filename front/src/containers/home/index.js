@@ -23,7 +23,7 @@ const HomeContainer = () => {
     <main>
       <PageNav view={view} setView={setView} lists={lists} params={''} />
       {!view || view === 'main' ? (
-        <div className="threeContainer navVh">
+        <div className="threeContainer fullVh">
           <Map />
           <div className="box">
             <MyGroup />

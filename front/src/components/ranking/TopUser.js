@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Api from '../../api';
+import styles from './index.module.scss';
 
 const TopUser = () => {
   const [datas, setDatas] = useState([]);
@@ -26,7 +27,7 @@ const TopUser = () => {
       <div className="titleContainer">
         <h1>상위 모임</h1>
       </div>
-      <div className="contentListContainer">
+      <div className={styles.shortBox}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas.length === 0 ? (

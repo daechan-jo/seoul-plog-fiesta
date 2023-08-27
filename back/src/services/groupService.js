@@ -80,7 +80,7 @@ const getAllGroups = async () => {
 				return {
 					...group,
 					memberCount,
-					images: imageUrls, // Use the array of image URLs
+					images: imageUrls, // Use the array of images URLs
 				};
 			}),
 		);
@@ -264,7 +264,7 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 
 const getMyGroups = async (userId) => {
 	try {
-		return await prisma.groupUser.findMany({
+		const groups = await prisma.groupUser.findMany({
 			where: {
 				userId: userId,
 				isAccepted: true,
@@ -283,10 +283,26 @@ const getMyGroups = async (userId) => {
 								nickname: true,
 							},
 						},
+						groupImage: {
+							select: {
+								imageUrl: true,
+							},
+						},
 					},
 				},
 			},
 		});
+		return groups.map((group) => ({
+			id: group.group.id,
+			name: group.group.name,
+			managerId: group.group.managerId,
+			manager: {
+				id: group.group.manager.id,
+				name: group.group.manager.name,
+				nickname: group.group.manager.nickname,
+			},
+			imageUrl: group.group.groupImage[0]?.imageUrl || null,
+		}));
 	} catch (error) {
 		throw error;
 	}
