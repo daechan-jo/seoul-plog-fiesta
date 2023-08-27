@@ -6,7 +6,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #ededed;
+  background-color: $grayBack;
   height: 100vh;
 }
 
@@ -186,6 +186,7 @@ ul.pagination li a.active {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
   form {
     border-radius: 5px;
     display: flex;

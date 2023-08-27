@@ -160,7 +160,7 @@ const Item = ({ data, view }) => {
         <img
           src={
             data.images && data.images.length !== 0
-              ? `${handleImgUrl(data.images[0])}`
+              ? `http://localhost:3001${handleImgUrl(data.images[0])}`
               : view === 'group'
               ? post_none
               : user_none

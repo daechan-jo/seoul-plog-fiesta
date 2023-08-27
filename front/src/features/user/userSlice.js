@@ -12,7 +12,6 @@ const userSlice = createSlice({
         action.payload;
 
       state.email = email;
-      console.log(action.payload);
       state.nickName = nickname;
       state.loginId = id;
       sessionStorage.setItem('userToken', token);

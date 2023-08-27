@@ -40,15 +40,13 @@ const List = () => {
   }, [groupId]);
 
   return (
-    <div className="contentContainer">
+    <div className="contentMinContainer">
       {isFetching ? (
         <div>로딩중</div>
       ) : datas.length === 0 ? (
         <div>데이터가 없습니다</div>
       ) : (
-        datas.map((data) => (
-          <Item key={`group_page ${data.groupId}`} data={data} />
-        ))
+        datas.map((data) => <Item key={`${data.userId}`} data={data} />)
       )}
     </div>
   );
