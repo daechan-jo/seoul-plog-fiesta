@@ -33,9 +33,7 @@ const uploadProfileImage = async (req, res, next) => {
 			});
 		}
 		console.log('프로필 이미지 업로드 성공');
-		res.status(201).json({
-			message: '프로필 이미지 업로드 성공',
-		});
+		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -67,7 +65,6 @@ const uploadPostImage = async (req, res, next) => {
 				where: { id: existingImage.id },
 				data: { imageUrl },
 			});
-			console.log(imageUrl);
 		} else {
 			await prisma.postImage.create({
 				data: {
@@ -77,7 +74,7 @@ const uploadPostImage = async (req, res, next) => {
 			});
 		}
 		console.log('게시글 이미지 업로드 성공');
-		res.status(201).json({ message: '게시글 이미지 업로드 성공' });
+		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -120,7 +117,7 @@ const uploadCertImage = async (req, res, next) => {
 			});
 		}
 		console.log('인증 이미지 업로드 성공');
-		res.status(201).json({ message: '인증 이미지 업로드 성공' });
+		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -166,7 +163,7 @@ const uploadGroupImage = async (req, res, next) => {
 			});
 		}
 		console.log('그룹 이미지 업로드 성공');
-		res.status(201).json({ message: '그룹 이미지 업로드 성공' });
+		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
