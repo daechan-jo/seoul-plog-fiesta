@@ -40,6 +40,7 @@
 
 .myGroup {
   overflow: hidden;
+  position: relative;
   .imgContainer {
     display: flex;
     justify-content: center;
@@ -47,6 +48,17 @@
     width: 100px;
     height: 100px;
     overflow: hidden;
+  }
+
+  .delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
   }
 }
 
