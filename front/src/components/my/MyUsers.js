@@ -80,6 +80,7 @@ const MyUser = ({ data, isEditing }) => {
       console.log('친구 삭제가 취소되었습니다.');
     }
   };
+
   return (
     <div
       className={styles.myGroup}

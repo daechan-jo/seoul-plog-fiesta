@@ -9,10 +9,11 @@ const MyGroup = () => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        //const res = await Api.get(``);
-        //setDatas(res.data);
+        const res = await Api.get(`/group/certpost`);
+        setDatas(res.data);
       } catch (err) {
         console.log('모임데이터를 불러오는데 실패.', err);
+        setDatas([]);
       } finally {
         setIsFetching(false);
       }
@@ -44,7 +45,7 @@ export default MyGroup;
 const Item = ({ data }) => {
   return (
     <div>
-      <h2>모임 게시글 제목</h2>
+      <h2>{data.title}</h2>
       <div>모임 게시글 작성자</div>
     </div>
   );

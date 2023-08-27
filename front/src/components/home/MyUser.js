@@ -9,8 +9,8 @@ const MyUser = () => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        //const res = await Api.get(`/user/list/info`);
-        //setDatas(res.data);
+        const res = await Api.get(`/user/list/info`);
+        setDatas(res.data);
       } catch (err) {
         console.log('유저데이터를 불러오는데 실패.', err);
         setDatas([]);
@@ -47,7 +47,7 @@ export default MyUser;
 const Item = ({ data }) => {
   return (
     <div>
-      <h2>유저 게시글 제목</h2>
+      <h2>{data.title}</h2>
       <div>유저 게시글 작성자</div>
     </div>
   );

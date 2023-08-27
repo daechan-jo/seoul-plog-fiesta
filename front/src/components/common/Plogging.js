@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { seoulDistricts } from './exportData';
 import styles from './index.module.scss';
+import * as Api from '../../api';
 
 const Plogging = ({ setIsWriting }) => {
   const [formData, setFormData] = useState({
@@ -11,13 +12,18 @@ const Plogging = ({ setIsWriting }) => {
     averagePace: '',
     description: '',
     title: '',
-    StartAt: '',
+    startTime: '',
+    endTime: '',
+    isGroupPost: false,
+  });
+  const [groupData, setGroupData] = useState({
+    groupName: '',
+    participants: [],
   });
 
-  /*
-  {title, startDt, endDt, description, groupYn, groupName
-  , groupId,  ,,,region, location, distance, trashAmount, averagePace} 
-*/
+  const [imgContainer, setImgContainer] = useState();
+  const [isGroupPost, setIsGroupPost] = useState(false);
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -46,67 +52,167 @@ const Plogging = ({ setIsWriting }) => {
         };
 
         reader.readAsDataURL(img);
+        setImgContainer(img);
       } catch (e) {
         alert(e);
       }
     }
   };
 
-  const handleSubmit = (event) => {
+  const uploadImage = async (postId) => {
+    try {
+      const res = await Api.postForm(`/upload/certimg/${postId}`, {
+        postImage: imgContainer,
+      });
+      return res;
+    } catch (err) {
+      console.log('이미지 업로드 에러', err);
+      throw err;
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // 폼 데이터를 이용하여 API 호출 또는 다른 작업 수행
     console.log(formData);
+    try {
+      const postRes = await Api.post('/plo/post', formData);
+      if (imgContainer) {
+        const imageUploadRes = await uploadImage(postRes.data.id);
+        console.log('이미지 업로드 결과:', imageUploadRes);
+      }
+    } catch (err) {
+      console.log('인증 글 업로드 실패', err);
+    }
   };
 
   return (
     <div className="modal">
       <form className={styles.plogging} onSubmit={handleSubmit}>
-        <h1>인증하기</h1>
+        <h1>인증하기</h1>{' '}
         <div className="container">
           <div className="img">
             <div className={styles.imgContainer}>
               <img id="proggingPreviewImg" alt="인증이미지" />
             </div>
             <input type="file" name="file" onChange={handleImgChange} />
+            <div>
+              <input
+                type="checkbox"
+                checked={isGroupPost}
+                onChange={(e) => setIsGroupPost(e.target.checked)}
+              />
+              <div>그룹 여부</div>
+            </div>
+            {isGroupPost && (
+              <div>
+                <label>그룹 이름</label>
+                <input
+                  type="text"
+                  name="groupName"
+                  value={groupData.groupName}
+                  onChange={(e) => {
+                    setGroupData((prev) => ({
+                      ...prev,
+                      groupName: e.target.value,
+                    }));
+                  }}
+                  placeholder="그룹 이름"
+                />
+
+                <label>참여자</label>
+                <input
+                  type="text"
+                  name="participants"
+                  value={groupData.participants}
+                  onChange={(e) => {
+                    setGroupData((prev) => ({
+                      ...prev,
+                      participants: e.target.value,
+                    }));
+                  }}
+                  placeholder="참여자"
+                />
+              </div>
+            )}
           </div>
           <div className={styles.content}>
-            <label>장소</label>
             <div>
-              <select
-                name="region"
-                value={formData.region}
+              <label>제목</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
                 onChange={handleInputChange}
-              >
-                <option value="">자치구 선택</option>
-                {Object.keys(seoulDistricts).map((region) => (
-                  <option key={region} value={region}>
-                    {seoulDistricts[region]}
-                  </option>
-                ))}
-              </select>
-              <input />
+              />
             </div>
-            <label>쓰레기 양</label>
-            <input
-              type="text"
-              name="trashAmount"
-              value={formData.trashAmount}
-              onChange={handleInputChange}
-            />
-            <label>거리(km)</label>
-            <input
-              type="text"
-              name="distance"
-              value={formData.distance}
-              onChange={handleInputChange}
-            />
-            <label>평균 페이스</label>
-            <input
-              type="text"
-              name="averagePace"
-              value={formData.averagePace}
-              onChange={handleInputChange}
-            />
+            <div className={styles.time}>
+              <label>시작 시간</label>
+              <input
+                type="text"
+                name="startTime"
+                value={formData.startTime}
+                onChange={handleInputChange}
+                placeholder="시작 시간 (예: 14:00)"
+              />
+              <label>종료 시간</label>
+              <input
+                type="text"
+                name="endTime"
+                value={formData.endTime}
+                onChange={handleInputChange}
+                placeholder="끝난 시간 (예: 17:00)"
+              />
+            </div>
+            <div>
+              <label>장소</label>
+              <div>
+                <select
+                  name="region"
+                  value={formData.region}
+                  onChange={handleInputChange}
+                >
+                  <option value="">자치구 선택</option>
+                  {Object.keys(seoulDistricts).map((region) => (
+                    <option key={region} value={region}>
+                      {seoulDistricts[region]}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div>
+              <label>거리(km)</label>
+              <input
+                type="text"
+                name="distance"
+                value={formData.distance}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label>평균 페이스</label>
+              <input
+                type="text"
+                name="averagePace"
+                value={formData.averagePace}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label>쓰레기 양</label>
+              <input
+                type="text"
+                name="trashAmount"
+                value={formData.trashAmount}
+                onChange={handleInputChange}
+              />
+            </div>
             <label>설명</label>
             <textarea
               name="description"

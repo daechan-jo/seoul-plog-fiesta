@@ -2,9 +2,25 @@ import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 import user_none from '../../assets/user_none.png';
 import { handleImgUrl } from '../../utils/handleImgUrl';
+import * as Api from '../../api';
 
-const MyGroup = ({ data }) => {
+const MyGroup = ({ data, isEditing }) => {
   const navigator = useNavigate();
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm('정말로 삭제하시겠습니까?');
+
+    if (confirmDelete) {
+      try {
+        await Api.get(`/group/${data.id}`);
+      } catch (err) {
+        console.log('그룹 탈퇴 실패.', err);
+      }
+    } else {
+      console.log('그룹 탈퇴가 취소되었습니다.');
+    }
+  };
+
   return (
     <div
       className={styles.myGroup}
@@ -23,6 +39,11 @@ const MyGroup = ({ data }) => {
         />
       </div>
       <div>{data.name}</div>
+      {isEditing && (
+        <button className={styles.delete} onClick={handleDelete}>
+          X
+        </button>
+      )}
     </div>
   );
 };
