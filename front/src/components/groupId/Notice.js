@@ -72,15 +72,15 @@ const Item = ({ data }) => {
       {data.isNotice && <div className={styles.isNotice}>공지사항</div>}
       <div className={styles.content}>
         <label>제목</label>
-        <div>{data.title}</div>
+        <div>{data?.title}</div>
       </div>
       <div className={styles.content}>
         <label>날짜</label>
-        <div>{data.createdAt.split('T')[0]}</div>
+        <div>{data?.createdAt.split('T')[0]}</div>
       </div>
       <div className={styles.content}>
         <label>내용</label>
-        <div>{data.content}</div>
+        <div>{data?.content}</div>
       </div>
     </div>
   );
