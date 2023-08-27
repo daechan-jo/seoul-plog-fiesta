@@ -59,7 +59,7 @@ const put = async (endpoint, data) => {
         filteredData[key] = data[key];
       }
     }
-    console.log(`FILTERED DATA: ${filteredData}`);
+    console.log(`FILTERED DATA: ${JSON.stringify(filteredData)}`);
     const res = await instance.put(endpoint, filteredData);
     return res;
   } catch (err) {

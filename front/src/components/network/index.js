@@ -38,8 +38,7 @@ const ItemList = () => {
         if (!view || view === 'group') {
           if (isCheck) {
             const res = await Api.get(`/${view}/mygroup`);
-            const resGroupIds = res.data.map((data) => data.groupId);
-            setDatas(datas.filter((data) => resGroupIds.includes(data.id)));
+            setDatas(res.data);
           } else {
             const res = await Api.get(`/${view}`);
             setDatas(res.data);
@@ -59,6 +58,7 @@ const ItemList = () => {
         }
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
+        setDatas([]);
       } finally {
         setIsFetching(false);
       }
