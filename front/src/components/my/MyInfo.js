@@ -21,6 +21,7 @@ const MyInfo = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(initialData);
   const dispatch = useDispatch();
+  const [imgContainer, setImgContainer] = useState();
 
   const formData = new FormData();
 
@@ -45,6 +46,7 @@ const MyInfo = () => {
 
         reader.readAsDataURL(img);
         formData.append('image', img);
+        setImgContainer(img);
       } catch (e) {
         alert(e);
       }
@@ -70,11 +72,17 @@ const MyInfo = () => {
         confirmPassword: data.passwordConfirm,
       });
       setData(res.data);
-      if (img) {
-        console.log('이미지업로드', img);
-        const res = await Api.postForm('/images/userimg', {
-          profileImage: formData,
-        });
+      if (imgContainer) {
+        console.log('이미지업로드', imgContainer);
+        try {
+          const res = await Api.postForm(`/upload/profile`, {
+            profileImage: imgContainer,
+          });
+          return res;
+        } catch (err) {
+          console.log('이미지 업로드 에러', err);
+          throw err;
+        }
       }
       setIsEditing(false);
     } catch (err) {

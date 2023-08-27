@@ -9,7 +9,7 @@ export const handleImgUrl = (url) => {
 
   const mordern2Url = mordernUrl.replace(/\\/g, '/');
   // /public/images/이미지.jpeg
-  const tagUrl = mordern2Url.replace('src/public/images', '');
+  const tagUrl = mordern2Url.replace('src/public/', '');
 
   return tagUrl;
 };
