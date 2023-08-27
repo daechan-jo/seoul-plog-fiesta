@@ -35,7 +35,7 @@ const Header = ({ setIsWriting }) => {
   );
 
   const handleJoinGroup = useCallback(async () => {
-    if (user.groups)
+    if (!user.groups.includes(id))
       try {
         const res = await Api.post(`/group/join/${id}`);
         alert('가입 요청 성공');

@@ -13,7 +13,7 @@ const RecommendContainer = () => {
           style={{
             width: '75vw',
             maxWidth: '1200px',
-            maxHeight: '750px',
+            maxHeight: '700px',
             height: '80vh',
             overflow: 'hidden',
             overflowX: 'hidden',
@@ -23,7 +23,7 @@ const RecommendContainer = () => {
             style={{
               width: '75vw',
               maxWidth: '1200px',
-              maxHeight: '750px',
+              maxHeight: '700px',
               height: '80vw',
             }}
             src="/seoul_course_map.html"

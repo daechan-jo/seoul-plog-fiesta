@@ -17,6 +17,7 @@ const GroupMember = ({ view }) => {
 
   const adminValue = searchParams.get('admin');
   const isGroupAdmin = parseInt(adminValue) === user.loginId;
+  const isMember = user.groups.includes(groupId);
 
   const navigator = useNavigate();
 
@@ -26,6 +27,15 @@ const GroupMember = ({ view }) => {
       navigator('/network?view=group');
     } catch (err) {
       console.log('그룹 삭제 실패.', err);
+    }
+  };
+
+  const handleGroupRequest = async () => {
+    try {
+      await Api.post(`/group/join/${groupId}`);
+      alert('가입 요청 성공');
+    } catch (err) {
+      alert(err.message ? err.message : '가입 요청 실패.');
     }
   };
   useEffect(() => {
@@ -51,6 +61,11 @@ const GroupMember = ({ view }) => {
         {isGroupAdmin && (
           <button className="gBtn" onClick={handleGroupDelete}>
             그룹 삭제하기
+          </button>
+        )}
+        {isMember || (
+          <button className="gBtn" onClick={handleGroupRequest}>
+            가입 요청하기
           </button>
         )}
       </div>
