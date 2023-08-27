@@ -92,7 +92,7 @@ const MyInfo = () => {
 
   const handleDelete = async () => {
     try {
-      await Api.get('/auth/drop');
+      await Api.delete('/auth/drop');
       alert('계정 삭제 완료');
       dispatch(logout());
       navigator('/intro');
