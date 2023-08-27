@@ -98,7 +98,10 @@ const checkEmail = async (req, res, next) => {
 
     // 유저 이메일 인증 처리후 리다이렉트
     res.redirect(
-      '/auth/changePassword?email=' + email + '&token=' + passwordToken,
+      'http://localhost:3000/auth/changepassword?email=' +
+        email +
+        '&token=' +
+        passwordToken,
     );
   } catch (error) {
     console.error(error);
