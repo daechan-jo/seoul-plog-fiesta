@@ -74,10 +74,12 @@ const Plogging = ({ setIsWriting }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (isGroupPost) {
-      setFormData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
-    }
     try {
+      if (formData.isGroupPost) {
+        console.log('할당', groupData);
+        setFormData((prev) => ({ ...prev, ...groupData }));
+        console.log('할당넣기', formData);
+      }
       const postRes = await Api.post('/plo/post', formData);
       if (imgContainer) {
         const imageUploadRes = await uploadImage(postRes.data.id);
@@ -135,7 +137,13 @@ const Plogging = ({ setIsWriting }) => {
               <input
                 type="checkbox"
                 checked={isGroupPost}
-                onChange={(e) => setIsGroupPost(e.target.checked)}
+                onChange={(e) => {
+                  setIsGroupPost(e.target.checked);
+                  setFormData((prev) => ({
+                    ...prev,
+                    isGroupPost: e.target.checked,
+                  }));
+                }}
               />
               <div>그룹 여부</div>
             </div>
@@ -144,7 +152,12 @@ const Plogging = ({ setIsWriting }) => {
                 <select
                   name="groupName"
                   value={groupData.groupName}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    setGroupData((prev) => ({
+                      ...prev,
+                      groupName: e.target.value,
+                    }));
+                  }}
                 >
                   <option value="">그룹이름</option>
                   {groupName.map((name) => (
@@ -156,7 +169,18 @@ const Plogging = ({ setIsWriting }) => {
                 <select
                   name="participants"
                   value={groupData.participants}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    const selectedOptions = e.target.selectedOptions;
+                    const selectedValues = Array.from(selectedOptions).map(
+                      (option) => option.value,
+                    );
+
+                    setGroupData((prev) => ({
+                      ...prev,
+                      participants: selectedValues,
+                    }));
+                  }}
+                  multiple
                 >
                   <option value="">멤버이름</option>
                   {groupMembers.map((name) => (

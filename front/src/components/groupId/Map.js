@@ -8,7 +8,7 @@ const GroupMap = () => {
   return (
     <div className="gContainer mapWidth">
       <div className="titleContainer">
-        <h1>모임이름 플로깅 지도</h1>
+        <h1>{name}의 플로깅 지도</h1>
       </div>
       <div className="contentMapContainer">
         <Map endpoint="/plo/count/group/" id={name} />

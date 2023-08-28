@@ -12,6 +12,10 @@ const PasswordChange = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!email || !name) {
+      alert('입력값을 다시 확인해주세요.');
+      return;
+    }
     try {
       await Api.post(`/auth/findpassword`, { email, name });
       alert('비밀번호 변경 요청 성공! 이메일을 확인해주세요');

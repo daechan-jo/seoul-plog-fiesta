@@ -4,7 +4,7 @@ import user_none from '../../assets/user_none.png';
 import { handleImgUrl } from '../../utils/handleImgUrl';
 import * as Api from '../../api';
 
-const MyGroup = ({ data, isEditing }) => {
+const MyGroup = ({ data, isEditing, setDatas }) => {
   const navigator = useNavigate();
 
   const handleDelete = async () => {
@@ -13,6 +13,7 @@ const MyGroup = ({ data, isEditing }) => {
     if (confirmDelete) {
       try {
         await Api.get(`/group/${data.id}`);
+        setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       } catch (err) {
         console.log('그룹 탈퇴 실패.', err);
       }

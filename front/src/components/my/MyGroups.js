@@ -33,7 +33,11 @@ const MyGroups = () => {
           <div>데이터가 없습니다</div>
         ) : (
           datas.map((data) => (
-            <MyGroup key={`mygroup_${data.id}`} data={data} />
+            <MyGroup
+              key={`mygroup_${data.id}`}
+              data={data}
+              setDatas={setDatas}
+            />
           ))
         )}
       </div>

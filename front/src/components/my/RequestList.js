@@ -59,6 +59,7 @@ const Item = ({ data, setDatas }) => {
     e.preventDefault();
     try {
       await Api.post(`/accept/${data.id}`);
+      setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       alert('수락 성공');
     } catch (err) {
       alert('수락 실패', err);
@@ -69,6 +70,7 @@ const Item = ({ data, setDatas }) => {
     e.preventDefault();
     try {
       await Api.post(`/reject/${data.id}`);
+      setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       alert('거절 성공');
     } catch (err) {
       alert('거절 실패', err);

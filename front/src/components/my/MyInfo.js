@@ -20,6 +20,7 @@ const MyInfo = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(initialData);
+  const [originData, setDriginData] = useState(initialData);
   const dispatch = useDispatch();
   const [imgContainer, setImgContainer] = useState();
 
@@ -71,7 +72,6 @@ const MyInfo = () => {
         password: data.password,
         confirmPassword: data.passwordConfirm,
       });
-      setData(res.data);
       if (imgContainer) {
         console.log('이미지업로드', imgContainer);
         try {
@@ -87,6 +87,7 @@ const MyInfo = () => {
       setIsEditing(false);
     } catch (err) {
       console.log('데이터 수정 실패.', err);
+      setData(originData);
     } finally {
       setIsFetching(false);
     }
@@ -109,6 +110,13 @@ const MyInfo = () => {
       try {
         await Api.get('/user').then((res) => {
           console.log(res.data.currentUserInfo);
+          setDriginData({
+            email: res.data.currentUserInfo.email,
+            name: res.data.currentUserInfo.name,
+            nickname: res.data.currentUserInfo.nickname,
+            about: res.data.currentUserInfo.about,
+            activity: res.data.currentUserInfo.activity,
+          });
           setData({
             email: res.data.currentUserInfo.email,
             name: res.data.currentUserInfo.name,
@@ -243,19 +251,11 @@ const MyInfo = () => {
             <button
               className="gBtn"
               onClick={() => {
-                setData(initialData);
+                setData(originData);
                 setIsEditing(false);
               }}
             >
               수정취소
-            </button>
-            <button
-              className="gBtn"
-              onClick={() => {
-                setData(data);
-              }}
-            >
-              초기화
             </button>
           </>
         ) : (

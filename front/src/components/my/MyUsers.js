@@ -54,6 +54,7 @@ const MyUsers = () => {
               isEditing={isEditing}
               key={`my_group_list_${data.id}`}
               data={data}
+              setDatas={setDatas}
             />
           ))
         )}
@@ -64,7 +65,7 @@ const MyUsers = () => {
 
 export default MyUsers;
 
-const MyUser = ({ data, isEditing }) => {
+const MyUser = ({ data, isEditing, setDatas }) => {
   const navigator = useNavigate();
 
   const handleDelete = async () => {
@@ -73,6 +74,7 @@ const MyUser = ({ data, isEditing }) => {
     if (confirmDelete) {
       try {
         await Api.get(`/user/drop/${data.id}`);
+        setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       } catch (err) {
         console.log('친구 삭제 실패.', err);
       }
