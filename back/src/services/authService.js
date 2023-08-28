@@ -114,12 +114,14 @@ const changeInformation = async (user) => {
     if (!name || !nickname) throw new Error('필수값들을 입력해주세요');
 
     //동일 사용자도 동일 닉네임을 사용할 수 없음
+    /*
     const sameNicknameUser = await prisma.user.findUnique({
       where: {
         nickname: nickname,
       },
     });
     if (sameNicknameUser) throw new Error('이미 존재하는 닉네임입니다.');
+    */
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const updateUser = await prisma.user.update({
