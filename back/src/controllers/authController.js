@@ -157,10 +157,10 @@ const changeInformation = async (req, res, next) => {
   try {
     const user = {
       id: req.user.id,
-      nickname: req.body.nickname,
-      name: req.body.name,
-      about: req.body.about,
-      activity: req.body.activity,
+      nickname: req.body.nickname || req.user.nickname,
+      name: req.body.name || req.user.name,
+      about: req.body.about || req.user.about,
+      activity: req.body.activity || req.user.activity,
       password: req.body.password,
       confirmPassword: req.body.confirmPassword,
     };
