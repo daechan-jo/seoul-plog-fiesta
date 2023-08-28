@@ -108,6 +108,19 @@ const weAreFriends = async (userId, requestId) => {
 	}
 };
 
+const createFriendship = async (userAId, userBId) => {
+	try {
+		return await prisma.friendship.create({
+			data: {
+				userAId: userAId,
+				userBId: userBId,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
 /** @description 친구 요청 */
 const friendRequest = async (userId, requestId) => {
 	try {
@@ -271,22 +284,31 @@ const myCertPost = async (userId) => {
 /** @description 친구 최신 게시물 */
 const friendsRecentPost = async (userId) => {
 	try {
-		return await prisma.friendship.findMany({
+		const friends = await prisma.friendship.findMany({
 			where: {
-				userAId: userId,
-				isAccepted: true,
+				OR: [
+					{ userAId: userId, isAccepted: true },
+					{ userBId: userId, isAccepted: true },
+				],
 			},
 			select: {
-				userB: {
-					include: {
-						certPost: true,
-					},
+				userAId: true,
+				userBId: true,
+			},
+		});
+		const friendIds = friends.map((friend) =>
+			friend.userAId === userId ? friend.userBId : friend.userAId,
+		);
+		return await prisma.certPost.findMany({
+			where: {
+				writerId: {
+					in: friendIds,
 				},
 			},
-			take: 5,
 			orderBy: {
 				createdAt: 'desc',
 			},
+			take: 5,
 		});
 	} catch (error) {
 		throw error;
@@ -322,4 +344,5 @@ module.exports = {
 	friendsRecentPost,
 	myCertPost,
 	getCertPostsByUserId,
+	createFriendship,
 };

@@ -89,18 +89,23 @@ const friendRequest = async (req, res, next) => {
 		const userId = req.user.id;
 		const requestId = parseInt(req.params.id);
 
-		if (userId == requestId) {
+		if (userId === requestId) {
 			return res
 				.status(400)
 				.json({ message: '나 자신과는 친구가 될 수 없어!' });
 		}
-
 		const weAreFriends = await userService.weAreFriends(userId, requestId);
 		if (weAreFriends) {
 			return res.status(400).json({ message: '이미 요청 했거나 우린 친구!' });
 		}
-
-		const request = await userService.friendRequest(userId, requestId);
+		const existingFriendRequest = await userService.weAreFriends(
+			requestId,
+			userId,
+		);
+		if (existingFriendRequest) {
+			return res.status(400).json({ message: '이미 요청 했거나 우린 친구!' });
+		}
+		const request = await userService.createFriendship(userId, requestId);
 		console.log(request);
 		res.status(200).json({ message: '친구 요청 완료', request });
 	} catch (error) {
