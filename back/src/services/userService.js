@@ -47,6 +47,7 @@ const searchUsers = async (nickname) => {
 				nickname: true,
 				about: true,
 				activity: true,
+				profileImage: true,
 			},
 		});
 	} catch (error) {
@@ -66,7 +67,9 @@ const searchUserId = async (userId) => {
 				nickname: true,
 				about: true,
 				activity: true,
+				profileImage: true,
 			},
+
 		});
 	} catch (error) {
 		throw error;
@@ -119,6 +122,9 @@ const getUserInfo = async (userId) => {
 			where: {
 				id: userId,
 			},
+			include: {
+				profileImage: true,
+			},
 		});
 	} catch (error) {
 		throw error;
@@ -170,6 +176,9 @@ const friendRequest = async (userId, requestId) => {
 					isAccepted: false,
 				},
 			],
+			include: {
+				profileImage: true,
+			},
 		});
 		return friendRequest;
 	} catch (error) {
@@ -192,6 +201,7 @@ const friendRequestList = async (userId) => {
 						nickname: true,
 						about: true,
 						activity: true,
+						profileImage: true,
 					},
 				},
 			},
@@ -275,6 +285,7 @@ const getMyFriends = async (userId) => {
 				nickname: true,
 				about: true,
 				activity: true,
+				profileImage: true,
 			},
 		});
 	} catch (error) {
@@ -351,6 +362,9 @@ const getCertPostsByUserId = async (userId) => {
 			where: {
 				writerId: userId,
 				isGroupPost: false,
+			},
+			orderBy: {
+			createdAt: 'desc',
 			},
 		});
 	} catch (error) {
