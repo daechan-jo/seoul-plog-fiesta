@@ -21,7 +21,7 @@ const socketIoJwt = require('socketio-jwt');
 
 const app = express();
 const server = http.createServer(app);
-app.use('/images', express.static('public'));
+app.use(express.static(__dirname + '/public'));
 passport.use('local', local);
 passport.use('jwt', jwt);
 
