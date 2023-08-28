@@ -63,7 +63,7 @@ const GroupMember = ({ view }) => {
             그룹 삭제하기
           </button>
         )}
-        {isMember || (
+        {!isGroupAdmin && isMember && (
           <button className="gBtn" onClick={handleGroupRequest}>
             가입 요청하기
           </button>

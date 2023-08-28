@@ -37,7 +37,11 @@ const Info = () => {
       await Api.post(`/req/${ownerId}`);
       alert('친구요청성공');
     } catch (err) {
-      console.log('친구요청실패', err);
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        console.log('친구요청실패', err);
+      }
     }
   };
 
