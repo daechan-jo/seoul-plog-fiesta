@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 import { useSelector } from 'react-redux';
 import { seoulDistricts } from '../common/exportData';
+import styles from './index.module.scss';
 
 const GroupMember = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -69,14 +70,21 @@ const GroupMember = ({ view }) => {
           </button>
         )}
       </div>
-      <div className="contentListContainer">
+      <div className={styles.memberList}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
           datas.map((data) => (
-            <Item data={data.user} key={data.name} view={view} />
+            <Item
+              data={data.user}
+              setDatas={setDatas}
+              groupId={groupId}
+              key={data.name}
+              view={view}
+              isGroupAdmin={isGroupAdmin}
+            />
           ))
         )}
       </div>
@@ -87,12 +95,21 @@ const GroupMember = ({ view }) => {
 
 export default GroupMember;
 
-const Item = ({ data, view }) => {
+const Item = ({ data, isGroupAdmin, groupId, setDatas }) => {
   const navigator = useNavigate();
+  const user = useSelector((state) => state.user);
 
-  console.log(data);
+  const handleOut = async () => {
+    try {
+      await Api.delete(`/group/${groupId}/${data.id}`);
+      setDatas((prev) => prev.filter((datas) => data.id !== datas.id));
+    } catch (err) {
+      console.log('멤버 추방 실패.', err);
+    }
+  };
   return (
     <div
+      className={styles.memberItem}
       onClick={() => {
         navigator(`/users/${data.id}`);
       }}
@@ -100,6 +117,9 @@ const Item = ({ data, view }) => {
       <div>{data.nickname}</div>
       <div>{data.about}</div>
       <div>{seoulDistricts[data.activity]}</div>
+      {isGroupAdmin && data.id !== user.loginId && (
+        <button onClick={handleOut}>X</button>
+      )}
     </div>
   );
 };
