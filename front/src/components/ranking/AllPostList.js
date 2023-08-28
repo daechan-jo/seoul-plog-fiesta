@@ -52,11 +52,13 @@ const AllPostList = ({ view }) => {
           ))
         )}
       </div>
-      <Pagination
-        totalPages={Math.ceil(datas.length / itemsPerPage)}
-        currentPage={currentPage}
-        handlePage={handlePage}
-      />
+      <div>
+        <Pagination
+          totalPages={Math.ceil(datas.length / itemsPerPage)}
+          currentPage={currentPage}
+          handlePage={handlePage}
+        />
+      </div>
     </div>
   );
 };
