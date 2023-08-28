@@ -5,6 +5,7 @@ import * as Api from '../../api';
 import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import { useSelector } from 'react-redux';
 import CommentAdd from './Comment';
+import { useNavigate } from 'react-router-dom';
 
 const initialData = {
   region: '',
@@ -30,6 +31,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
   const [imgContainer, setImgContainer] = useState();
   const [isGroupPost, setIsGroupPost] = useState(false);
 
+  const navigator = useNavigate();
   const user = useSelector((state) => state.user);
 
   const handleInputChange = (event) => {
@@ -212,7 +214,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
                   ))}
                 </select>
               ) : (
-                <div> {data.region}</div>
+                <div> {seoulDistricts[data.region]}</div>
               )}
             </div>
             <div>
@@ -348,6 +350,17 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
                 </button>
               </>
             ))}
+          {user.loginId !== data.writerId && (
+            <button
+              className="gBtn"
+              type="button"
+              onClick={() => {
+                navigator(`/users/${data.writerId}`);
+              }}
+            >
+              작성자 보러가기
+            </button>
+          )}
           <button
             type="button"
             className="gBtn"
