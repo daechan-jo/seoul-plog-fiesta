@@ -205,7 +205,6 @@ const myScoreNRank = async (req, res, next) => {
 };
 
 
-//todo 안됨.. 수정해야 함
 /** @description 친구 최신 게시물 */
 const friendsRecentPost = async (req, res, next) => {
 	try {
