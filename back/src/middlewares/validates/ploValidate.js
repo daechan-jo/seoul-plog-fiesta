@@ -50,6 +50,16 @@ const createCertPostSchema = Joi.object({
 	isGroupPost: Joi.boolean().optional().messages({
 		'boolean.base': 'isGroupPost가 boolean이 아닙니다.',
 	}),
+	groupName: Joi.string().min(1).max(50).optional().allow('').messages({
+		'string.base': '그룹 이름이 문자열이 아닙니다.',
+		'string.min': '그룹 이름이 너무 짧습니다.',
+		'string.max': '그룹 이름이 너무 깁니다.',
+	}),
+	participants: Joi.array().items(Joi.string()).optional().allow('').messages({
+		'string.base': '참여자가 문자열이 아닙니다.',
+		'string.min': '참여자가 너무 짧습니다.',
+		'string.max': '참여자가 너무 깁니다.',
+	}),
 });
 const validateCertCreation = (req, res, next) => {
 	const validGroup = createCertPostSchema.validate(req.body);

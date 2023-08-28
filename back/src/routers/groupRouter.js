@@ -67,6 +67,11 @@ groupRouter.get(
 	groupController.getGroupCertPosts,
 );
 
+groupRouter.get(
+	'/group/certpost/:groupname',
+	groupController.getCertPostByGroupName,
+);
+
 /** @description 그룹 상세정보(멤버 정보) */
 groupRouter.get('/group/:groupid', groupController.getGroupDetails);
 
