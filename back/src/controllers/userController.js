@@ -1,4 +1,5 @@
 import userService from '../services/userService.js';
+import ploService from '../services/ploService.js';
 
 /** @description 모든 유저  */
 const getAllUsers = async (req, res, next) => {
@@ -189,11 +190,13 @@ const deleteFriend = async (req, res, next) => {
 };
 
 /** @description 나의 인증 */
-const myCertPost = async (req, res, next) => {
+const myScoreNRank = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
-		const myCertPost = await userService.myCertPost(userId);
-		res.status(200).json({ message: '나의 인증', myCertPost });
+		const myCertPostCount = await userService.myScoreNRank(userId);
+		const myScore = myCertPostCount * 353;
+		const myRank = await ploService.getUserRank(userId)
+		res.status(200).json({ message: '나의 점수 / 랭킹', data :{myScore, myRank} });
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -201,6 +204,8 @@ const myCertPost = async (req, res, next) => {
 	}
 };
 
+
+//todo 안됨.. 수정해야 함
 /** @description 친구 최신 게시물 */
 const friendsRecentPost = async (req, res, next) => {
 	try {
@@ -238,7 +243,7 @@ module.exports = {
 	rejectFriend,
 	getMyFriends,
 	deleteFriend,
-	myCertPost,
+	myScoreNRank,
 	friendsRecentPost,
 	getCertPostsByUserId,
 };
