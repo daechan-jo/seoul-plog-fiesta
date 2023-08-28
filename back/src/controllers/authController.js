@@ -1,4 +1,4 @@
-import authService, { getUserByEmail } from '../services/authService';
+import authService from '../services/authService';
 import smtpTransport from '../config/sendEmail';
 import randomToken from '../utils/randomToken';
 import { text } from 'express';
@@ -25,11 +25,8 @@ const createUser = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const id = req.user.id;
-    const groups = await authService.findGroupsById(id);
-    const friendships = await authService.findFriendIdsById(id);
-    const profileImage = await authService.findProfileImageById(id);
-    console.log(profileImage);
-
+    const groups = await authService.getGroupsByUserId(id);
+    const friendships = await authService.getFriendIdsByUserId(id);
     const user = {
       id: id,
       token: req.token,
@@ -184,22 +181,24 @@ const changeInformation = async (req, res, next) => {
 const removeUser = async (req, res, next) => {
   try {
     const id = req.user.id;
-    const groups = await authService.findGroupsById(id);
-    const friendships = await authService.findFriendIdsById(id);
+    const groups = await authService.getGroupsByUserId(id);
+    const friendships = await authService.getFriendIdsByUserId(id);
     if (groups.length !== 0)
       throw new Error('가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다.');
     if (friendships.length !== 0)
       throw new Error('친구관계가 있으면 탈퇴할 수 없습니다.');
 
-    //프로필 이미지가 있g으면 있으면 삭제
-    await authService.deleteUserProfileImageById(id);
+    //프로필 이미지가 있으면 있으면 삭제
+    await authService.deleteUserProfileImageByUserId(id);
 
     //개인 인증글 및 인증글의 댓글 삭제
+    await authService.deleteCertPostsAndCommentsByUserId(id);
 
-    //댓글의 자식(대댓글) 댓글 고유의 id 삭제
+    //사용자의 모든 댓글 및 댓글 부모 삭제
+    await authService.deleteMyCommentsOnOtherUserCertPosts(id);
 
+    //회원 삭제
     const user = await authService.removeUser(id);
-    console.log(user);
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
