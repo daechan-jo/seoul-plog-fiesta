@@ -162,6 +162,19 @@ const getMyGroups = async (req, res, next) => {
 	}
 };
 
+const getGroupMembers = async (req, res, next) => {
+	try {
+		const groupName = req.params.groupname;
+		const userId = req.user.id;
+		const members = await groupService.getGroupMembers(groupName, userId);
+		res.status(200).json(members);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 const createPost = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
@@ -360,4 +373,5 @@ module.exports = {
 	getRecentPosts,
 	getGroupCertPosts,
 	getGroupJoinRequestsByGroupId,
+	getGroupMembers,
 };

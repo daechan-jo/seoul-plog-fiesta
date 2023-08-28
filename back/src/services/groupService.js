@@ -326,6 +326,30 @@ const getMyGroups = async (userId) => {
 	}
 };
 
+const getGroupMembers = async (groupName, userId) => {
+	try {
+		const group = await prisma.group.findUnique({
+			where: { name: groupName },
+			include: {
+				groupUser: {
+					where: { userId: { not: userId } },
+					select: {
+						user: {
+							select: { nickname: true },
+						},
+					},
+				},
+			},
+		});
+		if (!group) {
+			throw new Error('그룹을 찾을 수 없음');
+		}
+		return group.groupUser.map((groupUser) => groupUser.user.nickname);
+	} catch (error) {
+		throw error;
+	}
+};
+
 const createPost = async (userId, groupId, title, content, isNotice) => {
 	try {
 		console.log(userId, groupId, title, content, isNotice);
@@ -580,4 +604,5 @@ module.exports = {
 	getGroupByPostId,
 	getGroupUserByUserIdAndGroupId,
 	getGroupJoinRequestsByGroupId,
+	getGroupMembers,
 };
