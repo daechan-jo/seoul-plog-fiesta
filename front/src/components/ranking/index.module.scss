@@ -9,6 +9,7 @@
   width: 100%;
   height: 31vh;
   display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .listItem {

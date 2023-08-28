@@ -113,3 +113,13 @@ const CommentItem = ({ data }) => {
     </div>
   );
 };
+
+const CommentAdd = ({ setIsCommentAddOpen }) => {
+  return (
+    <div>
+      <div>
+        <button className="gBtn">댓글추가</button>
+      </div>
+    </div>
+  );
+};

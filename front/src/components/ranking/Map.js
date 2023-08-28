@@ -8,7 +8,7 @@ const RankingMap = () => {
         <h1>플로깅 지도</h1>
       </div>
       <div className="contentMapContainer">
-        <Map />
+        <Map endpoint="/plo/count/all" id="" />
       </div>
     </div>
   );

@@ -2,65 +2,10 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import geojson from '../../assets/seoul_municipalities_geo_simple.json';
 import * as Api from '../../api';
+import { handleMapData } from '../../utils/handleMapData';
 
-const mockData = {
-  gangnam: 8,
-  gangdong: 3,
-  gangbuk: 4,
-  gangseo: 2,
-  gwanak: 7,
-  gwangjin: 6,
-  guro: 1,
-  geumcheon: 9,
-  nowon: 10,
-  dobong: 5,
-  dongdaemun: 7,
-  dongjak: 4,
-  mapo: 2,
-  seodaemun: 3,
-  seocho: 6,
-  seongdong: 8,
-  seongbuk: 1,
-  songpa: 5,
-  yangcheon: 9,
-  yeongdeungpo: 10,
-  yongsan: 7,
-  eunpyeong: 4,
-  jongno: 2,
-  jung: 3,
-  jungnang: 6,
-};
-
-const initialData = {
-  gangnam: 0,
-  gangdong: 0,
-  gangbuk: 0,
-  gangseo: 0,
-  gwanak: 0,
-  gwangjin: 0,
-  guro: 0,
-  geumcheon: 0,
-  nowon: 0,
-  dobong: 0,
-  dongdaemun: 0,
-  dongjak: 0,
-  mapo: 0,
-  seodaemun: 0,
-  seocho: 0,
-  seongdong: 0,
-  seongbuk: 0,
-  songpa: 0,
-  yangcheon: 9,
-  yeongdeungpo: 0,
-  yongsan: 0,
-  eunpyeong: 0,
-  jongno: 0,
-  jung: 0,
-  jungnang: 0,
-};
-
-const Map = ({ endpoint }) => {
-  const [data, setData] = useState(initialData);
+const Map = ({ endpoint, id }) => {
+  const [data, setData] = useState({});
   const [isFetching, setIsFetching] = useState(false);
 
   // svg 요소에 지도를 그리기 위해 참조를 생성함
@@ -101,7 +46,8 @@ const Map = ({ endpoint }) => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        //const res = await Api.get(``);
+        const res = await Api.get(`${endpoint}${id}`);
+        setData(handleMapData(res.data));
       } catch (err) {
         console.log('지도데이터를 불러오는데 실패.', err);
       } finally {
@@ -110,7 +56,8 @@ const Map = ({ endpoint }) => {
     };
 
     getData();
-  }, []);
+    console.log(data);
+  }, [endpoint, id]);
 
   useEffect(() => {
     if (!isFetching) {
