@@ -6,13 +6,14 @@ import * as Api from '../../api';
 import { useLocation } from 'react-router-dom';
 import PageNav from '../../components/common/PageNav';
 import All from '../../components/ranking/All';
+import AllPostList from '../../components/ranking/AllPostList';
 
 const RankingContainer = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [users, setUsers] = useState([]);
   const [groups, setGroups] = useState([]);
 
-  const lists = { main: '홈', all: 'TOP 100' };
+  const lists = { main: '홈', all: 'TOP 100', allpost: '모든 인증글' };
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -48,8 +49,10 @@ const RankingContainer = () => {
             <TopGroup datas={groups} isFetching={isFetching} />
           </div>
         </div>
-      ) : (
+      ) : view === 'all' ? (
         <All />
+      ) : (
+        <AllPostList />
       )}
     </main>
   );

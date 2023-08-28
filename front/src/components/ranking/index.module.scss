@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .item {
   background-color: pink;
   padding: 20px;
@@ -26,4 +28,20 @@
   display: grid;
   grid-template-columns: repeat(4, 400px);
   text-align: center;
+}
+
+.allPostList {
+  min-height: 500px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(10, 50px);
+  text-align: center;
+  gap: 15px;
+  column-gap: 40px;
+  .allPostItem {
+    display: grid;
+    grid-template-columns: 90px 10px 400px 100px;
+    padding: 15px;
+    background-color: $grayBack;
+  }
 }
