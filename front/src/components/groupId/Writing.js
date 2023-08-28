@@ -4,7 +4,6 @@ import * as Api from '../../api';
 import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { GroupIdContext } from '../../context/groupIdContext';
 
 const Writing = ({ setIsModalOpen, setDatas }) => {
   const [, setIsError] = useRecoilState(isErrorState);
