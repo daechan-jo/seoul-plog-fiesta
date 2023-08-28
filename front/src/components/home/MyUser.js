@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Api from '../../api';
+import styles from './index.module.scss';
+import { handleCreatedDate } from '../../utils/handleCreatedDate';
 
 const MyUser = () => {
   const [datas, setDatas] = useState([]);
@@ -13,7 +15,7 @@ const MyUser = () => {
         if (!res.data) {
           setDatas([]);
         } else {
-          setDatas(res.data);
+          setDatas(res.data.friendsRecentPost);
         }
       } catch (err) {
         console.log('유저데이터를 불러오는데 실패.', err);
@@ -33,7 +35,7 @@ const MyUser = () => {
       <div className="titleContainer">
         <h1>나의 친구들 현황</h1>
       </div>
-      <div className="contentMinContainer">
+      <div className={styles.userList}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas.length !== 0 ? (
@@ -50,9 +52,9 @@ export default MyUser;
 
 const Item = ({ data }) => {
   return (
-    <div>
+    <div className={styles.userItem}>
       <h2>{data.title}</h2>
-      <div>유저 게시글 작성자</div>
+      <div>{handleCreatedDate(data.createdAt)}</div>
     </div>
   );
 };
