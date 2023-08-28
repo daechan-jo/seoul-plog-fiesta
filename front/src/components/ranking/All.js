@@ -9,7 +9,7 @@ const All = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
   const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
