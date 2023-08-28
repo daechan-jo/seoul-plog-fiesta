@@ -129,14 +129,20 @@
   }
   .content {
     display: grid;
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 60px);
     div {
       display: grid;
-      grid-template-columns: 100px 10px 300px;
+      grid-template-columns: 80px 60px 300px;
       div {
         display: flex;
         justify-content: center;
       }
+    }
+    select {
+      height: 30px;
+    }
+    input {
+      height: 30px;
     }
   }
 }
@@ -152,4 +158,8 @@
   grid-template-columns: 1fr 4fr;
   background-color: $grayBack;
   padding: 5px;
+}
+
+.commentAdd {
+  display: flex;
 }

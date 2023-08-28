@@ -3,10 +3,100 @@ import { seoulDistricts } from './exportData';
 import styles from './index.module.scss';
 import * as Api from '../../api';
 import { handleCreatedDate } from '../../utils/handleCreatedDate';
+import { useSelector } from 'react-redux';
+import CommentAdd from './Comment';
+
+const initialData = {
+  region: '',
+  location: '',
+  distance: '',
+  trashAmount: '',
+  averagePace: '',
+  description: '',
+  title: '',
+  startTime: '',
+  endTime: '',
+  isGroupPost: false,
+};
 
 const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
   const [isFetching, setIsFetching] = useState(false);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(initialData);
+  const [isEditing, setIsEditing] = useState(false);
+  const [groupData, setGroupData] = useState({
+    groupName: '',
+    participants: [],
+  });
+  const [imgContainer, setImgContainer] = useState();
+  const [isGroupPost, setIsGroupPost] = useState(false);
+
+  const user = useSelector((state) => state.user);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleImgChange = (e) => {
+    const img = e.target.files[0];
+
+    if (!img) {
+      alert('JPG 확장자의 이미지 파일을 넣어주세요.');
+      return;
+    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
+      alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
+      return;
+    }
+
+    if (img) {
+      try {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const previewImg = document.getElementById('proggingPreviewImg');
+          previewImg.src = reader.result;
+        };
+
+        reader.readAsDataURL(img);
+        setImgContainer(img);
+      } catch (e) {
+        alert(e);
+      }
+    }
+  };
+
+  const uploadImage = async (postId) => {
+    try {
+      const res = await Api.postForm(`/upload/certimg/${postId}`, {
+        postImage: imgContainer,
+      });
+      return res;
+    } catch (err) {
+      console.log('이미지 업로드 에러', err);
+      throw err;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isGroupPost) {
+      setData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
+    }
+    try {
+      const postRes = await Api.post(`/group/post/put/${data.id}`, data);
+      if (imgContainer) {
+        await uploadImage(postRes.data.id);
+      }
+      setData(postRes);
+      setIsEditing(false);
+    } catch (err) {
+      alert('인증 글 수정 실패', err);
+    }
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -27,52 +117,175 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
   return (
     <div className="modal">
       <form className={styles.show}>
-        <h1>{data.title}</h1>
+        {isEditing ? (
+          <input
+            type="text"
+            name="title"
+            value={data.title}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <h1>{data.title}</h1>
+        )}
         <div className="container">
           <div className="img">
             <div className={styles.imgContainer}>
               <img src={data.images} alt="인증이미지" />
             </div>
+            {isEditing && (
+              <input type="file" name="file" onChange={handleImgChange} />
+            )}
+            {isEditing && (
+              <div>
+                <input
+                  type="checkbox"
+                  checked={isGroupPost}
+                  onChange={(e) => setIsGroupPost(e.target.checked)}
+                />
+                <div>그룹 여부 수정</div>
+              </div>
+            )}
+            {isEditing && isGroupPost && (
+              <div>
+                <div>
+                  <label>그룹 이름</label>
+                  <input
+                    type="text"
+                    name="groupName"
+                    value={groupData.groupName}
+                    onChange={(e) => {
+                      setGroupData((prev) => ({
+                        ...prev,
+                        groupName: e.target.value,
+                      }));
+                    }}
+                    placeholder="그룹 이름"
+                  />
+                </div>
+                <div>
+                  <label>참여자</label>
+                  <input
+                    type="text"
+                    name="participants"
+                    value={groupData.participants}
+                    onChange={(e) => {
+                      setGroupData((prev) => ({
+                        ...prev,
+                        participants: e.target.value,
+                      }));
+                    }}
+                    placeholder="참여자"
+                  />
+                </div>
+              </div>
+            )}
           </div>
           <div className={styles.content}>
             <div>
               <label>작성자</label>
               <label>|</label>
-              {data.writerId}
+              <div>{data.writerId}</div>
             </div>
             <div>
               <label>지역구</label>
               <label>|</label>
-              {data.region}
+              {isEditing ? (
+                <select
+                  name="region"
+                  value={data.region}
+                  onChange={handleInputChange}
+                >
+                  <option value="">자치구 선택</option>
+                  {Object.keys(seoulDistricts).map((region) => (
+                    <option key={region} value={region}>
+                      {seoulDistricts[region]}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div> {data.region}</div>
+              )}
             </div>
             <div>
               <label>상세주소</label>
               <label>|</label>
-              {data.location}
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="location"
+                  value={data.location}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <div> {data.location}</div>
+              )}
             </div>
             <div>
               <label>거리</label>
               <label>|</label>
-              {data.distance}
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="distance"
+                  value={data.distance}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <div>{data.distance}</div>
+              )}
             </div>
             <div>
               <label>쓰레기양</label>
               <label>|</label>
-              {data.trashAmount}
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="trashAmount"
+                  value={data.trashAmount}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <div>{data.trashAmount}</div>
+              )}
             </div>
             <div>
               <label>평균속도</label>
               <label>|</label>
-              {data.averagePace}
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="averagePace"
+                  value={data.averagePace}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <div> {data.averagePace}</div>
+              )}
             </div>
             <div>
               <label>상세시간</label>
               <label>|</label>
               <div className={styles.time}>
-                <div>{handleCreatedDate(data.createdAt)}</div>
-                <div>
-                  {data.startTime}-{data.endTime}
-                </div>
+                {isEditing ? (
+                  <div>
+                    <input
+                      type="text"
+                      name="averagePace"
+                      value={data.startTime}
+                      onChange={handleInputChange}
+                    />
+                    <input
+                      type="text"
+                      name="averagePace"
+                      value={data.endTime}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    {data.startTime}-{data.endTime}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -85,11 +298,44 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
               data.comments.map((data) => <CommentItem data={data} />)}
           </div>
         )}
+        <CommentAdd id={data.id} comments={data.comments} />
         <div>
-          <button className="gBtn" onClick={() => {}}>
-            댓글작성하기
-          </button>
+          {user.loginId === data.writerId &&
+            (isEditing ? (
+              <>
+                <button
+                  className="gBtn"
+                  type="button"
+                  onClick={(e) => {
+                    handleSubmit(e);
+                    setIsEditing(false);
+                  }}
+                >
+                  수정완료
+                </button>
+                <button
+                  className="gBtn"
+                  type="button"
+                  onClick={() => {
+                    setIsEditing(false);
+                  }}
+                >
+                  수정취소
+                </button>
+              </>
+            ) : (
+              <button
+                className="gBtn"
+                type="button"
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              >
+                수정하기
+              </button>
+            ))}
           <button
+            type="button"
             className="gBtn"
             onClick={() => {
               setIsPlogginShowOpen(false);
@@ -110,16 +356,6 @@ const CommentItem = ({ data }) => {
     <div className={styles.commentItem}>
       <div>{data.content}</div>
       <div>{handleCreatedDate(data.createdAt)}</div>
-    </div>
-  );
-};
-
-const CommentAdd = ({ setIsCommentAddOpen }) => {
-  return (
-    <div>
-      <div>
-        <button className="gBtn">댓글추가</button>
-      </div>
     </div>
   );
 };
