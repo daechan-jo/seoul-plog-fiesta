@@ -27,7 +27,7 @@ const HomeContainer = () => {
           <Map />
           <div className="box">
             <MyGroup />
-            <MyUser />
+            {/*<MyUser />*/}
           </div>
         </div>
       ) : view === 'myposts' ? (

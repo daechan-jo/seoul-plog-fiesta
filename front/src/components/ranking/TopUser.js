@@ -2,32 +2,13 @@ import React, { useEffect, useState } from 'react';
 import * as Api from '../../api';
 import styles from './index.module.scss';
 
-const TopUser = () => {
-  const [datas, setDatas] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setIsFetching(true);
-        //const res = await Api.get(``);
-        //setDatas(res.data);
-      } catch (err) {
-        console.log('상위유저데이터를 불러오는데 실패.', err);
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
-    getData();
-  }, []);
-
+const TopUser = ({ isFetching, datas }) => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
         <h1>상위 모임</h1>
       </div>
-      <div className={styles.shortBox}>
+      <div className={`contentMinContainer ${styles.shortBox}`}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas.length === 0 ? (
@@ -40,14 +21,25 @@ const TopUser = () => {
   );
 };
 
-export default React.memo(TopUser);
+export default TopUser;
 
-const Item = () => {
+/*
+          "id": 3,
+          "name": "KIA",
+          "nickname": "타이거즈",
+          "activity": null,
+          "profileImage": null,
+          "score": 353,
+          "rank": 5,
+          "postCount": 1
+*/
+
+const Item = ({ data }) => {
   return (
-    <div>
-      <div>id</div>
-      <div>name</div>
-      <div>score</div>
+    <div className={styles.listItem}>
+      <div>{data.rank}위</div>
+      <div>{data.score}점</div>
+      <div>{data.nickname}</div>
     </div>
   );
 };

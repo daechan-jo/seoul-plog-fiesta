@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
-import { useSelector } from 'react-redux';
+import styles from './index.module.scss';
 
-const PostList = ({ view }) => {
+const All = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
-
-  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(`/plo/board/${user.loginId}`);
-        console.log(res);
+        const res = await Api.get('/plo/hundred');
         setDatas(res.data);
       } catch (err) {
-        console.log('나의 인증글 데이터를 불러오는데 실패.', err);
+        console.log('100명 순위데이터를 불러오는데 실패.', err);
       } finally {
         setIsFetching(false);
       }
     };
 
     getData();
-  }, [view, user]);
+  }, [view]);
 
   return (
     <div className="gContainer  gList navVh">
       <div className="titleContainer">
-        <h1>나의 인증글보기</h1>
+        <h1>Top 100</h1>
       </div>
-      <div className="contentListContainer">
+      <div className={styles.ranking}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas?.length === 0 ? (
@@ -40,24 +37,37 @@ const PostList = ({ view }) => {
           datas.map((data) => <Item data={data} key={data.id} view={view} />)
         )}
       </div>
-      <div>페이지네이션자리</div>
     </div>
   );
 };
 
-export default PostList;
+export default All;
+
+/*
+    {
+        "id": 5,
+        "nickname": "124",
+        "activity": "seodaemun",
+        "score": 2800,
+        "rank": 1,
+        "postCount": 8
+    },
+*/
 
 const Item = ({ data, view }) => {
   const navigator = useNavigate();
 
   return (
     <div
+      className={styles.rankingItem}
       onClick={() => {
-        navigator(`/posts/${data.id}`);
+        navigator(`/users/${data.id}`);
       }}
     >
-      <div>나의 인증1</div>
-      <div>장소 데이터있으면 여러개가 뜰것,,임,,</div>
+      <div>{data.rank}위</div>
+      <div>{data.nickname}</div>
+      <div>{data.score}점</div>
+      <div>{data.postCount}개 인증</div>
     </div>
   );
 };

@@ -8,3 +8,22 @@
   height: 31vh;
   display: grid;
 }
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ranking {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rankingItem {
+  display: grid;
+  grid-template-columns: repeat(4, 400px);
+  text-align: center;
+}
