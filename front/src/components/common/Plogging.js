@@ -75,11 +75,6 @@ const Plogging = ({ setIsWriting }) => {
     event.preventDefault();
 
     try {
-      if (formData.isGroupPost) {
-        console.log('할당', groupData);
-        setFormData((prev) => ({ ...prev, ...groupData }));
-        console.log('할당넣기', formData);
-      }
       const postRes = await Api.post('/plo/post', formData);
       if (imgContainer) {
         const imageUploadRes = await uploadImage(postRes.data.id);
@@ -110,9 +105,9 @@ const Plogging = ({ setIsWriting }) => {
 
   useEffect(() => {
     const fetchGroupMembers = async () => {
-      if (groupData.groupName) {
+      if (formData.groupName) {
         try {
-          const res = await Api.get(`/group/members/${groupData.groupName}`);
+          const res = await Api.get(`/group/members/${formData.groupName}`);
           setGroupMembers(res.data);
         } catch (err) {
           console.log('그룹 멤버 리스트를 가져오는데 실패.', err);
@@ -121,7 +116,7 @@ const Plogging = ({ setIsWriting }) => {
     };
 
     fetchGroupMembers();
-  }, [groupData.groupName]);
+  }, [formData.groupName]);
 
   return (
     <div className="modal">
@@ -151,9 +146,9 @@ const Plogging = ({ setIsWriting }) => {
               <div>
                 <select
                   name="groupName"
-                  value={groupData.groupName}
+                  value={formData.groupName}
                   onChange={(e) => {
-                    setGroupData((prev) => ({
+                    setFormData((prev) => ({
                       ...prev,
                       groupName: e.target.value,
                     }));
@@ -168,14 +163,14 @@ const Plogging = ({ setIsWriting }) => {
                 </select>
                 <select
                   name="participants"
-                  value={groupData.participants}
+                  value={formData.participants}
                   onChange={(e) => {
                     const selectedOptions = e.target.selectedOptions;
                     const selectedValues = Array.from(selectedOptions).map(
                       (option) => option.value,
                     );
 
-                    setGroupData((prev) => ({
+                    setFormData((prev) => ({
                       ...prev,
                       participants: selectedValues,
                     }));

@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
+import { GroupIdContext } from '../../containers/groupId';
 
 const GroupPlogging = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
+  const name = useContext(GroupIdContext);
+
   useEffect(() => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        //const res = await Api.get(``);
-        //setDatas(res.data);
+        const res = await Api.get(`/group/certpost/${name}`);
+        setDatas(res.data);
       } catch (err) {
         console.log('인증글 데이터를 불러오는데 실패.', err);
       } finally {
@@ -20,7 +23,7 @@ const GroupPlogging = ({ view }) => {
     };
 
     getData();
-  }, [view]);
+  }, [name, view]);
 
   return (
     <div className="gContainer  gList navVh">
