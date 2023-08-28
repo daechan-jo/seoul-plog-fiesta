@@ -22,7 +22,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
     };
 
     getData();
-  }, []);
+  }, [id]);
 
   return (
     <div className="modal">
