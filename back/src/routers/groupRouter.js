@@ -67,6 +67,7 @@ groupRouter.get(
 	groupController.getGroupCertPosts,
 );
 
+/** @description 개별 그룹 최신 인증글 */
 groupRouter.get(
 	'/group/certpost/:groupname',
 	groupController.getCertPostByGroupName,

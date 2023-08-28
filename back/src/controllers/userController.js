@@ -209,6 +209,18 @@ const friendsRecentPost = async (req, res, next) => {
 	}
 };
 
+const getCertPostsByUserId = async (req, res, next) => {
+	try {
+		const userId = req.user.id;
+		const certPosts = await userService.getCertPostsByUserId(userId);
+		res.status(200).json(certPosts);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
 module.exports = {
 	getAllUsers,
 	searchUsers,
@@ -223,4 +235,5 @@ module.exports = {
 	deleteFriend,
 	myCertPost,
 	friendsRecentPost,
+	getCertPostsByUserId,
 };

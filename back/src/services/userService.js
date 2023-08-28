@@ -293,6 +293,19 @@ const friendsRecentPost = async (userId) => {
 	}
 };
 
+const getCertPostsByUserId = async (userId) => {
+	try {
+		return await prisma.certPost.findMany({
+			where: {
+				writerId: userId,
+				isGroupPost: false,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	getAllUsers,
 	searchUsers,
@@ -308,4 +321,5 @@ module.exports = {
 	getRandomUsers,
 	friendsRecentPost,
 	myCertPost,
+	getCertPostsByUserId,
 };
