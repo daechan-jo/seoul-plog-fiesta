@@ -108,6 +108,19 @@ const weAreFriends = async (userId, requestId) => {
 	}
 };
 
+const createFriendship = async (userAId, userBId) => {
+	try {
+		return await prisma.friendship.create({
+			data: {
+				userAId: userAId,
+				userBId: userBId,
+			},
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
 /** @description 친구 요청 */
 const friendRequest = async (userId, requestId) => {
 	try {
@@ -322,4 +335,5 @@ module.exports = {
 	friendsRecentPost,
 	myCertPost,
 	getCertPostsByUserId,
+	createFriendship,
 };
