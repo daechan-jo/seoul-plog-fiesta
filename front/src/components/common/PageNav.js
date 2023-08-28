@@ -28,7 +28,11 @@ const PageNav = ({ params, view, lists, setView }) => {
           }`}
           onClick={() => {
             setView(list);
-            navigator(`/${params}?admin=${adminValue}&view=${list}`);
+            if (adminValue) {
+              navigator(`/${params}?admin=${adminValue}&view=${list}`);
+            } else {
+              navigator(`/${params}?&view=${list}`);
+            }
           }}
         >
           {lists[list]}

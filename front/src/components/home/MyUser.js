@@ -10,12 +10,18 @@ const MyUser = () => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/user/list/info`);
-        setDatas(res.data);
+        if (!res.data) {
+          setDatas([]);
+        } else {
+          setDatas(res.data);
+        }
       } catch (err) {
         console.log('유저데이터를 불러오는데 실패.', err);
         setDatas([]);
       } finally {
         setIsFetching(false);
+        console.log(datas);
+        console.log(datas.length);
       }
     };
 
@@ -30,12 +36,10 @@ const MyUser = () => {
       <div className="contentMinContainer">
         {isFetching ? (
           <div>로딩중</div>
-        ) : datas.length === 0 ? (
-          <div>데이터가 없습니다</div>
+        ) : datas.length !== 0 ? (
+          datas.map((data) => <Item key={`${data.id}`} data={data} />)
         ) : (
-          datas.map((data) => (
-            <Item key={`group_post_${data.id}`} data={data} />
-          ))
+          <div>데이터가 없습니다</div>
         )}
       </div>
     </div>

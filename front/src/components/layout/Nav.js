@@ -18,7 +18,7 @@ const Nav = () => {
   const navItems = [
     { to: '/?view=main', icon: <BiSolidHome /> },
     { to: '/network?view=group', icon: <FaUserFriends /> },
-    { to: '/ranking', icon: <FaAward /> },
+    { to: '/ranking?view=main', icon: <FaAward /> },
     { to: '/recommend', icon: <FaWalking /> },
   ];
 

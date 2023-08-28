@@ -3,7 +3,7 @@ import Map from '../common/Map';
 
 const RankingMap = () => {
   return (
-    <div className="gContainer">
+    <div className="gContainer mapWidth">
       <div className="titleContainer">
         <h1>플로깅 지도</h1>
       </div>

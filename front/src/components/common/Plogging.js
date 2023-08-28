@@ -73,15 +73,19 @@ const Plogging = ({ setIsWriting }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
+    console.log('form', formData);
+    if (isGroupPost) {
+      setFormData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
+    }
     try {
       const postRes = await Api.post('/plo/post', formData);
       if (imgContainer) {
         const imageUploadRes = await uploadImage(postRes.data.id);
         console.log('이미지 업로드 결과:', imageUploadRes);
       }
+      setIsWriting(false);
     } catch (err) {
-      console.log('인증 글 업로드 실패', err);
+      alert('인증 글 업로드 실패', err);
     }
   };
 
