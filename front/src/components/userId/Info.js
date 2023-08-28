@@ -4,6 +4,7 @@ import styles from './index.module.scss';
 import { useLocation, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { isChatOpenState, isChatWiState } from '../../features/recoilState';
+import { seoulDistricts } from '../common/exportData';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -84,7 +85,7 @@ const Info = () => {
         </li>
         <li key="activity">
           <label>지역구</label>
-          <div>{data.searchId?.activity}</div>
+          <div>{seoulDistricts[data.searchId?.activity]}</div>
         </li>
       </ul>
       <button className="gBtn" onClick={handleClick}>
