@@ -2,10 +2,11 @@ const { PrismaClient } = require('@prisma/client');
 // const { addSuffix } = require('yarn/lib/cli');
 const prisma = new PrismaClient();
 
+
 /** @description 모든 유저 정보 */
 const getAllUsers = async () => {
 	try {
-		return await prisma.user.findMany({
+		const user = await prisma.user.findMany({
 			select: {
 				id: true,
 				nickname: true,
@@ -13,6 +14,22 @@ const getAllUsers = async () => {
 				activity: true,
 			},
 		});
+		return await Promise.all(
+			user.map( async  (user) => {
+				const userProfile = await prisma.userProfileImage.findMany( {
+					where: { userId: user.id },
+				});
+
+				const userProfilesUrl = userProfile.map((image) => {
+					return image.imageUrl;
+				});
+
+				return {
+					...user,
+					image: userProfilesUrl,
+				}
+			})
+		)
 	} catch (error) {
 		throw error;
 	}
@@ -61,7 +78,7 @@ const getRandomUsers = async () => {
 	try {
 		const randomCount = await prisma.user.count();
 		const skip = Math.floor(Math.random() * randomCount);
-		return await prisma.user.findMany({
+		const user = await prisma.user.findMany({
 			take: 3,
 			skip: skip,
 			orderBy: {
@@ -74,6 +91,22 @@ const getRandomUsers = async () => {
 				activity: true,
 			},
 		});
+		return await Promise.all(
+			user.map( async  (user) => {
+				const userProfile = await prisma.userProfileImage.findMany( {
+					where: { userId: user.id },
+				});
+
+				const userProfilesUrl = userProfile.map((image) => {
+					return image.imageUrl;
+				});
+
+				return {
+					...user,
+					image: userProfilesUrl,
+				}
+			})
+		)
 	} catch (error) {
 		throw error;
 	}
@@ -187,6 +220,7 @@ const acceptFriend = async (userId, requestId) => {
 	}
 };
 
+
 /** @description 친구 거절 */
 const rejectFriend = async (userId, requestId) => {
 	try {
@@ -265,15 +299,11 @@ const deleteFriend = async (userId, friendId) => {
 };
 
 /** @description 나의 인증 횟수, 랭킹 */
-const myCertPost = async (userId) => {
+const myScoreNRank = async (userId) => {
 	try {
-		return await prisma.user.count({
+		return await prisma.certPost.count({
 			where: {
 				writerId: userId,
-				certPost: true,
-			},
-			include: {
-				certPostImage: true,
 			},
 		});
 	} catch (error) {
@@ -342,7 +372,7 @@ module.exports = {
 	deleteFriend,
 	getRandomUsers,
 	friendsRecentPost,
-	myCertPost,
+	myScoreNRank,
 	getCertPostsByUserId,
 	createFriendship,
 };
