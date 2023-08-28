@@ -14,6 +14,7 @@ const UserIdPage = () => {
 
   useEffect(() => {
     if (parseInt(userId) === user.loginId) {
+      console.log('이동');
       navigator('/mypage');
     }
   }, [navigator, user, userId]);

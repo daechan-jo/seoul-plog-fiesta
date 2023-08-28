@@ -14,7 +14,7 @@ const userSlice = createSlice({
       state.email = email;
       state.nickName = nickname;
       state.loginId = id;
-      sessionStorage.setItem('userToken', token);
+      localStorage.setItem('userToken', token);
       if (!groups) {
         state.groups = [];
       } else {
@@ -32,7 +32,7 @@ const userSlice = createSlice({
       state.email = '';
       state.nickName = '';
       state.loginId = '';
-      sessionStorage.removeItem('userToken');
+      localStorage.removeItem('userToken');
     },
   },
 });

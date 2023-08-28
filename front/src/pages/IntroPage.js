@@ -6,7 +6,7 @@ import Intro from '../components/intro/Intro';
 const IntroPage = () => {
   const navigator = useNavigate();
   const user = useSelector((state) => state.user);
-  const token = sessionStorage.getItem('userToken');
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     if (token && !user.email === '') {

@@ -51,7 +51,6 @@ const All = ({ view }) => {
         )}
       </div>
       <div>
-        {' '}
         <Pagination
           totalPages={Math.ceil(datas.length / itemsPerPage)}
           currentPage={currentPage}

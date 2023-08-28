@@ -14,7 +14,7 @@ const Header = ({ setIsWriting }) => {
   const dispatch = useDispatch();
   const navigator = useNavigate();
   const user = useSelector((state) => state.user);
-  const token = sessionStorage.getItem('userToken');
+  const token = localStorage.getItem('userToken');
 
   const location = useLocation(); //location {pathname: '/groups/1', search: '?admin=4&view=main', hash: '', state: null, key: 'nsywyzak'}
   const currentPath = location.pathname;

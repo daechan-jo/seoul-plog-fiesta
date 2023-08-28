@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Map from '../../components/home/Map';
 import MyGroup from '../../components/home/MyGroup';
 import MyUser from '../../components/home/MyUser';
-import * as Api from '../../api';
 import PageNav from '../../components/common/PageNav';
 import { useLocation } from 'react-router-dom';
 import ItemList from '../../components/home/PostList';
