@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './index.module.scss';
 
 const TopGroup = ({ isFetching, datas }) => {
+  console.log('topgroutser: ', datas);
   return (
     <div className="gContainer">
       <div className="titleContainer">
@@ -27,7 +28,6 @@ const Item = ({ data }) => {
 
   return (
     <div className={styles.listItem}>
-      <div>{data}</div>
       <div>{data.rank}위</div>
       <div>{data.score}점</div>
       <div>{data.name}</div>
