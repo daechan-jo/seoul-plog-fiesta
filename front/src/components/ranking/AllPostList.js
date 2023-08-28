@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import Pagination from '../common/Pagenation';
 import { handlePagenation } from '../../utils/pagenation';
+import PloggingShow from '../common/PlogginShow';
 
 const AllPostList = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -51,13 +52,11 @@ const AllPostList = ({ view }) => {
           ))
         )}
       </div>
-      <div>
-        <Pagination
-          totalPages={Math.ceil(datas.length / itemsPerPage)}
-          currentPage={currentPage}
-          handlePage={handlePage}
-        />
-      </div>
+      <Pagination
+        totalPages={Math.ceil(datas.length / itemsPerPage)}
+        currentPage={currentPage}
+        handlePage={handlePage}
+      />
     </div>
   );
 };
@@ -65,12 +64,27 @@ const AllPostList = ({ view }) => {
 export default AllPostList;
 
 const Item = ({ data, view }) => {
+  const [isPlogginShowOpen, setIsPlogginShowOpen] = useState(false);
+
   return (
-    <div className={styles.allPostItem}>
-      <div>{data.id}</div>
-      <div>|</div>
-      <div>{data.title}</div>
-      <div>{handleCreatedDate(data.createdAt)}</div>
-    </div>
+    <>
+      {isPlogginShowOpen && (
+        <PloggingShow
+          id={data.id}
+          setIsPlogginShowOpen={setIsPlogginShowOpen}
+        />
+      )}
+      <div
+        className={styles.allPostItem}
+        onClick={() => {
+          setIsPlogginShowOpen(true);
+        }}
+      >
+        <div>{data.id}</div>
+        <div>|</div>
+        <div>{data.title}</div>
+        <div>{handleCreatedDate(data.createdAt)}</div>
+      </div>
+    </>
   );
 };
