@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './index.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 const TopGroup = ({ isFetching, datas }) => {
   console.log('topgroutser: ', datas);
@@ -25,9 +26,15 @@ export default TopGroup;
 
 const Item = ({ data }) => {
   //{ id: '1', name: '모임이름1', score: 100 },
+  const navigator = useNavigate();
 
   return (
-    <div className={styles.listItem}>
+    <div
+      className={styles.listItem}
+      onClick={() => {
+        //navigator(`/users/${data.id}?view=main`);
+      }}
+    >
       <div>{data.rank}위</div>
       <div>{data.score}점</div>
       <div>{data.name}</div>

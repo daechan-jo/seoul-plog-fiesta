@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { seoulDistricts } from './exportData';
 import styles from './index.module.scss';
 import * as Api from '../../api';
@@ -73,7 +73,7 @@ const Plogging = ({ setIsWriting }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('form', formData);
+
     if (isGroupPost) {
       setFormData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
     }
@@ -88,6 +88,38 @@ const Plogging = ({ setIsWriting }) => {
       alert('인증 글 업로드 실패', err);
     }
   };
+
+  const [groupName, setGroupName] = useState([]);
+  const [groupMembers, setGroupMembers] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await Api.get(`/group/mygroup`);
+
+        setGroupName(res.data.map((item) => item.name));
+      } catch (err) {
+        console.log('나의 그룹 리스트 실패', err);
+      }
+    };
+
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const fetchGroupMembers = async () => {
+      if (groupData.groupName) {
+        try {
+          const res = await Api.get(`/group/members/${groupData.groupName}`);
+          setGroupMembers(res.data);
+        } catch (err) {
+          console.log('그룹 멤버 리스트를 가져오는데 실패.', err);
+        }
+      }
+    };
+
+    fetchGroupMembers();
+  }, [groupData.groupName]);
 
   return (
     <div className="modal">
@@ -109,33 +141,30 @@ const Plogging = ({ setIsWriting }) => {
             </div>
             {isGroupPost && (
               <div>
-                <label>그룹 이름</label>
-                <input
-                  type="text"
+                <select
                   name="groupName"
                   value={groupData.groupName}
-                  onChange={(e) => {
-                    setGroupData((prev) => ({
-                      ...prev,
-                      groupName: e.target.value,
-                    }));
-                  }}
-                  placeholder="그룹 이름"
-                />
-
-                <label>참여자</label>
-                <input
-                  type="text"
+                  onChange={handleInputChange}
+                >
+                  <option value="">그룹이름</option>
+                  {groupName.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+                <select
                   name="participants"
                   value={groupData.participants}
-                  onChange={(e) => {
-                    setGroupData((prev) => ({
-                      ...prev,
-                      participants: e.target.value,
-                    }));
-                  }}
-                  placeholder="참여자"
-                />
+                  onChange={handleInputChange}
+                >
+                  <option value="">멤버이름</option>
+                  {groupMembers.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
           </div>

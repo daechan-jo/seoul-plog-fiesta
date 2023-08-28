@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as Api from '../../api';
 import styles from './index.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 const TopUser = ({ isFetching, datas }) => {
   console.log('topuser: ', datas);
@@ -36,8 +37,15 @@ export default TopUser;
 */
 
 const Item = ({ data }) => {
+  const navigator = useNavigate();
+
   return (
-    <div className={styles.listItem}>
+    <div
+      className={styles.listItem}
+      onClick={() => {
+        navigator(`/users/${data.id}?view=main`);
+      }}
+    >
       <div>{data.rank}위</div>
       <div>{data.score}점</div>
       <div>{data.nickname}</div>
