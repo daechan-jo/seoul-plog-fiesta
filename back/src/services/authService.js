@@ -142,6 +142,9 @@ const changeInformation = async (user) => {
 
 const removeUser = async (id) => {
   try {
+    //가입한 그룹이 있거나 만든 그룹이 있으면 회원탈퇴 불가
+    //
+
     const deleteUser = await prisma.user.delete({
       where: {
         id: id,
@@ -202,6 +205,38 @@ const findFriendIdsById = async (id) => {
     throw error;
   }
 };
+const findProfileImageById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      include: { profileImage: true },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+const deleteUserProfileImageById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      include: { profileImage: true },
+    });
+
+    if (!user || !user.profileImage) {
+      return { success: false, message: '프로필 이미지가 없습니다.' };
+    }
+    //프로필 이미지가 존재하면 삭제
+    const updatedUser = await prisma.userProfileImage.delete({
+      where: { id: user.profileImage.id },
+    });
+
+    return { success: true, message: '프로필 이미지 삭제 완료' };
+    //return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
   createUser,
@@ -214,4 +249,6 @@ module.exports = {
   updatePasswordValidByEmail,
   findGroupsById,
   findFriendIdsById,
+  findProfileImageById,
+  deleteUserProfileImageById,
 };
