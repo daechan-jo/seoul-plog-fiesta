@@ -17,6 +17,7 @@ code {
 main {
   margin-left: $navWidth;
   min-width: 1200px;
+  min-height: 800px;
   padding: 0 30px 30px 30px;
   display: flex;
   flex-direction: column;
@@ -187,6 +188,7 @@ ul.pagination li a.active {
   align-items: center;
   z-index: 1;
   form {
+    min-width: 800px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
