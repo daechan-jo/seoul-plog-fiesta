@@ -396,27 +396,6 @@ const getGroupRank = async (groupName) => {
 	}
 };
 
-const getUserGroupCertPosts = async (userId) => {
-	try {
-		const userGroups = await prisma.groupUser.findMany({
-			where: { userId: userId },
-			select: { groupId: true },
-		});
-		const groupIds = userGroups.map((group) => group.groupId);
-		const groups = await prisma.group.findMany({
-			where: { id: { in: groupIds } },
-			select: { name: true },
-		});
-		const groupNames = groups.map((group) => group.name);
-		return await prisma.certPost.findMany({
-			where: { groupName: { in: groupNames }, isGroupPost: true },
-			orderBy: { createdAt: 'desc' },
-		});
-	} catch (error) {
-		throw error;
-	}
-};
-
 const getUserCertPostsRegionCount = async (userId) => {
 	try {
 		const userCertPosts = await prisma.certPost.findMany({
@@ -482,7 +461,6 @@ module.exports = {
 	getTopUsers,
 	getUserRank,
 	getGroupRank,
-	getUserGroupCertPosts,
 	getUserCertPostsRegionCount,
 	getGroupCertPostsRegionCount,
 	getAllCertPostsRegions,

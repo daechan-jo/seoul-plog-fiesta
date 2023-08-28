@@ -343,9 +343,23 @@ const dropGroup = async (req, res, next) => {
 const getGroupCertPosts = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
-		const posts = await ploService.getUserGroupCertPosts(userId);
+		const posts = await groupService.getUserGroupCertPosts(userId);
 		console.log(posts);
 		res.status(200).json(posts);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+const getCertPostByGroupName = async (req, res, next) => {
+	try {
+		const groupName = req.params.groupName;
+		const certPostDetails = await groupService.getCertPostByGroupName(
+			groupName,
+		);
+		res.status(200).json(certPostDetails);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -374,4 +388,5 @@ module.exports = {
 	getGroupCertPosts,
 	getGroupJoinRequestsByGroupId,
 	getGroupMembers,
+	getCertPostByGroupName,
 };

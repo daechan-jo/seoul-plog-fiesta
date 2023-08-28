@@ -580,6 +580,54 @@ const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
 	});
 };
 
+const getUserGroupCertPosts = async (userId) => {
+	try {
+		const userGroups = await prisma.groupUser.findMany({
+			where: { userId: userId },
+			select: { groupId: true },
+		});
+		const groupIds = userGroups.map((group) => group.groupId);
+		const groups = await prisma.group.findMany({
+			where: { id: { in: groupIds } },
+			select: { name: true },
+		});
+		const groupNames = groups.map((group) => group.name);
+		return await prisma.certPost.findMany({
+			where: { groupName: { in: groupNames }, isGroupPost: true },
+			orderBy: { createdAt: 'desc' },
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getCertPostByGroupName = async (groupName) => {
+	try {
+		const certPost = await prisma.certPost.findFirst({
+			where: { groupName },
+			orderBy: { createdAt: 'desc' },
+			include: {
+				images: true,
+				comments: true,
+				participants: true,
+			},
+		});
+
+		if (!certPost) {
+			throw new Error('인증게시글 없음');
+		}
+		const participantNicknames = certPost.participants.map(
+			(participant) => participant.participant,
+		);
+		return {
+			...certPost,
+			participants: participantNicknames,
+		};
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	createGroup,
 	getAllGroups,
@@ -605,4 +653,6 @@ module.exports = {
 	getGroupUserByUserIdAndGroupId,
 	getGroupJoinRequestsByGroupId,
 	getGroupMembers,
+	getUserGroupCertPosts,
+	getCertPostByGroupName,
 };
