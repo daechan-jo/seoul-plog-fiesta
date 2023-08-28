@@ -191,6 +191,9 @@ const removeUser = async (req, res, next) => {
     //프로필 이미지가 있으면 있으면 삭제
     await authService.deleteUserProfileImageByUserId(id);
 
+    //인증글의 이미지 삭제
+    await authService.deleteCertPostImagesByUserId(id);
+
     //개인 인증글 및 인증글의 댓글 삭제
     await authService.deleteCertPostsAndCommentsByUserId(id);
 

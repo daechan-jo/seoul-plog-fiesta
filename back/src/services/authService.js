@@ -262,6 +262,24 @@ const deleteUserProfileImageByUserId = async (id) => {
   }
 };
 
+const deleteCertPostImagesByUserId = async (id) => {
+  try {
+    // 해당 유저의 CertPostImage 가져오기
+    const userCertPostImages = await prisma.certPostImage.findMany({
+      where: { certPost: { writerId: id } }, // 해당 유저의 인증글 이미지 가져오기
+    });
+
+    for (const certPostImage of userCertPostImages) {
+      // CertPostImage 삭제
+      await prisma.certPostImage.delete({ where: { id: certPostImage.id } });
+      console.log(`CertPostImage (ID: ${certPostImage.id}) 삭제 완료`);
+    }
+    return { success: true, message: '인증 이미지 삭제 완료' };
+  } catch (error) {
+    throw error;
+  }
+};
+
 /**@description 개인 인증글과 댓글 삭제*/
 const deleteCertPostsAndCommentsByUserId = async (id) => {
   try {
@@ -340,6 +358,7 @@ module.exports = {
   deleteUserProfileImageByUserId,
   deleteCertPostsAndCommentsByUserId,
   deleteMyCommentsOnOtherUserCertPosts,
+  deleteCertPostImagesByUserId,
   getCertPostsByUserId,
   getCommentsByUserId,
 };
