@@ -142,9 +142,6 @@ const changeInformation = async (user) => {
 
 const removeUser = async (id) => {
   try {
-    //가입한 그룹이 있거나 만든 그룹이 있으면 회원탈퇴 불가
-    //
-
     const deleteUser = await prisma.user.delete({
       where: {
         id: id,
@@ -157,7 +154,7 @@ const removeUser = async (id) => {
 };
 
 /** @description 아이디로 가입된 모임 아이디들 찾기 -> 배열 반환*/
-const findGroupsById = async (id) => {
+const getGroupsByUserId = async (id) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -175,7 +172,7 @@ const findGroupsById = async (id) => {
 };
 
 /** @description 아이디로 친구 관계인 친구 아이디들 찾기 -> 배열 반환*/
-const findFriendIdsById = async (id) => {
+const getFriendIdsByUserId = async (id) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -205,7 +202,8 @@ const findFriendIdsById = async (id) => {
     throw error;
   }
 };
-const findProfileImageById = async (id) => {
+
+const getProfileImageByUserId = async (id) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: id },
@@ -216,7 +214,33 @@ const findProfileImageById = async (id) => {
     throw error;
   }
 };
-const deleteUserProfileImageById = async (id) => {
+
+const getCertPostsByUserId = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      include: { certPosts: true },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getCommentsByUserId = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      include: { comments: true },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**@description 프로필 이미지 삭제*/
+const deleteUserProfileImageByUserId = async (id) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: id },
@@ -238,6 +262,69 @@ const deleteUserProfileImageById = async (id) => {
   }
 };
 
+/**@description 개인 인증글과 댓글 삭제*/
+const deleteCertPostsAndCommentsByUserId = async (id) => {
+  try {
+    const certPosts = await prisma.certPost.findMany({
+      where: { writerId: id },
+      include: { comments: true },
+    });
+
+    if (!certPosts) {
+      return { success: false, message: '삭제할 게시물이 없습니다.' };
+    }
+
+    for (const certPost of certPosts) {
+      // 개인 인증글에 해당하는 댓글들 삭제
+      for (const comment of certPost.comments) {
+        await prisma.comment.delete({ where: { id: comment.id } });
+      }
+
+      // 개인 인증글 삭제
+      await prisma.certPost.delete({ where: { id: certPost.id } });
+    }
+    return { success: true, message: '개인 인증글과 댓글 삭제 완료' };
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**@description 다른 사용자 인증글에 달린 댓글 및 대댓글 삭제
+ * 기존 사용자 탈퇴시 모든 댓글 및 댓글의 부모 댓글도 지워짐*/
+const deleteMyCommentsOnOtherUserCertPosts = async (id) => {
+  try {
+    const myComments = await prisma.comment.findMany({
+      where: {
+        writerId: id, //자신의 댓글
+      },
+      include: { children: true }, //대댓글 정보 가져오기
+    });
+
+    if (!myComments) {
+      return { success: false, message: '삭제할 댓글이 없습니다.' };
+    }
+
+    for (const comment of myComments) {
+      // 대댓글 삭제
+      for (const reply of comment.children) {
+        await prisma.comment.delete({ where: { id: reply.id } });
+        console.log(`대댓글 (ID: ${reply.id}) 삭제 완료`);
+        // 댓글 삭제
+      }
+
+      await prisma.comment.delete({ where: { id: comment.id } });
+      console.log(`댓글 (ID: ${comment.id}) 삭제 완료`);
+    }
+
+    return {
+      success: true,
+      message: '다른 사용자 인증글에 달린 댓글 및 대댓글 삭제 완료',
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -247,8 +334,12 @@ module.exports = {
   updatePasswordTokenByEmail,
   getUserByPasswordToken,
   updatePasswordValidByEmail,
-  findGroupsById,
-  findFriendIdsById,
-  findProfileImageById,
-  deleteUserProfileImageById,
+  getGroupsByUserId,
+  getFriendIdsByUserId,
+  getProfileImageByUserId,
+  deleteUserProfileImageByUserId,
+  deleteCertPostsAndCommentsByUserId,
+  deleteMyCommentsOnOtherUserCertPosts,
+  getCertPostsByUserId,
+  getCommentsByUserId,
 };
