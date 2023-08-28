@@ -40,6 +40,15 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
     }));
   };
 
+  const handleDelete = async () => {
+    try {
+      const res = await Api.delete(`/plo/post/${data.id}`);
+      console.log(res.data);
+      setIsPlogginShowOpen(false);
+    } catch (err) {
+      console.log('인증글 삭제 실패.', err);
+    }
+  };
   const handleImgChange = (e) => {
     const img = e.target.files[0];
 
@@ -87,7 +96,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       setData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
     }
     try {
-      const postRes = await Api.post(`/group/post/put/${data.id}`, data);
+      const postRes = await Api.put(`/plo/post/${data.id}`, data);
       if (imgContainer) {
         await uploadImage(postRes.data.id);
       }
@@ -324,15 +333,20 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
                 </button>
               </>
             ) : (
-              <button
-                className="gBtn"
-                type="button"
-                onClick={() => {
-                  setIsEditing(true);
-                }}
-              >
-                수정하기
-              </button>
+              <>
+                <button
+                  className="gBtn"
+                  type="button"
+                  onClick={() => {
+                    setIsEditing(true);
+                  }}
+                >
+                  수정하기
+                </button>
+                <button className="gBtn" type="button" onClick={handleDelete}>
+                  삭제하기
+                </button>
+              </>
             ))}
           <button
             type="button"
