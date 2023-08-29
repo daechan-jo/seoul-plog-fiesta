@@ -2,12 +2,26 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
 import { GroupIdContext } from '../../containers/groupId';
+import { handlePagenation } from '../../utils/pagenation';
+import Pagination from '../common/Pagenation';
+import PloggingShow from '../common/PlogginShow';
+import { handleCreatedDate } from '../../utils/handleCreatedDate';
+import styles from './index.module.scss';
 
 const GroupPlogging = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
   const name = useContext(GroupIdContext);
+
+  const itemsPerPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
+
+  const handlePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -34,63 +48,52 @@ const GroupPlogging = ({ view }) => {
       <div className="titleContainer">
         <h1>인증글 모아보기</h1>
       </div>
-      <div className="contentListContainer">
+      <div className={styles.postList}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          datas.map((data) => <Item data={data} key={data.id} view={view} />)
+          paginatedData.map((data, index) => (
+            <Item data={data} key={data.id} view={view} order={index + 1} />
+          ))
         )}
       </div>
-      <div>페이지네이션자리</div>
+      <div>
+        <Pagination
+          totalPages={Math.ceil(datas.length / itemsPerPage)}
+          currentPage={currentPage}
+          handlePage={handlePage}
+        />
+      </div>
     </div>
   );
 };
 
 export default GroupPlogging;
 
-const Item = ({ data, view }) => {
-  const [isModal, setIsModal] = useState(false);
+const Item = ({ data, order }) => {
+  const [isPlogginShowOpen, setIsPlogginShowOpen] = useState(false);
 
   return (
-    <div
-      onClick={() => {
-        setIsModal(true);
-      }}
-    >
-      {isModal && <PostItem id={data.id} setIsModal={setIsModal} />}
-      <div>그룹 인증1</div>
-      <div>장소</div>
-    </div>
-  );
-};
-
-const PostItem = ({ id, setIsModal }) => {
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setIsFetching(true);
-        //const res = await Api.get(``);
-        //setDatas(res.data);
-      } catch (err) {
-        console.log('공지사항 데이터를 불러오는데 실패.', err);
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
-    getData();
-  }, []);
-
-  return (
-    <div className="modal">
-      <div>그룹 인증1</div>
-      <div>장소</div>
-      <button>back</button>
-      <button>뒤로가기</button>
-    </div>
+    <>
+      {isPlogginShowOpen && (
+        <PloggingShow
+          id={data.id}
+          setIsPlogginShowOpen={setIsPlogginShowOpen}
+        />
+      )}
+      <div
+        className={styles.postItem}
+        onClick={() => {
+          setIsPlogginShowOpen(true);
+        }}
+      >
+        <div>{order}</div>
+        <div>|</div>
+        <div>{data.title}</div>
+        <div>{handleCreatedDate(data.createdAt)}</div>
+      </div>
+    </>
   );
 };
