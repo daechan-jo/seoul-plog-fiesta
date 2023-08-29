@@ -414,7 +414,7 @@ const getPostById = async (postId) => {
 			},
 		});
 		if (!post) {
-			throw new Error('Post not found');
+			throw new Error('게시글 없음');
 		}
 		const { writer, comments, ...restPost } = post;
 		const commentDetails = comments.map((comment) => ({
