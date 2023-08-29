@@ -60,14 +60,14 @@ groupRouter.get(
 	groupController.getGroupMembers,
 );
 
-/** @description 나의 그룹 최신 인증글 */
+/** @description 나의 그룹 최신 인증글 리스트 */
 groupRouter.get(
 	'/group/certpost',
 	authenticateJWT,
 	groupController.getGroupCertPosts,
 );
 
-/** @description 개별 그룹 최신 인증글 */
+/** @description 개별 그룹 최신 인증글 리스트 */
 groupRouter.get(
 	'/group/certpost/:groupname',
 	groupController.getCertPostsByGroupName,

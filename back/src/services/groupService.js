@@ -391,16 +391,42 @@ const getAllPosts = async (groupId) => {
 
 const getPostById = async (postId) => {
 	try {
-		return await prisma.post.findUnique({
+		const post = await prisma.post.findUnique({
 			where: {
 				id: postId,
 			},
 			include: {
-				writer: true,
-				group: true,
-				comments: true,
+				writer: {
+					select: {
+						id: true,
+						nickname: true,
+					},
+				},
+				comments: {
+					include: {
+						writer: {
+							select: {
+								nickname: true,
+							},
+						},
+					},
+				},
 			},
 		});
+		if (!post) {
+			throw new Error('게시글 없음');
+		}
+		const { writer, comments, ...restPost } = post;
+		const commentDetails = comments.map((comment) => ({
+			...comment,
+			commenterNickname: comment.writer.nickname,
+			writer: undefined,
+		}));
+		return {
+			...restPost,
+			authorNickname: writer.nickname,
+			comments: commentDetails,
+		};
 	} catch (error) {
 		throw error;
 	}
