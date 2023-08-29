@@ -17,6 +17,7 @@ const initialData = {
   title: '',
   startTime: '',
   endTime: '',
+  authorNickname: '',
   isGroupPost: false,
 };
 
@@ -195,7 +196,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
             <div>
               <label>작성자</label>
               <label>|</label>
-              <div>{data.writerId}</div>
+              <div>{data.authorNickname}</div>
             </div>
             <div>
               <label>지역구</label>
