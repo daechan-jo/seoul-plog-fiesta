@@ -98,6 +98,39 @@ const changePassword = async (email, password) => {
   return updateUser;
 };
 
+const changePasswordByCheckOriginPassword = async (passwordData) => {
+  const { id, password, newPassword } = passwordData;
+  try {
+    const passwordUser = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    //기존 비밀번호와 새로 입력한 비밀번호가 다르면 오류 반환
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      passwordUser.password,
+    );
+    if (!isPasswordMatch) {
+      throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
+    }
+
+    //비밀번호 변경
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getUserByPasswordToken = async (passwordToken) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -378,4 +411,5 @@ module.exports = {
   deleteCertPostImagesByUserId,
   getCertPostsByUserId,
   getCommentsByUserId,
+  changePasswordByCheckOriginPassword,
 };
