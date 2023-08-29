@@ -51,8 +51,12 @@ const Register = () => {
 
     try {
       // "user/register" 엔드포인트로 post요청함.
-      await Api.registerPost('/auth', userData);
+      const res = await Api.registerPost('/auth', userData);
       // 로그인 페이지로 이동함.
+      if (res.data === '이미 존재하는 이메일입니다.') {
+        alert(res.data);
+        return;
+      }
       alert('회원가입 성공! 로그인해주세요');
       navigate('/login');
     } catch (err) {

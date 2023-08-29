@@ -65,7 +65,7 @@ const AllPostList = ({ view }) => {
 
 export default AllPostList;
 
-const Item = ({ data, view }) => {
+const Item = ({ data, order }) => {
   const [isPlogginShowOpen, setIsPlogginShowOpen] = useState(false);
 
   return (
