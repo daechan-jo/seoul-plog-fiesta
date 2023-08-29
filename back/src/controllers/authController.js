@@ -161,6 +161,7 @@ const changeInformation = async (req, res, next) => {
     if (!req.body.confirmPassword) {
       throw new Error('비밀번호 확인문자를 입력해주세요');
     }
+
     const user = {
       id: req.user.id,
       nickname: req.body.nickname || req.user.nickname, //입력하지 않으면 기존 정보 유지
@@ -176,6 +177,29 @@ const changeInformation = async (req, res, next) => {
 
     const changedUser = await authService.changeInformation(user);
     res.status(200).json(changedUser);
+  } catch (error) {
+    console.error(error);
+    error.status = 500;
+    next(error);
+  }
+};
+
+const changePasswordByCheckOriginPassword = async (req, res, next) => {
+  try {
+    const { password, newPassword, newConfirmPassword } = req.body;
+
+    if (newPassword !== newConfirmPassword) {
+      throw new Error('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+    }
+    const user = {
+      id: req.user.id,
+      password: password,
+      newPassword: newPassword,
+    };
+    const updatedUser = await authService.changePasswordByCheckOriginPassword(
+      user,
+    );
+    res.status(200).json(updatedUser);
   } catch (error) {
     console.error(error);
     error.status = 500;
@@ -224,4 +248,5 @@ module.exports = {
   removeUser,
   checkEmail,
   changePassword,
+  changePasswordByCheckOriginPassword,
 };
