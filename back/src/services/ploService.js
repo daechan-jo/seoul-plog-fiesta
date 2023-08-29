@@ -92,6 +92,11 @@ const getCertPostDetails = async (certPostId) => {
 				id: certPostId,
 			},
 			include: {
+				writer: {
+					select: {
+						nickname: true,
+					},
+				},
 				images: {
 					select: {
 						imageUrl: true,
@@ -112,10 +117,12 @@ const getCertPostDetails = async (certPostId) => {
 		const participants = certPost.participants.map(
 			(participant) => participant.participant,
 		);
+		const { writer, ...restCertPost } = certPost;
 		return {
-			...certPost,
+			...restCertPost,
 			images: imageUrls,
 			participants: participants,
+			authorNickname: writer.nickname,
 		};
 	} catch (error) {
 		throw error;
