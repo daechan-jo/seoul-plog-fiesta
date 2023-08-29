@@ -44,8 +44,12 @@ const createCertPost = async (userId, certPostData) => {
 	}
 };
 
-const getAllCertPosts = async () => {
+const getAllCertPosts = async (page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const certPosts = await prisma.certPost.findMany({
 			include: {
 				images: {
@@ -60,8 +64,9 @@ const getAllCertPosts = async () => {
 				},
 				comments: true,
 			},
+			orderBy: { createdAt: 'desc' },
+			...paginationOptions,
 		});
-
 		return certPosts.map((certPost) => {
 			const imageUrls = certPost.images.map((image) => image.imageUrl);
 			const participants = certPost.participants.map(

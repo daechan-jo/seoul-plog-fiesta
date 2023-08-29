@@ -22,15 +22,11 @@ const socketIoJwt = require('socketio-jwt');
 
 const app = express();
 const server = http.createServer(app);
-app.use(express.static(path.join(__dirname, '../public')));
-passport.use('local', local);
-passport.use('jwt', jwt);
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(loggerMiddleware);
 app.use(passport.initialize());
 passport.use('local', local);
