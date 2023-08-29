@@ -195,6 +195,7 @@ const Plogging = ({ setIsWriting }) => {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
+                placeholder="제목을 입력해주세요"
               />
             </div>
             <div className={styles.time}>
@@ -215,7 +216,7 @@ const Plogging = ({ setIsWriting }) => {
                 placeholder="끝난 시간 (예: 17:00)"
               />
             </div>
-            <div>
+            <div className={styles.location}>
               <label>장소</label>
               <div>
                 <select
@@ -235,6 +236,7 @@ const Plogging = ({ setIsWriting }) => {
                   name="location"
                   value={formData.location}
                   onChange={handleInputChange}
+                  placeholder="세부 장소를 입력해주세요"
                 />
               </div>
             </div>
@@ -245,15 +247,17 @@ const Plogging = ({ setIsWriting }) => {
                 name="distance"
                 value={formData.distance}
                 onChange={handleInputChange}
+                placeholder="거리 (예: 2km)"
               />
             </div>
             <div>
-              <label>평균 페이스</label>
+              <label>평균 속도</label>
               <input
                 type="text"
                 name="averagePace"
                 value={formData.averagePace}
                 onChange={handleInputChange}
+                placeholder="평균 속도 (예: 1km/h)"
               />
             </div>
             <div>
@@ -263,6 +267,7 @@ const Plogging = ({ setIsWriting }) => {
                 name="trashAmount"
                 value={formData.trashAmount}
                 onChange={handleInputChange}
+                placeholder="쓰레기 양 (예: 500g, 1.5봉투)"
               />
             </div>
             <label>설명</label>
@@ -270,6 +275,7 @@ const Plogging = ({ setIsWriting }) => {
               name="description"
               value={formData.description}
               onChange={handleInputChange}
+              placeholder="추가 정보를 입력해주세요"
             />
           </div>
         </div>

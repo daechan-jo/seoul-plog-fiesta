@@ -44,6 +44,10 @@
       align-items: center;
       gap: 20px;
     }
+    .time,
+    .location {
+      justify-content: space-between;
+    }
   }
   textarea {
     height: 100px;
