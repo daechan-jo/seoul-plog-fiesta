@@ -191,6 +191,14 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
                 </div>
               </div>
             )}
+            {data.isGroupPost && <div>{data.groupName}</div>}
+            {data.isGroupPost && (
+              <div>
+                {data.participants.map((name) => (
+                  <div>{name}</div>
+                ))}
+              </div>
+            )}
           </div>
           <div className={styles.content}>
             <div>
@@ -300,14 +308,14 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
                 )}
               </div>
             </div>
-
-            {data.isGroupPost && <div>{data.groupName}</div>}
           </div>
         </div>
         {data.comments && (
           <div className={styles.commentList}>
             {data.comments.length !== 0 &&
-              data.comments.map((data) => <CommentItem data={data} />)}
+              data.comments.map((data, index) => (
+                <CommentItem data={data} order={index + 1} />
+              ))}
           </div>
         )}
         <CommentAdd id={data.id} comments={data.comments} />
@@ -379,9 +387,10 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
 
 export default PloggingShow;
 
-const CommentItem = ({ data }) => {
+const CommentItem = ({ data, order }) => {
   return (
     <div className={styles.commentItem}>
+      <div>{order}</div>
       <div>{data.content}</div>
       <div>{data.commenterNickname}</div>
       <div>{handleCreatedDate(data.createdAt)}</div>

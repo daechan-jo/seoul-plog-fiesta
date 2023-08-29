@@ -155,11 +155,12 @@
 
 .commentItem {
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 0.5fr 4.5fr 1fr 1fr;
   background-color: $grayBack;
   padding: 5px;
 }
 
 .commentAdd {
   display: flex;
+  width: 100%;
 }
