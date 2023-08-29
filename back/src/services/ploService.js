@@ -107,22 +107,37 @@ const getCertPostDetails = async (certPostId) => {
 						participant: true,
 					},
 				},
-				comments: true,
+				comments: {
+					include: {
+						writer: {
+							select: {
+								nickname: true,
+							},
+						},
+					},
+				},
 			},
 		});
 		if (!certPost) {
 			throw new Error('인증게시글이 없음');
 		}
+
 		const imageUrls = certPost.images.map((image) => image.imageUrl);
 		const participants = certPost.participants.map(
 			(participant) => participant.participant,
 		);
-		const { writer, ...restCertPost } = certPost;
+		const { writer, comments, ...restCertPost } = certPost;
+		const commentDetails = comments.map((comment) => ({
+			...comment,
+			commenterNickname: comment.writer.nickname,
+			writer: undefined,
+		}));
 		return {
 			...restCertPost,
 			images: imageUrls,
 			participants: participants,
 			authorNickname: writer.nickname,
+			comments: commentDetails,
 		};
 	} catch (error) {
 		throw error;
