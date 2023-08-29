@@ -2,6 +2,7 @@ import router from 'express';
 import authController from '../controllers/authController';
 import authenticateJWT from '../middlewares/authenticateJWT';
 import authenticateLocal from '../middlewares/authenticateLocal';
+import authValidate from '../middlewares/validates/authValidate';
 
 const authRouter = router();
 
@@ -23,6 +24,7 @@ authRouter.post('/auth/changepassword', authController.changePassword);
 //회원정보 변경
 authRouter.put(
   '/auth/update',
+  //authValidate.validateUserUpdate,
   authenticateJWT,
   authController.changeInformation,
 );

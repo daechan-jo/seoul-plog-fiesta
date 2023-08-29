@@ -108,11 +108,12 @@ const getUserByPasswordToken = async (passwordToken) => {
   return user;
 };
 
+/** @description 회원정보 수정 ->
+ * 입력한 비밀번호가 기존 비밀번호와 다를 경우 오류 반환
+ * 비밀번호와 비밀번호확인문자가 다를 경우 오류 반환*/
 const changeInformation = async (user) => {
   const { id, name, nickname, about, activity, password } = user;
   try {
-    if (!name || !nickname) throw new Error('필수값들을 입력해주세요');
-
     //동일 사용자도 동일 닉네임을 사용할 수 없음
     /*
     const sameNicknameUser = await prisma.user.findUnique({
@@ -122,8 +123,23 @@ const changeInformation = async (user) => {
     });
     if (sameNicknameUser) throw new Error('이미 존재하는 닉네임입니다.');
     */
+    const passwordUser = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    //기존 비밀번호와 새로 입력한 비밀번호가 다르면 오류 반환
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      passwordUser.password,
+    );
+
+    if (!isPasswordMatch) {
+      throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
+    }
+
+    //정보 업데이트
     const updateUser = await prisma.user.update({
       where: {
         id: id,
@@ -131,7 +147,6 @@ const changeInformation = async (user) => {
       data: {
         name: name,
         nickname: nickname,
-        password: hashedPassword,
         about: about, //빈 값 허용
         activity: activity, //빈 값 허용
       },

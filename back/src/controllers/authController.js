@@ -155,9 +155,15 @@ const changePassword = async (req, res, next) => {
 /** @description 회원정보 변경*/
 const changeInformation = async (req, res, next) => {
   try {
+    if (!req.body.password) {
+      throw new Error('비밀번호를 입력해주세요');
+    }
+    if (!req.body.confirmPassword) {
+      throw new Error('비밀번호 확인문자를 입력해주세요');
+    }
     const user = {
       id: req.user.id,
-      nickname: req.body.nickname || req.user.nickname,
+      nickname: req.body.nickname || req.user.nickname, //입력하지 않으면 기존 정보 유지
       name: req.body.name || req.user.name,
       about: req.body.about || req.user.about,
       activity: req.body.activity || req.user.activity,
@@ -166,7 +172,7 @@ const changeInformation = async (req, res, next) => {
     };
 
     if (user.password !== user.confirmPassword)
-      throw new Error('비밀번호 확인 불일치');
+      throw new Error('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
 
     const changedUser = await authService.changeInformation(user);
     res.status(200).json(changedUser);
