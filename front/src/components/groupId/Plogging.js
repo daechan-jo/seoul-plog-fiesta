@@ -14,7 +14,11 @@ const GroupPlogging = ({ view }) => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/group/certpost/${name}`);
-        setDatas(res.data);
+        if (res.data === '인증게시글 없음') {
+          setDatas([]);
+        } else {
+          setDatas(res.data);
+        }
       } catch (err) {
         console.log('인증글 데이터를 불러오는데 실패.', err);
       } finally {
