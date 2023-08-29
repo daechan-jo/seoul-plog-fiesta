@@ -89,3 +89,18 @@
     align-items: center;
   }
 }
+
+.userList {
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.mainItem {
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 1fr 10fr 2fr;
+  text-align: center;
+}

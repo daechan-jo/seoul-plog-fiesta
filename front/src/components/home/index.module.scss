@@ -23,8 +23,17 @@
   gap: 20px;
   margin-top: 20px;
 }
+
 .userItem {
   padding: 5px;
   display: grid;
-  grid-template-columns: 6fr 1fr;
+  grid-template-columns: 1fr 10fr 2fr;
+  text-align: center;
+}
+
+.groupItem {
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 1fr 10fr 2fr;
+  text-align: center;
 }

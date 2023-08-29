@@ -43,23 +43,28 @@ const List = () => {
 
   return (
     <div className="contentMinContainer">
-      {isFetching ? (
-        <div>로딩중</div>
-      ) : datas.length === 0 ? (
-        <div>데이터가 없습니다</div>
-      ) : (
-        datas
-          .filter((data) => data.isNotice === true)
-          .map((data) => <Item key={data.id} data={data} />)
-      )}
+      <div className={styles.userList}>
+        {isFetching ? (
+          <div>로딩중</div>
+        ) : datas.length === 0 ? (
+          <div>데이터가 없습니다</div>
+        ) : (
+          datas
+            .filter((data) => data.isNotice === true)
+            .map((data, index) => (
+              <Item key={data.id} data={data} order={index + 1} />
+            ))
+        )}
+      </div>
     </div>
   );
 };
 
-const Item = ({ data }) => {
+const Item = ({ data, order }) => {
   const date = handleCreatedDate(data.createdAt);
   return (
-    <div className={styles.notices}>
+    <div className={styles.mainItem}>
+      <div>{order}</div>
       <div>{data.title}</div>
       <div>{date}</div>
     </div>

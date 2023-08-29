@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as Api from '../../api';
+import { handleCreatedDate } from '../../utils/handleCreatedDate';
+import styles from './index.module.scss';
 
 const MyGroup = () => {
   const [datas, setDatas] = useState([]);
@@ -27,13 +29,15 @@ const MyGroup = () => {
       <div className="titleContainer">
         <h1>나의 모임 현황</h1>
       </div>
-      <div className="contentMinContainer">
+      <div className={styles.userList}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas.length === 0 ? (
           <div>데이터가 없습니다</div>
         ) : (
-          datas.map((data) => <Item key={data.id} data={data} />)
+          datas.map((data, index) => (
+            <Item key={data.id} data={data} order={index + 1} />
+          ))
         )}
       </div>
     </div>
@@ -42,11 +46,29 @@ const MyGroup = () => {
 
 export default MyGroup;
 
-const Item = ({ data }) => {
+const Item = ({ data, order }) => {
   return (
-    <div>
+    <div className={styles.groupItem}>
+      <div>{order}</div>
       <h2>{data.title}</h2>
-      <div>모임 게시글 작성자</div>
+      <div>{handleCreatedDate(data.createdAt)}</div>
     </div>
   );
 };
+/*
+{
+  "id": 77,
+  "writerId": 103,
+  "title": "무야호야호",
+  "region": "gangdong",
+  "location": "dongjak",
+  "distance": "6",
+  "trashAmount": "1",
+  "averagePace": "4",
+  "description": "줍줍",
+  "startTime": "10:00",
+  "endTime": "12:00",
+  "createdAt": "2023-08-29T00:26:17.665Z",
+  "isGroupPost": true,
+  "groupName": "나혼자그룹"
+},*/

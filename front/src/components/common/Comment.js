@@ -12,6 +12,10 @@ const CommentAdd = ({ id, isCert, comments }) => {
         `/comment/${id}${isCert ? '' : '&cert=true'}`,
         { content: data },
       );
+      if (res.data === '게시글을 찾을 수 없') {
+        alert('잘못된 접근입니다.');
+        return;
+      }
       alert('댓글 작성 성공');
       comments.push(res.data);
     } catch (err) {

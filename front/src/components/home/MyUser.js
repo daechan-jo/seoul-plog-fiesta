@@ -39,7 +39,9 @@ const MyUser = () => {
         {isFetching ? (
           <div>로딩중</div>
         ) : datas.length !== 0 ? (
-          datas.map((data) => <Item key={`${data.id}`} data={data} />)
+          datas.map((data, index) => (
+            <Item key={data.id} data={data} order={index + 1} />
+          ))
         ) : (
           <div>데이터가 없습니다</div>
         )}
@@ -50,9 +52,10 @@ const MyUser = () => {
 
 export default MyUser;
 
-const Item = ({ data }) => {
+const Item = ({ data, order }) => {
   return (
     <div className={styles.userItem}>
+      <div>{order}</div>
       <h2>{data.title}</h2>
       <div>{handleCreatedDate(data.createdAt)}</div>
     </div>

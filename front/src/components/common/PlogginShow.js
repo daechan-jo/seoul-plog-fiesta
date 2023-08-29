@@ -383,6 +383,7 @@ const CommentItem = ({ data }) => {
   return (
     <div className={styles.commentItem}>
       <div>{data.content}</div>
+      <div>{data.commenterNickname}</div>
       <div>{handleCreatedDate(data.createdAt)}</div>
     </div>
   );
