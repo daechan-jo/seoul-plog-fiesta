@@ -102,7 +102,7 @@ const checkEmail = async (req, res, next) => {
     const email = updatedUser.email;
     // 유저 이메일 인증 처리후 리다이렉트 -> 프론트로
     res.redirect(
-      'http://localhost:3000/auth/changepassword?email=' +
+      'http://localhost:3000/changepassword?email=' +
         email +
         '&token=' +
         passwordToken,
