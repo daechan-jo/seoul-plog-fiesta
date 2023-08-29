@@ -70,7 +70,7 @@ groupRouter.get(
 /** @description 개별 그룹 최신 인증글 */
 groupRouter.get(
 	'/group/certpost/:groupname',
-	groupController.getCertPostByGroupName,
+	groupController.getCertPostsByGroupName,
 );
 
 /** @description 그룹 상세정보(멤버 정보) */

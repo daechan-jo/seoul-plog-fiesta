@@ -601,9 +601,9 @@ const getUserGroupCertPosts = async (userId) => {
 	}
 };
 
-const getCertPostByGroupName = async (groupName) => {
+const getCertPostsByGroupName = async (groupName) => {
 	try {
-		const certPost = await prisma.certPost.findFirst({
+		const certPosts = await prisma.certPost.findMany({
 			where: { groupName },
 			orderBy: { createdAt: 'desc' },
 			include: {
@@ -613,16 +613,19 @@ const getCertPostByGroupName = async (groupName) => {
 			},
 		});
 
-		if (!certPost) {
+		if (certPosts.length === 0) {
 			throw new Error('인증게시글 없음');
 		}
-		const participantNicknames = certPost.participants.map(
-			(participant) => participant.participant,
-		);
-		return {
-			...certPost,
-			participants: participantNicknames,
-		};
+
+		return certPosts.map((certPost) => {
+			const participantNicknames = certPost.participants.map(
+				(participant) => participant.participant,
+			);
+			return {
+				...certPost,
+				participants: participantNicknames,
+			};
+		});
 	} catch (error) {
 		throw error;
 	}
@@ -654,5 +657,5 @@ module.exports = {
 	getGroupJoinRequestsByGroupId,
 	getGroupMembers,
 	getUserGroupCertPosts,
-	getCertPostByGroupName,
+	getCertPostsByGroupName,
 };

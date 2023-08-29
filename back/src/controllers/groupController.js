@@ -353,10 +353,10 @@ const getGroupCertPosts = async (req, res, next) => {
 	}
 };
 
-const getCertPostByGroupName = async (req, res, next) => {
+const getCertPostsByGroupName = async (req, res, next) => {
 	try {
 		const groupName = req.params.groupName;
-		const certPostDetails = await groupService.getCertPostByGroupName(
+		const certPostDetails = await groupService.getCertPostsByGroupName(
 			groupName,
 		);
 		res.status(200).json(certPostDetails);
@@ -388,5 +388,5 @@ module.exports = {
 	getGroupCertPosts,
 	getGroupJoinRequestsByGroupId,
 	getGroupMembers,
-	getCertPostByGroupName,
+	getCertPostsByGroupName,
 };
