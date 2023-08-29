@@ -4,6 +4,8 @@ import * as Api from '../../api';
 import Writing from './Writing';
 import styles from './index.module.scss';
 import { useSelector } from 'react-redux';
+import Pagination from '../common/Pagenation';
+import { handlePagenation } from '../../utils/pagenation';
 
 const Notice = () => {
   const [isFetching, setIsFetching] = useState(false);
@@ -11,6 +13,15 @@ const Notice = () => {
   const [isModal, setIsModalOpen] = useState(false);
 
   const { groupId } = useParams();
+
+  const itemsPerPage = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
+
+  const handlePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -52,10 +63,18 @@ const Notice = () => {
           ) : datas?.length === 0 ? (
             <div>데이터가 없습니다.</div>
           ) : (
-            datas.map((data) => <Item data={data} key={data.id} />)
+            paginatedData.map((data) => (
+              <Item data={data} setDatas={setDatas} key={data.id} />
+            ))
           )}
         </div>
-        <div>페이지네이션자리</div>
+        <div>
+          <Pagination
+            totalPages={Math.ceil(datas.length / itemsPerPage)}
+            currentPage={currentPage}
+            handlePage={handlePage}
+          />
+        </div>
       </div>
     </>
   );
@@ -63,16 +82,58 @@ const Notice = () => {
 
 export default Notice;
 
-const Item = ({ data }) => {
+const Item = ({ data, setDatas }) => {
   const navigator = useNavigate();
   const [isModal, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [sendData, setSendData] = useState(data);
+
+  const user = useSelector((state) => state.user);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setSendData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleEditSubmit = async () => {
+    try {
+      const res = await Api.put(`/group/post/put/${data.id}`, sendData);
+      setDatas((prev) => ({ ...prev, sendData }));
+      setIsEditing(false);
+    } catch (err) {
+      console.log('수정실패');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Api.delete(`/group/post/delete/${data.id}`, sendData);
+      setDatas((prev) => prev.filter((pre) => prev.id !== data.id));
+      setIsEditing(false);
+    } catch (err) {
+      console.log('삭제실패');
+    }
+  };
 
   return (
     <div className={styles.notice}>
       {data.isNotice && <div className={styles.isNotice}>공지사항</div>}
       <div className={styles.content}>
         <label>제목</label>
-        <div>{data?.title}</div>
+        {isEditing ? (
+          <input
+            type="text"
+            name="title"
+            value={sendData.title}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <div>{data?.title}</div>
+        )}
       </div>
       <div className={styles.content}>
         <label>날짜</label>
@@ -80,8 +141,47 @@ const Item = ({ data }) => {
       </div>
       <div className={styles.content}>
         <label>내용</label>
-        <div>{data?.content}</div>
+        {isEditing ? (
+          <input
+            type="text"
+            name="content"
+            value={sendData.content}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <div>{data?.content}</div>
+        )}
       </div>
+      {data.writerId === user.loginId &&
+        (isEditing ? (
+          <div className={styles.postBtns}>
+            <button className="gBtn" onClick={handleEditSubmit}>
+              수정완료
+            </button>
+            <button
+              className="gBtn"
+              onClick={() => {
+                setIsEditing(false);
+              }}
+            >
+              수정취소
+            </button>
+          </div>
+        ) : (
+          <div className={styles.postBtns}>
+            <button
+              className="gBtn"
+              onClick={() => {
+                setIsEditing(true);
+              }}
+            >
+              수정하기
+            </button>
+            <button className="gBtn" onClick={handleDelete}>
+              삭제하기
+            </button>
+          </div>
+        ))}
     </div>
   );
 };
