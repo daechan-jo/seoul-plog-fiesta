@@ -355,7 +355,7 @@ const getGroupCertPosts = async (req, res, next) => {
 
 const getCertPostsByGroupName = async (req, res, next) => {
 	try {
-		const groupName = req.params.groupName;
+		const groupName = req.params.groupname;
 		const certPostDetails = await groupService.getCertPostsByGroupName(
 			groupName,
 		);

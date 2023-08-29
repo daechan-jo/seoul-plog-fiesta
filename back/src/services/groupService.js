@@ -604,7 +604,7 @@ const getUserGroupCertPosts = async (userId) => {
 const getCertPostsByGroupName = async (groupName) => {
 	try {
 		const certPosts = await prisma.certPost.findMany({
-			where: { groupName },
+			where: { groupName, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
 			include: {
 				images: true,
