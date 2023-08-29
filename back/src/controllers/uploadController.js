@@ -6,7 +6,7 @@ const fs = require('fs');
 const uploadProfileImage = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
-		const imageUrl = path.join('/public/images', req.file.filename);
+		const imageUrl = path.join('images', req.file.filename);
 		const existingImage = await prisma.userProfileImage.findUnique({
 			where: { userId },
 		});
@@ -14,8 +14,8 @@ const uploadProfileImage = async (req, res, next) => {
 		if (existingImage) {
 			const absoluteImagePath = path.join(
 				__dirname,
-				'..',
-				'..',
+				'../..',
+				'public',
 				existingImage.imageUrl,
 			);
 			fs.unlinkSync(absoluteImagePath);
@@ -44,7 +44,7 @@ const uploadProfileImage = async (req, res, next) => {
 const uploadPostImage = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);
-		const imageUrl = path.join('/public/images', req.file.filename);
+		const imageUrl = path.join('images', req.file.filename);
 		const post = await prisma.post.findUnique({
 			where: { id: postId },
 			include: { group: true },
@@ -59,7 +59,9 @@ const uploadPostImage = async (req, res, next) => {
 		});
 
 		if (existingImage) {
-			fs.unlinkSync(path.join(__dirname, '..', '..', existingImage.imageUrl)); // Corrected line
+			fs.unlinkSync(
+				path.join(__dirname, '../..', 'public', existingImage.imageUrl),
+			);
 
 			await prisma.postImage.update({
 				where: { id: existingImage.id },
@@ -85,13 +87,13 @@ const uploadPostImage = async (req, res, next) => {
 const uploadCertImage = async (req, res, next) => {
 	try {
 		const certPostId = parseInt(req.params.postid);
-		const imageUrl = path.join('/public/upload', req.file.filename);
+		const imageUrl = path.join('images', req.file.filename);
 		const certPost = await prisma.certPost.findUnique({
 			where: { id: certPostId },
 		});
 		console.log(certPost);
 		if (!certPost) {
-			return res.status(404).json({ message: 'Cert post not found' });
+			return res.status(404).json({ message: '인증 게시글 없음' });
 		}
 
 		const existingImage = await prisma.certPostImage.findFirst({
@@ -100,7 +102,9 @@ const uploadCertImage = async (req, res, next) => {
 
 		if (existingImage) {
 			// Delete the existing image file
-			fs.unlinkSync(path.join(__dirname, '..', existingImage.imageUrl));
+			fs.unlinkSync(
+				path.join(__dirname, '../..', 'public', existingImage.imageUrl),
+			);
 
 			// Update the image URL
 			await prisma.certPostImage.update({
@@ -138,15 +142,15 @@ const uploadGroupImage = async (req, res, next) => {
 			return res.status(403).json({ message: '관리자 권한' });
 		}
 
-		const imageUrl = path.join('src/public/images', req.file.filename);
+		const imageUrl = path.join('images', req.file.filename);
 		const existingImage = await prisma.groupImage.findFirst({
 			where: { groupId },
 		});
 		if (existingImage) {
 			const absoluteImagePath = path.join(
 				__dirname,
-				'..',
-				'..',
+				'../..',
+				'public',
 				existingImage.imageUrl,
 			);
 			fs.unlinkSync(absoluteImagePath);
