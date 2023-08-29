@@ -31,7 +31,7 @@ authRouter.put(
 //회원정보 변경
 authRouter.put(
   '/auth/update',
-  //authValidate.validateUserUpdate,
+  authValidate.validateUserUpdate,
   authenticateJWT,
   authController.changeInformation,
 );
