@@ -23,6 +23,7 @@ const MyInfo = () => {
   const [originData, setDriginData] = useState(initialData);
   const dispatch = useDispatch();
   const [imgContainer, setImgContainer] = useState();
+  const [isChanging, setIsChanging] = useState(false);
 
   const formData = new FormData();
 
@@ -147,9 +148,12 @@ const MyInfo = () => {
         </div>
         <>
           {isEditing && (
-            <li key="img">
-              <input type="file" accept="image/*" onChange={handleImgChange} />
-            </li>
+            <input
+              className={styles.imgInput}
+              type="file"
+              accept="image/*"
+              onChange={handleImgChange}
+            />
           )}
           <li key="email">
             <label>이메일</label>
@@ -223,17 +227,6 @@ const MyInfo = () => {
               />
             </li>
           )}
-          {isEditing && (
-            <li key="passwordConfirm">
-              <label>비밀번호 확인</label>
-              <input
-                type="password"
-                name="passwordConfirm"
-                value={data.passwordConfirm}
-                onChange={handleInputChange}
-              />
-            </li>
-          )}
         </>
       </ul>
       <div>
@@ -271,6 +264,15 @@ const MyInfo = () => {
             <button className="gBtn" onClick={handleDelete}>
               탈퇴하기
             </button>
+            <button
+              className="gBtn"
+              onClick={() => {
+                setIsChanging(true);
+              }}
+            >
+              비밀번호 변경
+            </button>
+            {isChanging && <PasswordChange setIsChanging={setIsChanging} />}
           </>
         )}
       </div>
@@ -279,3 +281,78 @@ const MyInfo = () => {
 };
 
 export default MyInfo;
+
+const PasswordChange = ({ setIsChanging }) => {
+  const [data, setData] = useState({
+    password: '',
+    newPassword: '',
+    newConfirmPassword: '',
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    for (const key in data) {
+      if (data[key] === '') {
+        alert('입력값을 확인해주세요');
+        return;
+      }
+    }
+
+    try {
+      await Api.put('/auth/login/update', data);
+      setIsChanging(false);
+    } catch (err) {
+      alert('비밀번호 변경 실패', err);
+    }
+  };
+  return (
+    <div className="modal">
+      <form className={styles.changingForm} onSubmit={handleSubmit}>
+        <label>기존 비밀번호 입력</label>
+        <input
+          type="password"
+          name="password"
+          value={data.password}
+          onChange={handleInputChange}
+        />
+        <label>새로운 비밀번호 입력</label>
+        <input
+          type="password"
+          name="password"
+          value={data.newPassword}
+          onChange={handleInputChange}
+        />
+        <label>새로운 비밀번호 확인</label>
+        <input
+          type="password"
+          name="password"
+          value={data.newConfirmPassword}
+          onChange={handleInputChange}
+        />
+        <div>
+          <button className="gBtn" type="submit">
+            비밀번호 변경
+          </button>
+          <button
+            className="gBtn"
+            type="button"
+            onClick={() => {
+              setIsChanging(false);
+            }}
+          >
+            뒤로가기
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
