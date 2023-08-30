@@ -55,6 +55,7 @@ const searchUsers = async (nickname) => {
 				about: true,
 				activity: true,
 				profileImage: true,
+
 			},
 		});
 	} catch (error) {
