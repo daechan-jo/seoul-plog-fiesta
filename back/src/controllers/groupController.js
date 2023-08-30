@@ -152,7 +152,9 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 const getMyGroups = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
-		const groups = await groupService.getMyGroups(userId);
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
+		const groups = await groupService.getMyGroups(userId, page, limit);
 		console.log(groups);
 		res.status(200).json(groups);
 	} catch (error) {

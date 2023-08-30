@@ -266,8 +266,12 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 	}
 };
 
-const getMyGroups = async (userId) => {
+const getMyGroups = async (userId, page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const groups = await prisma.groupUser.findMany({
 			where: {
 				userId: userId,
@@ -304,6 +308,7 @@ const getMyGroups = async (userId) => {
 					},
 				},
 			},
+			...paginationOptions,
 		});
 
 		return groups.map((group) => ({
