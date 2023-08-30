@@ -60,6 +60,7 @@ const Plogging = ({ setIsWriting }) => {
   };
 
   const uploadImage = async (postId) => {
+    console.log(imgContainer);
     try {
       const res = await Api.postForm(`/upload/certimg/${postId}`, {
         postImage: imgContainer,
@@ -73,10 +74,11 @@ const Plogging = ({ setIsWriting }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    console.log('담긴파일: ', imgContainer);
     try {
       const postRes = await Api.post('/plo/post', formData);
       if (imgContainer) {
+        console.log('포스트url: ', postRes.data.id);
         const imageUploadRes = await uploadImage(postRes.data.id);
         console.log('이미지 업로드 결과:', imageUploadRes);
       }
