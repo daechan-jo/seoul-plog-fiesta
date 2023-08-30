@@ -210,9 +210,10 @@ const createPost = async (req, res, next) => {
 
 const getRecentPosts = async (req, res, next) => {
 	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
 		const userId = req.user.id;
-
-		const posts = await groupService.getRecentPosts(userId);
+		const posts = await groupService.getRecentPosts(userId, page, limit);
 		console.log(posts);
 		res.status(200).json(posts);
 	} catch (error) {
@@ -222,7 +223,6 @@ const getRecentPosts = async (req, res, next) => {
 	}
 };
 
-//todo
 const getAllPosts = async (req, res, next) => {
 	try {
 		const page = parseInt(req.query.page) || null;

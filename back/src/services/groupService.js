@@ -451,8 +451,12 @@ const getPostById = async (postId) => {
 	}
 };
 
-const getRecentPosts = async (userId) => {
+const getRecentPosts = async (userId, page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const userGroupIds = await prisma.groupUser.findMany({
 			where: {
 				userId: userId,
@@ -470,6 +474,7 @@ const getRecentPosts = async (userId) => {
 			orderBy: {
 				createdAt: 'desc',
 			},
+			...paginationOptions,
 		});
 	} catch (error) {
 		throw error;
