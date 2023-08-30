@@ -47,8 +47,10 @@ const createGroup = async (groupData, managerId) => {
 
 const getAllGroups = async (page, limit) => {
 	try {
-		const skip = page && limit ? (page - 1) * limit : undefined;
-		const take = page && limit ? limit : undefined;
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const groups = await prisma.group.findMany({
 			select: {
 				id: true,
@@ -63,8 +65,7 @@ const getAllGroups = async (page, limit) => {
 					},
 				},
 			},
-			skip,
-			take,
+			...paginationOptions,
 		});
 		return await Promise.all(
 			groups.map(async (group) => {

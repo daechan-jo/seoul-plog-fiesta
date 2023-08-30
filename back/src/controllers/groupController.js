@@ -21,17 +21,11 @@ const createGroup = async (req, res, next) => {
 
 const getAllGroups = async (req, res, next) => {
 	try {
-		if (req.query.page || req.query.limit) {
-			const page = parseInt(req.query.page) || 1;
-			const limit = parseInt(req.query.limit) || 10;
-			const groups = await groupService.getAllGroups(page, limit);
-			console.log(groups);
-			res.status(200).json(groups);
-		} else {
-			const groups = await groupService.getAllGroups();
-			console.log(groups);
-			res.status(200).json(groups);
-		}
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
+		const groups = await groupService.getAllGroups(page, limit);
+		console.log(groups);
+		res.status(200).json(groups);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -158,9 +152,7 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 const getMyGroups = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
-
 		const groups = await groupService.getMyGroups(userId);
-
 		console.log(groups);
 		res.status(200).json(groups);
 	} catch (error) {
