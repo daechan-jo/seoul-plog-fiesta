@@ -19,7 +19,10 @@ const postPlo = async (req, res, next) => {
 
 const getAllCertPosts = async (req, res, next) => {
 	try {
-		const certPosts = await ploService.getAllCertPosts();
+		const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
+		const limit =
+			req.query.limit !== undefined ? parseInt(req.query.limit) : null;
+		const certPosts = await ploService.getAllCertPosts(page, limit);
 		console.log(certPosts);
 		res.status(200).json(certPosts);
 	} catch (error) {
