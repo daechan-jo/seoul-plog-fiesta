@@ -54,14 +54,15 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     const existingUser = await authService.getUserByEmail(email);
 
     //유저가 해당 닉네임을 가지고 있는지
-    await authService.checkUserHaveNickname(existingUser, nickname);
+    //await authService.checkUserHaveNickname(existingUser, nickname);
 
     //링크에 포함될 랜덤 토큰 생성
     const token = randomToken.createRandomToken();
 
     //이메일 내용
     const emailOptions = {
-      from: process.env.USER,
+      from: 'qweasdzxc0210@naver.com',
+      //from: process.env.USER,
       to: email,
       subject: '[SeoulPlogFiesta] 비밀번호 변경 안내',
       html:
@@ -69,7 +70,7 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
         '<h2>고객님의 비밀번호 변경을 위해 아래의 링크를 클릭해주세요.</h2>' +
         '<a href= "' +
         process.env.SERVER_URL +
-        'auth/checkEmail?token=' +
+        '/auth/checkEmail?token=' +
         token +
         '">비밀번호 재설정 링크<a>',
     };
@@ -213,7 +214,14 @@ const removeUser = async (req, res, next) => {
     const groups = await authService.getGroupsByUserId(id);
     const friendships = await authService.getFriendIdsByUserId(id);
     if (groups.length !== 0)
-      throw new Error('가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다.');
+      throw new Error('가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다');
+    /*
+      res
+        .status(500)
+        .json({
+          message: '가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다.',
+        });
+        */
     if (friendships.length !== 0)
       throw new Error('친구관계가 있으면 탈퇴할 수 없습니다.');
 
