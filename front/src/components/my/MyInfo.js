@@ -340,14 +340,14 @@ const PasswordChange = ({ setIsChanging }) => {
         <label>새로운 비밀번호 입력</label>
         <input
           type="password"
-          name="password"
+          name="newPassword"
           value={data.newPassword}
           onChange={handleInputChange}
         />
         <label>새로운 비밀번호 확인</label>
         <input
           type="password"
-          name="password"
+          name="newConfirmPassword"
           value={data.newConfirmPassword}
           onChange={handleInputChange}
         />
