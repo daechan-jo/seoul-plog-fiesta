@@ -44,8 +44,12 @@ const createCertPost = async (userId, certPostData) => {
 	}
 };
 
-const getAllCertPosts = async () => {
+const getAllCertPosts = async (page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const certPosts = await prisma.certPost.findMany({
 			include: {
 				images: {
@@ -60,8 +64,9 @@ const getAllCertPosts = async () => {
 				},
 				comments: true,
 			},
+			orderBy: { createdAt: 'desc' },
+			...paginationOptions,
 		});
-
 		return certPosts.map((certPost) => {
 			const imageUrls = certPost.images.map((image) => image.imageUrl);
 			const participants = certPost.participants.map(
@@ -92,6 +97,11 @@ const getCertPostDetails = async (certPostId) => {
 				id: certPostId,
 			},
 			include: {
+				writer: {
+					select: {
+						nickname: true,
+					},
+				},
 				images: {
 					select: {
 						imageUrl: true,
@@ -102,20 +112,37 @@ const getCertPostDetails = async (certPostId) => {
 						participant: true,
 					},
 				},
-				comments: true,
+				comments: {
+					include: {
+						writer: {
+							select: {
+								nickname: true,
+							},
+						},
+					},
+				},
 			},
 		});
 		if (!certPost) {
 			throw new Error('인증게시글이 없음');
 		}
+
 		const imageUrls = certPost.images.map((image) => image.imageUrl);
 		const participants = certPost.participants.map(
 			(participant) => participant.participant,
 		);
+		const { writer, comments, ...restCertPost } = certPost;
+		const commentDetails = comments.map((comment) => ({
+			...comment,
+			commenterNickname: comment.writer.nickname,
+			writer: undefined,
+		}));
 		return {
-			...certPost,
+			...restCertPost,
 			images: imageUrls,
 			participants: participants,
+			authorNickname: writer.nickname,
+			comments: commentDetails,
 		};
 	} catch (error) {
 		throw error;
@@ -396,27 +423,6 @@ const getGroupRank = async (groupName) => {
 	}
 };
 
-const getUserGroupCertPosts = async (userId) => {
-	try {
-		const userGroups = await prisma.groupUser.findMany({
-			where: { userId: userId },
-			select: { groupId: true },
-		});
-		const groupIds = userGroups.map((group) => group.groupId);
-		const groups = await prisma.group.findMany({
-			where: { id: { in: groupIds } },
-			select: { name: true },
-		});
-		const groupNames = groups.map((group) => group.name);
-		return await prisma.certPost.findMany({
-			where: { groupName: { in: groupNames }, isGroupPost: true },
-			orderBy: { createdAt: 'desc' },
-		});
-	} catch (error) {
-		throw error;
-	}
-};
-
 const getUserCertPostsRegionCount = async (userId) => {
 	try {
 		const userCertPosts = await prisma.certPost.findMany({
@@ -482,7 +488,6 @@ module.exports = {
 	getTopUsers,
 	getUserRank,
 	getGroupRank,
-	getUserGroupCertPosts,
 	getUserCertPostsRegionCount,
 	getGroupCertPostsRegionCount,
 	getAllCertPostsRegions,

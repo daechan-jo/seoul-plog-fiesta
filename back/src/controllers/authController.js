@@ -1,4 +1,4 @@
-import authService, { getUserByEmail } from '../services/authService';
+import authService from '../services/authService';
 import smtpTransport from '../config/sendEmail';
 import randomToken from '../utils/randomToken';
 import { text } from 'express';
@@ -25,9 +25,8 @@ const createUser = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const id = req.user.id;
-    const groups = await authService.findGroupsById(id);
-    const friendships = await authService.findFriendIdsById(id);
-
+    const groups = await authService.getGroupsByUserId(id);
+    const friendships = await authService.getFriendIdsByUserId(id);
     const user = {
       id: id,
       token: req.token,
@@ -36,7 +35,6 @@ const login = async (req, res, next) => {
       groups: groups,
       friendshipsA: friendships,
     };
-    console.log(user);
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
@@ -104,7 +102,8 @@ const checkEmail = async (req, res, next) => {
     const email = updatedUser.email;
     // 유저 이메일 인증 처리후 리다이렉트 -> 프론트로
     res.redirect(
-      'http://localhost:3000/auth/changepassword?email=' +
+      process.env.FRONT_URL +
+        'changepassword?email=' +
         email +
         '&token=' +
         passwordToken,
@@ -157,21 +156,44 @@ const changePassword = async (req, res, next) => {
 /** @description 회원정보 변경*/
 const changeInformation = async (req, res, next) => {
   try {
+    if (!req.body.password) {
+      throw new Error('비밀번호를 입력해주세요');
+    }
+
     const user = {
       id: req.user.id,
-      nickname: req.body.nickname,
-      name: req.body.name,
-      about: req.body.about,
-      activity: req.body.activity,
+      nickname: req.body.nickname || req.user.nickname, //입력하지 않으면 기존 정보 유지
+      name: req.body.name || req.user.name,
+      about: req.body.about || req.user.about,
+      activity: req.body.activity || req.user.activity,
       password: req.body.password,
-      confirmPassword: req.body.confirmPassword,
     };
-
-    if (user.password !== user.confirmPassword)
-      throw new Error('비밀번호 확인 불일치');
 
     const changedUser = await authService.changeInformation(user);
     res.status(200).json(changedUser);
+  } catch (error) {
+    console.error(error);
+    error.status = 500;
+    next(error);
+  }
+};
+
+const changePasswordByCheckOriginPassword = async (req, res, next) => {
+  try {
+    const { password, newPassword, newConfirmPassword } = req.body;
+
+    if (newPassword !== newConfirmPassword) {
+      throw new Error('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+    }
+    const user = {
+      id: req.user.id,
+      password: password,
+      newPassword: newPassword,
+    };
+    const updatedUser = await authService.changePasswordByCheckOriginPassword(
+      user,
+    );
+    res.status(200).json(updatedUser);
   } catch (error) {
     console.error(error);
     error.status = 500;
@@ -183,8 +205,27 @@ const changeInformation = async (req, res, next) => {
 const removeUser = async (req, res, next) => {
   try {
     const id = req.user.id;
+    const groups = await authService.getGroupsByUserId(id);
+    const friendships = await authService.getFriendIdsByUserId(id);
+    if (groups.length !== 0)
+      throw new Error('가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다.');
+    if (friendships.length !== 0)
+      throw new Error('친구관계가 있으면 탈퇴할 수 없습니다.');
+
+    //프로필 이미지가 있으면 있으면 삭제
+    await authService.deleteUserProfileImageByUserId(id);
+
+    //인증글의 이미지 삭제
+    await authService.deleteCertPostImagesByUserId(id);
+
+    //개인 인증글 및 인증글의 댓글 삭제
+    await authService.deleteCertPostsAndCommentsByUserId(id);
+
+    //사용자의 모든 댓글 및 댓글 부모 삭제
+    await authService.deleteMyCommentsOnOtherUserCertPosts(id);
+
+    //회원 삭제
     const user = await authService.removeUser(id);
-    console.log(user);
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
@@ -201,4 +242,5 @@ module.exports = {
   removeUser,
   checkEmail,
   changePassword,
+  changePasswordByCheckOriginPassword,
 };

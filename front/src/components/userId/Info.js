@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
 import styles from './index.module.scss';
 import { useLocation, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { isChatOpenState, isChatWiState } from '../../features/recoilState';
+import { seoulDistricts } from '../common/exportData';
+import { UserIdContext } from '../../containers/userId';
+import MyLanking from '../feat/Lanking';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -18,11 +21,15 @@ const mockmyInfo = {
 const Info = () => {
   const [data, setData] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [isMyRankingOpen, setIsMyRankingOpen] = useState(false);
 
   const location = useLocation();
   const currentPath = location.pathname;
 
   const ownerId = currentPath.split('/')[2].split('?')[0];
+  const { friends } = useContext(UserIdContext);
+
+  const isFriend = friends.includes(parseInt(ownerId));
 
   const [isChatOpen, setIsChatOpen] = useRecoilState(isChatOpenState);
   const [, setChatId] = useRecoilState(isChatWiState);
@@ -37,7 +44,11 @@ const Info = () => {
       await Api.post(`/req/${ownerId}`);
       alert('친구요청성공');
     } catch (err) {
-      console.log('친구요청실패', err);
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        console.log('친구요청실패', err);
+      }
     }
   };
 
@@ -60,8 +71,15 @@ const Info = () => {
 
   return (
     <div className={`gContainer`}>
+      {isMyRankingOpen && (
+        <MyLanking
+          setIsMyRankingOpen={setIsMyRankingOpen}
+          name="내 친구"
+          id={ownerId}
+        />
+      )}
       <div className="titleContainer">
-        <h1>내 정보</h1>
+        <h1>{data.searchId?.nickname}의 정보</h1>
       </div>
       <ul className={styles.info}>
         <div className={styles.imgContainer}>
@@ -80,12 +98,23 @@ const Info = () => {
         </li>
         <li key="activity">
           <label>지역구</label>
-          <div>{data.searchId?.activity}</div>
+          <div>{seoulDistricts[data.searchId?.activity]}</div>
         </li>
       </ul>
-      <button className="gBtn" onClick={handleClick}>
-        친구추가
-      </button>
+      {isFriend ? (
+        <button
+          className="gBtn"
+          onClick={() => {
+            setIsMyRankingOpen(true);
+          }}
+        >
+          친구랭킹
+        </button>
+      ) : (
+        <button className="gBtn" onClick={handleClick}>
+          친구추가
+        </button>
+      )}
       <button className="gBtn" onClick={handleChat}>
         채팅보내기
       </button>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Api from '../../api';
+import styles from './index.module.scss';
+import { handleCreatedDate } from '../../utils/handleCreatedDate';
 
 const MyUser = () => {
   const [datas, setDatas] = useState([]);
@@ -9,13 +11,19 @@ const MyUser = () => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        //const res = await Api.get(`/user/list/info`);
-        //setDatas(res.data);
+        const res = await Api.get(`/user/list/info`);
+        if (!res.data) {
+          setDatas([]);
+        } else {
+          setDatas(res.data.friendsRecentPost);
+        }
       } catch (err) {
         console.log('유저데이터를 불러오는데 실패.', err);
         setDatas([]);
       } finally {
         setIsFetching(false);
+        console.log(datas);
+        console.log(datas.length);
       }
     };
 
@@ -27,15 +35,15 @@ const MyUser = () => {
       <div className="titleContainer">
         <h1>나의 친구들 현황</h1>
       </div>
-      <div className="contentMinContainer">
+      <div className={styles.userList}>
         {isFetching ? (
           <div>로딩중</div>
-        ) : datas.length === 0 ? (
-          <div>데이터가 없습니다</div>
-        ) : (
-          datas.map((data) => (
-            <Item key={`group_post_${data.id}`} data={data} />
+        ) : datas.length !== 0 ? (
+          datas.map((data, index) => (
+            <Item key={data.id} data={data} order={index + 1} />
           ))
+        ) : (
+          <div>데이터가 없습니다</div>
         )}
       </div>
     </div>
@@ -44,11 +52,12 @@ const MyUser = () => {
 
 export default MyUser;
 
-const Item = ({ data }) => {
+const Item = ({ data, order }) => {
   return (
-    <div>
-      <h2>유저 게시글 제목</h2>
-      <div>유저 게시글 작성자</div>
+    <div className={styles.userItem}>
+      <div>{order}</div>
+      <h2>{data.title}</h2>
+      <div>{handleCreatedDate(data.createdAt)}</div>
     </div>
   );
 };

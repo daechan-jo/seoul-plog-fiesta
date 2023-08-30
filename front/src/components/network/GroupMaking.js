@@ -8,12 +8,11 @@ import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
 
 const GroupMaking = ({ setIsModal, setDatas }) => {
-  const navigate = useNavigate();
-  const [img, setImg] = useState();
   const loginId = useSelector((state) => state.user.loginId);
 
   const [isError, setIsError] = useRecoilState(isErrorState);
   const [errorMessage, setErrorMessage] = useRecoilState(errorMessageState);
+  const [imgContainer, setImgContainer] = useState();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -42,6 +41,7 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
       alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
+
     if (img) {
       try {
         const reader = new FileReader();
@@ -52,10 +52,23 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
         };
 
         reader.readAsDataURL(img);
-        imgData.append('image', img);
+
+        setImgContainer(img);
       } catch (e) {
         alert(e);
       }
+    }
+  };
+
+  const uploadImage = async (groupId) => {
+    try {
+      const res = await Api.postForm(`/upload/groupimg/${groupId}`, {
+        groupImage: imgContainer,
+      });
+      return res;
+    } catch (err) {
+      console.log('이미지 업로드 에러', err);
+      throw err;
     }
   };
 
@@ -64,13 +77,12 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
 
     try {
       const postRes = await Api.post('/group', formData);
-      console.log(postRes);
-      if (img) {
-        const res = await Api.postForm(`/upload/groupimg/${postRes.data.id}`, {
-          groupImage: imgData,
-        });
-        postRes.data['images'] = img;
+
+      if (imgData) {
+        const imageUploadRes = await uploadImage(postRes.data.id, imgData);
+        console.log('이미지 업로드 결과:', imageUploadRes);
       }
+
       postRes.data['memberCount'] = 1;
       setDatas((datas) => [...datas, postRes.data]);
       setIsModal(false);

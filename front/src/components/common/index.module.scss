@@ -21,28 +21,38 @@
 }
 
 .plogging {
+  width: 50vw;
   .imgContainer {
-    width: 500px;
-    height: 500px;
+    width: 300px;
+    height: 300px;
     background-color: gray;
     img {
       width: 500px;
     }
   }
+  label {
+    width: 150px;
+  }
   .content {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 400px;
     div {
       display: flex;
       flex-direction: row;
+      justify-content: center;
+      align-items: center;
       gap: 20px;
     }
-    textarea {
-      height: 150px;
+    .time,
+    .location {
+      justify-content: space-between;
     }
   }
+  textarea {
+    height: 100px;
+  }
+
   .btns {
     width: 100%;
     display: flex;
@@ -113,4 +123,56 @@
       color: gray;
     }
   }
+}
+
+.imgContainer {
+  width: 300px;
+  height: 300px;
+  background-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+#proggingPreviewImg {
+  width: 300px;
+}
+
+.show {
+  .content {
+    display: grid;
+    grid-template-rows: repeat(6, 60px);
+    div {
+      display: grid;
+      grid-template-columns: 80px 60px 300px;
+      div {
+        display: flex;
+        justify-content: center;
+      }
+    }
+    select {
+      height: 30px;
+    }
+    input {
+      height: 30px;
+    }
+  }
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.commentItem {
+  display: grid;
+  grid-template-columns: 0.5fr 4.5fr 1fr 1fr;
+  background-color: $grayBack;
+  padding: 5px;
+}
+
+.commentAdd {
+  display: flex;
+  width: 100%;
 }

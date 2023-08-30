@@ -1,35 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import * as Api from '../../api';
+import React from 'react';
 import styles from './index.module.scss';
+import { useNavigate } from 'react-router-dom';
 
-const TopGroup = () => {
-  //{ id: '1', name: '모임이름1', score: 100 },
-
-  const [datas, setDatas] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setIsFetching(true);
-        //const res = await Api.get(``);
-        //setDatas(res.data);
-      } catch (err) {
-        console.log('상위모임데이터를 불러오는데 실패.', err);
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
-    getData();
-  }, []);
-
+const TopGroup = ({ isFetching, datas }) => {
+  console.log('topgroutser: ', datas);
   return (
     <div className="gContainer">
       <div className="titleContainer">
         <h1>상위 모임</h1>
       </div>
-      <div className={styles.shortBox}>
+      <div className={`contentMinContainer ${styles.shortBox}`}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas.length === 0 ? (
@@ -42,16 +22,22 @@ const TopGroup = () => {
   );
 };
 
-export default React.memo(TopGroup);
+export default TopGroup;
 
-const Item = () => {
+const Item = ({ data }) => {
   //{ id: '1', name: '모임이름1', score: 100 },
+  const navigator = useNavigate();
 
   return (
-    <div>
-      <div>id</div>
-      <div>name</div>
-      <div>score</div>
+    <div
+      className={styles.listItem}
+      onClick={() => {
+        //navigator(`/users/${data.id}?view=main`);
+      }}
+    >
+      <div>{data.rank}위</div>
+      <div>{data.score}점</div>
+      <div>{data.name}</div>
     </div>
   );
 };

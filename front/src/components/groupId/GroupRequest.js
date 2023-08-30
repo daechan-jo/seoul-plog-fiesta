@@ -66,7 +66,9 @@ const GroupRequestList = () => {
 export default GroupRequestList;
 
 const Item = ({ data, setDatas, id }) => {
-  const handleOk = async () => {
+  const handleOk = async (e) => {
+    e.preventDefault();
+
     try {
       await Api.post(`/group/accept/${id}/${data.id}`);
       alert('수락 성공');
@@ -75,7 +77,9 @@ const Item = ({ data, setDatas, id }) => {
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (e) => {
+    e.preventDefault();
+
     try {
       await Api.post(`/group/reject/${id}/${data.id}`);
       alert('거절 성공');

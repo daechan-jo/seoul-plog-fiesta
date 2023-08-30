@@ -2,6 +2,7 @@ import router from 'express';
 import authController from '../controllers/authController';
 import authenticateJWT from '../middlewares/authenticateJWT';
 import authenticateLocal from '../middlewares/authenticateLocal';
+import authValidate from '../middlewares/validates/authValidate';
 
 const authRouter = router();
 
@@ -20,9 +21,17 @@ authRouter.get('/auth/checkemail', authController.checkEmail);
 //비밀번호 변경
 authRouter.post('/auth/changepassword', authController.changePassword);
 
+//로그인 상태에서 비밀번호 변경
+authRouter.put(
+  '/auth/login/update',
+  authenticateJWT,
+  authController.changePasswordByCheckOriginPassword,
+);
+
 //회원정보 변경
 authRouter.put(
   '/auth/update',
+  authValidate.validateUserUpdate,
   authenticateJWT,
   authController.changeInformation,
 );

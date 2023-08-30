@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import user_none from '../../assets/user_none.png';
 import * as Api from '../../api';
 import { seoulDistricts } from '../common/exportData';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
+import { handleImgUrl } from '../../utils/handleImgUrl';
 
 const initialData = {
   name: '',
@@ -20,18 +21,27 @@ const MyInfo = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(initialData);
+  const [originData, setDriginData] = useState(initialData);
   const dispatch = useDispatch();
+  const [imgContainer, setImgContainer] = useState();
+  const [isChanging, setIsChanging] = useState(false);
 
   const formData = new FormData();
+
+  const user = useSelector((state) => state.user);
 
   const handleImgChange = (e) => {
     const img = e.target.files[0];
 
     if (!img) {
-      alert('JPG 확장자의 이미지 파일을 넣어주세요.');
+      alert('이미지 파일을 넣어주세요.');
       return;
-    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
-      alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
+    } else if (
+      img.type !== 'image/png' &&
+      img.type !== 'image/jpeg' &&
+      img.type !== 'images/jpg'
+    ) {
+      alert('JPG 혹은 PNG확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
     if (img) {
@@ -45,6 +55,7 @@ const MyInfo = () => {
 
         reader.readAsDataURL(img);
         formData.append('image', img);
+        setImgContainer(img);
       } catch (e) {
         alert(e);
       }
@@ -69,16 +80,22 @@ const MyInfo = () => {
         password: data.password,
         confirmPassword: data.passwordConfirm,
       });
-      setData(res.data);
-      if (img) {
-        console.log('이미지업로드', img);
-        const res = await Api.postForm('/images/userimg', {
-          profileImage: formData,
-        });
+      if (imgContainer) {
+        console.log('이미지업로드', imgContainer);
+        try {
+          const res = await Api.postForm(`/upload/profile`, {
+            profileImage: imgContainer,
+          });
+          return res;
+        } catch (err) {
+          console.log('이미지 업로드 에러', err);
+          throw err;
+        }
       }
       setIsEditing(false);
     } catch (err) {
       console.log('데이터 수정 실패.', err);
+      setData(originData);
     } finally {
       setIsFetching(false);
     }
@@ -101,6 +118,13 @@ const MyInfo = () => {
       try {
         await Api.get('/user').then((res) => {
           console.log(res.data.currentUserInfo);
+          setDriginData({
+            email: res.data.currentUserInfo.email,
+            name: res.data.currentUserInfo.name,
+            nickname: res.data.currentUserInfo.nickname,
+            about: res.data.currentUserInfo.about,
+            activity: res.data.currentUserInfo.activity,
+          });
           setData({
             email: res.data.currentUserInfo.email,
             name: res.data.currentUserInfo.name,
@@ -109,7 +133,9 @@ const MyInfo = () => {
             activity: res.data.currentUserInfo.activity,
           });
         });
-        await Api.get('/profile/image').then((res) => setImg(res.data));
+        await Api.get(`/profileimg/${user.loginId}`).then((res) =>
+          setImg(res.data),
+        );
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
       } finally {
@@ -127,13 +153,20 @@ const MyInfo = () => {
       </div>
       <ul className={`${styles.info} ${isEditing ? styles.editing : ''}`}>
         <div className={styles.imgContainer}>
-          <img id="myInfoPreviewImg" src={img || user_none} alt="profile" />
+          <img
+            id="myInfoPreviewImg"
+            src={handleImgUrl(img) || user_none}
+            alt="profile"
+          />
         </div>
         <>
           {isEditing && (
-            <li key="img">
-              <input type="file" accept="image/*" onChange={handleImgChange} />
-            </li>
+            <input
+              className={styles.imgInput}
+              type="file"
+              accept="image/*"
+              onChange={handleImgChange}
+            />
           )}
           <li key="email">
             <label>이메일</label>
@@ -207,17 +240,6 @@ const MyInfo = () => {
               />
             </li>
           )}
-          {isEditing && (
-            <li key="passwordConfirm">
-              <label>비밀번호 확인</label>
-              <input
-                type="password"
-                name="passwordConfirm"
-                value={data.passwordConfirm}
-                onChange={handleInputChange}
-              />
-            </li>
-          )}
         </>
       </ul>
       <div>
@@ -235,19 +257,11 @@ const MyInfo = () => {
             <button
               className="gBtn"
               onClick={() => {
-                setData(initialData);
+                setData(originData);
                 setIsEditing(false);
               }}
             >
               수정취소
-            </button>
-            <button
-              className="gBtn"
-              onClick={() => {
-                setData(data);
-              }}
-            >
-              초기화
             </button>
           </>
         ) : (
@@ -263,6 +277,15 @@ const MyInfo = () => {
             <button className="gBtn" onClick={handleDelete}>
               탈퇴하기
             </button>
+            <button
+              className="gBtn"
+              onClick={() => {
+                setIsChanging(true);
+              }}
+            >
+              비밀번호 변경
+            </button>
+            {isChanging && <PasswordChange setIsChanging={setIsChanging} />}
           </>
         )}
       </div>
@@ -271,3 +294,78 @@ const MyInfo = () => {
 };
 
 export default MyInfo;
+
+const PasswordChange = ({ setIsChanging }) => {
+  const [data, setData] = useState({
+    password: '',
+    newPassword: '',
+    newConfirmPassword: '',
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    for (const key in data) {
+      if (data[key] === '') {
+        alert('입력값을 확인해주세요');
+        return;
+      }
+    }
+
+    try {
+      await Api.put('/auth/login/update', data);
+      setIsChanging(false);
+    } catch (err) {
+      alert('비밀번호 변경 실패', err);
+    }
+  };
+  return (
+    <div className="modal">
+      <form className={styles.changingForm} onSubmit={handleSubmit}>
+        <label>기존 비밀번호 입력</label>
+        <input
+          type="password"
+          name="password"
+          value={data.password}
+          onChange={handleInputChange}
+        />
+        <label>새로운 비밀번호 입력</label>
+        <input
+          type="password"
+          name="password"
+          value={data.newPassword}
+          onChange={handleInputChange}
+        />
+        <label>새로운 비밀번호 확인</label>
+        <input
+          type="password"
+          name="password"
+          value={data.newConfirmPassword}
+          onChange={handleInputChange}
+        />
+        <div>
+          <button className="gBtn" type="submit">
+            비밀번호 변경
+          </button>
+          <button
+            className="gBtn"
+            type="button"
+            onClick={() => {
+              setIsChanging(false);
+            }}
+          >
+            뒤로가기
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};

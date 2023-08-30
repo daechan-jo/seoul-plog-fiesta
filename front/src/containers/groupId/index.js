@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import GroupUsers from '../../components/groupId/Users';
 import GroupPosts from '../../components/groupId/Posts';
 import GroupMap from '../../components/groupId/Map';
@@ -7,10 +7,13 @@ import { useLocation, useParams } from 'react-router-dom';
 import Notice from '../../components/groupId/Notice';
 import GroupPlogging from '../../components/groupId/Plogging';
 import GroupMember from '../../components/groupId/Member';
-import { GroupIdContext, GroupIdProvider } from '../../context/groupIdContext';
 import { useRecoilState } from 'recoil';
 import { isGroupRequestListOpenState } from '../../features/recoilState';
 import GroupRequestList from '../../components/groupId/GroupRequest';
+import * as Api from '../../api';
+import { useSelector } from 'react-redux';
+
+export const GroupIdContext = createContext();
 
 const GroupIdContainer = () => {
   const lists = {
@@ -24,6 +27,8 @@ const GroupIdContainer = () => {
     isGroupRequestListOpenState,
   );
 
+  const [isFetching, setIsFetching] = useState(false);
+
   const { groupId } = useParams();
 
   const location = useLocation();
@@ -31,8 +36,31 @@ const GroupIdContainer = () => {
 
   const [view, setView] = useState(searchParams.get('view'));
 
+  const [name, setName] = useState();
+  const [members, setMembers] = useState([]);
+
+  const user = useSelector((state) => state.user);
+  const isMember = members.includes(user.loginId);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        setIsFetching(true);
+        const res = await Api.get(`/group/${groupId}`);
+        setName(res.data.name);
+        setMembers(res.data.groupUser.map((user) => user.userId));
+      } catch (err) {
+        console.log('그룹이름 데이터를 불러오는데 실패.', err);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    getData();
+  }, [groupId]);
+
   return (
-    <GroupIdProvider>
+    <GroupIdContext.Provider value={{ name, isMember }}>
       <main>
         {isGroupRequestListOpen && <GroupRequestList />}
         <PageNav
@@ -57,7 +85,7 @@ const GroupIdContainer = () => {
           <GroupMember />
         )}
       </main>
-    </GroupIdProvider>
+    </GroupIdContext.Provider>
   );
 };
 

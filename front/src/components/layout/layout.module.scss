@@ -1,7 +1,7 @@
 @import '../../styles/variables.scss';
 
 .header {
-  min-width: 1200px;
+  min-width: 1600px;
   height: $headerHeight;
   display: flex;
   justify-content: space-between;
@@ -44,6 +44,7 @@
 .LeftNav {
   width: $navWidth;
   height: 100%;
+  min-height: 800px;
   position: fixed;
   top: 0;
   left: 0;
@@ -66,9 +67,11 @@
     }
     .icon {
       font-size: 35px;
+      cursor: pointer;
     }
     .text {
       font-weight: 700;
+      cursor: pointer;
     }
     .just {
       width: 100px;
@@ -78,6 +81,7 @@
       justify-content: center;
       align-items: center;
       border-radius: 50%;
+      cursor: pointer;
     }
     .active {
       width: 100px;
@@ -88,6 +92,7 @@
       align-items: center;
       border-radius: 50%;
       background-color: #c7c7c7;
+      cursor: pointer;
     }
   }
 }

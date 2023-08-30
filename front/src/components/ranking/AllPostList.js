@@ -1,18 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
-import { GroupIdContext } from '../../containers/groupId';
-import { handlePagenation } from '../../utils/pagenation';
-import Pagination from '../common/Pagenation';
-import PloggingShow from '../common/PlogginShow';
-import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import styles from './index.module.scss';
+import { handleCreatedDate } from '../../utils/handleCreatedDate';
+import Pagination from '../common/Pagenation';
+import { handlePagenation } from '../../utils/pagenation';
+import PloggingShow from '../common/PlogginShow';
 
-const GroupPlogging = ({ view }) => {
+const AllPostList = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
-
-  const name = useContext(GroupIdContext);
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,35 +24,31 @@ const GroupPlogging = ({ view }) => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(`/group/certpost/${name}`);
-        if (res.data === '인증게시글 없음') {
-          setDatas([]);
-        } else {
-          setDatas(res.data);
-        }
+        const res = await Api.get(`/plo/post`);
+        setDatas(res.data);
       } catch (err) {
-        console.log('인증글 데이터를 불러오는데 실패.', err);
+        console.log('모든 인증글 데이터를 불러오는데 실패.', err);
       } finally {
         setIsFetching(false);
       }
     };
 
     getData();
-  }, [name, view]);
+  }, [view]);
 
   return (
     <div className="gContainer  gList navVh">
       <div className="titleContainer">
-        <h1>인증글 모아보기</h1>
+        <h1>모든 인증글</h1>
       </div>
-      <div className={styles.postList}>
+      <div className={styles.allPostList}>
         {isFetching ? (
           <div>로딩중</div>
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          paginatedData.map((data, index) => (
-            <Item data={data} key={data.id} view={view} order={index + 1} />
+          paginatedData.map((data) => (
+            <Item data={data} key={data.id} view={view} />
           ))
         )}
       </div>
@@ -70,7 +63,7 @@ const GroupPlogging = ({ view }) => {
   );
 };
 
-export default GroupPlogging;
+export default AllPostList;
 
 const Item = ({ data, order }) => {
   const [isPlogginShowOpen, setIsPlogginShowOpen] = useState(false);
@@ -84,12 +77,12 @@ const Item = ({ data, order }) => {
         />
       )}
       <div
-        className={styles.postItem}
+        className={styles.allPostItem}
         onClick={() => {
           setIsPlogginShowOpen(true);
         }}
       >
-        <div>{order}</div>
+        <div>{data.id}</div>
         <div>|</div>
         <div>{data.title}</div>
         <div>{handleCreatedDate(data.createdAt)}</div>

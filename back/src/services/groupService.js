@@ -45,8 +45,12 @@ const createGroup = async (groupData, managerId) => {
 	}
 };
 
-const getAllGroups = async () => {
+const getAllGroups = async (page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const groups = await prisma.group.findMany({
 			select: {
 				id: true,
@@ -61,22 +65,19 @@ const getAllGroups = async () => {
 					},
 				},
 			},
+			...paginationOptions,
 		});
-
 		return await Promise.all(
 			groups.map(async (group) => {
 				const memberCount = await prisma.groupUser.count({
 					where: { groupId: group.id, isAccepted: true },
 				});
-
 				const images = await prisma.groupImage.findMany({
 					where: { groupId: group.id },
 				});
-
 				const imageUrls = images.map((image) => {
 					return image.imageUrl;
 				});
-
 				return {
 					...group,
 					memberCount,
@@ -265,8 +266,12 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 	}
 };
 
-const getMyGroups = async (userId) => {
+const getMyGroups = async (userId, page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const groups = await prisma.groupUser.findMany({
 			where: {
 				userId: userId,
@@ -303,6 +308,7 @@ const getMyGroups = async (userId) => {
 					},
 				},
 			},
+			...paginationOptions,
 		});
 
 		return groups.map((group) => ({
@@ -321,6 +327,43 @@ const getMyGroups = async (userId) => {
 			},
 			imageUrl: group.group.groupImage[0]?.imageUrl || null,
 		}));
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getGroupMembers = async (groupName, userId, page, limit) => {
+	try {
+		const group = await prisma.group.findUnique({
+			where: { name: groupName },
+			include: {
+				groupUser: {
+					where: { userId: { not: userId } },
+					select: {
+						user: {
+							select: { nickname: true },
+						},
+					},
+				},
+			},
+		});
+		if (!group) {
+			throw new Error('그룹을 찾을 수 없음');
+		}
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
+		const groupMembers = await prisma.groupUser.findMany({
+			where: { groupId: group.id },
+			select: {
+				user: {
+					select: { nickname: true },
+				},
+			},
+			...paginationOptions,
+		});
+		return groupMembers.map((groupUser) => groupUser.user.nickname);
 	} catch (error) {
 		throw error;
 	}
@@ -367,16 +410,42 @@ const getAllPosts = async (groupId) => {
 
 const getPostById = async (postId) => {
 	try {
-		return await prisma.post.findUnique({
+		const post = await prisma.post.findUnique({
 			where: {
 				id: postId,
 			},
 			include: {
-				writer: true,
-				group: true,
-				comments: true,
+				writer: {
+					select: {
+						id: true,
+						nickname: true,
+					},
+				},
+				comments: {
+					include: {
+						writer: {
+							select: {
+								nickname: true,
+							},
+						},
+					},
+				},
 			},
 		});
+		if (!post) {
+			throw new Error('게시글 없음');
+		}
+		const { writer, comments, ...restPost } = post;
+		const commentDetails = comments.map((comment) => ({
+			...comment,
+			commenterNickname: comment.writer.nickname,
+			writer: undefined,
+		}));
+		return {
+			...restPost,
+			authorNickname: writer.nickname,
+			comments: commentDetails,
+		};
 	} catch (error) {
 		throw error;
 	}
@@ -556,6 +625,67 @@ const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
 	});
 };
 
+const getUserGroupCertPosts = async (userId, page, limit) => {
+	try {
+		const userGroups = await prisma.groupUser.findMany({
+			where: { userId: userId },
+			select: { groupId: true },
+		});
+		const groupIds = userGroups.map((group) => group.groupId);
+		const groups = await prisma.group.findMany({
+			where: { id: { in: groupIds } },
+			select: { name: true },
+		});
+		const groupNames = groups.map((group) => group.name);
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
+		return await prisma.certPost.findMany({
+			where: { groupName: { in: groupNames }, isGroupPost: true },
+			orderBy: { createdAt: 'desc' },
+			...paginationOptions,
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const getCertPostsByGroupName = async (groupName, page, limit) => {
+	try {
+		const paginationOptions =
+			(page !== null) & (limit !== null)
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
+		const certPosts = await prisma.certPost.findMany({
+			where: { groupName, isGroupPost: true },
+			orderBy: { createdAt: 'desc' },
+			include: {
+				images: true,
+				comments: true,
+				participants: true,
+			},
+			...paginationOptions,
+		});
+
+		if (certPosts.length === 0) {
+			throw new Error('인증게시글 없음');
+		}
+
+		return certPosts.map((certPost) => {
+			const participantNicknames = certPost.participants.map(
+				(participant) => participant.participant,
+			);
+			return {
+				...certPost,
+				participants: participantNicknames,
+			};
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
 module.exports = {
 	createGroup,
 	getAllGroups,
@@ -580,4 +710,7 @@ module.exports = {
 	getGroupByPostId,
 	getGroupUserByUserIdAndGroupId,
 	getGroupJoinRequestsByGroupId,
+	getGroupMembers,
+	getUserGroupCertPosts,
+	getCertPostsByGroupName,
 };

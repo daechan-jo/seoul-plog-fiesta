@@ -9,7 +9,7 @@ function Chat() {
   const [messages, setMessages] = useState([]); // 받은 채팅 메시지를 저장함
   const [messageText, setMessageText] = useState(''); // 메시지 input값을 저장
 
-  const userToken = sessionStorage.getItem('userToken');
+  const userToken = localStorage.getItem('userToken');
 
   const user = useSelector((state) => state.user);
 

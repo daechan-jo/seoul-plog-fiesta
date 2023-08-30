@@ -1,6 +1,6 @@
-import router from "express";
-import userController from "../controllers/userController";
-import authenticateJWT from "../middlewares/authenticateJWT";
+import router from 'express';
+import userController from '../controllers/userController';
+import authenticateJWT from '../middlewares/authenticateJWT';
 const userRouter = router();
 
 /** @description 모든 유저 정보 */
@@ -82,11 +82,11 @@ userRouter
         userController.deleteFriend);
 
 
-/** @description 나의 인증 */
+/** @description 나의 점수 /랭킹 */
 userRouter
-    .get("/user/count",
+    .get("/count",
         authenticateJWT,
-        userController.myCertPost);
+        userController.myScoreNRank);
 
 
 /** @description 친구 최신 게시물 */
@@ -95,5 +95,11 @@ userRouter
         authenticateJWT,
         userController.friendsRecentPost);
 
+/** @description 나의 인증 게시글 리스트 */
+userRouter.get(
+	'/user/cert/list',
+	authenticateJWT,
+	userController.getCertPostsByUserId,
+);
 
 module.exports = userRouter;

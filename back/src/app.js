@@ -3,8 +3,6 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import errorMiddleware from './middlewares/errorMiddleware';
 import loggerMiddleware from './middlewares/loggerMiddleware';
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 import authRoutes from './routers/authRouter';
 import userRoutes from './routers/userRouter';
 import groupRoutes from './routers/groupRouter';
@@ -15,21 +13,20 @@ import chatRouter from './routers/chatRouter';
 import ploRouter from './routers/ploRouter';
 import { local, jwt } from './config';
 import http from 'http';
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const path = require('path');
 const socketIo = require('socket.io');
 const passport = require('passport');
 const socketIoJwt = require('socketio-jwt');
 
 const app = express();
 const server = http.createServer(app);
-app.use('/images', express.static('public'));
-passport.use('local', local);
-passport.use('jwt', jwt);
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(loggerMiddleware);
 app.use(passport.initialize());
 passport.use('local', local);

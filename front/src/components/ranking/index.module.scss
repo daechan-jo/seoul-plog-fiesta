@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .item {
   background-color: pink;
   padding: 20px;
@@ -7,4 +9,58 @@
   width: 100%;
   height: 31vh;
   display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ranking {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  gap: 10px;
+  grid-template-rows: repeat(10, 1fr);
+  div {
+    font-size: 20px;
+  }
+  .rankingTop3 {
+    div {
+      font-size: 25px;
+      font-weight: 700;
+    }
+  }
+}
+
+.rankingItem {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 2fr;
+  text-align: center;
+  cursor: pointer;
+}
+
+.allPostList {
+  min-height: 500px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(10, 50px);
+  text-align: center;
+  gap: 15px;
+  column-gap: 40px;
+  .allPostItem {
+    display: grid;
+    grid-template-columns: 90px 10px 400px 100px;
+    padding: 15px;
+    background-color: $grayBack;
+    cursor: pointer;
+  }
+}
+
+.allPostItem:empty {
+  background-color: gray;
 }

@@ -21,7 +21,9 @@ const createGroup = async (req, res, next) => {
 
 const getAllGroups = async (req, res, next) => {
 	try {
-		const groups = await groupService.getAllGroups();
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
+		const groups = await groupService.getAllGroups(page, limit);
 		console.log(groups);
 		res.status(200).json(groups);
 	} catch (error) {
@@ -150,11 +152,31 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 const getMyGroups = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
-
-		const groups = await groupService.getMyGroups(userId);
-
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
+		const groups = await groupService.getMyGroups(userId, page, limit);
 		console.log(groups);
 		res.status(200).json(groups);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+const getGroupMembers = async (req, res, next) => {
+	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
+		const groupName = req.params.groupname;
+		const userId = req.user.id;
+		const members = await groupService.getGroupMembers(
+			groupName,
+			userId,
+			page,
+			limit,
+		);
+		res.status(200).json(members);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -329,10 +351,30 @@ const dropGroup = async (req, res, next) => {
 
 const getGroupCertPosts = async (req, res, next) => {
 	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
 		const userId = req.user.id;
-		const posts = await ploService.getUserGroupCertPosts(userId);
+		const posts = await groupService.getUserGroupCertPosts(userId, page, limit);
 		console.log(posts);
 		res.status(200).json(posts);
+	} catch (error) {
+		console.error(error);
+		error.status = 500;
+		next(error);
+	}
+};
+
+const getCertPostsByGroupName = async (req, res, next) => {
+	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
+		const groupName = req.params.groupname;
+		const certPostDetails = await groupService.getCertPostsByGroupName(
+			groupName,
+			page,
+			limit,
+		);
+		res.status(200).json(certPostDetails);
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -360,4 +402,6 @@ module.exports = {
 	getRecentPosts,
 	getGroupCertPosts,
 	getGroupJoinRequestsByGroupId,
+	getGroupMembers,
+	getCertPostsByGroupName,
 };

@@ -19,7 +19,6 @@ const RequestList = () => {
         setIsFetching(true);
         const res = await Api.get(`/req/list`);
         setDatas(res.data.friendRequest.map((data) => data.userA));
-        console.log(res.data.friendRequest);
       } catch (err) {
         console.log('친구요청목록을 불러오는데 실패.', err);
       } finally {
@@ -56,18 +55,22 @@ const RequestList = () => {
 export default RequestList;
 
 const Item = ({ data, setDatas }) => {
-  const handleOk = async () => {
+  const handleOk = async (e) => {
+    e.preventDefault();
     try {
       await Api.post(`/accept/${data.id}`);
+      setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       alert('수락 성공');
     } catch (err) {
       alert('수락 실패', err);
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (e) => {
+    e.preventDefault();
     try {
       await Api.post(`/reject/${data.id}`);
+      setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       alert('거절 성공');
     } catch (err) {
       alert('거절 실패', err);
