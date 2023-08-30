@@ -167,9 +167,15 @@
 
 .commentItem {
   display: grid;
-  grid-template-columns: 0.5fr 4.5fr 1fr 1fr;
+  grid-template-columns: 0.5fr 4.5fr 1fr 1fr 0.2fr;
   background-color: $grayBack;
   padding: 5px;
+  button {
+    background-color: $point;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+  }
 }
 
 .commentAdd {

@@ -4,6 +4,7 @@ import styles from './index.module.scss';
 
 const CommentAdd = ({ id, isCert, setComments }) => {
   const [data, setData] = useState();
+
   const handleClick = async (e) => {
     e.preventDefault();
 

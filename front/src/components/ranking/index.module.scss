@@ -58,6 +58,9 @@
     padding: 15px;
     background-color: $grayBack;
     cursor: pointer;
+    .allPostItem:empty {
+      background-color: gray;
+    }
   }
 }
 
