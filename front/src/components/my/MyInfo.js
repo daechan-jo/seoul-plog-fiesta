@@ -5,6 +5,7 @@ import * as Api from '../../api';
 import { seoulDistricts } from '../common/exportData';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
+import { handleImgUrl } from '../../utils/handleImgUrl';
 
 const initialData = {
   name: '',
@@ -148,7 +149,11 @@ const MyInfo = () => {
       </div>
       <ul className={`${styles.info} ${isEditing ? styles.editing : ''}`}>
         <div className={styles.imgContainer}>
-          <img id="myInfoPreviewImg" src={img || user_none} alt="profile" />
+          <img
+            id="myInfoPreviewImg"
+            src={handleImgUrl(img) || user_none}
+            alt="profile"
+          />
         </div>
         <>
           {isEditing && (
