@@ -204,6 +204,7 @@ const changeInformation = async (user) => {
 
 const removeUser = async (id) => {
   try {
+    console.log(id);
     const deleteUser = await prisma.user.delete({
       where: {
         id: id,
