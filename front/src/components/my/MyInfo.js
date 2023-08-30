@@ -103,10 +103,14 @@ const MyInfo = () => {
 
   const handleDelete = async () => {
     try {
-      await Api.delete('/auth/drop');
-      alert('계정 삭제 완료');
-      dispatch(logout());
-      navigator('/intro');
+      const res = await Api.delete('/auth/drop');
+      if (res.status === 200) {
+        alert('계정 삭제 완료');
+        dispatch(logout());
+        navigator('/intro');
+      } else {
+        console.log('회원 탈퇴 실패.');
+      }
     } catch (err) {
       console.log('계정삭제 실패.', err);
     }
