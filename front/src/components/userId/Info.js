@@ -7,6 +7,7 @@ import { isChatOpenState, isChatWiState } from '../../features/recoilState';
 import { seoulDistricts } from '../common/exportData';
 import { UserIdContext } from '../../containers/userId';
 import MyLanking from '../feat/Lanking';
+import { handleImgUrl } from '../../utils/handleImgUrl';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -84,7 +85,11 @@ const Info = () => {
       <ul className={styles.info}>
         <div className={styles.imgContainer}>
           <img
-            src={data?.imgUrl || 'http://placekitten.com/200/200'}
+            src={
+              data.imgUrl
+                ? handleImgUrl(data.imgUrl)
+                : 'http://placekitten.com/200/200'
+            }
             alt="profile"
           />
         </div>
