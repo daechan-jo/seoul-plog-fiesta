@@ -188,7 +188,9 @@ const createPost = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
 		const groupId = parseInt(req.params.groupid);
-		const { title, content, isNotice } = req.body;
+		const { title, content } = req.body;
+		const isNotice =
+			req.body.isNotice !== undefined ? req.body.isNotice : false;
 
 		const post = await groupService.createPost(
 			userId,
@@ -208,9 +210,10 @@ const createPost = async (req, res, next) => {
 
 const getRecentPosts = async (req, res, next) => {
 	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
 		const userId = req.user.id;
-
-		const posts = await groupService.getRecentPosts(userId);
+		const posts = await groupService.getRecentPosts(userId, page, limit);
 		console.log(posts);
 		res.status(200).json(posts);
 	} catch (error) {
@@ -222,9 +225,11 @@ const getRecentPosts = async (req, res, next) => {
 
 const getAllPosts = async (req, res, next) => {
 	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
 		const groupId = parseInt(req.params.groupid);
 
-		const posts = await groupService.getAllPosts(groupId);
+		const posts = await groupService.getAllPosts(groupId, page, limit);
 		console.log(posts);
 		res.status(200).json(posts);
 	} catch (error) {

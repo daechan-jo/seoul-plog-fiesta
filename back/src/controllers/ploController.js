@@ -109,7 +109,9 @@ const getTopCertPostContributors = async (req, res, next) => {
 
 const getTopUsers = async (req, res, next) => {
 	try {
-		const topUsers = await ploService.getTopUsers();
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
+		const topUsers = await ploService.getTopUsers(page, limit);
 		res.status(200).json(topUsers);
 	} catch (error) {
 		console.error(error);

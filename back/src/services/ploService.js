@@ -337,7 +337,11 @@ const allCertPosts = async () => {
 	});
 };
 
-const getTopUsers = async () => {
+const paginate = (array, page, limit) => {
+	const startIndex = (page - 1) * limit;
+	return array.slice(startIndex, startIndex + limit);
+};
+const getTopUsers = async (page, limit) => {
 	try {
 		const certPosts = await allCertPosts();
 		const userCounts = certPosts.reduce((acc, post) => {
@@ -347,9 +351,13 @@ const getTopUsers = async () => {
 		const sortedUserIds = Object.keys(userCounts).sort(
 			(a, b) => userCounts[b] - userCounts[a],
 		);
+		let paginatedUserIds = sortedUserIds; // Default to all users
+		if (page !== null && limit !== null)
+			paginatedUserIds = paginate(sortedUserIds, page, limit); // Apply pagination
+
 		const topUsers = [];
-		for (let i = 0; i < sortedUserIds.length; i++) {
-			let userId = sortedUserIds[i];
+		for (let i = 0; i < paginatedUserIds.length; i++) {
+			let userId = paginatedUserIds[i];
 			let userDetails = await prisma.user.findUnique({
 				where: { id: Number(userId) },
 				select: {
@@ -363,9 +371,6 @@ const getTopUsers = async () => {
 				userDetails.rank = i + 1;
 				userDetails.postCount = userCounts[userId];
 				topUsers.push(userDetails);
-			}
-			if (i === 99) {
-				break;
 			}
 		}
 		return topUsers;
