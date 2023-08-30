@@ -4,7 +4,10 @@ import ploService from '../services/ploService.js';
 /** @description 모든 유저  */
 const getAllUsers = async (req, res, next) => {
 	try {
-		const users = await userService.getAllUsers();
+		const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
+		const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : null;
+
+		const users = await userService.getAllUsers(page, limit);
 
 		if (users == 0) {
 			return res.status(404).json({ message: '유저 없음' });
@@ -18,6 +21,7 @@ const getAllUsers = async (req, res, next) => {
 		next(error);
 	}
 };
+
 
 /** @description 유저 검색 */
 const searchUsers = async (req, res, next) => {
