@@ -351,8 +351,10 @@ const dropGroup = async (req, res, next) => {
 
 const getGroupCertPosts = async (req, res, next) => {
 	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
 		const userId = req.user.id;
-		const posts = await groupService.getUserGroupCertPosts(userId);
+		const posts = await groupService.getUserGroupCertPosts(userId, page, limit);
 		console.log(posts);
 		res.status(200).json(posts);
 	} catch (error) {

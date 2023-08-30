@@ -625,7 +625,7 @@ const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
 	});
 };
 
-const getUserGroupCertPosts = async (userId) => {
+const getUserGroupCertPosts = async (userId, page, limit) => {
 	try {
 		const userGroups = await prisma.groupUser.findMany({
 			where: { userId: userId },
@@ -637,9 +637,14 @@ const getUserGroupCertPosts = async (userId) => {
 			select: { name: true },
 		});
 		const groupNames = groups.map((group) => group.name);
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		return await prisma.certPost.findMany({
 			where: { groupName: { in: groupNames }, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
+			...paginationOptions,
 		});
 	} catch (error) {
 		throw error;
