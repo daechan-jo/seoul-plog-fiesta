@@ -89,7 +89,7 @@ const getRandomUsers = async () => {
 		const randomCount = await prisma.user.count();
 		const skip = Math.floor(Math.random() * randomCount);
 		const user = await prisma.user.findMany({
-			take: 3,
+			take: 6,
 			skip: skip,
 			orderBy: {
 				id: 'desc',
@@ -255,8 +255,11 @@ const rejectFriend = async (userId, requestId) => {
 };
 
 /** @description 친구 목록 */
-const getMyFriends = async (userId) => {
+const getMyFriends = async (userId, page, limit) => {
 	try {
+		const paginationOptions = page !== null && limit !== null
+		? { skip: (page - 1) * limit, take: limit }
+		: {};
 		const myFriendsA = await prisma.friendship.findMany({
 			where: {
 				userAId: userId,
@@ -294,6 +297,9 @@ const getMyFriends = async (userId) => {
 				activity: true,
 				profileImage: true,
 			},
+			orderBy:
+			{ id: 'asc' },
+			...paginationOptions,
 		});
 	} catch (error) {
 		throw error;
@@ -363,16 +369,20 @@ const friendsRecentPost = async (userId) => {
 	}
 };
 
-const getCertPostsByUserId = async (userId) => {
+const getCertPostsByUserId = async (userId, page, limit) => {
 	try {
+		const paginationOptions = page !== null && limit !== null
+		? { skip: (page - 1) * limit, take: limit }
+		: {};
 		return await prisma.certPost.findMany({
 			where: {
 				writerId: userId,
 				isGroupPost: false,
 			},
 			orderBy: {
-			createdAt: 'desc',
-			},
+				createdAt: 'desc',
+				},
+			...paginationOptions,
 		});
 	} catch (error) {
 		throw error;

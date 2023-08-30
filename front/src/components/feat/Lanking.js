@@ -3,33 +3,32 @@ import styles from './mylanking.module.scss';
 import * as Api from '../../api';
 
 const MyLanking = ({ setIsMyRankingOpen, id, name }) => {
-  const [rank, setLank] = useState();
+  const [rank, setLank] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const res = await Api.get(`/plo/rank/user?id=${id}`);
         setLank(res.data);
-        console.log(res);
+        if (!res.data) {
+          setIsMyRankingOpen(false);
+          alert('인증글이 없습니다. 인증글을 작성해주세요.');
+          return;
+        }
       } catch (err) {
         console.log('순위데이터를 불러오는데 실패.', err);
       }
     };
     getData();
-  }, [id]);
+  }, [id, rank, setIsMyRankingOpen]);
+
   useEffect(() => {
     const toast = setTimeout(() => {
       setIsMyRankingOpen(false);
-    }, 4000);
+    }, 3500);
 
     return () => clearTimeout(toast);
-  });
-
-  if (!rank) {
-    alert('인증글이 없습니다. 인증글을 작성해주세요.');
-    setIsMyRankingOpen(false);
-    return;
-  }
+  }, [setIsMyRankingOpen]);
 
   return (
     <div class={styles.frame}>
