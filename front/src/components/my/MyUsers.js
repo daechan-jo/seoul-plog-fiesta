@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 import { useEffect, useState } from 'react';
 import * as Api from '../../api';
+import { handleImgUrl } from '../../utils/handleImgUrl';
+import user_none from '../../assets/user_none.png';
 
 const MyUsers = () => {
   const [datas, setDatas] = useState([]);
@@ -91,7 +93,14 @@ const MyUser = ({ data, isEditing, setDatas }) => {
       }}
     >
       <div className={styles.imgContainer}>
-        <img src={data.imgUrl} alt="이미지" />
+        <img
+          src={
+            data?.profileImage?.imageUrl
+              ? handleImgUrl(data.profileImage.imageUrl)
+              : user_none
+          }
+          alt="이미지"
+        />
       </div>
       <div>{data.nickname}</div>
       {isEditing && (
