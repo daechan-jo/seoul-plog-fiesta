@@ -377,17 +377,12 @@ const createPost = async (userId, groupId, title, content, isNotice) => {
 		const isManager = await groupUtils.isGroupManager(userId, groupId);
 		if (isNotice && !isManager) throw new Error('권한 없음');
 		const postData = {
-			writer: {
-				connect: { id: userId },
-			},
-			group: {
-				connect: { id: groupId },
-			},
+			writer: { connect: { id: userId } },
+			group: { connect: { id: groupId } },
 			title,
 			content,
+			isNotice,
 		};
-		if (isNotice !== undefined) postData.isNotice = isNotice;
-
 		return await prisma.post.create({
 			data: postData,
 		});
@@ -396,12 +391,17 @@ const createPost = async (userId, groupId, title, content, isNotice) => {
 	}
 };
 
-const getAllPosts = async (groupId) => {
+const getAllPosts = async (groupId, page, limit) => {
+	const paginationOptions =
+		page !== null && limit !== null
+			? { skip: (page - 1) * limit, take: limit }
+			: {};
 	try {
 		return await prisma.post.findMany({
 			where: {
 				groupId,
 			},
+			...paginationOptions,
 		});
 	} catch (error) {
 		throw error;
