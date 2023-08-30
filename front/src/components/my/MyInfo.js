@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../features/user/userSlice';
 import { handleImgUrl } from '../../utils/handleImgUrl';
-import { useNavigate } from 'react-router-dom';
 
 const initialData = {
   name: '',
@@ -30,7 +29,6 @@ const MyInfo = () => {
 
   const navigator = useNavigate();
   const formData = new FormData();
-  const navigator = useNavigate();
 
   const user = useSelector((state) => state.user);
 
