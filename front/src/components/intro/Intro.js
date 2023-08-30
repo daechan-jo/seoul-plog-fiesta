@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import style from './intro.module.scss';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
+import { handleImgUrl } from '../../utils/handleImgUrl';
 
 const Intro = () => {
   const [datas, setDatas] = useState([]);
@@ -71,7 +72,7 @@ const Intro = () => {
                 <div>{data.score} 점</div>
 
                 <div className={style.profile}>
-                  <img src={data.profileImage} alt="프로필 이미지" />
+                  <img src={handleImgUrl(data.imageUrl)} alt="프로필 이미지" />
                 </div>
               </div>
             ))
