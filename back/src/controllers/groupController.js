@@ -166,9 +166,16 @@ const getMyGroups = async (req, res, next) => {
 
 const getGroupMembers = async (req, res, next) => {
 	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
 		const groupName = req.params.groupname;
 		const userId = req.user.id;
-		const members = await groupService.getGroupMembers(groupName, userId);
+		const members = await groupService.getGroupMembers(
+			groupName,
+			userId,
+			page,
+			limit,
+		);
 		res.status(200).json(members);
 	} catch (error) {
 		console.error(error);

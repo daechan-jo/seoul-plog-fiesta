@@ -332,7 +332,7 @@ const getMyGroups = async (userId, page, limit) => {
 	}
 };
 
-const getGroupMembers = async (groupName, userId) => {
+const getGroupMembers = async (groupName, userId, page, limit) => {
 	try {
 		const group = await prisma.group.findUnique({
 			where: { name: groupName },
@@ -350,7 +350,20 @@ const getGroupMembers = async (groupName, userId) => {
 		if (!group) {
 			throw new Error('그룹을 찾을 수 없음');
 		}
-		return group.groupUser.map((groupUser) => groupUser.user.nickname);
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
+		const groupMembers = await prisma.groupUser.findMany({
+			where: { groupId: group.id },
+			select: {
+				user: {
+					select: { nickname: true },
+				},
+			},
+			...paginationOptions,
+		});
+		return groupMembers.map((groupUser) => groupUser.user.nickname);
 	} catch (error) {
 		throw error;
 	}
