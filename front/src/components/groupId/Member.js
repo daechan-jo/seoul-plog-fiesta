@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 import { useSelector } from 'react-redux';
 import { seoulDistricts } from '../common/exportData';
 import styles from './index.module.scss';
+import { GroupIdContext } from '../../containers/groupId';
 
 const GroupMember = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
   const { groupId } = useParams();
+
+  const { isMember } = useContext(GroupIdContext);
 
   const user = useSelector((state) => state.user);
 
@@ -18,7 +21,6 @@ const GroupMember = ({ view }) => {
 
   const adminValue = searchParams.get('admin');
   const isGroupAdmin = parseInt(adminValue) === user.loginId;
-  const isMember = user.groups.includes(groupId);
 
   const navigator = useNavigate();
 

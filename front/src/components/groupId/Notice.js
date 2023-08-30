@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Api from '../../api';
 import Writing from './Writing';
@@ -6,12 +6,14 @@ import styles from './index.module.scss';
 import { useSelector } from 'react-redux';
 import Pagination from '../common/Pagenation';
 import { handlePagenation } from '../../utils/pagenation';
+import { GroupIdContext } from '../../containers/groupId';
 
 const Notice = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
   const [isModal, setIsModalOpen] = useState(false);
 
+  const { isMember } = useContext(GroupIdContext);
   const { groupId } = useParams();
 
   const itemsPerPage = 6;
@@ -48,14 +50,16 @@ const Notice = () => {
       <div className="gContainer  gList navVh">
         <div className="titleContainer">
           <h1>그룹게시판</h1>
-          <button
-            className="gBtn"
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-          >
-            글쓰기
-          </button>
+          {isMember && (
+            <button
+              className="gBtn"
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+            >
+              글쓰기
+            </button>
+          )}
         </div>
         <div className="contentListContainer">
           {isFetching ? (
