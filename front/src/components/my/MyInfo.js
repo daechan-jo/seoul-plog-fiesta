@@ -102,17 +102,22 @@ const MyInfo = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      const res = await Api.delete('/auth/drop');
-      if (res.status === 200) {
-        alert('계정 삭제 완료');
-        dispatch(logout());
-        navigator('/intro');
-      } else {
-        console.log('회원 탈퇴 실패.');
+    const confirmDelete = window.confirm('정말로 탈퇴하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        const res = await Api.delete('/auth/drop');
+        if (res.status === 200) {
+          alert('계정 삭제 완료');
+          dispatch(logout());
+          navigator('/intro');
+        } else {
+          alert(res.data);
+        }
+      } catch (err) {
+        console.log('계정삭제 실패.', err);
       }
-    } catch (err) {
-      console.log('계정삭제 실패.', err);
+    } else {
+      console.log('그룹 탈퇴가 취소되었습니다.');
     }
   };
 
