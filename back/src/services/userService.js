@@ -27,13 +27,13 @@ const getAllUsers = async (page, limit) => {
 					where: { userId: user.id },
 				});
 
-				const userProfilesUrl = userProfile.map((image) => {
-					return image.imageUrl;
+				const userProfilesUrl = userProfile.map((images) => {
+					return images.imageUrl;
 				});
 
 				return {
 					...user,
-					image: userProfilesUrl,
+					images: userProfilesUrl,
 				}
 			})
 		)
@@ -107,13 +107,13 @@ const getRandomUsers = async () => {
 					where: { userId: user.id },
 				});
 
-				const userProfilesUrl = userProfile.map((image) => {
-					return image.imageUrl;
+				const userProfilesUrl = userProfile.map((images) => {
+					return images.imageUrl;
 				});
 
 				return {
 					...user,
-					image: userProfilesUrl,
+					images: userProfilesUrl,
 				}
 			})
 		)
