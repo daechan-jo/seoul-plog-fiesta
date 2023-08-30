@@ -8,9 +8,9 @@ const MyLanking = ({ setIsMyRankingOpen, id, name }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await Api.get(`/plo/rank/${id}`);
-
+        const res = await Api.get(`/plo/rank/user?id=${id}`);
         setLank(res.data);
+        console.log(res);
       } catch (err) {
         console.log('순위데이터를 불러오는데 실패.', err);
       }
@@ -30,6 +30,7 @@ const MyLanking = ({ setIsMyRankingOpen, id, name }) => {
     setIsMyRankingOpen(false);
     return;
   }
+
   return (
     <div class={styles.frame}>
       <div class={styles.circle}></div>
