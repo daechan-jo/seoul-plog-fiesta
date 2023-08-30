@@ -21,9 +21,17 @@ const createGroup = async (req, res, next) => {
 
 const getAllGroups = async (req, res, next) => {
 	try {
-		const groups = await groupService.getAllGroups();
-		console.log(groups);
-		res.status(200).json(groups);
+		if (req.query.page || req.query.limit) {
+			const page = parseInt(req.query.page) || 1;
+			const limit = parseInt(req.query.limit) || 10;
+			const groups = await groupService.getAllGroups(page, limit);
+			console.log(groups);
+			res.status(200).json(groups);
+		} else {
+			const groups = await groupService.getAllGroups();
+			console.log(groups);
+			res.status(200).json(groups);
+		}
 	} catch (error) {
 		console.error(error);
 		error.status = 500;

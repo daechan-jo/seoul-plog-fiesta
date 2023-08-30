@@ -45,8 +45,10 @@ const createGroup = async (groupData, managerId) => {
 	}
 };
 
-const getAllGroups = async () => {
+const getAllGroups = async (page, limit) => {
 	try {
+		const skip = page && limit ? (page - 1) * limit : undefined;
+		const take = page && limit ? limit : undefined;
 		const groups = await prisma.group.findMany({
 			select: {
 				id: true,
@@ -61,22 +63,20 @@ const getAllGroups = async () => {
 					},
 				},
 			},
+			skip,
+			take,
 		});
-
 		return await Promise.all(
 			groups.map(async (group) => {
 				const memberCount = await prisma.groupUser.count({
 					where: { groupId: group.id, isAccepted: true },
 				});
-
 				const images = await prisma.groupImage.findMany({
 					where: { groupId: group.id },
 				});
-
 				const imageUrls = images.map((image) => {
 					return image.imageUrl;
 				});
-
 				return {
 					...group,
 					memberCount,
