@@ -1,5 +1,6 @@
 import { formDataInstance, instance } from './instance';
-const baseURL = 'http://localhost:3001';
+
+const baseURL = 'http://34.64.122.168:3001';
 
 const userToken = () => localStorage.getItem('userToken');
 

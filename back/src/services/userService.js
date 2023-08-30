@@ -4,8 +4,11 @@ const prisma = new PrismaClient();
 
 
 /** @description 모든 유저 정보 */
-const getAllUsers = async () => {
+const getAllUsers = async (page, limit) => {
 	try {
+		 const paginationOptions = page !== null && limit !== null
+                ? { skip: (page - 1) * limit, take: limit }
+                : {};
 		const user = await prisma.user.findMany({
 			select: {
 				id: true,
@@ -13,6 +16,10 @@ const getAllUsers = async () => {
 				about: true,
 				activity: true,
 			},
+			orderBy:
+				{ id: 'asc' },
+				...paginationOptions,
+
 		});
 		return await Promise.all(
 			user.map( async  (user) => {

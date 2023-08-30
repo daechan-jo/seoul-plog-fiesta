@@ -9,7 +9,7 @@ const UserMap = () => {
   return (
     <div className="gContainer mapWidth ">
       <div className="titleContainer">
-        <h1>유저이름의 플로깅 지도</h1>
+        <h1>플로깅 지도</h1>
       </div>
       <div className="contentMapContainer">
         <Map endpoint="/plo/count/user/" id={id} />

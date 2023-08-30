@@ -12,7 +12,7 @@ const MyGroup = () => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/group/certpost`);
-        setDatas(res.data);
+        setDatas(res.data.length >= 5 ? res.data.slice(0, 5) : res.data);
       } catch (err) {
         console.log('모임데이터를 불러오는데 실패.', err);
         setDatas([]);

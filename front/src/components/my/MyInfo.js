@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import user_none from '../../assets/user_none.png';
 import * as Api from '../../api';
 import { seoulDistricts } from '../common/exportData';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
+import { handleImgUrl } from '../../utils/handleImgUrl';
 
 const initialData = {
   name: '',
@@ -26,6 +27,8 @@ const MyInfo = () => {
   const [isChanging, setIsChanging] = useState(false);
 
   const formData = new FormData();
+
+  const user = useSelector((state) => state.user);
 
   const handleImgChange = (e) => {
     const img = e.target.files[0];
@@ -126,7 +129,9 @@ const MyInfo = () => {
             activity: res.data.currentUserInfo.activity,
           });
         });
-        await Api.get('/profile/image').then((res) => setImg(res.data));
+        await Api.get(`/profileimg/${user.loginId}`).then((res) =>
+          setImg(res.data),
+        );
       } catch (err) {
         console.log('데이터를 불러오는데 실패.', err);
       } finally {
@@ -144,7 +149,11 @@ const MyInfo = () => {
       </div>
       <ul className={`${styles.info} ${isEditing ? styles.editing : ''}`}>
         <div className={styles.imgContainer}>
-          <img id="myInfoPreviewImg" src={img || user_none} alt="profile" />
+          <img
+            id="myInfoPreviewImg"
+            src={handleImgUrl(img) || user_none}
+            alt="profile"
+          />
         </div>
         <>
           {isEditing && (

@@ -3,7 +3,7 @@ import Map from '../common/Map';
 import { GroupIdContext } from '../../containers/groupId';
 
 const GroupMap = () => {
-  const name = useContext(GroupIdContext);
+  const { name } = useContext(GroupIdContext);
 
   return (
     <div className="gContainer mapWidth">

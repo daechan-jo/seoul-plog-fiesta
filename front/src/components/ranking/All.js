@@ -4,14 +4,16 @@ import * as Api from '../../api';
 import styles from './index.module.scss';
 import Pagination from '../common/Pagenation';
 import { handlePagenation } from '../../utils/pagenation';
-
+import MyLanking from '../feat/Lanking';
+import { useSelector } from 'react-redux';
 const All = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
-
+  const [isMyRankingOpen, setIsMyRankingOpen] = useState(false);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
+  const user = useSelector((state) => state.user);
   const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
 
   const handlePage = (pageNumber) => {
@@ -36,8 +38,23 @@ const All = ({ view }) => {
 
   return (
     <div className="gContainer  gList navVh">
+      {isMyRankingOpen && (
+        <MyLanking
+          setIsMyRankingOpen={setIsMyRankingOpen}
+          name="나"
+          id={user.loginId}
+        />
+      )}
       <div className="titleContainer">
         <h1>Top 100</h1>
+        <button
+          className="gBtn"
+          onClick={() => {
+            setIsMyRankingOpen(true);
+          }}
+        >
+          나의 랭킹
+        </button>
       </div>
       <div className={styles.ranking}>
         {isFetching ? (

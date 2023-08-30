@@ -29,7 +29,7 @@ const List = () => {
         setIsFetching(true);
         const res = await Api.get(`/group/posts/${groupId}`);
         console.log(res.data);
-        setDatas(res.data);
+        setDatas(res.data.filter((data) => data.isNotice === true));
       } catch (err) {
         console.log('공지사항 데이터를 불러오는데 실패.', err);
         setDatas([]);
@@ -49,11 +49,9 @@ const List = () => {
         ) : datas.length === 0 ? (
           <div>데이터가 없습니다</div>
         ) : (
-          datas
-            .filter((data) => data.isNotice === true)
-            .map((data, index) => (
-              <Item key={data.id} data={data} order={index + 1} />
-            ))
+          datas.map((data, index) => (
+            <Item key={data.id} data={data} order={index + 1} />
+          ))
         )}
       </div>
     </div>

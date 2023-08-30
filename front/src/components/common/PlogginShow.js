@@ -43,6 +43,8 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
     }));
   };
 
+  const [comments, setComments] = useState([]);
+
   const handleDelete = async () => {
     try {
       const res = await Api.delete(`/plo/post/${data.id}`);
@@ -116,6 +118,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         setIsFetching(true);
         const res = await Api.get(`/plo/post/${id}`);
         setData(res.data);
+        setComments(res.data.comments);
       } catch (err) {
         console.log('인증글 데이터를 불러오는데 실패.', err);
       } finally {
@@ -269,7 +272,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
               )}
             </div>
             <div>
-              <label>평균속도</label>
+              <label>평균시간</label>
               <label>|</label>
               {isEditing ? (
                 <input
@@ -310,15 +313,19 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
             </div>
           </div>
         </div>
-        {data.comments && (
+        {comments && (
           <div className={styles.commentList}>
-            {data.comments.length !== 0 &&
-              data.comments.map((data, index) => (
+            {comments.length !== 0 &&
+              comments.map((data, index) => (
                 <CommentItem data={data} order={index + 1} />
               ))}
           </div>
         )}
-        <CommentAdd id={data.id} comments={data.comments} />
+        <CommentAdd
+          id={data.id}
+          comments={data.comments}
+          setComments={setComments}
+        />
         <div>
           {user.loginId === data.writerId &&
             (isEditing ? (
