@@ -403,12 +403,24 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
 export default PloggingShow;
 
 const CommentItem = ({ data, order }) => {
+  const [commentTwo, setCommentTow] = useState(false);
   return (
-    <div className={styles.commentItem}>
-      <div>{order}</div>
-      <div>{data.content}</div>
-      <div>{data.commenterNickname}</div>
-      <div>{handleCreatedDate(data.createdAt)}</div>
-    </div>
+    <>
+      <div className={styles.commentItem}>
+        <div>{order}</div>
+        <div>{data.content}</div>
+        <div>{data.commenterNickname}</div>
+        <div>{handleCreatedDate(data.createdAt)}</div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setCommentTow(true);
+          }}
+        >
+          +
+        </button>
+      </div>
+      {commentTwo && <CommentAdd />}
+    </>
   );
 };
