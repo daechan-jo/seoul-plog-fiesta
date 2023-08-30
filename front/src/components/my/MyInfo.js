@@ -6,6 +6,7 @@ import { seoulDistricts } from '../common/exportData';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
 import { handleImgUrl } from '../../utils/handleImgUrl';
+import { useNavigate } from 'react-router-dom';
 
 const initialData = {
   name: '',
@@ -26,6 +27,7 @@ const MyInfo = () => {
   const [imgContainer, setImgContainer] = useState();
   const [isChanging, setIsChanging] = useState(false);
 
+  const navigator = useNavigate();
   const formData = new FormData();
 
   const user = useSelector((state) => state.user);
