@@ -27,8 +27,8 @@ const MyInfo = () => {
   const [imgContainer, setImgContainer] = useState();
   const [isChanging, setIsChanging] = useState(false);
 
-  const formData = new FormData();
   const navigator = useNavigate();
+  const formData = new FormData();
 
   const user = useSelector((state) => state.user);
 

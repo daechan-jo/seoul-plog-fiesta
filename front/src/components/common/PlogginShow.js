@@ -324,8 +324,13 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         {comments && (
           <div className={styles.commentList}>
             {comments.length !== 0 &&
-              comments.map((data, index) => (
-                <CommentItem data={data} order={index + 1} />
+              comments.map((comment, index) => (
+                <CommentItem
+                  data={comment}
+                  postId={data.id}
+                  order={index + 1}
+                  isReply
+                />
               ))}
           </div>
         )}
@@ -402,10 +407,28 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
 
 export default PloggingShow;
 
-const CommentItem = ({ data, order }) => {
+const CommentItem = ({ data, order, isReply }) => {
   const [commentTwo, setCommentTow] = useState(false);
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await Api.post(`/comment/${data.id}?cert=true'}`, {
+        content: data,
+      });
+      if (res.data === '게시글을 찾을 수 없') {
+        alert('잘못된 접근입니다.');
+        return;
+      }
+
+      alert('댓글 작성 성공');
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
+      {!isReply && 'L'}
       <div className={styles.commentItem}>
         <div>{order}</div>
         <div>{data.content}</div>
@@ -420,6 +443,14 @@ const CommentItem = ({ data, order }) => {
           +
         </button>
       </div>
+      {data.comments && (
+        <div className={styles.commentList}>
+          {data.comments.length !== 0 &&
+            data.comments.map((data, index) => (
+              <CommentItem data={data} order={index + 1} isReply />
+            ))}
+        </div>
+      )}
       {commentTwo && <CommentAdd />}
     </>
   );

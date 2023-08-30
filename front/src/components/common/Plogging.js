@@ -36,10 +36,14 @@ const Plogging = ({ setIsWriting }) => {
     const img = e.target.files[0];
 
     if (!img) {
-      alert('JPG 확장자의 이미지 파일을 넣어주세요.');
+      alert('이미지 파일을 넣어주세요.');
       return;
-    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
-      alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
+    } else if (
+      img.type !== 'image/png' &&
+      img.type !== 'image/jpeg' &&
+      img.type !== 'images/jpg'
+    ) {
+      alert('JPG 혹은 PNG확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
     if (img) {

@@ -17,7 +17,7 @@ const PasswordChange = () => {
       return;
     }
     try {
-      await Api.post(`/auth/findpassword`, { email, name });
+      await Api.post(`/auth/findpassword`, { email, nickname: name });
       alert('비밀번호 변경 요청 성공! 이메일을 확인해주세요');
       navigate('/login');
     } catch (err) {
@@ -29,10 +29,10 @@ const PasswordChange = () => {
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
       <AiOutlineArrowLeft className={styles.arrowLeft} />
-      <label>이름</label>
+      <label>닉네임</label>
       <input
         type="text"
-        placeholder="이름"
+        placeholder="닉네임"
         onChange={(e) => {
           setName(e.target.value);
         }}
