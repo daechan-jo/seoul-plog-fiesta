@@ -83,7 +83,6 @@ const MyInfo = () => {
         confirmPassword: data.passwordConfirm,
       });
       if (imgContainer) {
-        console.log('이미지업로드', imgContainer);
         try {
           const res = await Api.postForm(`/upload/profile`, {
             profileImage: imgContainer,
