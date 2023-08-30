@@ -60,14 +60,12 @@ const Plogging = ({ setIsWriting }) => {
   };
 
   const uploadImage = async (postId) => {
-    console.log(imgContainer);
     try {
       const res = await Api.postForm(`/upload/certimg/${postId}`, {
-        postImage: imgContainer,
+        certImage: imgContainer,
       });
       return res;
     } catch (err) {
-      console.log('이미지 업로드 에러', err);
       throw err;
     }
   };
@@ -77,10 +75,9 @@ const Plogging = ({ setIsWriting }) => {
     console.log('담긴파일: ', imgContainer);
     try {
       const postRes = await Api.post('/plo/post', formData);
+      //id가 필요하기 때문에 반환값을 받아서, 해당 id에 이미지를 업로드
       if (imgContainer) {
-        console.log('포스트url: ', postRes.data.id);
-        const imageUploadRes = await uploadImage(postRes.data.id);
-        console.log('이미지 업로드 결과:', imageUploadRes);
+        uploadImage(postRes.data.id);
       }
       setIsWriting(false);
     } catch (err) {
