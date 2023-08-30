@@ -39,7 +39,7 @@ ploRouter.get('/plo/main/five', ploController.getTopMainCertPostContributors);
 /** @description top5 유저, 그룹 */
 ploRouter.get('/plo/five', ploController.getTopCertPostContributors);
 
-/** @description top100 인증 게시글 */
+/** @description top100 유저 */
 ploRouter.get('/plo/hundred', ploController.getTopUsers);
 
 /** @description 유저 순위 */
