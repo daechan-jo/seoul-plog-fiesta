@@ -47,10 +47,15 @@ const login = async (req, res, next) => {
  * 토큰이 포함된 url 발송*/
 const sendEmailWithTokenUrl = async (req, res, next) => {
   try {
+    const nickname = req.body.nickname;
     const email = req.body.email;
 
     //유저가 있는지 검증
     const existingUser = await authService.getUserByEmail(email);
+
+    //유저가 해당 닉네임을 가지고 있는지
+    await authService.checkUserHaveNickname(existingUser, nickname);
+
     //링크에 포함될 랜덤 토큰 생성
     const token = randomToken.createRandomToken();
 

@@ -49,6 +49,18 @@ const getUserByEmail = async (email) => {
   return existingUser;
 };
 
+const checkUserHaveNickname = async (user, nickname) => {
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      nickname: nickname,
+    },
+  });
+  if (existingUser.email !== user.email) {
+    throw new Error('일치하는 사용자가 없습니다.');
+  }
+  return { success: true, message: '일치하는 사용자가 있습니다.' };
+};
+
 /** @description 이메일로 유저 찾아 패스워드 토큰 업데이트*/
 const updatePasswordTokenByEmail = async (email, token) => {
   try {
@@ -412,4 +424,5 @@ module.exports = {
   getCertPostsByUserId,
   getCommentsByUserId,
   changePasswordByCheckOriginPassword,
+  checkUserHaveNickname,
 };

@@ -4,6 +4,7 @@ import user_none from '../../assets/user_none.png';
 import * as Api from '../../api';
 import { seoulDistricts } from '../common/exportData';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { logout } from '../../features/user/userSlice';
 import { handleImgUrl } from '../../utils/handleImgUrl';
 
@@ -27,6 +28,7 @@ const MyInfo = () => {
   const [isChanging, setIsChanging] = useState(false);
 
   const formData = new FormData();
+  const navigator = useNavigate();
 
   const user = useSelector((state) => state.user);
 
