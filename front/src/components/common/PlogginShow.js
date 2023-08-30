@@ -54,23 +54,27 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       console.log('인증글 삭제 실패.', err);
     }
   };
+
   const handleImgChange = (e) => {
     const img = e.target.files[0];
 
     if (!img) {
-      alert('JPG 확장자의 이미지 파일을 넣어주세요.');
+      alert('이미지 파일을 넣어주세요.');
       return;
-    } else if (img.type !== 'image/jpeg' && img.type !== 'images/jpg') {
-      alert('JPG 확장자의 이미지 파일만 등록 가능합니다.');
+    } else if (
+      img.type !== 'image/png' &&
+      img.type !== 'image/jpeg' &&
+      img.type !== 'images/jpg'
+    ) {
+      alert('JPG 혹은 PNG확장자의 이미지 파일만 등록 가능합니다.');
       return;
     }
-
     if (img) {
       try {
         const reader = new FileReader();
 
         reader.onload = () => {
-          const previewImg = document.getElementById('proggingPreviewImg');
+          const previewImg = document.getElementById('proggingPostPreviewImg');
           previewImg.src = reader.result;
         };
 
@@ -145,7 +149,11 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         <div className="container">
           <div className="img">
             <div className={styles.imgContainer}>
-              <img src={data.images} alt="인증이미지" />
+              <img
+                id="proggingPostPreviewImg"
+                src={data.images}
+                alt="인증이미지"
+              />
             </div>
             {isEditing && (
               <input type="file" name="file" onChange={handleImgChange} />

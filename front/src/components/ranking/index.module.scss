@@ -60,3 +60,7 @@
     cursor: pointer;
   }
 }
+
+.allPostItem:empty {
+  background-color: gray;
+}

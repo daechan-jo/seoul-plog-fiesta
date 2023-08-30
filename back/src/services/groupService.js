@@ -45,8 +45,12 @@ const createGroup = async (groupData, managerId) => {
 	}
 };
 
-const getAllGroups = async () => {
+const getAllGroups = async (page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const groups = await prisma.group.findMany({
 			select: {
 				id: true,
@@ -61,22 +65,19 @@ const getAllGroups = async () => {
 					},
 				},
 			},
+			...paginationOptions,
 		});
-
 		return await Promise.all(
 			groups.map(async (group) => {
 				const memberCount = await prisma.groupUser.count({
 					where: { groupId: group.id, isAccepted: true },
 				});
-
 				const images = await prisma.groupImage.findMany({
 					where: { groupId: group.id },
 				});
-
 				const imageUrls = images.map((image) => {
 					return image.imageUrl;
 				});
-
 				return {
 					...group,
 					memberCount,
@@ -265,8 +266,12 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 	}
 };
 
-const getMyGroups = async (userId) => {
+const getMyGroups = async (userId, page, limit) => {
 	try {
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const groups = await prisma.groupUser.findMany({
 			where: {
 				userId: userId,
@@ -303,6 +308,7 @@ const getMyGroups = async (userId) => {
 					},
 				},
 			},
+			...paginationOptions,
 		});
 
 		return groups.map((group) => ({
@@ -326,7 +332,7 @@ const getMyGroups = async (userId) => {
 	}
 };
 
-const getGroupMembers = async (groupName, userId) => {
+const getGroupMembers = async (groupName, userId, page, limit) => {
 	try {
 		const group = await prisma.group.findUnique({
 			where: { name: groupName },
@@ -344,7 +350,20 @@ const getGroupMembers = async (groupName, userId) => {
 		if (!group) {
 			throw new Error('그룹을 찾을 수 없음');
 		}
-		return group.groupUser.map((groupUser) => groupUser.user.nickname);
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
+		const groupMembers = await prisma.groupUser.findMany({
+			where: { groupId: group.id },
+			select: {
+				user: {
+					select: { nickname: true },
+				},
+			},
+			...paginationOptions,
+		});
+		return groupMembers.map((groupUser) => groupUser.user.nickname);
 	} catch (error) {
 		throw error;
 	}
@@ -606,7 +625,7 @@ const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
 	});
 };
 
-const getUserGroupCertPosts = async (userId) => {
+const getUserGroupCertPosts = async (userId, page, limit) => {
 	try {
 		const userGroups = await prisma.groupUser.findMany({
 			where: { userId: userId },
@@ -618,17 +637,26 @@ const getUserGroupCertPosts = async (userId) => {
 			select: { name: true },
 		});
 		const groupNames = groups.map((group) => group.name);
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		return await prisma.certPost.findMany({
 			where: { groupName: { in: groupNames }, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
+			...paginationOptions,
 		});
 	} catch (error) {
 		throw error;
 	}
 };
 
-const getCertPostsByGroupName = async (groupName) => {
+const getCertPostsByGroupName = async (groupName, page, limit) => {
 	try {
+		const paginationOptions =
+			(page !== null) & (limit !== null)
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const certPosts = await prisma.certPost.findMany({
 			where: { groupName, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
@@ -637,6 +665,7 @@ const getCertPostsByGroupName = async (groupName) => {
 				comments: true,
 				participants: true,
 			},
+			...paginationOptions,
 		});
 
 		if (certPosts.length === 0) {
