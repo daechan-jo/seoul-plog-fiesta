@@ -167,9 +167,11 @@ const rejectFriend = async (req, res, next) => {
 /** @description 친구 목록 */
 const getMyFriends = async (req, res, next) => {
 	try {
+		const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
+		const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : null;
 		const userId = req.user.id;
 		console.log(userId);
-		const friendsList = await userService.getMyFriends(userId);
+		const friendsList = await userService.getMyFriends(userId, page, limit);
 		console.log(friendsList);
 		res.status(200).json({ message: '친구 목록', friendsList });
 	} catch (error) {
@@ -224,8 +226,10 @@ const friendsRecentPost = async (req, res, next) => {
 
 const getCertPostsByUserId = async (req, res, next) => {
 	try {
+		const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
+		const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : null;
 		const userId = req.user.id;
-		const certPosts = await userService.getCertPostsByUserId(userId);
+		const certPosts = await userService.getCertPostsByUserId(userId, page, limit);
 		res.status(200).json(certPosts);
 	} catch (error) {
 		console.error(error);
