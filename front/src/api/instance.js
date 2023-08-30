@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://34.64.122.168:3001';
+const baseURL = process.env.SERVER_URL;
 
 const userToken = () => localStorage.getItem('userToken');
 
