@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
 import styles from './index.module.scss';
 import { useLocation, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { isChatOpenState, isChatWiState } from '../../features/recoilState';
 import { seoulDistricts } from '../common/exportData';
+import { UserIdContext } from '../../containers/userId';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',
@@ -24,6 +25,9 @@ const Info = () => {
   const currentPath = location.pathname;
 
   const ownerId = currentPath.split('/')[2].split('?')[0];
+  const { friends } = useContext(UserIdContext);
+
+  const isFriend = friends.includes(parseInt(ownerId));
 
   const [isChatOpen, setIsChatOpen] = useRecoilState(isChatOpenState);
   const [, setChatId] = useRecoilState(isChatWiState);
@@ -88,9 +92,11 @@ const Info = () => {
           <div>{seoulDistricts[data.searchId?.activity]}</div>
         </li>
       </ul>
-      <button className="gBtn" onClick={handleClick}>
-        친구추가
-      </button>
+      {!isFriend && (
+        <button className="gBtn" onClick={handleClick}>
+          친구추가
+        </button>
+      )}
       <button className="gBtn" onClick={handleChat}>
         채팅보내기
       </button>
