@@ -651,8 +651,12 @@ const getUserGroupCertPosts = async (userId, page, limit) => {
 	}
 };
 
-const getCertPostsByGroupName = async (groupName) => {
+const getCertPostsByGroupName = async (groupName, page, limit) => {
 	try {
+		const paginationOptions =
+			(page !== null) & (limit !== null)
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const certPosts = await prisma.certPost.findMany({
 			where: { groupName, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
@@ -661,6 +665,7 @@ const getCertPostsByGroupName = async (groupName) => {
 				comments: true,
 				participants: true,
 			},
+			...paginationOptions,
 		});
 
 		if (certPosts.length === 0) {

@@ -366,9 +366,13 @@ const getGroupCertPosts = async (req, res, next) => {
 
 const getCertPostsByGroupName = async (req, res, next) => {
 	try {
+		const page = parseInt(req.query.page) || null;
+		const limit = parseInt(req.query.limit) || null;
 		const groupName = req.params.groupname;
 		const certPostDetails = await groupService.getCertPostsByGroupName(
 			groupName,
+			page,
+			limit,
 		);
 		res.status(200).json(certPostDetails);
 	} catch (error) {
