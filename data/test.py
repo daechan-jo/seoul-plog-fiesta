@@ -1,22 +1,52 @@
-import matplotlib.font_manager
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+from io import StringIO
 
 
-data = pd.read_csv('자치구별무단투기단속실적.csv')
+data = """자치구,2018,2019,2020,2021,2022
+종로,10213,9955,11675,15535,17064
+중구,3228,3618,6865,11434,6990
+용산,2326,1310,1398,1042,977
+성동,214,226,811,1546,1140
+광진,4849,3810,2787,3749,2532
+동대문,3150,6699,4666,6001,3304
+중랑,11744,10738,6043,7194,4270
+성북,546,764,674,399,1445
+강북,9046,9966,9747,5522,2827
+도봉,170,761,1295,782,672
+노원,1593,3461,3707,1735,2587
+은평,3194,3113,3552,4386,4758
+서대문,1142,3088,2521,2522,1644
+마포,4714,4017,4113,4709,4674
+양천,555,1647,1397,1504,1366
+강서,765,1006,362,402,507
+구로,4582,5328,2772,6637,4891
+금천,3308,5842,2228,3926,2709
+영등포,3715,3950,5325,2808,2779
+동작,1408,1964,2727,1606,1643
+관악,4164,4732,6151,5908,3924
+서초,5632,10522,11031,9655,11224
+강남,26305,18059,22467,22540,16987
+송파,7232,7265,5548,7063,6343
+강동,6793,10784,8282,9277,10496
+"""
 
-data.set_index('자치구', inplace=True)
+data_df = pd.read_csv(StringIO(data))
 
-garbage_2022 = data['2022']
-total_garbage_2022 = garbage_2022.sum()
+font_path = '/System/Library/Fonts/AppleSDGothicNeo.ttc'
+font_name = fm.FontProperties(fname=font_path, size=10).get_name()
+plt.rc('font', family=font_name)
 
-font_path = matplotlib.font_manager.FontProperties(fname="YOUR_FONT_PATH").get_name()
-plt.rc('font', family=font_path)
+# 그래프 그리기
+plt.barh(data_df['자치구'], data_df['2022'])
 
-plt.figure(figsize=(10, 6))
-garbage_2022.plot(kind='bar')
+# 레전드에 총합 표시
+total = data_df['2022'].sum()
+plt.legend([f'총합: {total}'])
+
+plt.title('2022년도 자치구별 무단투기 횟수')
 plt.xlabel('자치구')
-plt.ylabel('무단 투기량')
-plt.title('2022년 자치구별 무단 투기량')
-plt.xticks(rotation=45)
+plt.ylabel('무단투기 횟수')
+plt.xticks(rotation=90)
 plt.show()
