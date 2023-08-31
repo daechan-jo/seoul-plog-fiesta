@@ -125,10 +125,10 @@ const put = async (endpoint, data) => {
   }
 };
 
-const del = async (endpoint, params = '') => {
+const del = async (endpoint) => {
   try {
     console.log(`DELTE: ${baseURL}${endpoint} ${userToken}`);
-    const res = await instance.delete(endpoint + '/' + params, {
+    const res = await instance.delete(endpoint, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${userToken()}`,

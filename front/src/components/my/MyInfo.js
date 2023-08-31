@@ -75,6 +75,10 @@ const MyInfo = () => {
   };
 
   const handleSubmit = async (e) => {
+    if (!data.password || data.password === null) {
+      alert('수정을 위해서 비밀번호를 입력해주세요');
+      return;
+    }
     try {
       const res = await Api.put('/auth/update', {
         name: data.name,
@@ -82,7 +86,6 @@ const MyInfo = () => {
         about: data.about,
         activity: data.activity,
         password: data.password,
-        confirmPassword: data.passwordConfirm,
       });
       if (imgContainer) {
         try {

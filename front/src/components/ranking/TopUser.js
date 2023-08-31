@@ -8,7 +8,7 @@ const TopUser = ({ isFetching, datas }) => {
   return (
     <div className="gContainer">
       <div className="titleContainer">
-        <h1>상위 모임</h1>
+        <h1>상위 유저</h1>
       </div>
       <div className={`contentMinContainer ${styles.shortBox}`}>
         {isFetching ? (

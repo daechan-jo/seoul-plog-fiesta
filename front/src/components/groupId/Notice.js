@@ -73,11 +73,13 @@ const Notice = () => {
           )}
         </div>
         <div>
-          <Pagination
-            totalPages={Math.ceil(datas.length / itemsPerPage)}
-            currentPage={currentPage}
-            handlePage={handlePage}
-          />
+          {(datas || datas.length >= 0) && (
+            <Pagination
+              totalPages={Math.ceil(datas.length / itemsPerPage)}
+              currentPage={currentPage}
+              handlePage={handlePage}
+            />
+          )}
         </div>
       </div>
     </>
@@ -105,8 +107,16 @@ const Item = ({ data, setDatas }) => {
 
   const handleEditSubmit = async () => {
     try {
-      const res = await Api.put(`/group/post/put/${data.id}`, sendData);
-      setDatas((prev) => ({ ...prev, sendData }));
+      const res = await Api.put(`/group/post/put/${data.id}`, {
+        title: sendData.title,
+        content: sendData.content,
+        isNotice: sendData.isNotice,
+      });
+      setDatas((prev) =>
+        prev
+          .filter((pre) => pre.id !== res.data.id)
+          .map((el) => [...el, res.data]),
+      );
       setIsEditing(false);
     } catch (err) {
       console.log('수정실패');
@@ -116,7 +126,7 @@ const Item = ({ data, setDatas }) => {
   const handleDelete = async () => {
     try {
       await Api.delete(`/group/post/delete/${data.id}`, sendData);
-      setDatas((prev) => prev.filter((pre) => prev.id !== data.id));
+      setDatas((prev) => prev.filter((pre) => pre.id !== data.id));
       setIsEditing(false);
     } catch (err) {
       console.log('삭제실패');

@@ -75,7 +75,7 @@ const MyUser = ({ data, isEditing, setDatas }) => {
 
     if (confirmDelete) {
       try {
-        await Api.get(`/user/drop/${data.id}`);
+        await Api.delete(`/user/drop/${data.id}`);
         setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       } catch (err) {
         console.log('친구 삭제 실패.', err);
@@ -86,13 +86,13 @@ const MyUser = ({ data, isEditing, setDatas }) => {
   };
 
   return (
-    <div
-      className={styles.myGroup}
-      onClick={() => {
-        navigator(`/users/${data.id}?view=main`);
-      }}
-    >
-      <div className={styles.imgContainer}>
+    <div className={styles.myGroup}>
+      <div
+        className={styles.imgContainer}
+        onClick={() => {
+          navigator(`/users/${data.id}?view=main`);
+        }}
+      >
         <img
           src={
             data?.profileImage?.imageUrl
