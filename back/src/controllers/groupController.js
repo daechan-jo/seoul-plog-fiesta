@@ -344,7 +344,10 @@ const dropGroup = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
 		const groupId = parseInt(req.params.groupid);
-		await groupService.dropGroup(groupId, userId);
+		const group = await groupService.getGroupDetails(groupId);
+		if (!group || group.managerId !== userId)
+			return res.status(403).json({ message: '권한 없음' });
+		await groupService.dropGroup(groupId);
 		console.log('그룹 폭⭐파️');
 		res.status(200).json({ message: '삭제 완료' });
 	} catch (error) {
