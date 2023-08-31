@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../features/user/userSlice';
 import { handleImgUrl } from '../../utils/handleImgUrl';
+import { useRecoilState } from 'recoil';
+import { errorMessageState, isErrorState } from '../../features/recoilState';
 
 const initialData = {
   name: '',
@@ -306,6 +308,9 @@ const MyInfo = () => {
 export default MyInfo;
 
 const PasswordChange = ({ setIsChanging }) => {
+  const dispatch = useDispatch();
+  const [, setIsError] = useRecoilState(isErrorState);
+  const [, setErrorMessage] = useRecoilState(errorMessageState);
   const [data, setData] = useState({
     password: '',
     newPassword: '',
@@ -333,6 +338,9 @@ const PasswordChange = ({ setIsChanging }) => {
     try {
       await Api.put('/auth/login/update', data);
       setIsChanging(false);
+      setErrorMessage('비밀번호가 변경되었습니다. 다시 로그인 해주세요.');
+      setIsError(true);
+      dispatch(logout());
     } catch (err) {
       alert('비밀번호 변경 실패', err);
     }

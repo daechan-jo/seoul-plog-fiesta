@@ -12,7 +12,6 @@ const createUser = async (req, res, next) => {
     if (userData.password !== userData.confirmPassword)
       throw new Error('비밀번호 확인 불일치');
     const user = await authService.createUser(userData);
-    console.log(user);
     res.status(201).json(user);
   } catch (error) {
     console.error(error);
@@ -50,19 +49,20 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     const nickname = req.body.nickname;
     const email = req.body.email;
 
+    if (!nickname || !email) throw new Error('닉네임과 이메일을 입력해주세요');
     //유저가 있는지 검증
     const existingUser = await authService.getUserByEmail(email);
 
     //유저가 해당 닉네임을 가지고 있는지
-    await authService.checkUserHaveNickname(existingUser, nickname);
+    if (existingUser.nickname !== nickname)
+      throw new Error('일치하는 사용자가 없습니다.');
 
     //링크에 포함될 랜덤 토큰 생성
     const token = randomToken.createRandomToken();
 
     //이메일 내용
     const emailOptions = {
-      from: 'qweasdzxc0210@naver.com',
-      //from: process.env.USER,
+      from: process.env.USER,
       to: email,
       subject: '[SeoulPlogFiesta] 비밀번호 변경 안내',
       html:

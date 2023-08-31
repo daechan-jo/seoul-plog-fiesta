@@ -1,4 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
+const fs = require('fs');
+const path = require('path');
 const prisma = new PrismaClient();
 
 const createCertPost = async (userId, certPostData) => {
@@ -179,6 +181,13 @@ const updateCertPost = async (certPostId, certPostData) => {
 };
 const deleteCertPostImages = async (certPostId) => {
 	try {
+		const image = await prisma.certPostImage.findFirst({
+			where: { certPostId: certPostId },
+		});
+		if (image)
+			await fs.unlinkSync(
+				path.join(__dirname, '../..', 'public', image.imageUrl),
+			);
 		await prisma.certPostImage.deleteMany({
 			where: { certPostId: certPostId },
 		});

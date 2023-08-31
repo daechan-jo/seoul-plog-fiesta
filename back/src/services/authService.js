@@ -3,6 +3,8 @@ const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const { error } = require('console');
 const { accessSync } = require('fs');
+const fs = require('fs');
+const path = require('path');
 
 /** @description 유저 생성*/
 const createUser = async (userData) => {
@@ -47,18 +49,6 @@ const getUserByEmail = async (email) => {
   });
   if (!existingUser) throw new Error('존재하지 않는 사용자입니다.');
   return existingUser;
-};
-
-const checkUserHaveNickname = async (user, nickname) => {
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      nickname: nickname,
-    },
-  });
-  if (existingUser.email !== user.email) {
-    throw new Error('일치하는 사용자가 없습니다.');
-  }
-  return { success: true, message: '일치하는 사용자가 있습니다.' };
 };
 
 /** @description 이메일로 유저 찾아 패스워드 토큰 업데이트*/
@@ -204,7 +194,12 @@ const changeInformation = async (user) => {
 
 const removeUser = async (id) => {
   try {
-    console.log(id);
+    // 다른 테이블의 외래 키 레코드를 먼저 삭제
+    await prisma.friendship.deleteMany({
+      where: {
+        OR: [{ userAId: id }, { userBId: id }],
+      },
+    });
     const deleteUser = await prisma.user.delete({
       where: {
         id: id,
@@ -314,6 +309,11 @@ const deleteUserProfileImageByUserId = async (id) => {
       return { success: false, message: '프로필 이미지가 없습니다.' };
     }
     //프로필 이미지가 존재하면 삭제
+    const image = await prisma.userProfileImage.findFirst({
+      where: { userId: id },
+    });
+    if (image)
+      fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
     const updatedUser = await prisma.userProfileImage.delete({
       where: { id: user.profileImage.id },
     });
@@ -425,5 +425,4 @@ module.exports = {
   getCertPostsByUserId,
   getCommentsByUserId,
   changePasswordByCheckOriginPassword,
-  checkUserHaveNickname,
 };

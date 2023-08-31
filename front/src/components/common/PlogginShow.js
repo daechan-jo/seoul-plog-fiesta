@@ -6,6 +6,8 @@ import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import { useSelector } from 'react-redux';
 import CommentAdd from './Comment';
 import { useNavigate } from 'react-router-dom';
+import { handleImgUrl } from '../../utils/handleImgUrl';
+import post_none from '../../assets/post_none.png';
 
 const initialData = {
   region: '',
@@ -90,7 +92,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
   const uploadImage = async (postId) => {
     try {
       const res = await Api.postForm(`/upload/certimg/${postId}`, {
-        postImage: imgContainer,
+        certImage: imgContainer,
       });
       return res;
     } catch (err) {
@@ -106,11 +108,19 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       setData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
     }
     try {
-      const postRes = await Api.put(`/plo/post/${data.id}`, data);
+      const postRes = await Api.put(`/plo/post/${data.id}`, {
+        title: data.title,
+        region: data.region,
+        location: data.location,
+        distance: data.distance,
+        trashAmount: data.trashAmount,
+        averagePace: data.averagePace,
+        description: data.description,
+        startTime: data.startTime,
+      });
       if (imgContainer) {
         await uploadImage(postRes.data.id);
       }
-      setData(postRes);
       setIsEditing(false);
     } catch (err) {
       alert('인증 글 수정 실패', err);
@@ -153,7 +163,11 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
             <div className={styles.imgContainer}>
               <img
                 id="proggingPostPreviewImg"
-                src={data.images}
+                src={
+                  data.images && data.images.length !== 0
+                    ? handleImgUrl(data.images[0])
+                    : post_none
+                }
                 alt="인증이미지"
               />
             </div>
@@ -414,6 +428,31 @@ export default PloggingShow;
 
 const CommentItem = ({ data, order, setComments, postId, isReply }) => {
   const [commentTwo, setCommentTow] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [sendData, setSendData] = useState(data.content);
+  const user = useSelector((state) => state.user);
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+
+    try {
+      await Api.delete(`/comment/${data.id}`);
+      setComments((prev) => prev.filter((comment) => comment.id !== data.id));
+    } catch (err) {
+      console.log('댓글글 삭제 실패.', err);
+    }
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await Api.put(`/comment/${data.id}`, { content: sendData });
+      setIsEditing(false);
+    } catch (err) {
+      console.log('댓글 수정 실패.', err);
+    }
+  };
 
   return (
     <>
@@ -422,19 +461,48 @@ const CommentItem = ({ data, order, setComments, postId, isReply }) => {
         <div>{data.id}</div>
         <div className={styles.commentItemContent}>
           {data.parentId != null && <span>@{data.parentId}</span>}
-          {data.content}
+          {isEditing ? (
+            <input
+              type="text"
+              required
+              name="content"
+              value={sendData}
+              onChange={(e) => {
+                setSendData(e.target.value);
+              }}
+            />
+          ) : (
+            sendData
+          )}
         </div>
         <div>{data.commenterNickname}</div>
         <div>{handleCreatedDate(data.createdAt)}</div>
         <div className={styles.btns}>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setCommentTow(!commentTwo);
-            }}
-          >
-            +
-          </button>
+          {user.loginId === data.writerId && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCommentTow(!commentTwo);
+                }}
+              >
+                추가
+              </button>
+              {isEditing ? (
+                <button onClick={handleEditSubmit}>완료</button>
+              ) : (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsEditing(true);
+                  }}
+                >
+                  편집
+                </button>
+              )}
+            </>
+          )}
+          <button onClick={handleDelete}>삭제</button>
         </div>
       </div>
       {/* 태그형식으로 보관이라 사용 불가능 */}
