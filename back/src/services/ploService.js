@@ -376,7 +376,7 @@ const getTopUsers = async (page, limit) => {
 				},
 			});
 			if (userDetails) {
-				userDetails.score = userCounts[userId] * 350;
+				userDetails.score = userCounts[userId] * 353;
 				userDetails.rank = i + 1;
 				userDetails.postCount = userCounts[userId];
 				topUsers.push(userDetails);
