@@ -20,7 +20,7 @@ export default GroupUsers;
 
 const List = () => {
   const { groupId } = useParams();
-  const name = useContext(GroupIdContext);
+  const { name } = useContext(GroupIdContext);
 
   const [datas, setDatas] = useState([]);
   const [isFetching, setIsFetching] = useState(false);

@@ -6,6 +6,8 @@ import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import { useSelector } from 'react-redux';
 import CommentAdd from './Comment';
 import { useNavigate } from 'react-router-dom';
+import { handleImgUrl } from '../../utils/handleImgUrl';
+import post_none from '../../assets/post_none.png';
 
 const initialData = {
   region: '',
@@ -29,6 +31,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
     groupName: '',
     participants: [],
   });
+  const [postId, setPostId] = useState(null);
   const [imgContainer, setImgContainer] = useState();
   const [isGroupPost, setIsGroupPost] = useState(false);
 
@@ -89,7 +92,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
   const uploadImage = async (postId) => {
     try {
       const res = await Api.postForm(`/upload/certimg/${postId}`, {
-        postImage: imgContainer,
+        certImage: imgContainer,
       });
       return res;
     } catch (err) {
@@ -105,11 +108,19 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       setData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
     }
     try {
-      const postRes = await Api.put(`/plo/post/${data.id}`, data);
+      const postRes = await Api.put(`/plo/post/${data.id}`, {
+        title: data.title,
+        region: data.region,
+        location: data.location,
+        distance: data.distance,
+        trashAmount: data.trashAmount,
+        averagePace: data.averagePace,
+        description: data.description,
+        startTime: data.startTime,
+      });
       if (imgContainer) {
         await uploadImage(postRes.data.id);
       }
-      setData(postRes);
       setIsEditing(false);
     } catch (err) {
       alert('인증 글 수정 실패', err);
@@ -123,6 +134,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         const res = await Api.get(`/plo/post/${id}`);
         setData(res.data);
         setComments(res.data.comments);
+        setPostId(res.data.id);
       } catch (err) {
         console.log('인증글 데이터를 불러오는데 실패.', err);
       } finally {
@@ -151,7 +163,11 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
             <div className={styles.imgContainer}>
               <img
                 id="proggingPostPreviewImg"
-                src={data.images}
+                src={
+                  data.images && data.images.length !== 0
+                    ? handleImgUrl(data.images[0])
+                    : post_none
+                }
                 alt="인증이미지"
               />
             </div>
@@ -324,9 +340,17 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         {comments && (
           <div className={styles.commentList}>
             {comments.length !== 0 &&
-              comments.map((data, index) => (
-                <CommentItem data={data} order={index + 1} />
-              ))}
+              comments
+                .slice(0, 5)
+                .map((comment, index) => (
+                  <CommentItem
+                    data={comment}
+                    postId={postId}
+                    order={index + 1}
+                    isReply
+                    setComments={setComments}
+                  />
+                ))}
           </div>
         )}
         <CommentAdd
@@ -402,25 +426,49 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
 
 export default PloggingShow;
 
-const CommentItem = ({ data, order }) => {
+const CommentItem = ({ data, order, setComments, postId, isReply }) => {
   const [commentTwo, setCommentTow] = useState(false);
+
   return (
     <>
+      {!isReply && 'L'}
       <div className={styles.commentItem}>
-        <div>{order}</div>
-        <div>{data.content}</div>
+        <div>{data.id}</div>
+        <div className={styles.commentItemContent}>
+          {data.parentId != null && <span>@{data.parentId}</span>}
+          {data.content}
+        </div>
         <div>{data.commenterNickname}</div>
         <div>{handleCreatedDate(data.createdAt)}</div>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            setCommentTow(true);
-          }}
-        >
-          +
-        </button>
+        <div className={styles.btns}>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setCommentTow(!commentTwo);
+            }}
+          >
+            +
+          </button>
+        </div>
       </div>
-      {commentTwo && <CommentAdd />}
+      {/* 태그형식으로 보관이라 사용 불가능 */}
+      {data.comments && (
+        <div className={styles.commentList}>
+          {data.comments.length !== 0 &&
+            data.comments.map((data, index) => (
+              <CommentItem data={data} order={index + 1} isReply="false" />
+            ))}
+        </div>
+      )}
+      {commentTwo && (
+        <CommentAdd
+          id={data.id}
+          postId={postId}
+          isComment={true}
+          setCommentTow={setCommentTow}
+          setComments={setComments}
+        />
+      )}
     </>
   );
 };

@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# 배포용 주소 고정
+/src/api/index.js
+/src/api/instance.js
 # testing
 /coverage
 

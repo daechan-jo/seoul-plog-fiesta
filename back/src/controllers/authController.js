@@ -12,7 +12,6 @@ const createUser = async (req, res, next) => {
     if (userData.password !== userData.confirmPassword)
       throw new Error('비밀번호 확인 불일치');
     const user = await authService.createUser(userData);
-    console.log(user);
     res.status(201).json(user);
   } catch (error) {
     console.error(error);
@@ -47,10 +46,17 @@ const login = async (req, res, next) => {
  * 토큰이 포함된 url 발송*/
 const sendEmailWithTokenUrl = async (req, res, next) => {
   try {
+    const nickname = req.body.nickname;
     const email = req.body.email;
 
+    if (!nickname || !email) throw new Error('닉네임과 이메일을 입력해주세요');
     //유저가 있는지 검증
     const existingUser = await authService.getUserByEmail(email);
+
+    //유저가 해당 닉네임을 가지고 있는지
+    if (existingUser.nickname !== nickname)
+      throw new Error('일치하는 사용자가 없습니다.');
+
     //링크에 포함될 랜덤 토큰 생성
     const token = randomToken.createRandomToken();
 
@@ -64,7 +70,7 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
         '<h2>고객님의 비밀번호 변경을 위해 아래의 링크를 클릭해주세요.</h2>' +
         '<a href= "' +
         process.env.SERVER_URL +
-        'auth/checkEmail?token=' +
+        '/auth/checkEmail?token=' +
         token +
         '">비밀번호 재설정 링크<a>',
     };
@@ -208,7 +214,14 @@ const removeUser = async (req, res, next) => {
     const groups = await authService.getGroupsByUserId(id);
     const friendships = await authService.getFriendIdsByUserId(id);
     if (groups.length !== 0)
-      throw new Error('가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다.');
+      throw new Error('가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다');
+    /*
+      res
+        .status(500)
+        .json({
+          message: '가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다.',
+        });
+        */
     if (friendships.length !== 0)
       throw new Error('친구관계가 있으면 탈퇴할 수 없습니다.');
 

@@ -12,7 +12,7 @@ const GroupPlogging = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
-  const name = useContext(GroupIdContext);
+  const { name } = useContext(GroupIdContext);
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);

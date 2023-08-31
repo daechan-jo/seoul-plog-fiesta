@@ -4,6 +4,7 @@ import user_none from '../../assets/user_none.png';
 import * as Api from '../../api';
 import { seoulDistricts } from '../common/exportData';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { logout } from '../../features/user/userSlice';
 import { handleImgUrl } from '../../utils/handleImgUrl';
 
@@ -26,6 +27,7 @@ const MyInfo = () => {
   const [imgContainer, setImgContainer] = useState();
   const [isChanging, setIsChanging] = useState(false);
 
+  const navigator = useNavigate();
   const formData = new FormData();
 
   const user = useSelector((state) => state.user);
@@ -81,7 +83,6 @@ const MyInfo = () => {
         confirmPassword: data.passwordConfirm,
       });
       if (imgContainer) {
-        console.log('이미지업로드', imgContainer);
         try {
           const res = await Api.postForm(`/upload/profile`, {
             profileImage: imgContainer,
@@ -102,13 +103,22 @@ const MyInfo = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      await Api.delete('/auth/drop');
-      alert('계정 삭제 완료');
-      dispatch(logout());
-      navigator('/intro');
-    } catch (err) {
-      console.log('계정삭제 실패.', err);
+    const confirmDelete = window.confirm('정말로 탈퇴하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        const res = await Api.delete('/auth/drop');
+        if (res.status === 200) {
+          alert('계정 삭제 완료');
+          dispatch(logout());
+          navigator('/intro');
+        } else {
+          alert(res.data);
+        }
+      } catch (err) {
+        console.log('계정삭제 실패.', err);
+      }
+    } else {
+      console.log('그룹 탈퇴가 취소되었습니다.');
     }
   };
 
