@@ -170,20 +170,26 @@
 
 .commentItem {
   display: grid;
-  grid-template-columns: 0.5fr 4.5fr 1fr 1fr 0.2fr;
+  grid-template-columns: 60px 300px 120px 120px 150px;
   background-color: $grayBack;
   padding: 5px;
   border-radius: 4px;
+  align-items: center;
   gap: 20px;
   .commentItemContent {
     display: flex;
+    align-items: center;
+    height: 30px;
     span {
       display: inline-block;
       margin-right: 5px;
       font-weight: 700;
     }
   }
-
+  .btns {
+    display: flex;
+    gap: 5px;
+  }
   button {
     background-color: $point;
     color: white;
