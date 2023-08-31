@@ -1,6 +1,6 @@
 import authService from '../services/authService';
-import smtpTransport from '../config/sendEmail';
 import randomToken from '../utils/randomToken';
+import mailSend from '../utils/mailSend';
 import { text } from 'express';
 
 /** @description 회원가입 -> 새로운 유저를 생성 */
@@ -49,10 +49,13 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     const nickname = req.body.nickname;
     const email = req.body.email;
 
+    console.log(nickname, email);
+
     if (!nickname || !email) throw new Error('닉네임과 이메일을 입력해주세요');
     //유저가 있는지 검증
     const existingUser = await authService.getUserByEmail(email);
 
+    console.log(existingUser);
     //유저가 해당 닉네임을 가지고 있는지
     if (existingUser.nickname !== nickname)
       throw new Error('일치하는 사용자가 없습니다.');
@@ -75,14 +78,8 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
         '">비밀번호 재설정 링크<a>',
     };
     //이메일 발송
-    smtpTransport.sendMail(emailOptions, (err, info) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('성공적으로 이메일을 전송하였습니다.', info.response);
-        smtpTransport.close();
-      }
-    });
+    const response = await mailSend(emailOptions);
+    console.log('성공적으로 이메일을 전송하였습니다', response);
 
     //사용자의 토큰 업데이트
     const user = await authService.updatePasswordTokenByEmail(email, token);
