@@ -656,7 +656,7 @@ const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
 const getUserGroupCertPosts = async (userId, page, limit) => {
 	try {
 		const userGroups = await prisma.groupUser.findMany({
-			where: { userId: userId },
+			where: { userId: userId, isAccepted: true },
 			select: { groupId: true },
 		});
 		const groupIds = userGroups.map((group) => group.groupId);

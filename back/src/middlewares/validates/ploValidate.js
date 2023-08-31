@@ -114,7 +114,7 @@ const updateCertPostSchema = Joi.object({
 		'string.min': '시작 시간이 너무 짧습니다.',
 		'string.max': '시작 시간이 너무 깁니다.',
 	}),
-	endTIme: Joi.string().min(1).max(50).optional().allow('').messages({
+	endTime: Joi.string().min(1).max(50).optional().allow('').messages({
 		'string.base': '종료 시간이 문자열이 아닙니다.',
 		'string.min': '종료 시간이 너무 짧습니다.',
 		'string.max': '종료 시간이 너무 깁니다.',
