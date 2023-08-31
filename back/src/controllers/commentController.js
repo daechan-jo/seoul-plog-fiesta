@@ -5,7 +5,7 @@ const createComment = async (req, res, next) => {
 		const postId = parseInt(req.params.postid);
 		const writerId = req.user.id;
 		const content = req.body.content;
-		const parentId = req.body.parentId; // 대댓글인 경우
+		const parentId = req.body.parentId;
 		const isCertPost = req.query.cert === 'true';
 
 		const newComment = await commentService.createComment(
@@ -15,7 +15,6 @@ const createComment = async (req, res, next) => {
 			parentId !== undefined ? parentId : null,
 			isCertPost,
 		);
-		console.log(newComment);
 		res.status(201).json(newComment);
 	} catch (error) {
 		console.error(error);
@@ -39,7 +38,6 @@ const updateComment = async (req, res, next) => {
 			commentId,
 			content,
 		);
-		console.log(updatedComment);
 		res.json(updatedComment);
 	} catch (error) {
 		console.error(error);
