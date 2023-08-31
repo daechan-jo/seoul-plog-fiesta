@@ -194,7 +194,12 @@ const changeInformation = async (user) => {
 
 const removeUser = async (id) => {
   try {
-    console.log(id);
+    // 다른 테이블의 외래 키 레코드를 먼저 삭제
+    await prisma.friendship.deleteMany({
+      where: {
+        OR: [{ userAId: id }, { userBId: id }],
+      },
+    });
     const deleteUser = await prisma.user.delete({
       where: {
         id: id,
