@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import { seoulDistricts } from './exportData';
 import styles from './index.module.scss';
 import * as Api from '../../api';
+import { errorMessageState, isErrorState } from '../../features/recoilState';
+import { useRecoilState } from 'recoil';
 
 const Plogging = ({ setIsWriting }) => {
+  const [, setIsError] = useRecoilState(isErrorState);
+  const [, setErrorMessage] = useRecoilState(errorMessageState);
   const [formData, setFormData] = useState({
     region: '',
     location: '',
@@ -84,6 +88,8 @@ const Plogging = ({ setIsWriting }) => {
         uploadImage(postRes.data.id);
       }
       setIsWriting(false);
+      setErrorMessage('인증글이 생성되었습니다.');
+      setIsError(true);
     } catch (err) {
       alert('인증 글 업로드 실패', err);
     }

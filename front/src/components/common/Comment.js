@@ -25,7 +25,6 @@ const CommentAdd = ({
         return;
       }
 
-      alert('댓글 작성 성공');
       setComments((prevComments) => [...prevComments, res.data]);
       setData('');
     } catch (err) {

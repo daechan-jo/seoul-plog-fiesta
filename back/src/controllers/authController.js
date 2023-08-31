@@ -12,7 +12,6 @@ const createUser = async (req, res, next) => {
     if (userData.password !== userData.confirmPassword)
       throw new Error('비밀번호 확인 불일치');
     const user = await authService.createUser(userData);
-    console.log(user);
     res.status(201).json(user);
   } catch (error) {
     console.error(error);
@@ -50,7 +49,6 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     const nickname = req.body.nickname;
     const email = req.body.email;
 
-    console.log(nickname, email);
     if (!nickname || !email) throw new Error('닉네임과 이메일을 입력해주세요');
     //유저가 있는지 검증
     const existingUser = await authService.getUserByEmail(email);
