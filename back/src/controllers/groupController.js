@@ -1,5 +1,4 @@
 import groupService from '../services/groupService.js';
-import ploService from '../services/ploService.js';
 import commentService from '../services/commentService.js';
 import imageService from '../services/imageService.js';
 const groupUtils = require('../utils/groupUtils');
@@ -10,7 +9,6 @@ const createGroup = async (req, res, next) => {
 		const managerId = req.user.id;
 
 		const group = await groupService.createGroup(groupData, managerId);
-		console.log(group);
 		res.status(201).json(group);
 	} catch (error) {
 		console.error(error);
@@ -24,7 +22,6 @@ const getAllGroups = async (req, res, next) => {
 		const page = parseInt(req.query.page) || null;
 		const limit = parseInt(req.query.limit) || null;
 		const groups = await groupService.getAllGroups(page, limit);
-		console.log(groups);
 		res.status(200).json(groups);
 	} catch (error) {
 		console.error(error);
@@ -38,7 +35,6 @@ const getGroupDetails = async (req, res, next) => {
 		const groupId = parseInt(req.params.groupid);
 		const group = await groupService.getGroupDetails(groupId);
 		if (!group) return res.status(404).json({ message: '그룹 없음' });
-		console.log(group);
 		res.status(200).json(group);
 	} catch (error) {
 		console.error(error);
@@ -62,7 +58,6 @@ const requestToJoinGroup = async (req, res, next) => {
 				.json({ message: '이미 가입된 그룹 또는 가입 신청한 그룹' });
 
 		await groupService.requestToJoinGroup(userId, groupId);
-		console.log('그룹 가입 신청 성공');
 		res.status(200).json('그룹 가입 신청 성공');
 	} catch (error) {
 		console.error(error);
@@ -77,7 +72,6 @@ const getGroupJoinRequests = async (req, res, next) => {
 		const groupJoinRequests = await groupService.getGroupJoinRequests(
 			managerId,
 		);
-		console.log(groupJoinRequests);
 		res.status(200).json(groupJoinRequests);
 	} catch (error) {
 		console.error(error);
@@ -96,7 +90,6 @@ const acceptRegistration = async (req, res, next) => {
 			groupId,
 			userId,
 		);
-		console.log(acceptedRequest);
 		res.status(200).json(acceptedRequest);
 	} catch (error) {
 		console.error(error);
@@ -116,7 +109,6 @@ const getGroupJoinRequestsByGroupId = async (req, res, next) => {
 		if (!groupJoinRequests) {
 			return res.status(403).json({ message: '권한 없음' });
 		}
-		console.log(groupJoinRequests);
 		res.status(200).json(groupJoinRequests);
 	} catch (error) {
 		console.error(error);
@@ -137,7 +129,6 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 			userId,
 		);
 		if (success) {
-			console.log(success);
 			res.status(200).json({ message: '그룹 가입 거절' });
 		} else {
 			res.status(400).json({ message: '그룹 가입 거절 실패' });
@@ -155,7 +146,6 @@ const getMyGroups = async (req, res, next) => {
 		const page = parseInt(req.query.page) || null;
 		const limit = parseInt(req.query.limit) || null;
 		const groups = await groupService.getMyGroups(userId, page, limit);
-		console.log(groups);
 		res.status(200).json(groups);
 	} catch (error) {
 		console.error(error);
@@ -199,7 +189,6 @@ const createPost = async (req, res, next) => {
 			content,
 			isNotice,
 		);
-		console.log(post);
 		res.status(201).json(post);
 	} catch (error) {
 		console.error(error);
@@ -214,7 +203,6 @@ const getRecentPosts = async (req, res, next) => {
 		const limit = parseInt(req.query.limit) || null;
 		const userId = req.user.id;
 		const posts = await groupService.getRecentPosts(userId, page, limit);
-		console.log(posts);
 		res.status(200).json(posts);
 	} catch (error) {
 		console.error(error);
@@ -230,7 +218,6 @@ const getAllPosts = async (req, res, next) => {
 		const groupId = parseInt(req.params.groupid);
 
 		const posts = await groupService.getAllPosts(groupId, page, limit);
-		console.log(posts);
 		res.status(200).json(posts);
 	} catch (error) {
 		console.error(error);
@@ -244,7 +231,6 @@ const getPostById = async (req, res, next) => {
 		const postId = parseInt(req.params.postid);
 		const post = await groupService.getPostById(postId);
 		if (!post) return res.status(404).json({ message: '게시글 없음' });
-		console.log(post);
 		res.status(200).json(post);
 	} catch (error) {
 		console.error(error);
@@ -259,7 +245,6 @@ const editPost = async (req, res, next) => {
 		const userId = req.user.id;
 		const postData = req.body;
 		const updatedPost = await groupService.editPost(postId, userId, postData);
-		console.log(updatedPost);
 		res.status(200).json(updatedPost);
 	} catch (error) {
 		console.error(error);
@@ -268,7 +253,6 @@ const editPost = async (req, res, next) => {
 	}
 };
 
-//todo
 const deletePost = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);
@@ -288,7 +272,6 @@ const deletePost = async (req, res, next) => {
 			imageService.deleteImagesByPostId(postId),
 			groupService.deletePost(postId, userId),
 		]);
-		console.log('게시글 삭제 성공');
 		res.status(202).json({ message: `게시글 삭제 : ${postId}` });
 	} catch (error) {
 		console.error(error);
@@ -300,7 +283,6 @@ const deletePost = async (req, res, next) => {
 const leaveGroup = async (req, res, next) => {
 	const userId = req.user.id;
 	const groupId = parseInt(req.params.groupid);
-
 	try {
 		const isMember = await groupUtils.isUserGroupMember(userId, groupId);
 		console.log(isMember);
@@ -309,7 +291,6 @@ const leaveGroup = async (req, res, next) => {
 		if (isMember.isAdmin === true)
 			return res.status(400).json({ message: '관리자는 탈퇴할 수 없음' });
 		await groupService.leaveGroup(userId, groupId);
-		console.log('그룹 탈퇴 성공');
 		res.status(200).json({ message: `그룹 탈퇴 : ${groupId}` });
 	} catch (error) {
 		console.error(error);
@@ -329,7 +310,6 @@ const removeGroupMember = async (req, res, next) => {
 
 		const isRemoved = await groupService.removeGroupMember(userId, groupId);
 		if (isRemoved) {
-			console.log(isRemoved);
 			res.status(200).json({ message: `그룹원 추방 : ${userId}` });
 		} else {
 			res.status(404).json({ message: '그룹원 없음' });
@@ -349,7 +329,6 @@ const dropGroup = async (req, res, next) => {
 		if (!group || group.managerId !== userId)
 			return res.status(403).json({ message: '권한 없음' });
 		await groupService.dropGroup(groupId);
-		console.log('그룹 폭⭐파️');
 		res.status(200).json({ message: '삭제 완료' });
 	} catch (error) {
 		console.error(error);
@@ -364,7 +343,6 @@ const getGroupCertPosts = async (req, res, next) => {
 		const limit = parseInt(req.query.limit) || null;
 		const userId = req.user.id;
 		const posts = await groupService.getUserGroupCertPosts(userId, page, limit);
-		console.log(posts);
 		res.status(200).json(posts);
 	} catch (error) {
 		console.error(error);

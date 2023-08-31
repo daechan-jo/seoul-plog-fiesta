@@ -18,6 +18,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.frameBlock {
+  display: none;
+}
+
 .circle {
   position: absolute;
   z-index: 10;

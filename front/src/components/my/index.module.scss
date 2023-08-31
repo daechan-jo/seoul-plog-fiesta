@@ -61,7 +61,6 @@
     width: 100px;
     height: 100px;
     overflow: hidden;
-    margin-bottom: 3px;
     img {
       width: 100px;
       height: 100px;
@@ -70,8 +69,8 @@
 
   .delete {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
     background-color: red;
     color: white;
     width: 20px;
