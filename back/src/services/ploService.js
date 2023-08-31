@@ -219,6 +219,7 @@ const deleteCertPost = async (certPostId) => {
 const getTopMainCertPostContributors = async () => {
 	try {
 		const certPosts = await prisma.certPost.findMany({
+			where: { isGroupPost: false },
 			select: {
 				writerId: true,
 			},
@@ -260,6 +261,7 @@ const getTopMainCertPostContributors = async () => {
 const getTopCertPostContributorsUsers = async () => {
 	try {
 		const certPosts = await prisma.certPost.findMany({
+			where: { isGroupPost: false },
 			select: {
 				writerId: true,
 			},
@@ -350,6 +352,7 @@ const paginate = (array, page, limit) => {
 	const startIndex = (page - 1) * limit;
 	return array.slice(startIndex, startIndex + limit);
 };
+
 const getTopUsers = async (page, limit) => {
 	try {
 		const certPosts = await allCertPosts();
@@ -360,9 +363,9 @@ const getTopUsers = async (page, limit) => {
 		const sortedUserIds = Object.keys(userCounts).sort(
 			(a, b) => userCounts[b] - userCounts[a],
 		);
-		let paginatedUserIds = sortedUserIds; // Default to all users
+		let paginatedUserIds = sortedUserIds;
 		if (page !== null && limit !== null)
-			paginatedUserIds = paginate(sortedUserIds, page, limit); // Apply pagination
+			paginatedUserIds = paginate(sortedUserIds, page, limit);
 
 		const topUsers = [];
 		for (let i = 0; i < paginatedUserIds.length; i++) {
