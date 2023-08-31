@@ -53,9 +53,7 @@ const deleteComment = async (req, res, next) => {
 		const commentId = parseInt(req.params.commentid);
 		const userId = req.user.id;
 		const canDelete = await commentService.canDeleteComment(commentId, userId);
-		if (!canDelete) {
-			return res.status(403).json({ message: '권한 없음' });
-		}
+		if (!canDelete) return res.status(403).json({ message: '권한 없음' });
 		await commentService.deleteCommentAndChildren(commentId);
 		res.status(204).json({ message: '댓글 삭제 :', commentId });
 	} catch (error) {
