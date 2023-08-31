@@ -54,7 +54,7 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     const existingUser = await authService.getUserByEmail(email);
 
     //유저가 해당 닉네임을 가지고 있는지
-    //await authService.checkUserHaveNickname(existingUser, nickname);
+    await authService.checkUserHaveNickname(existingUser, nickname);
 
     //링크에 포함될 랜덤 토큰 생성
     const token = randomToken.createRandomToken();
