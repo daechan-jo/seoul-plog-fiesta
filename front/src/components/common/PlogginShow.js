@@ -430,7 +430,7 @@ export default PloggingShow;
 const CommentItem = ({ data, order, setComments, postId, isReply }) => {
   const [commentTwo, setCommentTow] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [sendData, setSendData] = useState(data.content);
+  const [sendData, setSendData] = useState(data);
   const user = useSelector((state) => state.user);
 
   const handleDelete = async (e) => {
@@ -467,16 +467,20 @@ const CommentItem = ({ data, order, setComments, postId, isReply }) => {
               type="text"
               required
               name="content"
-              value={sendData}
+              value={sendData.content}
               onChange={(e) => {
                 setSendData(e.target.value);
               }}
             />
           ) : (
-            sendData
+            <div>{sendData.content}</div>
           )}
         </div>
-        <div>{data.commenterNickname}</div>
+        <div>
+          {sendData.commenterNickname
+            ? sendData.commenterNickname
+            : sendData.nickname}
+        </div>
         <div>{handleCreatedDate(data.createdAt)}</div>
         <div className={styles.btns}>
           {user.loginId === data.writerId && (
