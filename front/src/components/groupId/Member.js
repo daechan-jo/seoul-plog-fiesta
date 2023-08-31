@@ -7,6 +7,8 @@ import styles from './index.module.scss';
 import { GroupIdContext } from '../../containers/groupId';
 import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
+import { handlePagenation } from '../../utils/pagenation';
+import Pagination from '../common/Pagenation';
 
 const GroupMember = ({ view }) => {
   const [, setIsError] = useRecoilState(isErrorState);
@@ -27,6 +29,15 @@ const GroupMember = ({ view }) => {
   const isGroupAdmin = parseInt(adminValue) === user.loginId;
 
   const navigator = useNavigate();
+
+  const itemsPerPage = 18;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
+
+  const handlePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleGroupDelete = async () => {
     try {
@@ -83,7 +94,7 @@ const GroupMember = ({ view }) => {
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          datas.map((data) => (
+          paginatedData.map((data) => (
             <Item
               data={data.user}
               setDatas={setDatas}
@@ -95,7 +106,14 @@ const GroupMember = ({ view }) => {
           ))
         )}
       </div>
-      <div>페이지네이션자리</div>
+      <div>
+        {' '}
+        <Pagination
+          totalPages={Math.ceil(datas.length / itemsPerPage)}
+          currentPage={currentPage}
+          handlePage={handlePage}
+        />
+      </div>
     </div>
   );
 };
@@ -107,25 +125,34 @@ const Item = ({ data, isGroupAdmin, groupId, setDatas }) => {
   const user = useSelector((state) => state.user);
 
   const handleOut = async () => {
-    try {
-      await Api.delete(`/group/${groupId}/${data.id}`);
-      setDatas((prev) => prev.filter((datas) => data.id !== datas.id));
-    } catch (err) {
-      console.log('멤버 추방 실패.', err);
+    const confirm = window.confirm(`${data.nickname}님을 추방시킬까요?`);
+    if (confirm) {
+      try {
+        console.log(data.id);
+        await Api.delete(`/group/expulse/${groupId}/${data.id}`);
+        setDatas((prev) => prev.filter((datas) => data.id !== datas.id));
+      } catch (err) {
+        console.log('멤버 추방 실패.', err);
+      }
+    } else {
+      console.log('멤버 추방 취소');
     }
   };
   return (
-    <div
-      className={styles.memberItem}
-      onClick={() => {
-        navigator(`/users/${data.id}`);
-      }}
-    >
-      <div>{data.nickname}</div>
+    <div className={styles.memberItem}>
+      <div
+        onClick={() => {
+          navigator(`/users/${data.id}`);
+        }}
+      >
+        {data.nickname}
+      </div>
       <div>{data.about}</div>
       <div>{seoulDistricts[data.activity]}</div>
       {isGroupAdmin && data.id !== user.loginId && (
-        <button onClick={handleOut}>X</button>
+        <button className={styles.expulse} onClick={handleOut}>
+          X
+        </button>
       )}
     </div>
   );

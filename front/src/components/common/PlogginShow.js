@@ -501,9 +501,9 @@ const CommentItem = ({ data, order, setComments, postId, isReply }) => {
                   편집
                 </button>
               )}
+              <button onClick={handleDelete}>삭제</button>
             </>
           )}
-          <button onClick={handleDelete}>삭제</button>
         </div>
       </div>
       {/* 태그형식으로 보관이라 사용 불가능 */}

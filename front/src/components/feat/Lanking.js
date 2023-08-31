@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import styles from './mylanking.module.scss';
 import * as Api from '../../api';
 
-const MyLanking = ({ setIsMyRankingOpen, id, name }) => {
-  const [rank, setLank] = useState(null);
+const MyRanking = ({ setIsMyRankingOpen, id, name }) => {
+  const [rank, setRank] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const res = await Api.get(`/plo/rank/user?id=${id}`);
-        setLank(res.data);
+        setRank(res.data);
         if (!res.data) {
           setIsMyRankingOpen(false);
           alert('인증글이 없습니다. 인증글을 작성해주세요.');
@@ -31,7 +31,7 @@ const MyLanking = ({ setIsMyRankingOpen, id, name }) => {
   }, [setIsMyRankingOpen]);
 
   return (
-    <div class={styles.frame}>
+    <div class={rank ? styles.frame : `${styles.frame} ${styles.frameBlock}`}>
       <div class={styles.circle}></div>
       <div class={`${styles.line} ${styles.left}`}></div>
       <div class={`${styles.line} ${styles.right}`}></div>
@@ -46,4 +46,4 @@ const MyLanking = ({ setIsMyRankingOpen, id, name }) => {
   );
 };
 
-export default MyLanking;
+export default MyRanking;
