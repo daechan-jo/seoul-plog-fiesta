@@ -45,11 +45,11 @@ const ItemList = () => {
           }
         } else {
           if (isCheck) {
-            const res = await Api.get(`/user/friends`);
-            if (!res.data.searchNickname) {
+            const res = await Api.get(`/friends`);
+            if (!res.data.friendsList) {
               setDatas([]);
             } else {
-              setDatas(res.data.searchNickname);
+              setDatas(res.data.friendsList);
             }
           } else {
             const res = await Api.get(`/${view}s`);
@@ -148,6 +148,8 @@ const Item = ({ data, view }) => {
           src={
             data.images && data.images.length !== 0
               ? `${handleImgUrl(data.images[0])}`
+              : data.profileImage
+              ? handleImgUrl(data?.profileImage.imageUrl)
               : view === 'group'
               ? post_none
               : user_none
