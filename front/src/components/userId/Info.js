@@ -123,7 +123,12 @@ const Info = () => {
           친구추가
         </button>
       )}
-      <button className="gBtn" onClick={handleChat}>
+      <button
+        className="gBtn"
+        onClick={() => {
+          alert('준비중인 기능입니다');
+        }}
+      >
         채팅보내기
       </button>
     </div>

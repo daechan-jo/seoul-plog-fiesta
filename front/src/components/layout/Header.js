@@ -6,11 +6,15 @@ import * as Api from '../../api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
+  errorMessageState,
+  isErrorState,
   isGroupRequestListOpenState,
   isRequestListOpenState,
 } from '../../features/recoilState';
 
 const Header = ({ setIsWriting }) => {
+  const [, setIsError] = useRecoilState(isErrorState);
+  const [, setErrorMessage] = useRecoilState(errorMessageState);
   const dispatch = useDispatch();
   const navigator = useNavigate();
   const user = useSelector((state) => state.user);
@@ -27,10 +31,8 @@ const Header = ({ setIsWriting }) => {
 
   const [visibleButton, setVisibleButton] = useState(null);
 
-  const [isRequestListOpen, setIsRequestListOpen] = useRecoilState(
-    isRequestListOpenState,
-  );
-  const [isGroupRequestListOpen, setIsGroupRequestListOpen] = useRecoilState(
+  const [, setIsRequestListOpen] = useRecoilState(isRequestListOpenState);
+  const [, setIsGroupRequestListOpen] = useRecoilState(
     isGroupRequestListOpenState,
   );
 
@@ -49,7 +51,8 @@ const Header = ({ setIsWriting }) => {
       await Api.post(`/req/${id}`, {
         id: id,
       });
-      alert('친구 요청 성공');
+      setErrorMessage('친구 요청에 성공했습니다.');
+      setIsError(true);
     } catch (err) {
       alert(err.message ? err.message : '친구 요청 실패.');
     }
