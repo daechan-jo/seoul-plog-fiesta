@@ -112,9 +112,6 @@ const Item = ({ data, setDatas }) => {
         content: sendData.content,
         isNotice: sendData.isNotice,
       });
-      setDatas((prev) =>
-        prev.map((item) => item.id === res.data.id && res.data),
-      );
       setIsEditing(false);
     } catch (err) {
       console.log('수정실패');
@@ -144,7 +141,7 @@ const Item = ({ data, setDatas }) => {
             onChange={handleInputChange}
           />
         ) : (
-          <div>{data?.title}</div>
+          <div>{sendData.title}</div>
         )}
       </div>
       <div className={styles.content}>
@@ -161,7 +158,7 @@ const Item = ({ data, setDatas }) => {
             onChange={handleInputChange}
           />
         ) : (
-          <div>{data?.content}</div>
+          <div>{sendData.content}</div>
         )}
       </div>
       {data.writerId === user.loginId &&
