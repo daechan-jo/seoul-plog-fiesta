@@ -62,8 +62,45 @@ const updateComment = async (commentId, content) => {
 	});
 };
 
-const deleteComment = async (commentId) => {
-	return prisma.comment.delete({ where: { id: commentId } });
+const deleteCommentAndChildren = async (commentId) => {
+	try {
+		const comment = await prisma.comment.findUnique({
+			where: { id: commentId },
+		});
+		if (!comment) throw new Error('댓글을 찾을 수 없음');
+		async function recursiveDelete(parentId) {
+			const children = await prisma.comment.findMany({ where: { parentId } });
+
+			for (const child of children) {
+				await recursiveDelete(child.id);
+				await prisma.comment.delete({ where: { id: child.id } });
+			}
+		}
+		await recursiveDelete(commentId);
+		await prisma.comment.delete({ where: { id: commentId } });
+	} catch (error) {
+		throw error;
+	}
+};
+
+const canDeleteComment = async (commentId, userId) => {
+	try {
+		const comment = await prisma.comment.findUnique({
+			where: { id: commentId },
+			include: {
+				post: true,
+				certPost: true,
+			},
+		});
+		if (!comment) throw new Error('댓글을 찾을 수 없음');
+		return (
+			comment.writerId === userId ||
+			(comment.post && comment.post.writerId === userId) ||
+			(comment.certPost && comment.certPost.writerId === userId)
+		);
+	} catch (error) {
+		throw error;
+	}
 };
 
 const deleteCommentsByPostId = async (postId) => {
@@ -78,6 +115,7 @@ module.exports = {
 	createComment,
 	getCommentById,
 	updateComment,
-	deleteComment,
+	deleteCommentAndChildren,
 	deleteCommentsByPostId,
+	canDeleteComment,
 };

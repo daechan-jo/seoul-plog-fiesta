@@ -32,7 +32,6 @@ const uploadProfileImage = async (req, res, next) => {
 				},
 			});
 		}
-		console.log('프로필 이미지 업로드 성공');
 		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
@@ -75,7 +74,6 @@ const uploadPostImage = async (req, res, next) => {
 				},
 			});
 		}
-		console.log('게시글 이미지 업로드 성공');
 		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
@@ -91,28 +89,21 @@ const uploadCertImage = async (req, res, next) => {
 		const certPost = await prisma.certPost.findUnique({
 			where: { id: certPostId },
 		});
-		console.log(certPost);
 		if (!certPost) {
 			return res.status(404).json({ message: '인증 게시글 없음' });
 		}
-
 		const existingImage = await prisma.certPostImage.findFirst({
 			where: { certPostId: certPost.id },
 		});
-
 		if (existingImage) {
-			// Delete the existing image file
 			fs.unlinkSync(
 				path.join(__dirname, '../..', 'public', existingImage.imageUrl),
 			);
-
-			// Update the image URL
 			await prisma.certPostImage.update({
 				where: { id: existingImage.id },
 				data: { imageUrl },
 			});
 		} else {
-			// Create a new certPostImage record
 			await prisma.certPostImage.create({
 				data: {
 					imageUrl,
@@ -120,7 +111,6 @@ const uploadCertImage = async (req, res, next) => {
 				},
 			});
 		}
-		console.log('인증 이미지 업로드 성공');
 		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
@@ -141,7 +131,6 @@ const uploadGroupImage = async (req, res, next) => {
 		if (!isGroupAdmin) {
 			return res.status(403).json({ message: '관리자 권한' });
 		}
-
 		const imageUrl = path.join('images', req.file.filename);
 		const existingImage = await prisma.groupImage.findFirst({
 			where: { groupId },
@@ -166,7 +155,6 @@ const uploadGroupImage = async (req, res, next) => {
 				},
 			});
 		}
-		console.log('그룹 이미지 업로드 성공');
 		res.status(201).json(imageUrl);
 	} catch (error) {
 		console.error(error);
