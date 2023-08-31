@@ -113,9 +113,7 @@ const Item = ({ data, setDatas }) => {
         isNotice: sendData.isNotice,
       });
       setDatas((prev) =>
-        prev
-          .filter((pre) => pre.id !== res.data.id)
-          .map((el) => [...el, res.data]),
+        prev.map((item) => item.id === res.data.id && res.data),
       );
       setIsEditing(false);
     } catch (err) {

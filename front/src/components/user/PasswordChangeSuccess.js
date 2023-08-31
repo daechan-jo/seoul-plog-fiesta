@@ -68,7 +68,7 @@ const PasswordChangeSuccess = () => {
       <label>비밀번호</label>
       <input
         type="password"
-        placeholder="이름"
+        placeholder="비밀번호를 입력해주세요"
         onChange={(e) => {
           setPassword(e.target.value);
         }}

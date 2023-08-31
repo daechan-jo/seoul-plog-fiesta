@@ -44,7 +44,6 @@ const CommentAdd = ({
         alert('잘못된 접근입니다.');
         return;
       }
-      alert('댓글 작성 성공');
       setComments((prevComments) => [...prevComments, res.data]);
       setData('');
       console.log(setCommentTow);
