@@ -30,6 +30,7 @@ const Info = () => {
   const ownerId = currentPath.split('/')[2].split('?')[0];
   const { friends } = useContext(UserIdContext);
 
+  const [imgContainer, setImageContainer] = useState(null);
   const isFriend = friends.includes(parseInt(ownerId));
 
   const [isChatOpen, setIsChatOpen] = useRecoilState(isChatOpenState);
@@ -59,7 +60,9 @@ const Info = () => {
         setIsFetching(true);
         const res = await Api.get(`/search/${ownerId}`);
         setData(res.data);
-        console.log(res);
+        await Api.get(`/profileimg/${ownerId}`).then((res) =>
+          setImageContainer(res.data),
+        );
       } catch (err) {
         console.log('상위모임데이터를 불러오는데 실패.', err);
       } finally {
@@ -86,8 +89,8 @@ const Info = () => {
         <div className={styles.imgContainer}>
           <img
             src={
-              data.imgUrl
-                ? handleImgUrl(data.imgUrl)
+              imgContainer
+                ? handleImgUrl(imgContainer)
                 : 'http://placekitten.com/200/200'
             }
             alt="profile"

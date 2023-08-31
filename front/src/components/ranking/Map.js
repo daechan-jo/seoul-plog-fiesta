@@ -40,7 +40,7 @@ const Map = ({ endpoint, id }) => {
     const pathGenerator = d3.geoPath().projection(projection);
 
     // 색상 보간(시작 색상에서 끝 색상으로 점진적으로 변하는 색상)을 호출 후 이 값을 연속값 매핑 함수를 호출하여 0~10으로 매핑
-    const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, 10]);
+    const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, 20]);
 
     svg
       .selectAll('path')

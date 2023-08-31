@@ -29,6 +29,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
     groupName: '',
     participants: [],
   });
+  const [postId, setPostId] = useState(null);
   const [imgContainer, setImgContainer] = useState();
   const [isGroupPost, setIsGroupPost] = useState(false);
 
@@ -123,6 +124,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         const res = await Api.get(`/plo/post/${id}`);
         setData(res.data);
         setComments(res.data.comments);
+        setPostId(res.data.id);
       } catch (err) {
         console.log('인증글 데이터를 불러오는데 실패.', err);
       } finally {
@@ -324,14 +326,17 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         {comments && (
           <div className={styles.commentList}>
             {comments.length !== 0 &&
-              comments.map((comment, index) => (
-                <CommentItem
-                  data={comment}
-                  postId={data.id}
-                  order={index + 1}
-                  isReply
-                />
-              ))}
+              comments
+                .slice(0, 5)
+                .map((comment, index) => (
+                  <CommentItem
+                    data={comment}
+                    postId={postId}
+                    order={index + 1}
+                    isReply
+                    setComments={setComments}
+                  />
+                ))}
           </div>
         )}
         <CommentAdd
@@ -407,51 +412,49 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
 
 export default PloggingShow;
 
-const CommentItem = ({ data, order, isReply }) => {
+const CommentItem = ({ data, order, setComments, postId, isReply }) => {
   const [commentTwo, setCommentTow] = useState(false);
 
-  const handleClick = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await Api.post(`/comment/${data.id}?cert=true'}`, {
-        content: data,
-      });
-      if (res.data === '게시글을 찾을 수 없') {
-        alert('잘못된 접근입니다.');
-        return;
-      }
-
-      alert('댓글 작성 성공');
-    } catch (err) {
-      console.log(err);
-    }
-  };
   return (
     <>
       {!isReply && 'L'}
       <div className={styles.commentItem}>
-        <div>{order}</div>
-        <div>{data.content}</div>
+        <div>{data.id}</div>
+        <div className={styles.commentItemContent}>
+          {data.parentId != null && <span>@{data.parentId}</span>}
+          {data.content}
+        </div>
         <div>{data.commenterNickname}</div>
         <div>{handleCreatedDate(data.createdAt)}</div>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            setCommentTow(true);
-          }}
-        >
-          +
-        </button>
+        <div className={styles.btns}>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setCommentTow(!commentTwo);
+            }}
+          >
+            +
+          </button>
+        </div>
       </div>
+      {/* 태그형식으로 보관이라 사용 불가능 */}
       {data.comments && (
         <div className={styles.commentList}>
           {data.comments.length !== 0 &&
             data.comments.map((data, index) => (
-              <CommentItem data={data} order={index + 1} isReply />
+              <CommentItem data={data} order={index + 1} isReply="false" />
             ))}
         </div>
       )}
-      {commentTwo && <CommentAdd />}
+      {commentTwo && (
+        <CommentAdd
+          id={data.id}
+          postId={postId}
+          isComment={true}
+          setCommentTow={setCommentTow}
+          setComments={setComments}
+        />
+      )}
     </>
   );
 };
