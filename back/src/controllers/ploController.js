@@ -8,7 +8,6 @@ const postPlo = async (req, res, next) => {
 			userId,
 			certPostData,
 		);
-		console.log(createdCertPost);
 		res.status(201).json(createdCertPost);
 	} catch (error) {
 		console.error(error);
@@ -23,7 +22,6 @@ const getAllCertPosts = async (req, res, next) => {
 		const limit =
 			req.query.limit !== undefined ? parseInt(req.query.limit) : null;
 		const certPosts = await ploService.getAllCertPosts(page, limit);
-		console.log(certPosts);
 		res.status(200).json(certPosts);
 	} catch (error) {
 		console.error(error);
@@ -36,7 +34,6 @@ const getCertPost = async (req, res, next) => {
 	try {
 		const certPostId = parseInt(req.params.postid);
 		const detailedCertPost = await ploService.getCertPostDetails(certPostId);
-		console.log(detailedCertPost);
 		res.status(200).json(detailedCertPost);
 	} catch (error) {
 		console.error(error);
@@ -53,7 +50,6 @@ const updateCertPost = async (req, res, next) => {
 			certPostId,
 			certPostData,
 		);
-		console.log(updatedCertPost);
 		res.status(200).json(updatedCertPost);
 	} catch (error) {
 		console.error(error);
