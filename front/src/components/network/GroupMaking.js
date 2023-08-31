@@ -90,7 +90,7 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
       postRes.data['memberCount'] = 1;
       setDatas((datas) => [...datas, postRes.data]);
       setIsModal(false);
-      setErrorMessage('게시글이 생성되었습니다.');
+      setErrorMessage('그룹이 생성되었습니다.');
       setIsError(true);
     } catch (err) {
       console.log('에 실패하였습니다.', err);

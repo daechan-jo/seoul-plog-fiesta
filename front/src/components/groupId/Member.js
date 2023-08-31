@@ -5,8 +5,12 @@ import { useSelector } from 'react-redux';
 import { seoulDistricts } from '../common/exportData';
 import styles from './index.module.scss';
 import { GroupIdContext } from '../../containers/groupId';
+import { useRecoilState } from 'recoil';
+import { errorMessageState, isErrorState } from '../../features/recoilState';
 
 const GroupMember = ({ view }) => {
+  const [, setIsError] = useRecoilState(isErrorState);
+  const [, setErrorMessage] = useRecoilState(errorMessageState);
   const [isFetching, setIsFetching] = useState(false);
   const [datas, setDatas] = useState([]);
 
@@ -36,7 +40,8 @@ const GroupMember = ({ view }) => {
   const handleGroupRequest = async () => {
     try {
       await Api.post(`/group/join/${groupId}`);
-      alert('가입 요청 성공');
+      setErrorMessage('가입 요청에 성공했습니다');
+      setIsError(true);
     } catch (err) {
       alert(err.message ? err.message : '가입 요청 실패.');
     }
