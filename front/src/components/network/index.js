@@ -150,6 +150,8 @@ const Item = ({ data, view }) => {
               ? `${handleImgUrl(data.images[0])}`
               : data.profileImage
               ? handleImgUrl(data?.profileImage.imageUrl)
+              : data.imageUrl
+              ? handleImgUrl(data.imageUrl)
               : view === 'group'
               ? post_none
               : user_none
