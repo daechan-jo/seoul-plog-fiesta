@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import * as Api from '../../api';
 import { useLocation } from 'react-router-dom';
 import styles from './index.module.scss';
+import { errorMessageState, isErrorState } from '../../features/recoilState';
 
 const GroupRequestList = () => {
   const [isFetching, setIsFetching] = useState(false);
@@ -66,12 +67,18 @@ const GroupRequestList = () => {
 export default GroupRequestList;
 
 const Item = ({ data, setDatas, id }) => {
+  const [errorMessage, setErrorMessage] = useRecoilState(errorMessageState);
+  const [imgContainer, setImgContainer] = useState();
+  const [isError, setIsError] = useRecoilState(isErrorState);
+
   const handleOk = async (e) => {
     e.preventDefault();
 
     try {
       await Api.post(`/group/accept/${id}/${data.id}`);
-      alert('수락 성공');
+      setErrorMessage(`${data.nickname} 멤버 수락 성공`);
+      setDatas((datas) => datas.filter((el) => el.id !== data.id));
+      setIsError(true);
     } catch (err) {
       alert('수락 실패', err);
     }

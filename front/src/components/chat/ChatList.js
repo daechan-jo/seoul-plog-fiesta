@@ -63,7 +63,7 @@ const ChatList = () => {
       {isFetching ? (
         <div>로딩중</div>
       ) : !datas || datas.length === 0 ? (
-        <div>새로운 채팅을 시작하세요</div>
+        <div>채팅 서비스 준비중</div>
       ) : (
         datas.map((data) => <Item data={data} />)
       )}
@@ -86,7 +86,7 @@ const UserItem = ({ data }) => {
   const navigator = useNavigate();
 
   return (
-    <div>
+    <div className={styles.userItem}>
       <div
         onClick={() => {
           navigator(`/users/${data.id}?view=main`);

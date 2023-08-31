@@ -117,6 +117,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         averagePace: data.averagePace,
         description: data.description,
         startTime: data.startTime,
+        endTime: data.endTime,
       });
       if (imgContainer) {
         await uploadImage(postRes.data.id);
