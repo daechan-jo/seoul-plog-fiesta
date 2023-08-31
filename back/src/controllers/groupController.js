@@ -268,6 +268,7 @@ const editPost = async (req, res, next) => {
 	}
 };
 
+//todo
 const deletePost = async (req, res, next) => {
 	try {
 		const postId = parseInt(req.params.postid);

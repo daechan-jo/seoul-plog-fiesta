@@ -6,6 +6,8 @@ import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import { useSelector } from 'react-redux';
 import CommentAdd from './Comment';
 import { useNavigate } from 'react-router-dom';
+import { handleImgUrl } from '../../utils/handleImgUrl';
+import post_none from '../../assets/post_none.png';
 
 const initialData = {
   region: '',
@@ -90,7 +92,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
   const uploadImage = async (postId) => {
     try {
       const res = await Api.postForm(`/upload/certimg/${postId}`, {
-        postImage: imgContainer,
+        certImage: imgContainer,
       });
       return res;
     } catch (err) {
@@ -106,11 +108,19 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       setData((prev) => ({ ...prev, ...groupData, isGroupPost: true }));
     }
     try {
-      const postRes = await Api.put(`/plo/post/${data.id}`, data);
+      const postRes = await Api.put(`/plo/post/${data.id}`, {
+        title: data.title,
+        region: data.region,
+        location: data.location,
+        distance: data.distance,
+        trashAmount: data.trashAmount,
+        averagePace: data.averagePace,
+        description: data.description,
+        startTime: data.startTime,
+      });
       if (imgContainer) {
         await uploadImage(postRes.data.id);
       }
-      setData(postRes);
       setIsEditing(false);
     } catch (err) {
       alert('인증 글 수정 실패', err);
@@ -153,7 +163,11 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
             <div className={styles.imgContainer}>
               <img
                 id="proggingPostPreviewImg"
-                src={data.images}
+                src={
+                  data.images && data.images.length !== 0
+                    ? handleImgUrl(data.images[0])
+                    : post_none
+                }
                 alt="인증이미지"
               />
             </div>

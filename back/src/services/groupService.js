@@ -585,16 +585,30 @@ const dropGroup = async (groupId) => {
 		const group = await prisma.group.findUnique({ where: { id: groupId } });
 		if (!group) throw new Error('그룹을 찾을 수 없음');
 		const groupName = group.name;
+
 		const posts = await prisma.post.findMany({ where: { groupId } });
 		for (let post of posts) {
+			const postImages = await prisma.postImage.findMany({
+				where: { postId: post.id },
+			});
+			for (let image of postImages) {
+				fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
+			}
 			await prisma.postImage.deleteMany({ where: { postId: post.id } });
 			await prisma.comment.deleteMany({ where: { postId: post.id } });
 			await prisma.post.delete({ where: { id: post.id } });
 		}
+
 		const certPosts = await prisma.certPost.findMany({
 			where: { groupName: groupName },
 		});
 		for (let certPost of certPosts) {
+			const certPostImages = await prisma.certPostImage.findMany({
+				where: { certPostId: certPost.id },
+			});
+			for (let image of certPostImages) {
+				fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
+			}
 			await prisma.certPostImage.deleteMany({
 				where: { certPostId: certPost.id },
 			});
@@ -608,7 +622,12 @@ const dropGroup = async (groupId) => {
 				where: { id: certPost.id },
 			});
 		}
-
+		const groupImages = await prisma.groupImage.findMany({
+			where: { groupId },
+		});
+		for (let image of groupImages) {
+			fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
+		}
 		await prisma.groupUser.deleteMany({ where: { groupId } });
 		await prisma.groupImage.deleteMany({ where: { groupId } });
 		await prisma.group.deleteMany({ where: { id: groupId } });
