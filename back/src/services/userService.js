@@ -6,9 +6,11 @@ const prisma = new PrismaClient();
 /** @description 모든 유저 정보 */
 const getAllUsers = async (page, limit) => {
 	try {
-		 const paginationOptions = page !== null && limit !== null
+		const paginationOptions = page !== null && limit !== null
                 ? { skip: (page - 1) * limit, take: limit }
                 : {};
+		const allUserCount = await prisma.user.count();
+		const totalPages = Math.ceil(allUserCount / limit);
 		const user = await prisma.user.findMany({
 			select: {
 				id: true,
@@ -21,7 +23,7 @@ const getAllUsers = async (page, limit) => {
 				...paginationOptions,
 
 		});
-		return await Promise.all(
+		const users =  await Promise.all(
 			user.map( async  (user) => {
 				const userProfile = await prisma.userProfileImage.findMany( {
 					where: { userId: user.id },
@@ -35,8 +37,12 @@ const getAllUsers = async (page, limit) => {
 					...user,
 					images: userProfilesUrl,
 				}
-			})
-		)
+			}));
+		return {
+				user: users,
+				currentPage: page,
+				totalPages: totalPages,
+			}
 	} catch (error) {
 		throw error;
 	}
@@ -55,7 +61,6 @@ const searchUsers = async (nickname) => {
 				about: true,
 				activity: true,
 				profileImage: true,
-
 			},
 		});
 	} catch (error) {
@@ -259,8 +264,8 @@ const rejectFriend = async (userId, requestId) => {
 const getMyFriends = async (userId, page, limit) => {
 	try {
 		const paginationOptions = page !== null && limit !== null
-		? { skip: (page - 1) * limit, take: limit }
-		: {};
+                ? { skip: (page - 1) * limit, take: limit }
+                : {};
 		const myFriendsA = await prisma.friendship.findMany({
 			where: {
 				userAId: userId,
@@ -285,7 +290,7 @@ const getMyFriends = async (userId, page, limit) => {
 			...new Set(myFriendsA.map((friend) => friend.userBId)),
 			...new Set(myFriendsB.map((friend) => friend.userAId)),
 		];
-		return await prisma.user.findMany({
+		const user = await prisma.user.findMany({
 			where: {
 				id: {
 					in: uniqueFriendIds,
@@ -302,10 +307,22 @@ const getMyFriends = async (userId, page, limit) => {
 			{ id: 'asc' },
 			...paginationOptions,
 		});
+		const allUserCount = await prisma.user.count(
+			{where : { id: { in: uniqueFriendIds }, }, }
+		);
+		const totalPages = Math.ceil(allUserCount / limit);
+		return {
+				user: user,
+				currentPage: page,
+				totalPages: totalPages,
+		}
+
 	} catch (error) {
 		throw error;
 	}
 };
+
+
 
 /** @description 친구 삭제 */
 const deleteFriend = async (userId, friendId) => {

@@ -13,7 +13,6 @@ const getAllUsers = async (req, res, next) => {
 			return res.status(404).json({ message: '유저 없음' });
 		}
 
-		console.log(users);
 		res.status(200).json({ message: '모든 유저', users });
 	} catch (error) {
 		console.error(error);
@@ -33,7 +32,6 @@ const searchUsers = async (req, res, next) => {
 			return res.status(404).json({ message: '검색 결과 없음' });
 		}
 
-		console.log(searchNickname);
 		res.status(200).json({ message: '유저 검색 결과', searchNickname });
 	} catch (error) {
 		console.error(error);
@@ -52,7 +50,6 @@ const searchUserId = async (req, res, next) => {
 			return res.status(404).json({ message: '검색 결과 없음' });
 		}
 
-		console.log(searchId);
 		res.status(200).json({ message: '유저 검색 결과(id)', searchId });
 	} catch (error) {
 		console.error(error);
@@ -65,7 +62,6 @@ const searchUserId = async (req, res, next) => {
 const getRandomUsers = async (req, res, next) => {
 	try {
 		const randomUsers = await userService.getRandomUsers();
-		console.log(randomUsers);
 		res.status(200).json({ message: '랜덤 유저', randomUsers });
 	} catch (error) {
 		console.error(error);
@@ -79,7 +75,6 @@ const currentUser = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
 		const currentUserInfo = await userService.getUserInfo(userId);
-		console.log(currentUserInfo);
 		res.status(200).json({ message: '나의 상세 정보', currentUserInfo });
 	} catch (error) {
 		console.error(error);
@@ -111,7 +106,6 @@ const friendRequest = async (req, res, next) => {
 			return res.status(400).json({ message: '이미 요청 했거나 우린 친구!' });
 		}
 		const request = await userService.createFriendship(userId, requestId);
-		console.log(request);
 		res.status(200).json({ message: '친구 요청 완료', request });
 	} catch (error) {
 		console.error(error);
@@ -125,7 +119,6 @@ const friendRequestList = async (req, res, next) => {
 	try {
 		const userId = req.user.id;
 		const friendRequest = await userService.friendRequestList(userId);
-		console.log(friendRequest);
 		res.status(200).json({ message: '친구 요청 리스트', friendRequest });
 	} catch (error) {
 		console.error(error);
@@ -140,7 +133,6 @@ const acceptFriend = async (req, res, next) => {
 		const userId = req.user.id;
 		const requestId = parseInt(req.params.id);
 		const acceptFriend = await userService.acceptFriend(userId, requestId);
-		console.log(acceptFriend);
 		res.status(200).json({ message: '친구 수락', acceptFriend });
 	} catch (error) {
 		console.error(error);
@@ -155,8 +147,7 @@ const rejectFriend = async (req, res, next) => {
 		const userId = req.user.id;
 		const requestId = parseInt(req.params.id);
 		const rejectFriend = await userService.rejectFriend(userId, requestId);
-		console.log(rejectFriend);
-		res.status(200).json({ message: '친구 거절', acceptFriend });
+		res.status(200).json({ message: '친구 거절', rejectFriend });
 	} catch (error) {
 		console.error(error);
 		error.status = 500;
@@ -170,9 +161,7 @@ const getMyFriends = async (req, res, next) => {
 		const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
 		const limit = req.query.limit !== undefined ? parseInt(req.query.limit) : null;
 		const userId = req.user.id;
-		console.log(userId);
 		const friendsList = await userService.getMyFriends(userId, page, limit);
-		console.log(friendsList);
 		res.status(200).json({ message: '친구 목록', friendsList });
 	} catch (error) {
 		console.error(error);
