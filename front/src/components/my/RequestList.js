@@ -69,7 +69,7 @@ const Item = ({ data, setDatas }) => {
   const handleReject = async (e) => {
     e.preventDefault();
     try {
-      await Api.post(`/reject/${data.id}`);
+      await Api.delete(`/reject/${data.id}`);
       setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       alert('거절 성공');
     } catch (err) {
