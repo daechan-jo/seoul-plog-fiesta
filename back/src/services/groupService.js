@@ -727,6 +727,10 @@ const getCertPostsByGroupName = async (groupName, page, limit) => {
 			(page !== null) & (limit !== null)
 				? { skip: (page - 1) * limit, take: limit }
 				: {};
+		const totalPostsCount = await prisma.certPost.count({
+			where: { groupName, isGroupPost: true },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
 		const certPosts = await prisma.certPost.findMany({
 			where: { groupName, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
@@ -749,6 +753,8 @@ const getCertPostsByGroupName = async (groupName, page, limit) => {
 			return {
 				...certPost,
 				participants: participantNicknames,
+				page: page,
+				totalPages: totalPages,
 			};
 		});
 	} catch (error) {
