@@ -339,7 +339,7 @@ const getMyGroups = async (userId, page, limit) => {
 			...paginationOptions,
 		});
 
-		return groups.map((group) => ({
+		const myGroup = groups.map((group) => ({
 			id: group.group.id,
 			name: group.group.name,
 			managerId: group.group.managerId,
@@ -354,9 +354,12 @@ const getMyGroups = async (userId, page, limit) => {
 				nickname: group.group.manager.nickname,
 			},
 			imageUrl: group.group.groupImage[0]?.imageUrl || null,
+		}));
+		return {
+			groups: myGroup,
 			currentPage: page,
 			totalPages: totalPages,
-		}));
+		};
 	} catch (error) {
 		console.error(error);
 		throw error;
