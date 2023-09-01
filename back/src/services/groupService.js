@@ -47,6 +47,8 @@ const createGroup = async (groupData, managerId) => {
 
 const getAllGroups = async (page, limit) => {
 	try {
+		const totalGroupsCount = await prisma.group.count();
+		const totalPages = Math.ceil(totalGroupsCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
@@ -82,6 +84,8 @@ const getAllGroups = async (page, limit) => {
 					...group,
 					memberCount,
 					images: imageUrls,
+					currentPage: page,
+					totalPages: totalPages,
 				};
 			}),
 		);
@@ -268,6 +272,13 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 
 const getMyGroups = async (userId, page, limit) => {
 	try {
+		const totalGroupsCount = await prisma.groupUser.count({
+			where: {
+				userId: userId,
+				isAccepted: true,
+			},
+		});
+		const totalPages = Math.ceil(totalGroupsCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
@@ -326,6 +337,8 @@ const getMyGroups = async (userId, page, limit) => {
 				nickname: group.group.manager.nickname,
 			},
 			imageUrl: group.group.groupImage[0]?.imageUrl || null,
+			currentPage: page,
+			totalPages: totalPages,
 		}));
 	} catch (error) {
 		throw error;
