@@ -37,8 +37,11 @@ const ItemList = () => {
 
         if (!view || view === 'group') {
           if (isCheck) {
-            const res = await Api.get(`/${view}/mygroup`);
+            const res = await Api.get(
+              `/${view}/mygroup?limit=${itemsPerPage}&page=${currentPage}`,
+            );
             setDatas(res.data.groups);
+            setTotalPages(res.data.totalPages);
           } else {
             const res = await Api.get(
               `/group?limit=${itemsPerPage}&page=${currentPage}`,
@@ -49,11 +52,14 @@ const ItemList = () => {
           }
         } else {
           if (isCheck) {
-            const res = await Api.get(`/friends`);
+            const res = await Api.get(
+              `/friends?limit=${itemsPerPage}&page=${currentPage}`,
+            );
             if (!res.data.friendsList.user) {
               setDatas([]);
             } else {
               setDatas(res.data.friendsList.user);
+              setTotalPages(res.data.friendsList.totalPages);
             }
           } else {
             const res = await Api.get(
@@ -122,7 +128,7 @@ const NetworkHeader = ({ view, setIsModal, setIsCheck }) => {
               setIsCheck((isCheck) => !isCheck);
             }}
           />
-          <div>나의 {view === 'group' ? '그룹' : '유저'}만 보기</div>
+          <div>나의 {view === 'group' ? '그룹' : '친구'}만 보기</div>
         </span>
       </div>
       {view === 'group' && (
