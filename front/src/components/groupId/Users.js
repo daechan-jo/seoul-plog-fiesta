@@ -40,6 +40,9 @@ const List = () => {
           '멤버 리스트 데이터를 불러오는데 실패.',
           err.response.data.message,
         );
+        if (err.response.data === '인증게시글 없음') {
+          setDatas([]);
+        }
       } finally {
         setIsFetching(false);
       }
@@ -57,7 +60,7 @@ const List = () => {
           <div>데이터가 없습니다</div>
         ) : (
           datas.map((data, index) => (
-            <Item key={`${data.userId}`} data={data} order={index + 1} />
+            <Item key={`${data.id}`} data={data} order={index + 1} />
           ))
         )}
       </div>

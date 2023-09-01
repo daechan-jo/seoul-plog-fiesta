@@ -85,7 +85,7 @@ const GroupIdContainer = () => {
         ) : view === 'posts' ? (
           <GroupPlogging />
         ) : (
-          <GroupMember />
+          <GroupMember setView={setView} />
         )}
       </main>
     </GroupIdContext.Provider>

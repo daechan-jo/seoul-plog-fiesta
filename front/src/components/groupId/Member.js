@@ -10,7 +10,7 @@ import { errorMessageState, isErrorState } from '../../features/recoilState';
 import { handlePagenation } from '../../utils/pagenation';
 import Pagination from '../common/Pagenation';
 
-const GroupMember = ({ view }) => {
+const GroupMember = ({ setView, view }) => {
   const [, setIsError] = useRecoilState(isErrorState);
   const [, setErrorMessage] = useRecoilState(errorMessageState);
   const [isFetching, setIsFetching] = useState(false);
@@ -74,7 +74,7 @@ const GroupMember = ({ view }) => {
     };
 
     getData();
-  }, [groupId]);
+  }, [groupId, navigator, adminValue, isMember]);
 
   return (
     <div className="gContainer  gList navVh">
