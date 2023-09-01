@@ -363,6 +363,10 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
 		if (!group) {
 			throw new Error('그룹을 찾을 수 없음');
 		}
+		const totalMembersCount = await prisma.groupUser.count({
+			where: { groupId: group.id },
+		});
+		const totalPages = Math.ceil(totalMembersCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
@@ -376,7 +380,11 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
 			},
 			...paginationOptions,
 		});
-		return groupMembers.map((groupUser) => groupUser.user.nickname);
+		return {
+			members: groupMembers.map((groupUser) => groupUser.user.nickname),
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
@@ -405,17 +413,26 @@ const createPost = async (userId, groupId, title, content, isNotice) => {
 };
 
 const getAllPosts = async (groupId, page, limit) => {
-	const paginationOptions =
-		page !== null && limit !== null
-			? { skip: (page - 1) * limit, take: limit }
-			: {};
 	try {
-		return await prisma.post.findMany({
-			where: {
-				groupId,
-			},
+		const totalPostsCount = await prisma.post.count({
+			where: { groupId },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
+
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
+
+		const posts = await prisma.post.findMany({
+			where: { groupId },
 			...paginationOptions,
 		});
+		return {
+			posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
@@ -480,15 +497,21 @@ const getRecentPosts = async (userId, page, limit) => {
 			},
 		});
 		const groupIds = userGroupIds.map((userGroup) => userGroup.groupId);
-		return await prisma.post.findMany({
-			where: {
-				groupId: { in: groupIds },
-			},
-			orderBy: {
-				createdAt: 'desc',
-			},
+		const totalPostsCount = await prisma.post.count({
+			where: { groupId: { in: groupIds } },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
+		const posts = await prisma.post.findMany({
+			where: { groupId: { in: groupIds } },
+			orderBy: { createdAt: 'desc' },
 			...paginationOptions,
 		});
+
+		return {
+			posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
@@ -678,15 +701,21 @@ const getUserGroupCertPosts = async (userId, page, limit) => {
 			select: { name: true },
 		});
 		const groupNames = groups.map((group) => group.name);
+
+		const totalPostsCount = await prisma.certPost.count({
+			where: { groupName: { in: groupNames }, isGroupPost: true },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
 				: {};
-		return await prisma.certPost.findMany({
+		const posts = await prisma.certPost.findMany({
 			where: { groupName: { in: groupNames }, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
 			...paginationOptions,
 		});
+		return { posts: posts, currentPage: page, totalPages: totalPages };
 	} catch (error) {
 		throw error;
 	}
