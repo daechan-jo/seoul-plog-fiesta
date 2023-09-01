@@ -41,6 +41,7 @@ const createGroup = async (groupData, managerId) => {
 		});
 		return createdGroup;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -90,6 +91,7 @@ const getAllGroups = async (page, limit) => {
 			}),
 		);
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -112,33 +114,44 @@ const getGroupDetails = async (groupId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const isUserGroupAdmin = async (userId, groupId) => {
-	const group = await prisma.group.findUnique({
-		where: {
-			id: groupId,
-		},
-		include: {
-			manager: true,
-		},
-	});
-	return group.managerId === userId;
+	try {
+		const group = await prisma.group.findUnique({
+			where: {
+				id: groupId,
+			},
+			include: {
+				manager: true,
+			},
+		});
+		return group.managerId === userId;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const isUserGroupMember = async (userId, groupId) => {
-	const groupUser = await prisma.groupUser.findUnique({
-		where: {
-			userId_groupId: {
-				userId: userId,
-				groupId: groupId,
+	try {
+		const groupUser = await prisma.groupUser.findUnique({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
 			},
-		},
-	});
+		});
 
-	return !!groupUser;
+		return !!groupUser;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const requestToJoinGroup = async (userId, groupId) => {
@@ -151,6 +164,7 @@ const requestToJoinGroup = async (userId, groupId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -180,6 +194,7 @@ const getGroupJoinRequests = async (managerId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -211,6 +226,7 @@ const acceptRegistration = async (managerId, groupId, userId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -241,6 +257,7 @@ const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
 		});
 		return true;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -266,6 +283,7 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 		if (!group || group.managerId !== managerId) return null;
 		return group.groupUser.map((groupUser) => groupUser.user);
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -341,6 +359,7 @@ const getMyGroups = async (userId, page, limit) => {
 			totalPages: totalPages,
 		}));
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -386,6 +405,7 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
 			totalPages: totalPages,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -408,6 +428,7 @@ const createPost = async (userId, groupId, title, content, isNotice) => {
 			data: postData,
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -434,6 +455,7 @@ const getAllPosts = async (groupId, page, limit) => {
 			totalPages: totalPages,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -477,6 +499,7 @@ const getPostById = async (postId) => {
 			comments: commentDetails,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -513,6 +536,7 @@ const getRecentPosts = async (userId, page, limit) => {
 			totalPages: totalPages,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -538,6 +562,7 @@ const editPost = async (postId, userId, postData) => {
 			data: filteredData,
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -569,6 +594,7 @@ const deletePost = async (postId, userId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -581,6 +607,7 @@ const deleteComment = async (commentId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -596,6 +623,7 @@ const leaveGroup = async (userId, groupId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -612,6 +640,7 @@ const removeGroupMember = async (userId, groupId) => {
 		});
 		return isRemoved !== null;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -668,25 +697,36 @@ const dropGroup = async (groupId) => {
 		await prisma.groupImage.deleteMany({ where: { groupId } });
 		await prisma.group.deleteMany({ where: { id: groupId } });
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const getGroupByPostId = async (postId) => {
-	return prisma.group.findFirst({
-		where: { post: { some: { id: postId } } },
-	});
+	try {
+		return prisma.group.findFirst({
+			where: { post: { some: { id: postId } } },
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
-	return prisma.groupUser.findUnique({
-		where: {
-			userId_groupId: {
-				userId: userId,
-				groupId: groupId,
+	try {
+		return prisma.groupUser.findUnique({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
 			},
-		},
-	});
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const getUserGroupCertPosts = async (userId, page, limit) => {
@@ -717,6 +757,7 @@ const getUserGroupCertPosts = async (userId, page, limit) => {
 		});
 		return { posts: posts, currentPage: page, totalPages: totalPages };
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -724,7 +765,7 @@ const getUserGroupCertPosts = async (userId, page, limit) => {
 const getCertPostsByGroupName = async (groupName, page, limit) => {
 	try {
 		const paginationOptions =
-			(page !== null) & (limit !== null)
+			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
 				: {};
 		const totalPostsCount = await prisma.certPost.count({
@@ -746,18 +787,22 @@ const getCertPostsByGroupName = async (groupName, page, limit) => {
 			throw new Error('인증게시글 없음');
 		}
 
-		return certPosts.map((certPost) => {
+		const posts = certPosts.map((certPost) => {
 			const participantNicknames = certPost.participants.map(
 				(participant) => participant.participant,
 			);
 			return {
 				...certPost,
 				participants: participantNicknames,
-				page: page,
-				totalPages: totalPages,
 			};
 		});
+		return {
+			posts: posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
