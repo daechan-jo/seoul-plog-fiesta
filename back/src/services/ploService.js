@@ -42,6 +42,7 @@ const createCertPost = async (userId, certPostData) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -95,6 +96,7 @@ const getAllCertPosts = async (page, limit) => {
 			totalPages: totalPages,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -154,6 +156,7 @@ const getCertPostDetails = async (certPostId) => {
 			comments: commentDetails,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -183,6 +186,7 @@ const updateCertPost = async (certPostId, certPostData) => {
 			data: updateData,
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -199,6 +203,7 @@ const deleteCertPostImages = async (certPostId) => {
 			where: { certPostId: certPostId },
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -209,6 +214,7 @@ const deleteCertPostParticipants = async (certPostId) => {
 			where: { certPostId: certPostId },
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -219,6 +225,7 @@ const deleteCertPost = async (certPostId) => {
 			where: { id: certPostId },
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -262,6 +269,7 @@ const getTopMainCertPostContributors = async () => {
 
 		return topUsers;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -302,6 +310,7 @@ const getTopCertPostContributorsUsers = async () => {
 		}
 		return topUsers;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -309,6 +318,7 @@ const getTopCertPostContributorsUsers = async () => {
 const getTopCertPostContributorsGroups = async () => {
 	try {
 		const certPosts = await prisma.certPost.findMany({
+			where: { isGroupPost: true },
 			select: {
 				groupName: true,
 			},
@@ -318,10 +328,10 @@ const getTopCertPostContributorsGroups = async () => {
 			return acc;
 		}, {});
 
-		//todo 여기서 왜 0번째 인덱스에 null이 들어갈까..
 		const topGroupNames = Object.keys(groupCounts)
 			.sort((a, b) => groupCounts[b] - groupCounts[a])
-			.slice(0, 6);
+			.slice(0, 5);
+		console.log(topGroupNames);
 
 		const topGroups = [];
 		for (let i = 0; i < topGroupNames.length; i++) {
@@ -344,20 +354,31 @@ const getTopCertPostContributorsGroups = async () => {
 		}
 		return topGroups;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const allCertPosts = async () => {
-	return prisma.certPost.findMany({
-		where: { isGroupPost: false },
-		select: { writerId: true },
-	});
+	try {
+		return prisma.certPost.findMany({
+			where: { isGroupPost: false },
+			select: { writerId: true },
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const paginate = (array, page, limit) => {
-	const startIndex = (page - 1) * limit;
-	return array.slice(startIndex, startIndex + limit);
+	try {
+		const startIndex = (page - 1) * limit;
+		return array.slice(startIndex, startIndex + limit);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const getTopUsers = async (page, limit) => {
@@ -400,6 +421,7 @@ const getTopUsers = async (page, limit) => {
 			totalPages: totalPages,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -423,6 +445,7 @@ const getUserRank = async (userId) => {
 		}
 		return loggedInUserRank;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -449,6 +472,7 @@ const getGroupRank = async (groupName) => {
 		}
 		return groupRank;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -467,6 +491,7 @@ const getUserCertPostsRegionCount = async (userId) => {
 		}
 		return regionCount;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -485,6 +510,7 @@ const getGroupCertPostsRegionCount = async (groupName) => {
 		}
 		return regionCount;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -501,6 +527,7 @@ const getAllCertPostsRegions = async () => {
 		}
 		return regionCount;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
