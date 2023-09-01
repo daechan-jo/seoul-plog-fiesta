@@ -363,6 +363,10 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
 		if (!group) {
 			throw new Error('그룹을 찾을 수 없음');
 		}
+		const totalMembersCount = await prisma.groupUser.count({
+			where: { groupId: group.id },
+		});
+		const totalPages = Math.ceil(totalMembersCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
@@ -376,7 +380,11 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
 			},
 			...paginationOptions,
 		});
-		return groupMembers.map((groupUser) => groupUser.user.nickname);
+		return {
+			members: groupMembers.map((groupUser) => groupUser.user.nickname),
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
