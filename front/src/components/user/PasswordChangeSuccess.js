@@ -26,6 +26,7 @@ const PasswordChangeSuccess = () => {
       navigate('/setpassword');
     }
   }, [navigate, pwToken]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 

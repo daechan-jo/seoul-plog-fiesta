@@ -47,8 +47,8 @@ const AllPostList = ({ view }) => {
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          paginatedData.map((data) => (
-            <Item data={data} key={data.id} view={view} />
+          paginatedData.map((data, index) => (
+            <Item data={data} key={data.id} order={index + 1} view={view} />
           ))
         )}
       </div>
@@ -82,7 +82,7 @@ const Item = ({ data, order }) => {
           setIsPlogginShowOpen(true);
         }}
       >
-        <div>{data.id}</div>
+        <div>{order}</div>
         <div>|</div>
         <div>{data.title}</div>
         <div>{handleCreatedDate(data.createdAt)}</div>

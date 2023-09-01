@@ -6,6 +6,7 @@ import { seoulDistricts } from '../common/exportData';
 import { useSelector } from 'react-redux';
 import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
+import post_none from '../../assets/post_none.png';
 
 const GroupMaking = ({ setIsModal, setDatas }) => {
   const loginId = useSelector((state) => state.user.loginId);
@@ -104,7 +105,7 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
         <div className="container">
           <div className="img">
             <div className="img-container">
-              <img id="GroupPreviewImg" alt="인증이미지" />
+              <img src={post_none} id="GroupPreviewImg" alt="인증이미지" />
             </div>
             <input type="file" name="imgUrl" onChange={handleImgChange} />
           </div>

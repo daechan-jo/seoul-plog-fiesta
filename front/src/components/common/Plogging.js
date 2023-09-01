@@ -4,6 +4,7 @@ import styles from './index.module.scss';
 import * as Api from '../../api';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
 import { useRecoilState } from 'recoil';
+import post_none from '../../assets/post_none.png';
 
 const Plogging = ({ setIsWriting }) => {
   const [, setIsError] = useRecoilState(isErrorState);
@@ -134,7 +135,7 @@ const Plogging = ({ setIsWriting }) => {
         <div className="container">
           <div className="img">
             <div className={styles.imgContainer}>
-              <img id="proggingPreviewImg" alt="인증이미지" />
+              <img src={post_none} id="proggingPreviewImg" alt="인증이미지" />
             </div>
             <input type="file" name="file" onChange={handleImgChange} />
             <div>

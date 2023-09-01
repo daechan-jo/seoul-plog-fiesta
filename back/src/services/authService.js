@@ -1,8 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
-const { error } = require('console');
-const { accessSync } = require('fs');
 const fs = require('fs');
 const path = require('path');
 
@@ -41,6 +39,7 @@ const createUser = async (userData) => {
   }
 };
 
+/** @description 이메일로 유저 찾기*/
 const getUserByEmail = async (email) => {
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -85,9 +84,8 @@ const updatePasswordValidByEmail = async (email) => {
   }
 };
 
+/** @description 비밀번호 변경*/
 const changePassword = async (email, password) => {
-  //비밀번호 변경
-  //console.log(email, password);
   const hashedPassword = await bcrypt.hash(password, 10);
   const updateUser = await prisma.user.update({
     where: {
@@ -100,6 +98,7 @@ const changePassword = async (email, password) => {
   return updateUser;
 };
 
+/** @description 비밀번호 변경*/
 const changePasswordByCheckOriginPassword = async (passwordData) => {
   const { id, password, newPassword } = passwordData;
   try {
@@ -113,6 +112,7 @@ const changePasswordByCheckOriginPassword = async (passwordData) => {
       password,
       passwordUser.password,
     );
+
     if (!isPasswordMatch) {
       throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
     }
@@ -133,6 +133,7 @@ const changePasswordByCheckOriginPassword = async (passwordData) => {
   }
 };
 
+/** @description 패스워드토큰으로 유저 찾기*/
 const getUserByPasswordToken = async (passwordToken) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -143,21 +144,10 @@ const getUserByPasswordToken = async (passwordToken) => {
   return user;
 };
 
-/** @description 회원정보 수정 ->
- * 입력한 비밀번호가 기존 비밀번호와 다를 경우 오류 반환
- * 비밀번호와 비밀번호확인문자가 다를 경우 오류 반환*/
+/** @description 유저 정보 수정 -> 입력한 비밀번호가 기존 비밀번호여야 함 */
 const changeInformation = async (user) => {
   const { id, name, nickname, about, activity, password } = user;
   try {
-    //동일 사용자도 동일 닉네임을 사용할 수 없음
-    /*
-    const sameNicknameUser = await prisma.user.findUnique({
-      where: {
-        nickname: nickname,
-      },
-    });
-    if (sameNicknameUser) throw new Error('이미 존재하는 닉네임입니다.');
-    */
     const passwordUser = await prisma.user.findUnique({
       where: {
         id: id,
@@ -182,8 +172,8 @@ const changeInformation = async (user) => {
       data: {
         name: name,
         nickname: nickname,
-        about: about, //빈 값 허용
-        activity: activity, //빈 값 허용
+        about: about,
+        activity: activity,
       },
     });
     return updateUser;
@@ -192,6 +182,7 @@ const changeInformation = async (user) => {
   }
 };
 
+/** @description 유저 삭제*/
 const removeUser = async (id) => {
   try {
     // 다른 테이블의 외래 키 레코드를 먼저 삭제
@@ -261,42 +252,6 @@ const getFriendIdsByUserId = async (id) => {
   }
 };
 
-const getProfileImageByUserId = async (id) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: id },
-      include: { profileImage: true },
-    });
-    return user;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const getCertPostsByUserId = async (id) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: id },
-      include: { certPosts: true },
-    });
-    return user;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const getCommentsByUserId = async (id) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: id },
-      include: { comments: true },
-    });
-    return user;
-  } catch (error) {
-    throw error;
-  }
-};
-
 /**@description 프로필 이미지 삭제*/
 const deleteUserProfileImageByUserId = async (id) => {
   try {
@@ -325,6 +280,7 @@ const deleteUserProfileImageByUserId = async (id) => {
   }
 };
 
+/** @description 인증글 이미지 삭제*/
 const deleteCertPostImagesByUserId = async (id) => {
   try {
     // 해당 유저의 CertPostImage 가져오기
@@ -335,7 +291,6 @@ const deleteCertPostImagesByUserId = async (id) => {
     for (const certPostImage of userCertPostImages) {
       // CertPostImage 삭제
       await prisma.certPostImage.delete({ where: { id: certPostImage.id } });
-      console.log(`CertPostImage (ID: ${certPostImage.id}) 삭제 완료`);
     }
     return { success: true, message: '인증 이미지 삭제 완료' };
   } catch (error) {
@@ -389,14 +344,10 @@ const deleteMyCommentsOnOtherUserCertPosts = async (id) => {
       // 대댓글 삭제
       for (const reply of comment.children) {
         await prisma.comment.delete({ where: { id: reply.id } });
-        console.log(`대댓글 (ID: ${reply.id}) 삭제 완료`);
         // 댓글 삭제
       }
-
       await prisma.comment.delete({ where: { id: comment.id } });
-      console.log(`댓글 (ID: ${comment.id}) 삭제 완료`);
     }
-
     return {
       success: true,
       message: '다른 사용자 인증글에 달린 댓글 및 대댓글 삭제 완료',
@@ -417,12 +368,9 @@ module.exports = {
   updatePasswordValidByEmail,
   getGroupsByUserId,
   getFriendIdsByUserId,
-  getProfileImageByUserId,
   deleteUserProfileImageByUserId,
   deleteCertPostsAndCommentsByUserId,
   deleteMyCommentsOnOtherUserCertPosts,
   deleteCertPostImagesByUserId,
-  getCertPostsByUserId,
-  getCommentsByUserId,
   changePasswordByCheckOriginPassword,
 };
