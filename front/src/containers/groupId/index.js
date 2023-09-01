@@ -50,7 +50,10 @@ const GroupIdContainer = () => {
         setName(res.data.name);
         setMembers(res.data.groupUser.map((user) => user.userId));
       } catch (err) {
-        console.log('그룹이름 데이터를 불러오는데 실패.', err);
+        console.log(
+          '그룹이름 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

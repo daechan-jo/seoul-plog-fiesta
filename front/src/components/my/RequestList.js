@@ -20,7 +20,10 @@ const RequestList = () => {
         const res = await Api.get(`/req/list`);
         setDatas(res.data.friendRequest.map((data) => data.userA));
       } catch (err) {
-        console.log('친구요청목록을 불러오는데 실패.', err);
+        console.log(
+          '친구요청목록을 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }
@@ -62,7 +65,7 @@ const Item = ({ data, setDatas }) => {
       setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       alert('수락 성공');
     } catch (err) {
-      alert('수락 실패', err);
+      alert('수락 실패', err.response.data.message);
     }
   };
 
@@ -73,7 +76,7 @@ const Item = ({ data, setDatas }) => {
       setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       alert('거절 성공');
     } catch (err) {
-      alert('거절 실패', err);
+      alert('거절 실패', err.response.data.message);
     }
   };
 

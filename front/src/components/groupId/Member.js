@@ -44,7 +44,7 @@ const GroupMember = ({ view }) => {
       await Api.delete(`/group/drop/${groupId}`);
       navigator('/network?view=group');
     } catch (err) {
-      console.log('그룹 삭제 실패.', err);
+      console.log('그룹 삭제 실패.', err.response.data.message);
     }
   };
 
@@ -134,7 +134,7 @@ const Item = ({ data, isGroupAdmin, groupId, setDatas }) => {
         await Api.delete(`/group/expulse/${groupId}/${data.id}`);
         setDatas((prev) => prev.filter((datas) => data.id !== datas.id));
       } catch (err) {
-        console.log('멤버 추방 실패.', err);
+        console.log('멤버 추방 실패.', err.response.data.message);
       }
     } else {
       console.log('멤버 추방 취소');

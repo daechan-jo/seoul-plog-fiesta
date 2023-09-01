@@ -60,7 +60,7 @@ const Register = () => {
       alert('회원가입 성공! 로그인해주세요');
       navigate('/login');
     } catch (err) {
-      console.log('회원가입에 실패하였습니다.', err);
+      console.log('회원가입에 실패하였습니다.', err.response.data.message);
     }
   };
 

@@ -64,7 +64,7 @@ const ItemList = () => {
           }
         }
       } catch (err) {
-        console.log('데이터를 불러오는데 실패.', err);
+        console.log('데이터를 불러오는데 실패.', err.response.data.message);
         setDatas([]);
       } finally {
         setIsFetching(false);

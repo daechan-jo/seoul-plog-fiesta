@@ -16,7 +16,7 @@ const MyRanking = ({ setIsMyRankingOpen, id, name }) => {
           return;
         }
       } catch (err) {
-        console.log('순위데이터를 불러오는데 실패.', err);
+        console.log('순위데이터를 불러오는데 실패.', err.response.data.message);
       }
     };
     getData();

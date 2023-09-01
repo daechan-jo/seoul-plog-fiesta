@@ -15,7 +15,7 @@ const Intro = () => {
         const res = await Api.get(`/plo/main/five`);
         setDatas(res.data);
       } catch (err) {
-        console.log('탑5데이터를 불러오는데 실패.', err);
+        console.log('탑5데이터를 불러오는데 실패.', err.response.data.message);
         setDatas([]);
       } finally {
         setIsFetching(false);

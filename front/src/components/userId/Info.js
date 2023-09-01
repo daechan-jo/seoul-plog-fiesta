@@ -58,7 +58,7 @@ const Info = () => {
       if (err.response && err.response.data && err.response.data.message) {
         alert(err.response.data.message);
       } else {
-        console.log('친구요청실패', err);
+        console.log('친구요청실패', err.response.data.message);
       }
     }
   };
@@ -73,7 +73,10 @@ const Info = () => {
           setImageContainer(res.data),
         );
       } catch (err) {
-        console.log('상위모임데이터를 불러오는데 실패.', err);
+        console.log(
+          '상위모임데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

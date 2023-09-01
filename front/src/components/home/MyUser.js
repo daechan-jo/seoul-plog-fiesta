@@ -18,7 +18,7 @@ const MyUser = () => {
           setDatas(res.data.friendsRecentPost);
         }
       } catch (err) {
-        console.log('유저데이터를 불러오는데 실패.', err);
+        console.log('유저데이터를 불러오는데 실패.', err.response.data.message);
         setDatas([]);
       } finally {
         setIsFetching(false);

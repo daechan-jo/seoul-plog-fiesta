@@ -31,7 +31,10 @@ const GroupRequestList = () => {
           setDatas(res.data);
         }
       } catch (err) {
-        console.log('해당그룹가입목록을 불러오는데 실패.', err);
+        console.log(
+          '해당그룹가입목록을 불러오는데 실패.',
+          err.response.data.message,
+        );
         setDatas([]);
       } finally {
         setIsFetching(false);
@@ -80,7 +83,7 @@ const Item = ({ data, setDatas, id }) => {
       setDatas((datas) => datas.filter((el) => el.id !== data.id));
       setIsError(true);
     } catch (err) {
-      alert('수락 실패', err);
+      alert('수락 실패', err.response.data.message);
     }
   };
 
@@ -91,7 +94,7 @@ const Item = ({ data, setDatas, id }) => {
       await Api.post(`/group/reject/${id}/${data.id}`);
       alert('거절 성공');
     } catch (err) {
-      alert('거절 실패', err);
+      alert('거절 실패', err.response.data.message);
     }
   };
 

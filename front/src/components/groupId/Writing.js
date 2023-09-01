@@ -48,7 +48,7 @@ const Writing = ({ setIsModalOpen, setDatas }) => {
       setIsModalOpen(false);
       setDatas((datas) => [...datas, res.data]);
     } catch (err) {
-      console.log('그룹 글생성 실패.', err);
+      console.log('그룹 글생성 실패.', err.response.data.message);
     }
   };
 

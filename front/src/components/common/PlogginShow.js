@@ -54,7 +54,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       console.log(res.data);
       setIsPlogginShowOpen(false);
     } catch (err) {
-      console.log('인증글 삭제 실패.', err);
+      console.log('인증글 삭제 실패.', err.response.data.message);
     }
   };
 
@@ -96,7 +96,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       });
       return res;
     } catch (err) {
-      console.log('이미지 업로드 에러', err);
+      console.log('이미지 업로드 에러', err.response.data.message);
       throw err;
     }
   };
@@ -124,7 +124,7 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
       }
       setIsEditing(false);
     } catch (err) {
-      alert('인증 글 수정 실패', err);
+      alert('인증 글 수정 실패', err.response.data.message);
     }
   };
 
@@ -137,7 +137,10 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
         setComments(res.data.comments);
         setPostId(res.data.id);
       } catch (err) {
-        console.log('인증글 데이터를 불러오는데 실패.', err);
+        console.log(
+          '인증글 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }
@@ -445,7 +448,7 @@ const CommentItem = ({ data, order, setComments, postId, isReply }) => {
       await Api.delete(`/comment/${data.id}`);
       setComments((prev) => prev.filter((comment) => comment.id !== data.id));
     } catch (err) {
-      console.log('댓글글 삭제 실패.', err);
+      console.log('댓글글 삭제 실패.', err.response.data.message);
     }
   };
 
@@ -456,7 +459,7 @@ const CommentItem = ({ data, order, setComments, postId, isReply }) => {
       await Api.put(`/comment/${data.id}`, { content: sendData });
       setIsEditing(false);
     } catch (err) {
-      console.log('댓글 수정 실패.', err);
+      console.log('댓글 수정 실패.', err.response.data.message);
     }
   };
 

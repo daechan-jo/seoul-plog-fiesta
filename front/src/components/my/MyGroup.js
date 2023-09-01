@@ -15,7 +15,7 @@ const MyGroup = ({ data, isEditing, setDatas }) => {
         await Api.get(`/group/${data.id}`);
         setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       } catch (err) {
-        console.log('그룹 탈퇴 실패.', err);
+        console.log('그룹 탈퇴 실패.', err.response.data.message);
       }
     } else {
       console.log('그룹 탈퇴가 취소되었습니다.');

@@ -36,7 +36,10 @@ const GroupPlogging = ({ view }) => {
           setTotalPages(res.data.totalPages);
         }
       } catch (err) {
-        console.log('인증글 데이터를 불러오는데 실패.', err);
+        console.log(
+          '인증글 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

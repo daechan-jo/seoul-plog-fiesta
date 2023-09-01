@@ -14,7 +14,7 @@ const MyGroups = () => {
         const res = await Api.get(`/group/mygroup`);
         setDatas(res.data.groups);
       } catch (err) {
-        console.log('모임데이터를 불러오는데 실패.', err);
+        console.log('모임데이터를 불러오는데 실패.', err.response.data.message);
       } finally {
         setIsFetching(false);
       }

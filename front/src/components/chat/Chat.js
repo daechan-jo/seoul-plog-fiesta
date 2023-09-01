@@ -86,7 +86,7 @@ function Chat() {
       console.log('백에서 받은값: ', res);
       setMessageText('');
     } catch (err) {
-      console.log('메시지 보내기 실패', err);
+      console.log('메시지 보내기 실패', err.response.data.message);
     }
   };
 

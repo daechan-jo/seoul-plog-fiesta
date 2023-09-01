@@ -92,7 +92,7 @@ const Plogging = ({ setIsWriting }) => {
       setErrorMessage('인증글이 생성되었습니다.');
       setIsError(true);
     } catch (err) {
-      alert('인증 글 업로드 실패', err);
+      alert('인증 글 업로드 실패', err.response.data.message);
     }
   };
 
@@ -106,7 +106,7 @@ const Plogging = ({ setIsWriting }) => {
 
         setGroupName(res.data.map((item) => item.name));
       } catch (err) {
-        console.log('나의 그룹 리스트 실패', err);
+        console.log('나의 그룹 리스트 실패', err.response.data.message);
       }
     };
 
@@ -120,7 +120,10 @@ const Plogging = ({ setIsWriting }) => {
           const res = await Api.get(`/group/members/${formData.groupName}`);
           setGroupMembers(res.data);
         } catch (err) {
-          console.log('그룹 멤버 리스트를 가져오는데 실패.', err);
+          console.log(
+            '그룹 멤버 리스트를 가져오는데 실패.',
+            err.response.data.message,
+          );
         }
       }
     };

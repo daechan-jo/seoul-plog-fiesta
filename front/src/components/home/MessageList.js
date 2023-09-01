@@ -13,7 +13,10 @@ const MessageList = ({ view }) => {
         //const res = await Api.get(``);
         //setDatas(res.data);
       } catch (err) {
-        console.log('나의 쪽지함 데이터를 불러오는데 실패.', err);
+        console.log(
+          '나의 쪽지함 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

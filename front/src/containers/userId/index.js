@@ -17,7 +17,10 @@ const UserIdContainer = () => {
         const res = await Api.get(`/friends`);
         setFriends(res.data.friendsList.map((user) => user.id));
       } catch (err) {
-        console.log('그룹이름 데이터를 불러오는데 실패.', err);
+        console.log(
+          '그룹이름 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

@@ -49,7 +49,7 @@ const Map = ({ endpoint, id }) => {
         const res = await Api.get(`${endpoint}${id}`);
         setData(handleMapData(res.data));
       } catch (err) {
-        console.log('지도데이터를 불러오는데 실패.', err);
+        console.log('지도데이터를 불러오는데 실패.', err.response.data.message);
       } finally {
         setIsFetching(false);
       }

@@ -29,7 +29,10 @@ const RankingContainer = () => {
           setGroups(res.data.topGroups);
         });
       } catch (err) {
-        console.log('상위 유저 및 그룹 데이터를 불러오는데 실패.', err);
+        console.log(
+          '상위 유저 및 그룹 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

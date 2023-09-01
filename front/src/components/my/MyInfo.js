@@ -94,13 +94,13 @@ const MyInfo = () => {
           });
           return res;
         } catch (err) {
-          console.log('이미지 업로드 에러', err);
+          console.log('이미지 업로드 에러', err.response.data.message);
           throw err;
         }
       }
       setIsEditing(false);
     } catch (err) {
-      console.log('데이터 수정 실패.', err);
+      console.log('데이터 수정 실패.', err.response.data.message);
       setData(originData);
     } finally {
       setIsFetching(false);
@@ -120,7 +120,7 @@ const MyInfo = () => {
           alert(res.data);
         }
       } catch (err) {
-        console.log('계정삭제 실패.', err);
+        console.log('계정삭제 실패.', err.response.data.message);
       }
     } else {
       console.log('그룹 탈퇴가 취소되었습니다.');
@@ -152,7 +152,7 @@ const MyInfo = () => {
           setImg(res.data),
         );
       } catch (err) {
-        console.log('데이터를 불러오는데 실패.', err);
+        console.log('데이터를 불러오는데 실패.', err.response.data.message);
       } finally {
         setIsFetching(false);
       }
@@ -345,7 +345,7 @@ const PasswordChange = ({ setIsChanging }) => {
       setIsError(true);
       dispatch(logout());
     } catch (err) {
-      alert('비밀번호 변경 실패', err);
+      alert('비밀번호 변경 실패', err.response.data.message);
     }
   };
   return (

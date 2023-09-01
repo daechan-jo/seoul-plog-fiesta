@@ -36,7 +36,10 @@ const List = () => {
           setDatas(res.data.slice(0, 5));
         }
       } catch (err) {
-        console.log('멤버 리스트 데이터를 불러오는데 실패.', err);
+        console.log(
+          '멤버 리스트 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

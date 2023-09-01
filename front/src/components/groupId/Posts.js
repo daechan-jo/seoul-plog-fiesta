@@ -30,7 +30,10 @@ const List = () => {
         const res = await Api.get(`/group/posts/${groupId}`);
         setDatas(res.data.filter((data) => data.isNotice === true));
       } catch (err) {
-        console.log('공지사항 데이터를 불러오는데 실패.', err);
+        console.log(
+          '공지사항 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
         setDatas([]);
       } finally {
         setIsFetching(false);

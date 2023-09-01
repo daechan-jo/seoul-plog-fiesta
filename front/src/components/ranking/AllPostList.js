@@ -31,7 +31,10 @@ const AllPostList = ({ view }) => {
         setDatas(res.data.posts);
         setTotalPages(res.data.totalPages);
       } catch (err) {
-        console.log('모든 인증글 데이터를 불러오는데 실패.', err);
+        console.log(
+          '모든 인증글 데이터를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

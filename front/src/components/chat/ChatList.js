@@ -22,7 +22,10 @@ const ChatList = () => {
       const res = await Api.get(`/user/${newSearchText}`);
       setSearchResult(res.data.searchNickname);
     } catch (err) {
-      console.log('이름 검색데이터를 불러오는데 실패.', err);
+      console.log(
+        '이름 검색데이터를 불러오는데 실패.',
+        err.response.data.message,
+      );
     }
   };
 
@@ -33,7 +36,10 @@ const ChatList = () => {
         const res = await Api.get('/unread');
         setDatas(res.data);
       } catch (err) {
-        console.log('채팅방 리스트를 불러오는데 실패.', err);
+        console.log(
+          '채팅방 리스트를 불러오는데 실패.',
+          err.response.data.message,
+        );
       } finally {
         setIsFetching(false);
       }

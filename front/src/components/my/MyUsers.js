@@ -23,7 +23,7 @@ const MyUsers = () => {
           setDatas([]);
         }
       } catch (err) {
-        console.log('모임데이터를 불러오는데 실패.', err);
+        console.log('모임데이터를 불러오는데 실패.', err.response.data.message);
       } finally {
         setIsFetching(false);
       }
@@ -78,7 +78,7 @@ const MyUser = ({ data, isEditing, setDatas }) => {
         await Api.delete(`/user/drop/${data.id}`);
         setDatas((datas) => datas.filter((prev) => prev.id !== data.id));
       } catch (err) {
-        console.log('친구 삭제 실패.', err);
+        console.log('친구 삭제 실패.', err.response.data.message);
       }
     } else {
       console.log('친구 삭제가 취소되었습니다.');

@@ -72,7 +72,7 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
       });
       return res;
     } catch (err) {
-      console.log('이미지 업로드 에러', err);
+      console.log('이미지 업로드 에러', err.response.data.message);
       throw err;
     }
   };
@@ -94,7 +94,7 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
       setErrorMessage('그룹이 생성되었습니다.');
       setIsError(true);
     } catch (err) {
-      console.log('에 실패하였습니다.', err);
+      console.log('에 실패하였습니다.', err.response.data.message);
     }
   };
 
