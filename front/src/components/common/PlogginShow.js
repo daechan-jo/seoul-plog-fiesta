@@ -173,7 +173,12 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
               />
             </div>
             {isEditing && (
-              <input type="file" name="file" onChange={handleImgChange} />
+              <input
+                type="file"
+                accept=".jpg, .jpeg, .png, .gif"
+                name="file"
+                onChange={handleImgChange}
+              />
             )}
             {isEditing && (
               <div>
@@ -483,16 +488,16 @@ const CommentItem = ({ data, order, setComments, postId, isReply }) => {
         </div>
         <div>{handleCreatedDate(data.createdAt)}</div>
         <div className={styles.btns}>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setCommentTow(!commentTwo);
+            }}
+          >
+            추가
+          </button>
           {user.loginId === data.writerId && (
             <>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCommentTow(!commentTwo);
-                }}
-              >
-                추가
-              </button>
               {isEditing ? (
                 <button onClick={handleEditSubmit}>완료</button>
               ) : (

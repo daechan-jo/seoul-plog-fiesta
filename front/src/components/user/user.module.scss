@@ -1,9 +1,10 @@
 .container {
   width: 40%;
   height: 80vh;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   // 투명도 넣어봤습니다
   background-color: rgb(255, 255, 255, 0.8);
   padding: 20px;
@@ -37,7 +38,7 @@
     margin-top: 50px;
     padding: 15px;
     background-color: #00821d;
-    border-radius: 20px;
+    border-radius: 8px;
     font-weight: 700;
     color: white;
   }

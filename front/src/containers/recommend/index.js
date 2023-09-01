@@ -17,6 +17,9 @@ const RecommendContainer = () => {
             height: '80vh',
             overflow: 'hidden',
             overflowX: 'hidden',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <iframe

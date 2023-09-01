@@ -82,8 +82,6 @@ const Item = ({ data, order }) => {
           setIsPlogginShowOpen(true);
         }}
       >
-        <div>{order}</div>
-        <div>|</div>
         <div>{data.title}</div>
         <div>{handleCreatedDate(data.createdAt)}</div>
       </div>
