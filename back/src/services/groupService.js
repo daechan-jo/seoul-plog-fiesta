@@ -70,7 +70,7 @@ const getAllGroups = async (page, limit) => {
 			},
 			...paginationOptions,
 		});
-		return await Promise.all(
+		const formatGroups = await Promise.all(
 			groups.map(async (group) => {
 				const memberCount = await prisma.groupUser.count({
 					where: { groupId: group.id, isAccepted: true },
@@ -85,11 +85,10 @@ const getAllGroups = async (page, limit) => {
 					...group,
 					memberCount,
 					images: imageUrls,
-					currentPage: page,
-					totalPages: totalPages,
 				};
 			}),
 		);
+		return { groups: formatGroups, currentPage: page, totalPages: totalPages };
 	} catch (error) {
 		console.error(error);
 		throw error;
