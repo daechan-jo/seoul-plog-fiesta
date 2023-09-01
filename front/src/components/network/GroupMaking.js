@@ -107,7 +107,12 @@ const GroupMaking = ({ setIsModal, setDatas }) => {
             <div className="img-container">
               <img src={post_none} id="GroupPreviewImg" alt="인증이미지" />
             </div>
-            <input type="file" name="imgUrl" onChange={handleImgChange} />
+            <input
+              type="file"
+              name="imgUrl"
+              accept=".jpg, .jpeg, .png, .gif"
+              onChange={handleImgChange}
+            />
           </div>
           <div className="content">
             <div>

@@ -55,7 +55,13 @@ const CommentAdd = ({
 
   return (
     <div className={styles.commentAdd}>
-      <textarea
+      {postId && <div>ㄴ</div>}
+      <input
+        placeholder={
+          postId
+            ? `@${id}님에게 보낼 답글을 입력해주세요.`
+            : '댓글을 입력해주세요.'
+        }
         type="text"
         value={data}
         onChange={(e) => {

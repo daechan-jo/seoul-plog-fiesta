@@ -143,3 +143,25 @@
     background-color: $grayBack;
   }
 }
+
+.plogging {
+  input {
+    height: 30px;
+  }
+  textarea {
+    height: 150px;
+  }
+  .check {
+    display: flex;
+    align-items: center;
+    input {
+      height: 15px;
+      width: 15px;
+      margin: 10px 10px 10px 0px;
+    }
+  }
+  div.btns {
+    display: flex;
+    justify-content: space-between;
+  }
+}

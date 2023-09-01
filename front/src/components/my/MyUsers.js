@@ -86,13 +86,13 @@ const MyUser = ({ data, isEditing, setDatas }) => {
   };
 
   return (
-    <div className={styles.myGroup}>
-      <div
-        className={styles.imgContainer}
-        onClick={() => {
-          navigator(`/users/${data.id}?view=main`);
-        }}
-      >
+    <div
+      className={styles.myGroup}
+      onClick={() => {
+        navigator(`/users/${data.id}?view=main`);
+      }}
+    >
+      <div className={styles.imgContainer}>
         <img
           src={
             data?.profileImage?.imageUrl
@@ -104,7 +104,13 @@ const MyUser = ({ data, isEditing, setDatas }) => {
       </div>
       <div>{data.nickname}</div>
       {isEditing && (
-        <button className={styles.delete} onClick={handleDelete}>
+        <button
+          className={styles.delete}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete();
+          }}
+        >
           X
         </button>
       )}

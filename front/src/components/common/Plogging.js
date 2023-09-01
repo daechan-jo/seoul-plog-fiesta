@@ -137,7 +137,12 @@ const Plogging = ({ setIsWriting }) => {
             <div className={styles.imgContainer}>
               <img src={post_none} id="proggingPreviewImg" alt="인증이미지" />
             </div>
-            <input type="file" name="file" onChange={handleImgChange} />
+            <input
+              type="file"
+              name="file"
+              accept=".jpg, .jpeg, .png, .gif"
+              onChange={handleImgChange}
+            />
             <div>
               <input
                 type="checkbox"
