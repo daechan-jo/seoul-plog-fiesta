@@ -52,6 +52,8 @@ const getAllCertPosts = async (page, limit) => {
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
 				: {};
+		const totalCertPostCount = await prisma.certPost.count();
+		const totalPages = Math.ceil(totalCertPostCount / limit);
 		const certPosts = await prisma.certPost.findMany({
 			include: {
 				images: {
@@ -69,7 +71,7 @@ const getAllCertPosts = async (page, limit) => {
 			orderBy: { createdAt: 'desc' },
 			...paginationOptions,
 		});
-		return certPosts.map((certPost) => {
+		const posts = certPosts.map((certPost) => {
 			const imageUrls = certPost.images.map((image) => image.imageUrl);
 			const participants = certPost.participants.map(
 				(participant) => participant.participant,
@@ -87,6 +89,11 @@ const getAllCertPosts = async (page, limit) => {
 				participants: participants,
 			};
 		});
+		return {
+			posts: posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
@@ -360,6 +367,8 @@ const getTopUsers = async (page, limit) => {
 			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
 			return acc;
 		}, {});
+		const totalUsersCount = Object.keys(userCounts).length;
+		const totalPages = Math.ceil(totalUsersCount / limit);
 		const sortedUserIds = Object.keys(userCounts).sort(
 			(a, b) => userCounts[b] - userCounts[a],
 		);
@@ -385,7 +394,11 @@ const getTopUsers = async (page, limit) => {
 				topUsers.push(userDetails);
 			}
 		}
-		return topUsers;
+		return {
+			users: topUsers,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
