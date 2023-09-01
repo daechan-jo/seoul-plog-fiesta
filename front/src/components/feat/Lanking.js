@@ -31,17 +31,23 @@ const MyRanking = ({ setIsMyRankingOpen, id, name }) => {
   }, [setIsMyRankingOpen]);
 
   return (
-    <div class={rank ? styles.frame : `${styles.frame} ${styles.frameBlock}`}>
-      <div class={styles.circle}></div>
-      <div class={`${styles.line} ${styles.left}`}></div>
-      <div class={`${styles.line} ${styles.right}`}></div>
-      <div class={`${styles.bracket} ${styles.left}`}></div>
-      <div class={`${styles.bracket} ${styles.right}`}></div>
-      <div class={`${styles.small} ${styles.top}`}>{name}의 현재 순위는?</div>
-      <div class={styles.big}>{rank && `${rank} 위`}</div>
-      <div class={`${styles.small} ${styles.bottom}`}>Seoul Flog Fiesta</div>
-      <div class={`${styles.hide} ${styles.top}`}></div>
-      <div class={`${styles.hide} ${styles.bottom}`}></div>
+    <div
+      className={rank ? styles.frame : `${styles.frame} ${styles.frameBlock}`}
+    >
+      <div className={styles.circle}></div>
+      <div className={`${styles.line} ${styles.left}`}></div>
+      <div className={`${styles.line} ${styles.right}`}></div>
+      <div className={`${styles.bracket} ${styles.left}`}></div>
+      <div className={`${styles.bracket} ${styles.right}`}></div>
+      <div className={`${styles.small} ${styles.top}`}>
+        {name}의 현재 순위는?
+      </div>
+      <div className={styles.big}>{rank && `${rank} 위`}</div>
+      <div className={`${styles.small} ${styles.bottom}`}>
+        Seoul Flog Fiesta
+      </div>
+      <div className={`${styles.hide} ${styles.top}`}></div>
+      <div className={`${styles.hide} ${styles.bottom}`}></div>
     </div>
   );
 };

@@ -99,10 +99,10 @@ const GroupMember = ({ view }) => {
         ) : (
           paginatedData.map((data) => (
             <Item
+              key={data.id}
               data={data.user}
               setDatas={setDatas}
               groupId={groupId}
-              key={data.name}
               view={view}
               isGroupAdmin={isGroupAdmin}
             />

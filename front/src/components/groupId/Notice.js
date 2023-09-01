@@ -18,6 +18,7 @@ const Notice = () => {
 
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
 
@@ -30,8 +31,8 @@ const Notice = () => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/group/posts/${groupId}`);
-        console.log(res);
-        setDatas(res.data);
+        setDatas(res.data.posts);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
         console.log('공지사항 데이터를 불러오는데 실패.', err);
       } finally {

@@ -12,7 +12,7 @@ const MyGroups = () => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/group/mygroup`);
-        setDatas(res.data);
+        setDatas(res.data.groups);
       } catch (err) {
         console.log('모임데이터를 불러오는데 실패.', err);
       } finally {
@@ -29,7 +29,9 @@ const MyGroups = () => {
         <h1>모임관리</h1>
       </div>
       <div className={styles.shortBox}>
-        {datas.length === 0 ? (
+        {isFetching ? (
+          <div>로딩중</div>
+        ) : !datas || datas.length === 0 ? (
           <div>데이터가 없습니다</div>
         ) : (
           datas.map((data) => (

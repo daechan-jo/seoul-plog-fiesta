@@ -34,7 +34,6 @@ const initialData = {
 */
 
 export const handleMapData = (data) => {
-  console.log(data);
   const sendData = {};
 
   for (const key in initialData) {

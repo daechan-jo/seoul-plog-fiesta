@@ -16,6 +16,7 @@ const GroupPlogging = ({ view }) => {
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
 
@@ -28,10 +29,11 @@ const GroupPlogging = ({ view }) => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/group/certpost/${name}`);
-        if (res.data === '인증게시글 없음') {
+        if (res.data.posts === '인증게시글 없음') {
           setDatas([]);
         } else {
-          setDatas(res.data);
+          setDatas(res.data.posts);
+          setTotalPages(res.data.totalPages);
         }
       } catch (err) {
         console.log('인증글 데이터를 불러오는데 실패.', err);

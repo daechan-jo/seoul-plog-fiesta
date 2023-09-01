@@ -25,7 +25,6 @@ const RankingContainer = () => {
       setIsFetching(true);
       try {
         await Api.get('/plo/five').then((res) => {
-          console.log(res.data);
           setUsers(res.data.topUsers);
           setGroups(res.data.topGroups);
         });

@@ -27,7 +27,7 @@ const PostList = ({ view }) => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/user/cert/list`);
-        console.log(res);
+
         setDatas(res.data);
       } catch (err) {
         console.log('나의 인증글 데이터를 불러오는데 실패.', err);

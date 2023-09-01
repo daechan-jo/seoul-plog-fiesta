@@ -12,6 +12,7 @@ const All = ({ view }) => {
   const [isMyRankingOpen, setIsMyRankingOpen] = useState(false);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const user = useSelector((state) => state.user);
   const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
@@ -24,8 +25,11 @@ const All = ({ view }) => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get('/plo/hundred');
-        setDatas(res.data);
+        const res = await Api.get(
+          `/plo/hundred?limit=${itemsPerPage}&page=${currentPage}`,
+        );
+        setDatas(res.data.users);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
         console.log('100명 순위데이터를 불러오는데 실패.', err);
       } finally {
@@ -34,7 +38,7 @@ const All = ({ view }) => {
     };
 
     getData();
-  }, [view]);
+  }, [view, currentPage]);
 
   return (
     <div className="gContainer  gList navVh">
@@ -62,14 +66,12 @@ const All = ({ view }) => {
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          paginatedData.map((data) => (
-            <Item data={data} key={data.id} view={view} />
-          ))
+          datas.map((data) => <Item data={data} key={data.id} view={view} />)
         )}
       </div>
       <div>
         <Pagination
-          totalPages={Math.ceil(datas.length / itemsPerPage)}
+          totalPages={totalPages}
           currentPage={currentPage}
           handlePage={handlePage}
         />

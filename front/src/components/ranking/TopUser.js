@@ -4,7 +4,6 @@ import styles from './index.module.scss';
 import { useNavigate } from 'react-router-dom';
 
 const TopUser = ({ isFetching, datas }) => {
-  console.log('topuser: ', datas);
   return (
     <div className="gContainer">
       <div className="titleContainer">

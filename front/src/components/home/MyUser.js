@@ -22,8 +22,6 @@ const MyUser = () => {
         setDatas([]);
       } finally {
         setIsFetching(false);
-        console.log(datas);
-        console.log(datas.length);
       }
     };
 

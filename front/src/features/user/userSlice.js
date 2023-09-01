@@ -25,7 +25,6 @@ const userSlice = createSlice({
       } else {
         state.users = friendshipA;
       }
-      console.log(state);
     },
     logout(state, action) {
       //api요청 후 state를 삭제함

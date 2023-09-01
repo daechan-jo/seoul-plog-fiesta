@@ -56,7 +56,6 @@ const Map = ({ endpoint, id }) => {
     };
 
     getData();
-    console.log(data);
   }, [endpoint, id]);
 
   useEffect(() => {

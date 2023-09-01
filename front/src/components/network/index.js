@@ -23,7 +23,7 @@ const ItemList = () => {
 
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [totalPages, setTotalPages] = useState(1);
   const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
 
   const handlePage = (pageNumber) => {
@@ -38,22 +38,29 @@ const ItemList = () => {
         if (!view || view === 'group') {
           if (isCheck) {
             const res = await Api.get(`/${view}/mygroup`);
-            setDatas(res.data);
+            setDatas(res.data.groups);
           } else {
-            const res = await Api.get(`/${view}`);
-            setDatas(res.data);
+            const res = await Api.get(
+              `/group?limit=${itemsPerPage}&page=${currentPage}`,
+            );
+
+            setDatas(res.data.groups);
+            setTotalPages(res.data.totalPages);
           }
         } else {
           if (isCheck) {
             const res = await Api.get(`/friends`);
-            if (!res.data.friendsList) {
+            if (!res.data.friendsList.user) {
               setDatas([]);
             } else {
-              setDatas(res.data.friendsList);
+              setDatas(res.data.friendsList.user);
             }
           } else {
-            const res = await Api.get(`/${view}s`);
-            setDatas(res.data.users);
+            const res = await Api.get(
+              `/${view}s?limit=${itemsPerPage}&page=${currentPage}`,
+            );
+            setDatas(res.data.users.user);
+            setTotalPages(res.data.users.totalPages);
           }
         }
       } catch (err) {
@@ -63,9 +70,12 @@ const ItemList = () => {
         setIsFetching(false);
       }
     };
-
     getData();
-  }, [view, isCheck, setIsCheck]);
+  }, [view, isCheck, setIsCheck, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [view, isCheck]);
 
   return (
     <div className="gContainer  gList navVh">
@@ -81,14 +91,14 @@ const ItemList = () => {
         ) : datas.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          paginatedData.map((data) => (
+          datas.map((data) => (
             <Item view={view} data={data} key={`${view}_${data.id}`} />
           ))
         )}
       </div>
       <div>
         <Pagination
-          totalPages={Math.ceil(datas.length / itemsPerPage)}
+          totalPages={totalPages}
           currentPage={currentPage}
           handlePage={handlePage}
         />

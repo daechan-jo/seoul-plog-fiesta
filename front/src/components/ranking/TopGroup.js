@@ -3,7 +3,6 @@ import styles from './index.module.scss';
 import { useNavigate } from 'react-router-dom';
 
 const TopGroup = ({ isFetching, datas }) => {
-  console.log('topgroutser: ', datas);
   return (
     <div className="gContainer">
       <div className="titleContainer">

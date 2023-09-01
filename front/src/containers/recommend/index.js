@@ -31,7 +31,7 @@ const RecommendContainer = () => {
             }}
             src="/seoul_course_map.html"
             title="Seoul Course Map"
-            frameborder="0"
+            frameBorder="0"
           ></iframe>
         </div>
       </div>

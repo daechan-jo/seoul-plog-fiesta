@@ -13,6 +13,7 @@ const AllPostList = ({ view }) => {
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const paginatedData = handlePagenation(datas, currentPage, itemsPerPage);
 
@@ -24,8 +25,11 @@ const AllPostList = ({ view }) => {
     const getData = async () => {
       try {
         setIsFetching(true);
-        const res = await Api.get(`/plo/post`);
-        setDatas(res.data);
+        const res = await Api.get(
+          `/plo/post?limit=${itemsPerPage}&page=${currentPage}`,
+        );
+        setDatas(res.data.posts);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
         console.log('모든 인증글 데이터를 불러오는데 실패.', err);
       } finally {
@@ -34,7 +38,7 @@ const AllPostList = ({ view }) => {
     };
 
     getData();
-  }, [view]);
+  }, [view, currentPage]);
 
   return (
     <div className="gContainer  gList navVh">
@@ -47,14 +51,14 @@ const AllPostList = ({ view }) => {
         ) : datas?.length === 0 ? (
           <div>데이터가 없습니다.</div>
         ) : (
-          paginatedData.map((data, index) => (
+          datas.map((data, index) => (
             <Item data={data} key={data.id} order={index + 1} view={view} />
           ))
         )}
       </div>
       <div>
         <Pagination
-          totalPages={Math.ceil(datas.length / itemsPerPage)}
+          totalPages={totalPages}
           currentPage={currentPage}
           handlePage={handlePage}
         />

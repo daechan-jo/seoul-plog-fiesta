@@ -16,9 +16,9 @@ const MyUsers = () => {
         setIsFetching(true);
         const res = await Api.get(`/friends`);
         console.log('res', res);
-        if (res.data.friendsList) {
+        if (res.data.friendsList.user) {
           //{"message":"친구 목록","friendsList":[{"userB":{"id":1,"nickname":"끼룩끼룩","about":null,"activity":null}}]}
-          setDatas(res.data.friendsList);
+          setDatas(res.data.friendsList.user);
         } else {
           setDatas([]);
         }

@@ -32,7 +32,6 @@ const ChatList = () => {
         setIsFetching(true);
         const res = await Api.get('/unread');
         setDatas(res.data);
-        console.log(res);
       } catch (err) {
         console.log('채팅방 리스트를 불러오는데 실패.', err);
       } finally {
