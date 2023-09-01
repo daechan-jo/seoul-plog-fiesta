@@ -1,14 +1,13 @@
 const { PrismaClient } = require('@prisma/client');
-// const { addSuffix } = require('yarn/lib/cli');
 const prisma = new PrismaClient();
-
 
 /** @description 모든 유저 정보 */
 const getAllUsers = async (page, limit) => {
 	try {
-		const paginationOptions = page !== null && limit !== null
-                ? { skip: (page - 1) * limit, take: limit }
-                : {};
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const allUserCount = await prisma.user.count();
 		const totalPages = Math.ceil(allUserCount / limit);
 		const user = await prisma.user.findMany({
@@ -18,14 +17,12 @@ const getAllUsers = async (page, limit) => {
 				about: true,
 				activity: true,
 			},
-			orderBy:
-				{ id: 'asc' },
-				...paginationOptions,
-
+			orderBy: { id: 'asc' },
+			...paginationOptions,
 		});
-		const users =  await Promise.all(
-			user.map( async  (user) => {
-				const userProfile = await prisma.userProfileImage.findMany( {
+		const users = await Promise.all(
+			user.map(async (user) => {
+				const userProfile = await prisma.userProfileImage.findMany({
 					where: { userId: user.id },
 				});
 
@@ -36,13 +33,14 @@ const getAllUsers = async (page, limit) => {
 				return {
 					...user,
 					images: userProfilesUrl,
-				}
-			}));
+				};
+			}),
+		);
 		return {
-				user: users,
-				currentPage: page,
-				totalPages: totalPages,
-			}
+			user: users,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
@@ -82,7 +80,6 @@ const searchUserId = async (userId) => {
 				activity: true,
 				profileImage: true,
 			},
-
 		});
 	} catch (error) {
 		throw error;
@@ -108,8 +105,8 @@ const getRandomUsers = async () => {
 			},
 		});
 		return await Promise.all(
-			user.map( async  (user) => {
-				const userProfile = await prisma.userProfileImage.findMany( {
+			user.map(async (user) => {
+				const userProfile = await prisma.userProfileImage.findMany({
 					where: { userId: user.id },
 				});
 
@@ -120,9 +117,9 @@ const getRandomUsers = async () => {
 				return {
 					...user,
 					images: userProfilesUrl,
-				}
-			})
-		)
+				};
+			}),
+		);
 	} catch (error) {
 		throw error;
 	}
@@ -243,7 +240,6 @@ const acceptFriend = async (userId, requestId) => {
 	}
 };
 
-
 /** @description 친구 거절 */
 const rejectFriend = async (userId, requestId) => {
 	try {
@@ -263,9 +259,10 @@ const rejectFriend = async (userId, requestId) => {
 /** @description 친구 목록 */
 const getMyFriends = async (userId, page, limit) => {
 	try {
-		const paginationOptions = page !== null && limit !== null
-                ? { skip: (page - 1) * limit, take: limit }
-                : {};
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		const myFriendsA = await prisma.friendship.findMany({
 			where: {
 				userAId: userId,
@@ -303,26 +300,22 @@ const getMyFriends = async (userId, page, limit) => {
 				activity: true,
 				profileImage: true,
 			},
-			orderBy:
-			{ id: 'asc' },
+			orderBy: { id: 'asc' },
 			...paginationOptions,
 		});
-		const allUserCount = await prisma.user.count(
-			{where : { id: { in: uniqueFriendIds }, }, }
-		);
+		const allUserCount = await prisma.user.count({
+			where: { id: { in: uniqueFriendIds } },
+		});
 		const totalPages = Math.ceil(allUserCount / limit);
 		return {
-				user: user,
-				currentPage: page,
-				totalPages: totalPages,
-		}
-
+			user: user,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
 		throw error;
 	}
 };
-
-
 
 /** @description 친구 삭제 */
 const deleteFriend = async (userId, friendId) => {
@@ -389,9 +382,10 @@ const friendsRecentPost = async (userId) => {
 
 const getCertPostsByUserId = async (userId, page, limit) => {
 	try {
-		const paginationOptions = page !== null && limit !== null
-		? { skip: (page - 1) * limit, take: limit }
-		: {};
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
 		return await prisma.certPost.findMany({
 			where: {
 				writerId: userId,
@@ -399,7 +393,7 @@ const getCertPostsByUserId = async (userId, page, limit) => {
 			},
 			orderBy: {
 				createdAt: 'desc',
-				},
+			},
 			...paginationOptions,
 		});
 	} catch (error) {
