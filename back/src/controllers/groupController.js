@@ -264,7 +264,7 @@ const deletePost = async (req, res, next) => {
 				userId,
 				post.groupId,
 			);
-			if (!(groupUser && groupUser.isAdmin))
+			if (!groupUser?.isAdimin)
 				return res.status(403).json({ message: '권한 없음' });
 		}
 		await Promise.all([

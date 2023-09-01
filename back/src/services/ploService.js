@@ -42,6 +42,7 @@ const createCertPost = async (userId, certPostData) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -52,6 +53,8 @@ const getAllCertPosts = async (page, limit) => {
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
 				: {};
+		const totalCertPostCount = await prisma.certPost.count();
+		const totalPages = Math.ceil(totalCertPostCount / limit);
 		const certPosts = await prisma.certPost.findMany({
 			include: {
 				images: {
@@ -69,7 +72,7 @@ const getAllCertPosts = async (page, limit) => {
 			orderBy: { createdAt: 'desc' },
 			...paginationOptions,
 		});
-		return certPosts.map((certPost) => {
+		const posts = certPosts.map((certPost) => {
 			const imageUrls = certPost.images.map((image) => image.imageUrl);
 			const participants = certPost.participants.map(
 				(participant) => participant.participant,
@@ -87,7 +90,13 @@ const getAllCertPosts = async (page, limit) => {
 				participants: participants,
 			};
 		});
+		return {
+			posts: posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -147,6 +156,7 @@ const getCertPostDetails = async (certPostId) => {
 			comments: commentDetails,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -176,6 +186,7 @@ const updateCertPost = async (certPostId, certPostData) => {
 			data: updateData,
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -192,6 +203,7 @@ const deleteCertPostImages = async (certPostId) => {
 			where: { certPostId: certPostId },
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -202,6 +214,7 @@ const deleteCertPostParticipants = async (certPostId) => {
 			where: { certPostId: certPostId },
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -212,6 +225,7 @@ const deleteCertPost = async (certPostId) => {
 			where: { id: certPostId },
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -255,6 +269,7 @@ const getTopMainCertPostContributors = async () => {
 
 		return topUsers;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -295,6 +310,7 @@ const getTopCertPostContributorsUsers = async () => {
 		}
 		return topUsers;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -302,6 +318,7 @@ const getTopCertPostContributorsUsers = async () => {
 const getTopCertPostContributorsGroups = async () => {
 	try {
 		const certPosts = await prisma.certPost.findMany({
+			where: { isGroupPost: true },
 			select: {
 				groupName: true,
 			},
@@ -311,10 +328,10 @@ const getTopCertPostContributorsGroups = async () => {
 			return acc;
 		}, {});
 
-		//todo 여기서 왜 0번째 인덱스에 null이 들어갈까..
 		const topGroupNames = Object.keys(groupCounts)
 			.sort((a, b) => groupCounts[b] - groupCounts[a])
-			.slice(0, 6);
+			.slice(0, 5);
+		console.log(topGroupNames);
 
 		const topGroups = [];
 		for (let i = 0; i < topGroupNames.length; i++) {
@@ -337,20 +354,31 @@ const getTopCertPostContributorsGroups = async () => {
 		}
 		return topGroups;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const allCertPosts = async () => {
-	return prisma.certPost.findMany({
-		where: { isGroupPost: false },
-		select: { writerId: true },
-	});
+	try {
+		return prisma.certPost.findMany({
+			where: { isGroupPost: false },
+			select: { writerId: true },
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const paginate = (array, page, limit) => {
-	const startIndex = (page - 1) * limit;
-	return array.slice(startIndex, startIndex + limit);
+	try {
+		const startIndex = (page - 1) * limit;
+		return array.slice(startIndex, startIndex + limit);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const getTopUsers = async (page, limit) => {
@@ -360,6 +388,8 @@ const getTopUsers = async (page, limit) => {
 			acc[post.writerId] = (acc[post.writerId] || 0) + 1;
 			return acc;
 		}, {});
+		const totalUsersCount = Object.keys(userCounts).length;
+		const totalPages = Math.ceil(totalUsersCount / limit);
 		const sortedUserIds = Object.keys(userCounts).sort(
 			(a, b) => userCounts[b] - userCounts[a],
 		);
@@ -385,8 +415,13 @@ const getTopUsers = async (page, limit) => {
 				topUsers.push(userDetails);
 			}
 		}
-		return topUsers;
+		return {
+			users: topUsers,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -410,6 +445,7 @@ const getUserRank = async (userId) => {
 		}
 		return loggedInUserRank;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -436,6 +472,7 @@ const getGroupRank = async (groupName) => {
 		}
 		return groupRank;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -454,6 +491,7 @@ const getUserCertPostsRegionCount = async (userId) => {
 		}
 		return regionCount;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -472,6 +510,7 @@ const getGroupCertPostsRegionCount = async (groupName) => {
 		}
 		return regionCount;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -488,6 +527,7 @@ const getAllCertPostsRegions = async () => {
 		}
 		return regionCount;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };

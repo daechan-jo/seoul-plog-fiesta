@@ -41,12 +41,15 @@ const createGroup = async (groupData, managerId) => {
 		});
 		return createdGroup;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const getAllGroups = async (page, limit) => {
 	try {
+		const totalGroupsCount = await prisma.group.count();
+		const totalPages = Math.ceil(totalGroupsCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
@@ -82,10 +85,13 @@ const getAllGroups = async (page, limit) => {
 					...group,
 					memberCount,
 					images: imageUrls,
+					currentPage: page,
+					totalPages: totalPages,
 				};
 			}),
 		);
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -108,33 +114,44 @@ const getGroupDetails = async (groupId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const isUserGroupAdmin = async (userId, groupId) => {
-	const group = await prisma.group.findUnique({
-		where: {
-			id: groupId,
-		},
-		include: {
-			manager: true,
-		},
-	});
-	return group.managerId === userId;
+	try {
+		const group = await prisma.group.findUnique({
+			where: {
+				id: groupId,
+			},
+			include: {
+				manager: true,
+			},
+		});
+		return group.managerId === userId;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const isUserGroupMember = async (userId, groupId) => {
-	const groupUser = await prisma.groupUser.findUnique({
-		where: {
-			userId_groupId: {
-				userId: userId,
-				groupId: groupId,
+	try {
+		const groupUser = await prisma.groupUser.findUnique({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
 			},
-		},
-	});
+		});
 
-	return !!groupUser;
+		return !!groupUser;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const requestToJoinGroup = async (userId, groupId) => {
@@ -147,6 +164,7 @@ const requestToJoinGroup = async (userId, groupId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -176,6 +194,7 @@ const getGroupJoinRequests = async (managerId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -207,6 +226,7 @@ const acceptRegistration = async (managerId, groupId, userId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -237,6 +257,7 @@ const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
 		});
 		return true;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -262,12 +283,20 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 		if (!group || group.managerId !== managerId) return null;
 		return group.groupUser.map((groupUser) => groupUser.user);
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const getMyGroups = async (userId, page, limit) => {
 	try {
+		const totalGroupsCount = await prisma.groupUser.count({
+			where: {
+				userId: userId,
+				isAccepted: true,
+			},
+		});
+		const totalPages = Math.ceil(totalGroupsCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
@@ -326,8 +355,11 @@ const getMyGroups = async (userId, page, limit) => {
 				nickname: group.group.manager.nickname,
 			},
 			imageUrl: group.group.groupImage[0]?.imageUrl || null,
+			currentPage: page,
+			totalPages: totalPages,
 		}));
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -350,6 +382,10 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
 		if (!group) {
 			throw new Error('그룹을 찾을 수 없음');
 		}
+		const totalMembersCount = await prisma.groupUser.count({
+			where: { groupId: group.id },
+		});
+		const totalPages = Math.ceil(totalMembersCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
@@ -363,8 +399,13 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
 			},
 			...paginationOptions,
 		});
-		return groupMembers.map((groupUser) => groupUser.user.nickname);
+		return {
+			members: groupMembers.map((groupUser) => groupUser.user.nickname),
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -387,23 +428,34 @@ const createPost = async (userId, groupId, title, content, isNotice) => {
 			data: postData,
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const getAllPosts = async (groupId, page, limit) => {
-	const paginationOptions =
-		page !== null && limit !== null
-			? { skip: (page - 1) * limit, take: limit }
-			: {};
 	try {
-		return await prisma.post.findMany({
-			where: {
-				groupId,
-			},
+		const totalPostsCount = await prisma.post.count({
+			where: { groupId },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
+
+		const paginationOptions =
+			page !== null && limit !== null
+				? { skip: (page - 1) * limit, take: limit }
+				: {};
+
+		const posts = await prisma.post.findMany({
+			where: { groupId },
 			...paginationOptions,
 		});
+		return {
+			posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -447,6 +499,7 @@ const getPostById = async (postId) => {
 			comments: commentDetails,
 		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -467,16 +520,23 @@ const getRecentPosts = async (userId, page, limit) => {
 			},
 		});
 		const groupIds = userGroupIds.map((userGroup) => userGroup.groupId);
-		return await prisma.post.findMany({
-			where: {
-				groupId: { in: groupIds },
-			},
-			orderBy: {
-				createdAt: 'desc',
-			},
+		const totalPostsCount = await prisma.post.count({
+			where: { groupId: { in: groupIds } },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
+		const posts = await prisma.post.findMany({
+			where: { groupId: { in: groupIds } },
+			orderBy: { createdAt: 'desc' },
 			...paginationOptions,
 		});
+
+		return {
+			posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -502,6 +562,7 @@ const editPost = async (postId, userId, postData) => {
 			data: filteredData,
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -533,6 +594,7 @@ const deletePost = async (postId, userId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -545,6 +607,7 @@ const deleteComment = async (commentId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -560,6 +623,7 @@ const leaveGroup = async (userId, groupId) => {
 			},
 		});
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -576,6 +640,7 @@ const removeGroupMember = async (userId, groupId) => {
 		});
 		return isRemoved !== null;
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -632,25 +697,36 @@ const dropGroup = async (groupId) => {
 		await prisma.groupImage.deleteMany({ where: { groupId } });
 		await prisma.group.deleteMany({ where: { id: groupId } });
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
 
 const getGroupByPostId = async (postId) => {
-	return prisma.group.findFirst({
-		where: { post: { some: { id: postId } } },
-	});
+	try {
+		return prisma.group.findFirst({
+			where: { post: { some: { id: postId } } },
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
-	return prisma.groupUser.findUnique({
-		where: {
-			userId_groupId: {
-				userId: userId,
-				groupId: groupId,
+	try {
+		return prisma.groupUser.findUnique({
+			where: {
+				userId_groupId: {
+					userId: userId,
+					groupId: groupId,
+				},
 			},
-		},
-	});
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const getUserGroupCertPosts = async (userId, page, limit) => {
@@ -665,16 +741,23 @@ const getUserGroupCertPosts = async (userId, page, limit) => {
 			select: { name: true },
 		});
 		const groupNames = groups.map((group) => group.name);
+
+		const totalPostsCount = await prisma.certPost.count({
+			where: { groupName: { in: groupNames }, isGroupPost: true },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
 		const paginationOptions =
 			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
 				: {};
-		return await prisma.certPost.findMany({
+		const posts = await prisma.certPost.findMany({
 			where: { groupName: { in: groupNames }, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
 			...paginationOptions,
 		});
+		return { posts: posts, currentPage: page, totalPages: totalPages };
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
@@ -682,9 +765,13 @@ const getUserGroupCertPosts = async (userId, page, limit) => {
 const getCertPostsByGroupName = async (groupName, page, limit) => {
 	try {
 		const paginationOptions =
-			(page !== null) & (limit !== null)
+			page !== null && limit !== null
 				? { skip: (page - 1) * limit, take: limit }
 				: {};
+		const totalPostsCount = await prisma.certPost.count({
+			where: { groupName, isGroupPost: true },
+		});
+		const totalPages = Math.ceil(totalPostsCount / limit);
 		const certPosts = await prisma.certPost.findMany({
 			where: { groupName, isGroupPost: true },
 			orderBy: { createdAt: 'desc' },
@@ -700,7 +787,7 @@ const getCertPostsByGroupName = async (groupName, page, limit) => {
 			throw new Error('인증게시글 없음');
 		}
 
-		return certPosts.map((certPost) => {
+		const posts = certPosts.map((certPost) => {
 			const participantNicknames = certPost.participants.map(
 				(participant) => participant.participant,
 			);
@@ -709,7 +796,13 @@ const getCertPostsByGroupName = async (groupName, page, limit) => {
 				participants: participantNicknames,
 			};
 		});
+		return {
+			posts: posts,
+			currentPage: page,
+			totalPages: totalPages,
+		};
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 };
