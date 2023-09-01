@@ -30,10 +30,10 @@ const List = () => {
       try {
         setIsFetching(true);
         const res = await Api.get(`/group/certpost/${name}`);
-        if (res.data === '인증게시글 없음') {
+        if (res.data.posts === '인증게시글 없음') {
           setDatas([]);
         } else {
-          setDatas(res.data.slice(0, 5));
+          setDatas(res.data.posts.slice(0, 5));
         }
       } catch (err) {
         console.log(
