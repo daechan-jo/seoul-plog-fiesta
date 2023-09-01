@@ -1,16 +1,16 @@
 import authService from '../services/authService';
 import randomToken from '../utils/randomToken';
 import mailSend from '../utils/mailSend';
-import { text } from 'express';
 
 /** @description 회원가입 -> 새로운 유저를 생성 */
 const createUser = async (req, res, next) => {
   try {
     const userData = req.body;
-    //비밀번호 확인
 
+    //비밀번호 확인
     if (userData.password !== userData.confirmPassword)
       throw new Error('비밀번호 확인 불일치');
+
     const user = await authService.createUser(userData);
     res.status(201).json(user);
   } catch (error) {
@@ -43,13 +43,14 @@ const login = async (req, res, next) => {
 };
 
 /** @description 이메일 발송 ->
- * 토큰이 포함된 url 발송*/
+ * 토큰 및 이메일이 포함된 url 발송*/
 const sendEmailWithTokenUrl = async (req, res, next) => {
   try {
     const nickname = req.body.nickname;
     const email = req.body.email;
 
     if (!nickname || !email) throw new Error('닉네임과 이메일을 입력해주세요');
+
     //유저가 있는지 검증
     const existingUser = await authService.getUserByEmail(email);
 
@@ -59,6 +60,7 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
 
     //링크에 포함될 랜덤 토큰 생성
     const token = randomToken.createRandomToken();
+
     //이메일 내용
     const emailOptions = {
       from: process.env.EMAIL_USER,
@@ -73,9 +75,9 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
         token +
         '">비밀번호 재설정 링크<a>',
     };
+
     //이메일 발송
     const response = await mailSend(emailOptions);
-    console.log('성공적으로 이메일을 전송하였습니다', response);
 
     //사용자의 토큰 업데이트
     const user = await authService.updatePasswordTokenByEmail(email, token);
@@ -93,6 +95,7 @@ const checkEmail = async (req, res, next) => {
   try {
     //유저 특정
     const user = await authService.getUserByPasswordToken(token);
+
     //유저에 PasswordValid, 토큰 유효 기간 기록
     const updatedUser = await authService.updatePasswordValidByEmail(
       user.email,
@@ -101,11 +104,7 @@ const checkEmail = async (req, res, next) => {
     const email = updatedUser.email;
     // 유저 이메일 인증 처리후 리다이렉트 -> 프론트로
     res.redirect(
-      process.env.FRONT_URL +
-        'changepassword?email=' +
-        email +
-        '&token=' +
-        passwordToken,
+      process.env.FRONT_URL + '?email=' + email + '&token=' + passwordToken,
     );
   } catch (error) {
     console.error(error);
@@ -114,11 +113,12 @@ const checkEmail = async (req, res, next) => {
   }
 };
 
-/** @description 비밀번호 변경*/
+/** @description 이메일 인증 후 비밀번호 변경*/
 const changePassword = async (req, res, next) => {
   try {
     //token, email, 변경될 password를 받음
     const { passwordToken, email, password } = req.body;
+
     const user = await authService.getUserByEmail(email);
 
     if (!passwordToken || !email || !password) {
@@ -177,6 +177,7 @@ const changeInformation = async (req, res, next) => {
   }
 };
 
+/**@description 기존 비밀번호 일치시 비밀번호 변경 */
 const changePasswordByCheckOriginPassword = async (req, res, next) => {
   try {
     const { password, newPassword, newConfirmPassword } = req.body;
@@ -206,15 +207,10 @@ const removeUser = async (req, res, next) => {
     const id = req.user.id;
     const groups = await authService.getGroupsByUserId(id);
     const friendships = await authService.getFriendIdsByUserId(id);
+
     if (groups.length !== 0)
       throw new Error('가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다');
-    /*
-      res
-        .status(500)
-        .json({
-          message: '가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다.',
-        });
-        */
+
     if (friendships.length !== 0)
       throw new Error('친구관계가 있으면 탈퇴할 수 없습니다.');
 
