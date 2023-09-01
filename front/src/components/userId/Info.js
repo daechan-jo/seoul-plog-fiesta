@@ -3,7 +3,12 @@ import * as Api from '../../api';
 import styles from './index.module.scss';
 import { useLocation, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { isChatOpenState, isChatWiState } from '../../features/recoilState';
+import {
+  errorMessageState,
+  isChatOpenState,
+  isChatWiState,
+  isErrorState,
+} from '../../features/recoilState';
 import { seoulDistricts } from '../common/exportData';
 import { UserIdContext } from '../../containers/userId';
 import MyLanking from '../feat/Lanking';
@@ -20,6 +25,9 @@ const mockmyInfo = {
 };
 
 const Info = () => {
+  const [, setIsError] = useRecoilState(isErrorState);
+  const [, setErrorMessage] = useRecoilState(errorMessageState);
+
   const [data, setData] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [isMyRankingOpen, setIsMyRankingOpen] = useState(false);
@@ -44,7 +52,8 @@ const Info = () => {
   const handleClick = async () => {
     try {
       await Api.post(`/req/${ownerId}`);
-      alert('친구요청성공');
+      setErrorMessage('친구 요청에 성공했습니다');
+      setIsError(true);
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {
         alert(err.response.data.message);

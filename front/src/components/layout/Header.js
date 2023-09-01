@@ -56,7 +56,7 @@ const Header = ({ setIsWriting }) => {
     } catch (err) {
       alert(err.message ? err.message : '친구 요청 실패.');
     }
-  }, [id]);
+  }, [id, setErrorMessage, setIsError]);
 
   const handleFriendRequestList = useCallback(() => {
     setIsRequestListOpen(true);
