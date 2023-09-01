@@ -173,7 +173,12 @@ const PloggingShow = ({ id, setIsPlogginShowOpen }) => {
               />
             </div>
             {isEditing && (
-              <input type="file" name="file" onChange={handleImgChange} />
+              <input
+                type="file"
+                accept=".jpg, .jpeg, .png, .gif"
+                name="file"
+                onChange={handleImgChange}
+              />
             )}
             {isEditing && (
               <div>
