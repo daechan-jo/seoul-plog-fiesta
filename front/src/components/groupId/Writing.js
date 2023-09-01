@@ -91,7 +91,7 @@ const Writing = ({ setIsModalOpen, setDatas }) => {
             onClick={() => {
               setIsModalOpen(false);
             }}
-            className={styles.back}
+            className="gBtn"
           >
             뒤로가기
           </button>

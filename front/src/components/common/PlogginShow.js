@@ -483,16 +483,16 @@ const CommentItem = ({ data, order, setComments, postId, isReply }) => {
         </div>
         <div>{handleCreatedDate(data.createdAt)}</div>
         <div className={styles.btns}>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setCommentTow(!commentTwo);
+            }}
+          >
+            추가
+          </button>
           {user.loginId === data.writerId && (
             <>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCommentTow(!commentTwo);
-                }}
-              >
-                추가
-              </button>
               {isEditing ? (
                 <button onClick={handleEditSubmit}>완료</button>
               ) : (
