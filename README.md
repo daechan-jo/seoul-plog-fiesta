@@ -49,7 +49,8 @@
 
 ## **활용 데이터셋**
 
-- 데이터셋 정보 및 출처 추가 예정
+- 서울특별시_강남구_쓰레기통설치현황 : https://www.data.go.kr/data/15038054/fileData.do
+- 2022년 쓰레기 무단투기 단속실적(자치구별) : https://opengov.seoul.go.kr/public/28298027
 
 ## **ERD**
 
