@@ -33,11 +33,16 @@
 
 ### 백엔드
 
+![Express](https://img.shields.io/badge/-Express-000000?style=for-the-badge&logo=express&logoColor=white)
 ![MySQL](https://img.shields.io/badge/-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Prisma](https://img.shields.io/badge/-Prisma-1B222D?style=for-the-badge&logo=prisma&logoColor=white)
 ![JWT](https://img.shields.io/badge/-JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 ![Nodemailer](https://img.shields.io/badge/-Nodemailer-339933?style=for-the-badge&logo=nodemailer&logoColor=white)
 ![Multer](https://img.shields.io/badge/-Multer-FF6600?style=for-the-badge&logo=multer&logoColor=white)
+
+### 데이터분석
+
+
 
 ### 기획 및 배포
 
