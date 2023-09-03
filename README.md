@@ -51,9 +51,9 @@
 
 - 데이터셋 정보 및 출처 추가 예정
 
-## **데이터베이스 모델**
+## **ERD**
 
-데이터베이스 모델은 위키 주소를 통해 확인할 수 있습니다.
+![SeoulPlogFiestaERD2](https://github.com/JoDaeChan/SeoulPlogFiesta/assets/103374153/cf769414-edf6-4452-8eeb-148bd5bdc7e3)
 
 ## **프로젝트 구성도**
 
