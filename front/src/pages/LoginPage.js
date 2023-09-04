@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
-import { LoginContainer } from '../containers/user';
 import Layout from './Layout';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Login from '../components/user/Login';
 
 const LoginPage = () => {
   const navigator = useNavigate();
@@ -18,7 +18,9 @@ const LoginPage = () => {
 
   return (
     <Layout>
-      <LoginContainer />
+      <main>
+      <Login />
+      </main>
     </Layout>
   );
 };

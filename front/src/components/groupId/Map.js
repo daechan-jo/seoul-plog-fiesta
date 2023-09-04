@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Map from '../common/Map';
-import { GroupIdContext } from '../../containers/groupId';
+import { GroupIdContext } from '../../pages/GroupIdPage';
 
 const GroupMap = () => {
   const { name } = useContext(GroupIdContext);

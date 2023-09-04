@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import * as Api from '../../api';
 import { useParams } from 'react-router-dom';
-import { GroupIdContext } from '../../containers/groupId';
 import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import styles from './index.module.scss';
+import { GroupIdContext } from '../../pages/GroupIdPage';
 
 const GroupUsers = () => {
   return (

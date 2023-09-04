@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import PasswordContainer from '../containers/password';
 import Layout from './Layout';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import PasswordChange from '../components/user/PasswordChange';
 
 const PasswordPage = () => {
   const navigator = useNavigate();
@@ -18,7 +18,9 @@ const PasswordPage = () => {
 
   return (
     <Layout>
-      <PasswordContainer />
+      <main>
+      <PasswordChange />
+      </main>
     </Layout>
   );
 };
