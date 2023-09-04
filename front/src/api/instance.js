@@ -13,6 +13,20 @@ export const instance = axios.create({
   },
 });
 
+const instanceInterceptor =  instance.interceptors.request.use(
+  (config) => {
+    console.log('인터셉트해버리기');
+    config.headers['Content-Type'] = 'application/json';
+    config.headers['Authorization'] = `Bearer ${userToken()}`;
+    return config;
+  }, (error)=>{
+    console.log('에러를 인터셉트해버리기') 
+    return Promise.reject(error);
+  }
+);
+
+instance.interceptors.request.eject(instanceInterceptor);
+
 export const formDataInstance = axios.create({
   baseURL,
   timeout: 3000,
@@ -21,3 +35,15 @@ export const formDataInstance = axios.create({
     Authorization: `Bearer ${userToken()}`,
   },
 });
+
+const formDataInstanceInterceptor = formDataInstance.interceptors.request.use(
+  (config) => {
+    console.log('폼 인터셉트해버리기')
+    return config;
+  }, (error)=>{
+    console.log('폼 에러를 인터셉트해버리기') 
+    return Promise.reject(error);
+  }
+);
+
+formDataInstance.interceptors.request.eject(formDataInstanceInterceptor);
