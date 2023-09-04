@@ -13,7 +13,7 @@ export const instance = axios.create({
   },
 });
 
-const instanceInterceptor =  instance.interceptors.request.use(
+instance.interceptors.request.use(
   (config) => {
     console.log('인터셉트해버리기');
     config.headers['Content-Type'] = 'application/json';
@@ -24,8 +24,6 @@ const instanceInterceptor =  instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-instance.interceptors.request.eject(instanceInterceptor);
 
 export const formDataInstance = axios.create({
   baseURL,
