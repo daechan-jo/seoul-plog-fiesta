@@ -11,50 +11,39 @@ datasource db {
 }
 
 model User {
-  id            Int               @id @default(autoincrement())
-  name          String
-  nickname      String            @unique
-  email         String            @unique
-  password      String
-  passwordToken String?           @unique
-  passwordValid DateTime?
-  about         String?
-  activity      String?
-  provider      String?
-  friendshipsA  Friendship[]      @relation("UserFriendshipsA")
-  friendshipsB  Friendship[]      @relation("UserFriendshipsB")
-  groups        GroupUser[]
-  createdGroups Group[]
-  posts         Post[]
-  comments      Comment[]
-  profileImage  UserProfileImage?
-  certPosts     CertPost[]
-  chatRoomUser  ChatRoomUser[]
-  chatMessage   ChatMessage[]
+	id            Int               @id @default(autoincrement())
+	name          String
+	nickname      String            @unique
+	email         String            @unique
+	password      String
+	passwordToken String?           @unique
+	passwordValid DateTime?
+	about         String?
+	activity      String?
+	provider      String?
+	friendshipsA  Friendship[]      @relation("UserFriendshipsA")
+	friendshipsB  Friendship[]      @relation("UserFriendshipsB")
+	groups        GroupUser[]
+	createdGroups Group[]
+	posts         Post[]
+	comments      Comment[]
+	profileImage  UserProfileImage?
+	certPosts     CertPost[]
+	chatMessage   ChatMessage[]
 }
 
 model ChatRoom {
-	id            Int            @id @default(autoincrement())
-	chatRoomUsers ChatRoomUser[]
-	messages      ChatMessage[]
-	createdAt     DateTime       @default(now())
-}
-
-model ChatRoomUser {
-	chatRoomId Int
-	chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
-	userId     Int
-	user       User     @relation(fields: [userId], references: [id])
-
-	@@id([chatRoomId, userId])
+	id        String        @id
+	messages  ChatMessage[]
+	createdAt DateTime      @default(now())
 }
 
 model ChatMessage {
 	id        Int      @id @default(autoincrement())
 	room      ChatRoom @relation(fields: [roomId], references: [id])
-	roomId    Int
+	roomId    String
 	sender    User     @relation(fields: [senderId], references: [id])
-	senderId  Int
+	senderId  Int      @map("sender_id")
 	message   String
 	createdAt DateTime @default(now())
 	isRead    Boolean  @default(false)
@@ -68,18 +57,18 @@ model UserProfileImage {
 }
 
 model Group {
-  id           Int          @id @default(autoincrement())
-  name         String				@unique
-  manager      User         @relation(fields: [managerId], references: [id])
-  managerId    Int
-  posts        Post[]
+	id           Int          @id @default(autoincrement())
+	name         String       @unique
+	manager      User         @relation(fields: [managerId], references: [id])
+	managerId    Int
+	posts        Post[]
 	certposts    CertPost[]
-  goal         String?			@db.VarChar(1000)
-	region       String?			@db.VarChar(1000)
-	introduction String?			@db.VarChar(1000)
-  memberLimit  Int          @default(50)
-  groupUser    GroupUser[]
-  groupImage   GroupImage[]
+	goal         String?      @db.VarChar(1000)
+	region       String?      @db.VarChar(1000)
+	introduction String?      @db.VarChar(1000)
+	memberLimit  Int          @default(50)
+	groupUser    GroupUser[]
+	groupImage   GroupImage[]
 }
 
 model GroupUser {
@@ -90,8 +79,7 @@ model GroupUser {
 	isAdmin    Boolean @default(false)
 	isAccepted Boolean @default(false)
 
-
-  @@id([userId, groupId])
+	@@id([userId, groupId])
 }
 
 model GroupImage {
@@ -113,33 +101,33 @@ model Friendship {
 }
 
 model Post {
-  id        Int         @id @default(autoincrement())
-  writer    User        @relation(fields: [writerId], references: [id])
-  writerId  Int
-  group     Group       @relation(fields: [groupId], references: [id])
-  groupId   Int
-  title     String			@db.VarChar(50)
-	content   String			@db.VarChar(1000)
-  isNotice  Boolean
-  createdAt DateTime    @default(now())
-  comments  Comment[]
-  images    PostImage[]
+	id        Int         @id @default(autoincrement())
+	writer    User        @relation(fields: [writerId], references: [id])
+	writerId  Int
+	group     Group       @relation(fields: [groupId], references: [id])
+	groupId   Int
+	title     String      @db.VarChar(50)
+	content   String      @db.VarChar(1000)
+	isNotice  Boolean
+	createdAt DateTime    @default(now())
+	comments  Comment[]
+	images    PostImage[]
 }
 
 model Comment {
-  id         Int       @id @default(autoincrement())
-  content    String		 @db.VarChar(200)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  writer     User      @relation(fields: [writerId], references: [id])
-  writerId   Int
-  post       Post?     @relation(fields: [postId], references: [id])
-  postId     Int?
-  certPost   CertPost? @relation(fields: [certPostId], references: [id])
-  certPostId Int?
-  parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
-  parentId   Int?
-  children   Comment[] @relation("CommentToComment")
+	id         Int       @id @default(autoincrement())
+	content    String    @db.VarChar(200)
+	createdAt  DateTime  @default(now())
+	updatedAt  DateTime  @updatedAt
+	writer     User      @relation(fields: [writerId], references: [id])
+	writerId   Int
+	post       Post?     @relation(fields: [postId], references: [id])
+	postId     Int?
+	certPost   CertPost? @relation(fields: [certPostId], references: [id])
+	certPostId Int?
+	parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
+	parentId   Int?
+	children   Comment[] @relation("CommentToComment")
 }
 
 model PostImage {
@@ -150,36 +138,37 @@ model PostImage {
 }
 
 model CertPost {
-  id        	Int             @id @default(autoincrement())
-  writer    	User            @relation(fields: [writerId], references: [id])
-  writerId  	Int
-  title     	String			@db.VarChar(50)
-  region   		String			@db.VarChar(20)
-  location  	String			@db.VarChar(50)
-	distance  	String			@db.VarChar(50)
-	trashAmount String			@db.VarChar(50)
-	averagePace String			@db.VarChar(50)
-  description String			@db.VarChar(1000)
-	startTime 	String			@db.VarChar(50)
-	endTime   	String		  @db.VarChar(50)
-  createdAt 	DateTime        @default(now())
-  comments  	Comment[]
-  images    	CertPostImage[]
-	isGroupPost  Boolean      @default(false)
-	group       Group?       @relation(fields: [groupName], references: [name])
+	id           Int                   @id @default(autoincrement())
+	writer       User                  @relation(fields: [writerId], references: [id])
+	writerId     Int
+	title        String                @db.VarChar(50)
+	region       String                @db.VarChar(20)
+	location     String                @db.VarChar(50)
+	distance     String                @db.VarChar(50)
+	trashAmount  String                @db.VarChar(50)
+	averagePace  String                @db.VarChar(50)
+	description  String                @db.VarChar(1000)
+	startTime    String                @db.VarChar(50)
+	endTime      String                @db.VarChar(50)
+	createdAt    DateTime              @default(now())
+	comments     Comment[]
+	images       CertPostImage[]
+	isGroupPost  Boolean               @default(false)
+	group        Group?                @relation(fields: [groupName], references: [name])
 	groupName    String?
 	participants CertPostParticipant[]
 }
+
 model CertPostParticipant {
-	id            Int         @id @default(autoincrement())
-	certPost      CertPost    @relation(fields: [certPostId], references: [id])
-	certPostId    Int
-	participant   String
+	id          Int      @id @default(autoincrement())
+	certPost    CertPost @relation(fields: [certPostId], references: [id])
+	certPostId  Int
+	participant String
 }
 
 model CertPostImage {
-  id         Int      @id @default(autoincrement())
-  imageUrl   String
-  certPost   CertPost @relation(fields: [certPostId], references: [id])
-  certPostId Int
+	id         Int      @id @default(autoincrement())
+	imageUrl   String
+	certPost   CertPost @relation(fields: [certPostId], references: [id])
+	certPostId Int
 }
