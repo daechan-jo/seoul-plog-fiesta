@@ -45,7 +45,7 @@ app.use(errorMiddleware);
 
 /** @description 실시간 채팅 */
 const io = socketIo(server, {
-  path: '/chat',
+  path: '/',
   cors: {
     origin: 'http://localhost:3000', // 실제 프론트엔드 URL로 대체하세요
     methods: ['GET', 'POST'],
@@ -91,9 +91,9 @@ io.on('connection', async (socket) => {
       const messages = await prisma.chatMessage.findMany({
         where: { roomId },
       });
-      console.log(messages, '= 채팅 내역 소환');
+      console.log(messages, '= 채팅 내역 불러오기');
 
-      //읽음처리
+      //상대방이 보낸 메시지 읽음처리
       for (let message of messages) {
         if (message.senderId !== loggedInUserId) {
           await prisma.chatMessage.update({
@@ -150,12 +150,18 @@ io.on('connection', async (socket) => {
         nickname: user.nickname,
         message,
       });
+
       if (io.sockets.connected[otherUserSocketId]) {
         await prisma.chatMessage.update({
           where: { id: createdMessage.id },
           data: { isRead: true },
         });
       }
+      io.to(otherUserSocketId).emit('newMessage', {
+        senderId: loggedInUserId,
+        nickname: user.nickname,
+        messageId: createdMessage.id,
+      });
     }
   });
 
