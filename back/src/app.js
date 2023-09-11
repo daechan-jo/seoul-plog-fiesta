@@ -9,7 +9,6 @@ import groupRoutes from './routers/groupRouter';
 import uploadRouter from './routers/uploadRouter';
 import loadRouter from './routers/loadRouter';
 import commentRouter from './routers/commentRouter';
-import chatRouter from './routers/chatRouter';
 import ploRouter from './routers/ploRouter';
 import { local, jwt } from './config';
 import http from 'http';
@@ -38,14 +37,13 @@ app.use(groupRoutes);
 app.use(uploadRouter);
 app.use(loadRouter);
 app.use(commentRouter);
-app.use(chatRouter);
 app.use(ploRouter);
 
 app.use(errorMiddleware);
 
 /** @description 실시간 채팅 */
 const io = socketIo(server, {
-  path: '/',
+  path: '/chat',
   cors: {
     origin: 'http://localhost:3000', // 실제 프론트엔드 URL로 대체하세요
     methods: ['GET', 'POST'],
@@ -72,6 +70,17 @@ io.on('connection', async (socket) => {
     user,
   };
   console.log(`User ${user.nickname} connected`);
+
+  socket.on('initialize', async (userId) => {
+    const messages = await prisma.$queryRaw`
+      SELECT * FROM ChatMessage 
+      WHERE roomId LIKE '%chat_${userId}_%' 
+        AND senderId != ${userId}
+        AND isRead = false
+      ORDER BY createdAt DESC, senderId ASC
+    `;
+    socket.emit('messages', messages);
+  });
 
   socket.on('joinRoom', async (otherUserId) => {
     // 나와 상대방 ID를 기반으로 고유한 방 ID를 생성
