@@ -85,12 +85,24 @@ io.on('connection', async (socket) => {
       where: { id: roomId },
     });
     console.log(existingRoom, '= null ? 만들어진 방 접속');
+
     if (existingRoom) {
       socket.join(roomId);
       const messages = await prisma.chatMessage.findMany({
         where: { roomId },
       });
       console.log(messages, '= 채팅 내역 소환');
+
+      //읽음처리
+      for (let message of messages) {
+        if (message.senderId !== loggedInUserId) {
+          await prisma.chatMessage.update({
+            where: { id: message.id },
+            data: { isRead: true },
+          });
+        }
+      }
+
       // 채팅내역 불러옴
       socket.emit('messages', messages);
     } else {
@@ -120,7 +132,7 @@ io.on('connection', async (socket) => {
       });
     }
 
-    await prisma.chatMessage.create({
+    const createdMessage = await prisma.chatMessage.create({
       data: {
         roomId,
         message,
@@ -138,6 +150,12 @@ io.on('connection', async (socket) => {
         nickname: user.nickname,
         message,
       });
+      if (io.sockets.connected[otherUserSocketId]) {
+        await prisma.chatMessage.update({
+          where: { id: createdMessage.id },
+          data: { isRead: true },
+        });
+      }
     }
   });
 
