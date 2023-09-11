@@ -147,15 +147,24 @@ io.on('connection', async (socket) => {
       otherUserId,
     )}`;
 
-    // 사용자가 방을 나가면, 해당 방과 속해있는 메시지를 데이터베이스에서 삭제한다
+    console.log('채팅방 나가기');
+    socket.leave(roomId);
+  });
+
+  socket.on('deleteRoom', async (otherUserId) => {
+    const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
+      loggedInUserId,
+      otherUserId,
+    )}`;
+
+    // 사용자가 채팅방을 지우면, 해당 방과 속해있는 메시지를 데이터베이스에서 삭제한다
     await prisma.chatMessage.deleteMany({
       where: { roomId },
     });
     await prisma.chatRoom.delete({
       where: { id: roomId },
     });
-    console.log('채팅방이랑 채팅내역 삭-제');
-    socket.leave(roomId);
+    console.log('채팅방 지우기');
   });
 
   socket.on('messageViewed', async (messageId) => {
