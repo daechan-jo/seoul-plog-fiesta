@@ -2,6 +2,10 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const loadProfileImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Load']
+   * #swagger.summary = '프로필 이미지 로드'
+   */
   try {
     const userId = parseInt(req.params.userid);
     const userProfileImage = await prisma.userProfileImage.findUnique({
@@ -19,6 +23,10 @@ const loadProfileImage = async (req, res, next) => {
 };
 
 const loadPostImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Load']
+   * #swagger.summary = '게시글 이미지 로드'
+   */
   try {
     const postId = parseInt(req.params.postid);
     const postImage = await prisma.postImage.findFirst({
@@ -36,6 +44,10 @@ const loadPostImage = async (req, res, next) => {
 };
 
 const loadGroupImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Load']
+   * #swagger.summary = '그룹 이미지 로드'
+   */
   try {
     const groupId = parseInt(req.params.groupid);
     const groupImage = await prisma.groupImage.findFirst({
@@ -55,6 +67,10 @@ const loadGroupImage = async (req, res, next) => {
 };
 
 const loadCertPostImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Load']
+   * #swagger.summary = '인증게시글 이미지 로드'
+   */
   try {
     const certPostId = parseInt(req.params.certid);
     const certPostImage = await prisma.certPostImage.findFirst({

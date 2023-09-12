@@ -4,6 +4,11 @@ import imageService from '../services/imageService.js';
 import groupUtils from '../utils/groupUtils.js';
 
 const createGroup = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 생성'
+   * #swagger.description = '1인당 5개 생성 제한 / 그룹 이름 중복 불가'
+   */
   try {
     const groupData = req.body;
     const managerId = req.user.id;
@@ -17,6 +22,11 @@ const createGroup = async (req, res, next) => {
 };
 
 const getAllGroups = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '모든 그룹 조회'
+   * #swagger.description = '서버사이드 페이지네이션'
+   */
   try {
     const page = parseInt(req.query.page) || null;
     const limit = parseInt(req.query.limit) || null;
@@ -29,6 +39,10 @@ const getAllGroups = async (req, res, next) => {
 };
 
 const getGroupDetails = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 상세 조회'
+   */
   try {
     const groupId = parseInt(req.params.groupid);
     const group = await groupService.getGroupDetails(groupId);
@@ -41,6 +55,11 @@ const getGroupDetails = async (req, res, next) => {
 };
 
 const requestToJoinGroup = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 가입 신청'
+   * #swagger.description = 'GroupUser 테이블에 isMember = false로 생성'
+   */
   try {
     const userId = req.user.id;
     const groupId = parseInt(req.params.groupid);
@@ -63,6 +82,11 @@ const requestToJoinGroup = async (req, res, next) => {
 };
 
 const getGroupJoinRequests = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 가입 신청 목록'
+   * #swagger.description = '그룹 생성자 권한'
+   */
   try {
     const managerId = req.user.id;
     const groupJoinRequests = await groupService.getGroupJoinRequests(
@@ -76,6 +100,11 @@ const getGroupJoinRequests = async (req, res, next) => {
 };
 
 const acceptRegistration = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 가입 신청 수락'
+   * #swagger.description = '그룹 생성자 권한'
+   */
   try {
     const managerId = req.user.id;
     const groupId = parseInt(req.params.groupid);
@@ -93,6 +122,11 @@ const acceptRegistration = async (req, res, next) => {
 };
 
 const getGroupJoinRequestsByGroupId = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '해당 그룹 가입 신청 목록'
+   * #swagger.description = '그룹 생성자 권한'
+   */
   try {
     const groupId = parseInt(req.params.groupid);
     const managerId = req.user.id;
@@ -111,6 +145,11 @@ const getGroupJoinRequestsByGroupId = async (req, res, next) => {
 };
 
 const rejectGroupJoinRequest = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 가입 신청 거절'
+   * #swagger.description = '그룹 생성자 권한'
+   */
   try {
     const userId = parseInt(req.params.userid);
     const groupId = parseInt(req.params.groupid);
@@ -133,6 +172,11 @@ const rejectGroupJoinRequest = async (req, res, next) => {
 };
 
 const getMyGroups = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '사용자 소속 그룹 목록'
+   * #swagger.description = '서버사이드 페이지네이션'
+   */
   try {
     const userId = req.user.id;
     const page = parseInt(req.query.page) || null;
@@ -146,6 +190,10 @@ const getMyGroups = async (req, res, next) => {
 };
 
 const getGroupMembers = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '해당 그룹원 닉네임 배열 반환'
+   */
   try {
     const page = parseInt(req.query.page) || null;
     const limit = parseInt(req.query.limit) || null;
@@ -165,6 +213,11 @@ const getGroupMembers = async (req, res, next) => {
 };
 
 const createPost = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 게시글 작성'
+   * #swagger.description = 'isNotice는 기본값 false / true 라면 공지글'
+   */
   try {
     const userId = req.user.id;
     const groupId = parseInt(req.params.groupid);
@@ -187,6 +240,11 @@ const createPost = async (req, res, next) => {
 };
 
 const getRecentPosts = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '사용자 소속 그룹 최신 게시글 목록'
+   * #swagger.description = '서버사이드 페이지네이션'
+   */
   try {
     const page = parseInt(req.query.page) || null;
     const limit = parseInt(req.query.limit) || null;
@@ -200,6 +258,11 @@ const getRecentPosts = async (req, res, next) => {
 };
 
 const getAllPosts = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '해당 그룹 모든 게시글 목록'
+   * #swagger.description = '서버사이드 페이지네이션'
+   */
   try {
     const page = parseInt(req.query.page) || null;
     const limit = parseInt(req.query.limit) || null;
@@ -214,6 +277,10 @@ const getAllPosts = async (req, res, next) => {
 };
 
 const getPostById = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 게시글 상세조회'
+   */
   try {
     const postId = parseInt(req.params.postid);
     const post = await groupService.getPostById(postId);
@@ -226,6 +293,11 @@ const getPostById = async (req, res, next) => {
 };
 
 const editPost = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 게시글 수정'
+   * #swagger.description = '작성자 권한'
+   */
   try {
     const postId = parseInt(req.params.postid);
     const userId = req.user.id;
@@ -239,6 +311,11 @@ const editPost = async (req, res, next) => {
 };
 
 const deletePost = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 게시글 삭제'
+   * #swagger.description = '작성자 또는 관리자 권한'
+   */
   try {
     const postId = parseInt(req.params.postid);
     const userId = req.user.id;
@@ -265,11 +342,15 @@ const deletePost = async (req, res, next) => {
 };
 
 const leaveGroup = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 탈퇴'
+   * #swagger.description = '사용자의 게시글 및 댓글은 유지 / 관리자는 탈퇴 불가'
+   */
   const userId = req.user.id;
   const groupId = parseInt(req.params.groupid);
   try {
     const isMember = await groupUtils.isUserGroupMember(userId, groupId);
-    console.log(isMember);
     if (!isMember)
       return res.status(400).json({ message: '가입되지 않은 그룹' });
     if (isMember.isAdmin === true)
@@ -283,6 +364,11 @@ const leaveGroup = async (req, res, next) => {
 };
 
 const removeGroupMember = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 추방'
+   * #swagger.description = '해당 유저의 게시글 및 댓글 유지 / 관리자 권한'
+   */
   try {
     const managerId = req.user.id;
     const groupId = parseInt(req.params.groupid);
@@ -304,6 +390,11 @@ const removeGroupMember = async (req, res, next) => {
 };
 
 const dropGroup = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 삭제'
+   * #swagger.description = '관리자 권한 / 해당 그룹 관련 모든 데이터 삭제 및 그룹원 탈퇴 처리'
+   */
   try {
     const userId = req.user.id;
     const groupId = parseInt(req.params.groupid);
@@ -319,6 +410,11 @@ const dropGroup = async (req, res, next) => {
 };
 
 const getGroupCertPosts = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '소속 그룹 최신 인증글'
+   * #swagger.description = '서버사이드 페이지네이션'
+   */
   try {
     const page = parseInt(req.query.page) || null;
     const limit = parseInt(req.query.limit) || null;
@@ -332,6 +428,11 @@ const getGroupCertPosts = async (req, res, next) => {
 };
 
 const getCertPostsByGroupName = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Group']
+   * #swagger.summary = '그룹 인증 게시글 상세조회'
+   * #swagger.description = '참여자 정보 포함 / 서버사이드 페이지네이션'
+   */
   try {
     const page = parseInt(req.query.page) || null;
     const limit = parseInt(req.query.limit) || null;

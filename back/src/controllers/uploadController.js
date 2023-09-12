@@ -4,6 +4,11 @@ const path = require('path');
 const fs = require('fs');
 
 const uploadProfileImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Upload']
+   * #swagger.summary = '프로필 이미지 업로드'
+   * #swagger.description = '유저의 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트'
+   */
   try {
     const userId = req.user.id;
     const imageUrl = path.join('images', req.file.filename);
@@ -40,6 +45,11 @@ const uploadProfileImage = async (req, res, next) => {
 };
 
 const uploadPostImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Upload']
+   * #swagger.summary = '게시글 이미지 업로드'
+   * #swagger.description = '게시글의 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트'
+   */
   try {
     const postId = parseInt(req.params.postid);
     const imageUrl = path.join('images', req.file.filename);
@@ -81,6 +91,11 @@ const uploadPostImage = async (req, res, next) => {
 };
 
 const uploadCertImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Upload']
+   * #swagger.summary = '인증게시글 이미지 업로드'
+   * #swagger.description = '인증게시글 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트'
+   */
   try {
     const certPostId = parseInt(req.params.postid);
     const imageUrl = path.join('images', req.file.filename);
@@ -117,6 +132,11 @@ const uploadCertImage = async (req, res, next) => {
 };
 
 const uploadGroupImage = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Upload']
+   * #swagger.summary = '그룹 이미지 업로드'
+   * #swagger.description = '그룹 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트'
+   */
   try {
     const userId = req.user.id;
     const groupId = parseInt(req.params.groupid);

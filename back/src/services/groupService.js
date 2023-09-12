@@ -242,7 +242,6 @@ const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
         group: true,
       },
     });
-    console.log(groupUser);
     if (!groupUser) throw new Error('가입 신청 없음');
     if (groupUser.group.managerId !== managerId) throw new Error('권한 없음');
 

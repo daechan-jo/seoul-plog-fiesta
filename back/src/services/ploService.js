@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 const createCertPost = async (userId, certPostData) => {
   try {
     const participants = certPostData.participants || [];
-    console.log(certPostData.groupName);
     if (certPostData.isGroupPost && certPostData.groupName) {
       const group = await prisma.group.findUnique({
         where: {
@@ -325,7 +324,6 @@ const getTopCertPostContributorsGroups = async () => {
     const topGroupNames = Object.keys(groupCounts)
       .sort((a, b) => groupCounts[b] - groupCounts[a])
       .slice(0, 5);
-    console.log(topGroupNames);
 
     const topGroups = [];
     for (let i = 0; i < topGroupNames.length; i++) {

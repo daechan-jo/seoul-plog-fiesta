@@ -2,13 +2,17 @@ import authService from '../services/authService';
 import randomToken from '../utils/randomToken';
 import mailSend from '../utils/mailSend';
 
-/** @description 회원가입 -> 새로운 유저를 생성 */
 const createUser = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '회원가입'
+   * #swagger.description = '이메일과 닉네임 중복 검사 후 회원가입'
+   */
   try {
     const userData = req.body;
 
     if (userData.password !== userData.confirmPassword)
-      throw new Error('비밀번호 확인 불일치');
+      return res.status(400).json('비밀번호 확인 불일치');
 
     const user = await authService.createUser(userData);
     res.status(201).json(user);
@@ -18,8 +22,12 @@ const createUser = async (req, res, next) => {
   }
 };
 
-/** @description 로그인 -> token, 그룹아이디, 친구관계를 반환 */
 const login = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '로그인'
+   * #swagger.description = '로컬 로그인. 로그인 성공시 JWT 발급'
+   */
   try {
     const id = req.user.id;
     const groups = await authService.getGroupsByUserId(id);
@@ -39,9 +47,12 @@ const login = async (req, res, next) => {
   }
 };
 
-/** @description 이메일 발송 ->
- * 토큰 및 이메일이 포함된 url 발송*/
 const sendEmailWithTokenUrl = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '비밀번호 찾기'
+   * #swagger.description = '입력받은 닉네임과 이메일을 데이터베이스와 대조 후 해당 이메일로 링크 + 토큰 전송'
+   */
   try {
     const nickname = req.body.nickname;
     const email = req.body.email;
@@ -83,10 +94,14 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
   }
 };
 
-/** @description 이메일 인증 */
 const checkEmail = async (req, res, next) => {
-  const token = req.query.token;
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '비밀번호찾기 링크 인증'
+   * #swagger.description = '토큰 검증 후 비밀번호 변경 페이지로 리다이렉트'
+   */
   try {
+    const token = req.query.token;
     const user = await authService.getUserByPasswordToken(token);
 
     //유저에 PasswordValid, 토큰 유효 기간 기록
@@ -105,10 +120,13 @@ const checkEmail = async (req, res, next) => {
   }
 };
 
-/** @description 이메일 인증 후 비밀번호 변경*/
 const changePassword = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '비밀번호 찾기 비밀번호 변경'
+   * #swagger.description = '토큰 검증 후 비밀번호 변경'
+   */
   try {
-    //token, email, 변경될 password를 받음
     const { passwordToken, email, password } = req.body;
 
     const user = await authService.getUserByEmail(email);
@@ -144,13 +162,15 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-/** @description 회원정보 변경*/
 const changeInformation = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '회원정보 업데이트'
+   */
   try {
     if (!req.body.password) {
       return res.status(400).json({ message: '비밀번호를 입력해주세요' });
     }
-
     const user = {
       id: req.user.id,
       nickname: req.body.nickname || req.user.nickname, //입력하지 않으면 기존 정보 유지
@@ -168,8 +188,11 @@ const changeInformation = async (req, res, next) => {
   }
 };
 
-/**@description 기존 비밀번호 일치시 비밀번호 변경 */
 const changePasswordByCheckOriginPassword = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '비밀번호 변경'
+   */
   try {
     const { password, newPassword, newConfirmPassword } = req.body;
 
@@ -193,8 +216,12 @@ const changePasswordByCheckOriginPassword = async (req, res, next) => {
   }
 };
 
-/** @description 회원 탈퇴*/
 const removeUser = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '회원탈퇴'
+   * #swagger.description = '회원과 관련된 모든 데이터 삭제. 가입되어있는 그룹이나 친구가 있다면 탈퇴 불가'
+   */
   try {
     const id = req.user.id;
     const groups = await authService.getGroupsByUserId(id);

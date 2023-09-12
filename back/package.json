@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "npx prisma generate --schema=./prisma/schema.prisma && nodemon index.js --exec babel-node",
 		"start:prod": "npx prisma generate --schema=./prisma/schema.prisma && index.js --exec babel-node",
-		"test": "jest --setupFiles dotenv/config"
+		"swagger-autogen": "node ./src/config/swagger.js"
 	},
 	"author": "daechanJo",
 	"license": "ISC",
@@ -51,15 +51,7 @@
 		"prisma": "^5.2.0",
 		"socket.io-client": "^4.7.2",
 		"swagger-jsdoc": "^6.2.8",
-		"swagger-ui-express": "^5.0.0"
-	},
-	"jest": {
-		"testEnvironment": "node",
-		"coveragePathIgnorePatterns": [
-			"/node_modules/"
-		],
-		"modulePathIgnorePatterns": [
-			"__config__"
-		]
+		"swagger-ui-express": "^5.0.0",
+		"swagger-autogen": "^2.23.5"
 	}
 }

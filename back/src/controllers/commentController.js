@@ -1,5 +1,10 @@
 import commentService from '../services/commentService';
 const createComment = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Comment']
+   * #swagger.summary = '댓글 작성'
+   * #swagger.description = 'parentId가 있으면 대댓글, 없으면 댓글 / isCertPost가 true면 인증글 댓글'
+   */
   try {
     const postId = parseInt(req.params.postid);
     const writerId = req.user.id;
@@ -22,6 +27,11 @@ const createComment = async (req, res, next) => {
 };
 
 const updateComment = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Comment']
+   * #swagger.summary = '댓글 수정'
+   * #swagger.description = '댓글 작성자만 수정 가능'
+   */
   try {
     const commentId = parseInt(req.params.commentid);
     const userId = req.user.id;
@@ -45,6 +55,11 @@ const updateComment = async (req, res, next) => {
 };
 
 const deleteComment = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Comment']
+   * #swagger.summary = '댓글 삭제'
+   * #swagger.description = '댓글 작성자와 게시글 작성자 삭제 가능'
+   */
   try {
     const commentId = parseInt(req.params.commentid);
     const userId = req.user.id;
