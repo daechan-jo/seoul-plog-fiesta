@@ -246,7 +246,6 @@ const getCertPostsPersonalCount = async () => {
 const getTopMainCertPostContributors = async () => {
   try {
     const userCounts = await getCertPostsPersonalCount();
-    console.log(userCounts);
     const topUserIds = Object.keys(userCounts)
       .sort((a, b) => userCounts[b] - userCounts[a])
       .slice(0, 5);
