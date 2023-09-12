@@ -63,10 +63,9 @@ function initializeSocketServer(server) {
 
       if (existingRoom) {
         connectedUsers[loggedInUserId].roomId = roomId;
+        console.log(connectedUsers[loggedInUserId].roomId, '현재 접속항방');
         socket.join(roomId);
-        console.log(
-          `${loggedInUserId}님이 [${existingRoom}] 방에 접속했습니다.`,
-        );
+        console.log(`${user.nickname}님이 [${roomId}] 방에 접속했습니다.`);
         const messages = await prisma.chatMessage.findMany({
           where: { roomId },
         });
@@ -82,7 +81,7 @@ function initializeSocketServer(server) {
           }
         }
         socket.emit('messages', messages);
-        console.log(`${loggedInUserId}님의 채팅 내역 불러오기 완료`);
+        console.log(`${user.nickname}님의 채팅 내역 불러오기 완료`);
       } else {
         const newRoom = await prisma.chatRoom.create({
           data: { id: roomId },
@@ -119,20 +118,18 @@ function initializeSocketServer(server) {
       });
       console.log(`[${message}] 데이터베이스 저장 완료`);
 
-      //상대방 소켓 아이디 가기져오기
+      // 방에 접속중이라면 메시지 보내기
       if (connectedUsers[otherUserId]) {
         const otherUserSocketId = connectedUsers[otherUserId].socketId;
 
-        if (
-          io.sockets.connected[otherUserSocketId] &&
-          roomId === connectedUsers[otherUserId].roomId
-        ) {
-          console.log(`[${otherUserId}] 에게 메시지 :: ${message}`);
+        if (connectedUsers[otherUserId].roomId === roomId) {
           io.to(otherUserSocketId).emit('message', {
             senderId: loggedInUserId,
             nickname: user.nickname,
             message,
           });
+          console.log(`[${otherUserId}] 에게 메시지 :: ${message}`);
+
           await prisma.chatMessage.update({
             where: { id: createdMessage.id },
             data: { isRead: true },
