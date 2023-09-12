@@ -22,6 +22,9 @@ function initializeSocketServer(server) {
 
   const connectedUsers = {};
   io.on('connection', async (socket) => {
+    socket.onAny((e) => {
+      console.log(`Socket Event: ${e}`);
+    });
     const loggedInUserId = socket.decoded_token.id;
     const user = await prisma.user.findUnique({
       where: { id: loggedInUserId },
@@ -142,6 +145,7 @@ function initializeSocketServer(server) {
             nickname: user.nickname,
             messageId: createdMessage.id,
           });
+          console.log(`방에 접속중이 아니라서 알림`);
         }
       }
     });
