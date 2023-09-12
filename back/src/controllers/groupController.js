@@ -344,7 +344,6 @@ const getCertPostsByGroupName = async (req, res, next) => {
     return res.status(200).json(certPostDetails);
   } catch (error) {
     console.error(error);
-    error.status = 500;
     next(error);
   }
 };
