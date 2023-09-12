@@ -77,7 +77,6 @@ const deleteCertPost = async (req, res, next) => {
 const getTopMainCertPostContributors = async (req, res, next) => {
   try {
     const topUsers = await ploService.getTopMainCertPostContributors();
-    console.log(topUsers);
     return res.status(200).json(topUsers);
   } catch (error) {
     console.error(error);
