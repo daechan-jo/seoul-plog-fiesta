@@ -22,7 +22,6 @@ function initializeSocketServer(server) {
 
   const connectedUsers = {};
   io.on('connection', async (socket) => {
-    // 인증된 사용자 정보는 소켓.decoded_token에서 확인 가능
     const loggedInUserId = socket.decoded_token.id;
     const user = await prisma.user.findUnique({
       where: { id: loggedInUserId },
@@ -33,10 +32,14 @@ function initializeSocketServer(server) {
     };
     console.log(`User ${user.nickname} connected`);
 
+    // 안읽은 메시지 불러오기
     socket.on('initialize', async (userId) => {
       const messages = await prisma.$queryRaw`
-      SELECT * FROM ChatMessage 
-      WHERE roomId LIKE '%chat_${userId}_%' 
+      SELECT * FROM ChatMessage
+			WHERE (
+						roomId LIKE CONCAT('chat_', ${userId}, '_%') OR
+						roomId LIKE CONCAT('chat_%_', ${userId})
+				)
         AND senderId != ${userId}
         AND isRead = false
       ORDER BY createdAt DESC, senderId ASC
@@ -44,27 +47,25 @@ function initializeSocketServer(server) {
       socket.emit('messages', messages);
     });
 
+    /** @description 사용자와 상대방의 아이디 기반 고유 roomId 생성
+     * 해당 아이디로 이미 생성된 방이 있다면 채팅 내역을 불러오고 읽음처리*/
     socket.on('joinRoom', async (otherUserId) => {
-      // 나와 상대방 ID를 기반으로 고유한 방 ID를 생성
       const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
         loggedInUserId,
         otherUserId,
       )}`;
 
-      //이미 둘 사이의 방이 있다면
       const existingRoom = await prisma.chatRoom.findUnique({
         where: { id: roomId },
       });
-      console.log(existingRoom, '= null ? 만들어진 방 접속');
 
       if (existingRoom) {
         socket.join(roomId);
+        console.log(existingRoom, '= 채팅방 접속');
         const messages = await prisma.chatMessage.findMany({
           where: { roomId },
         });
-        console.log(messages, '= 채팅 내역 불러오기');
 
-        //상대방이 보낸 메시지 읽음처리
         for (let message of messages) {
           if (message.senderId !== loggedInUserId) {
             if (!message.isRead) {
@@ -75,14 +76,12 @@ function initializeSocketServer(server) {
             }
           }
         }
-        // 채팅내역 불러옴
         socket.emit('messages', messages);
       } else {
-        //방이 없다면
         const newRoom = await prisma.chatRoom.create({
           data: { id: roomId },
         });
-        console.log(newRoom, '= 최초 채팅 방 생성');
+        console.log(newRoom, '= 방 생성');
         socket.join(newRoom.id);
       }
     });
