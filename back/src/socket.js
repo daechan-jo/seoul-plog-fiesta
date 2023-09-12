@@ -4,7 +4,7 @@ const socketIoJwt = require('socketio-jwt');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-async function initializeSocketServer(server) {
+function initializeSocketServer(server) {
   const io = socketIo(server, {
     path: '/chat',
     cors: {
