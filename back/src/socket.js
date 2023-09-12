@@ -21,6 +21,7 @@ function initializeSocketServer(server) {
   );
 
   const connectedUsers = {};
+
   io.on('connection', async (socket) => {
     socket.onAny((e) => {
       console.log(`Socket Event: ${e}`);
@@ -126,7 +127,7 @@ function initializeSocketServer(server) {
         const otherUserSocketId = connectedUsers[otherUserId].socketId;
 
         if (connectedUsers[otherUserId].roomId === roomId) {
-          io.to(otherUserSocketId).emit('message', {
+          socket.to(roomId).emit('message', {
             senderId: loggedInUserId,
             nickname: user.nickname,
             message,
@@ -145,7 +146,6 @@ function initializeSocketServer(server) {
             nickname: user.nickname,
             messageId: createdMessage.id,
           });
-          console.log(`방에 접속중이 아니라서 알림`);
         }
       }
     });
