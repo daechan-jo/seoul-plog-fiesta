@@ -28,9 +28,10 @@ function initializeSocketServer(server) {
     });
     connectedUsers[loggedInUserId] = {
       socketId: socket.id,
+      roomId: null,
       user,
     };
-    console.log(`User ${user.nickname} connected`);
+    console.log(`[${user.nickname}] connected`);
 
     // 안읽은 메시지 불러오기
     socket.on('initialize', async (userId) => {
@@ -45,6 +46,7 @@ function initializeSocketServer(server) {
       ORDER BY createdAt DESC, senderId ASC
     `;
       socket.emit('messages', messages);
+      console.log(messages, '새로운 메시지');
     });
 
     /** @description 사용자와 상대방의 아이디 기반 고유 roomId 생성
@@ -60,8 +62,11 @@ function initializeSocketServer(server) {
       });
 
       if (existingRoom) {
+        connectedUsers[loggedInUserId].roomId = roomId;
         socket.join(roomId);
-        console.log(existingRoom, '= 채팅방 접속');
+        console.log(
+          `${loggedInUserId}님이 [${existingRoom}] 방에 접속했습니다.`,
+        );
         const messages = await prisma.chatMessage.findMany({
           where: { roomId },
         });
@@ -77,22 +82,24 @@ function initializeSocketServer(server) {
           }
         }
         socket.emit('messages', messages);
+        console.log(`${loggedInUserId}님의 채팅 내역 불러오기 완료`);
       } else {
         const newRoom = await prisma.chatRoom.create({
           data: { id: roomId },
         });
-        console.log(newRoom, '= 방 생성');
+        console.log(`[${newRoom}] 방 생성 완료`);
+        connectedUsers[loggedInUserId].roomId = roomId;
         socket.join(newRoom.id);
       }
     });
 
+    /** @description 메시지 보내기
+     * 메시지를 데이터베이스에 저장 후 상대방이 해당 방에 접속중이라면 전송 후 읽음처리 */
     socket.on('sendMessage', async (otherUserId, message) => {
-      // 마찬가지로 나와 상대방 ID를 기반으로 룸 ID를 만든 다음 보낼 메시지를 데이터베이스에 저장하고 상대방에게 보낸다.
       const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
         loggedInUserId,
         otherUserId,
       )}`;
-      console.log(message, '= 메시지 이벤트');
 
       let room = await prisma.chatRoom.findUnique({
         where: { id: roomId },
@@ -110,60 +117,68 @@ function initializeSocketServer(server) {
           senderId: loggedInUserId,
         },
       });
-      console.log('메시지 DB 저장 완료');
+      console.log(`[${message}] 데이터베이스 저장 완료`);
+
       //상대방 소켓 아이디 가기져오기
       if (connectedUsers[otherUserId]) {
         const otherUserSocketId = connectedUsers[otherUserId].socketId;
 
-        console.log('상대방이 접속중이라서 메시지 전송');
-        io.to(otherUserSocketId).emit('message', {
-          senderId: loggedInUserId,
-          nickname: user.nickname,
-          message,
-        });
-
-        if (io.sockets.connected[otherUserSocketId]) {
+        if (
+          io.sockets.connected[otherUserSocketId] &&
+          roomId === connectedUsers[otherUserId].roomId
+        ) {
+          console.log(`[${otherUserId}] 에게 메시지 :: ${message}`);
+          io.to(otherUserSocketId).emit('message', {
+            senderId: loggedInUserId,
+            nickname: user.nickname,
+            message,
+          });
           await prisma.chatMessage.update({
             where: { id: createdMessage.id },
             data: { isRead: true },
           });
         }
-        io.to(otherUserSocketId).emit('newMessage', {
-          senderId: loggedInUserId,
-          nickname: user.nickname,
-          messageId: createdMessage.id,
-        });
+
+        if (connectedUsers[otherUserId].roomId === null) {
+          io.to(otherUserSocketId).emit('newMessage', {
+            senderId: loggedInUserId,
+            nickname: user.nickname,
+            messageId: createdMessage.id,
+          });
+        }
       }
     });
 
+    /** @description 방 나가기 */
     socket.on('leaveRoom', async (otherUserId) => {
       const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
         loggedInUserId,
         otherUserId,
       )}`;
 
-      console.log('채팅방 나가기');
+      console.log(`[${roomId}] 방에서 나가기`);
+      connectedUsers[loggedInUserId].roomId = null;
       socket.leave(roomId);
     });
 
+    /** @description 채팅방 삭제
+     * 채팅 내역, 방 삭제 */
     socket.on('deleteRoom', async (otherUserId) => {
       const roomId = `chat_${Math.min(loggedInUserId, otherUserId)}_${Math.max(
         loggedInUserId,
         otherUserId,
       )}`;
 
-      // 사용자가 채팅방을 지우면, 해당 방과 속해있는 메시지를 데이터베이스에서 삭제한다
       await prisma.chatMessage.deleteMany({
         where: { roomId },
       });
       await prisma.chatRoom.delete({
         where: { id: roomId },
       });
-      console.log('채팅방 지우기');
+      console.log(`[${roomId}] 방 삭제 완료`);
     });
 
     socket.on('messageViewed', async (messageId) => {
-      // isRead 를 true로 업데이트
       await prisma.chatMessage.update({
         where: { id: messageId },
         data: { isRead: true },
