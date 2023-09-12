@@ -1,4 +1,4 @@
-import smtpTransport from '../config/sendEmail';
+import smtpTransport from '../config/nodeMailer';
 
 async function mailSendApp(emailOptions) {
   return new Promise((resolve, reject) => {

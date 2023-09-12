@@ -1,5 +1,4 @@
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import nodemailer from 'nodemailer';
 
 const smtpTransport = nodemailer.createTransport({
   service: 'naver',
