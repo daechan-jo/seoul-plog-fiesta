@@ -14,10 +14,9 @@ const createComment = async (req, res, next) => {
       parentId !== undefined ? parentId : null,
       isCertPost,
     );
-    res.status(201).json(newComment);
+    return res.status(201).json(newComment);
   } catch (error) {
     console.error(error);
-    error.status = 500;
     next(error);
   }
 };
@@ -29,6 +28,7 @@ const updateComment = async (req, res, next) => {
     const content = req.body.content;
 
     const comment = await commentService.getCommentById(commentId);
+
     if (!comment) return res.status(404).json({ message: '댓글 없음' });
     if (comment.writerId !== userId)
       return res.status(403).json({ message: '권한 없음' });
@@ -37,10 +37,9 @@ const updateComment = async (req, res, next) => {
       commentId,
       content,
     );
-    res.json(updatedComment);
+    return res.status(201).json(updatedComment);
   } catch (error) {
     console.error(error);
-    error.status = 500;
     next(error);
   }
 };
@@ -49,13 +48,15 @@ const deleteComment = async (req, res, next) => {
   try {
     const commentId = parseInt(req.params.commentid);
     const userId = req.user.id;
+
     const canDelete = await commentService.canDeleteComment(commentId, userId);
+
     if (!canDelete) return res.status(403).json({ message: '권한 없음' });
     await commentService.deleteCommentAndChildren(commentId);
-    res.status(204).json({ message: '댓글 삭제 :', commentId });
+
+    return res.status(204).json({ message: '댓글 삭제 :', commentId });
   } catch (error) {
     console.error(error);
-    error.status = 500;
     next(error);
   }
 };
