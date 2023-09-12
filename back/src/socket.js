@@ -5,7 +5,6 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function initializeSocketServer(server) {
-  const connectedUsers = {};
   const io = socketIo(server, {
     path: '/chat',
     cors: {
@@ -21,7 +20,7 @@ async function initializeSocketServer(server) {
       auth_header_required: true,
     }),
   );
-
+  const connectedUsers = {};
   io.on('connection', async (socket) => {
     socket.onAny((e) => {
       console.log(`Socket Event: ${e}`);
