@@ -12,10 +12,11 @@ import commentRouter from './routers/commentRouter';
 import ploRouter from './routers/ploRouter';
 import { local, jwt } from './config';
 import http from 'http';
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+import path from 'path';
+import passport from 'passport';
+
 const prisma = new PrismaClient();
-const path = require('path');
-const passport = require('passport');
 const initializeSocketServer = require('./socket');
 const app = express();
 const server = http.createServer(app);
@@ -26,10 +27,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
-app.use(loggerMiddleware);
 app.use(passport.initialize());
 passport.use('local', local);
 passport.use('jwt', jwt);
+
+app.use(loggerMiddleware);
 
 app.use(authRoutes);
 app.use(userRoutes);
