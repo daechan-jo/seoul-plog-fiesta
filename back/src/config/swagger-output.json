@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Seoul plog fiesta API",
-    "description": "서울 플로깅 웹 서비스 API 문서",
+    "description": "서울 플로깅 웹 서비슷 API 문서",
     "version": "1.0.0"
   },
   "servers": [

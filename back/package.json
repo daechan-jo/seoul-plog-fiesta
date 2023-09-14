@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "npx prisma generate --schema=./prisma/schema.prisma && nodemon index.js --exec babel-node",
+		"start": "npx prisma generate --schema=./prisma/schema.prisma && node ./src/config/swagger.js && nodemon index.js --exec babel-node",
 		"start:prod": "npx prisma generate --schema=./prisma/schema.prisma && index.js --exec babel-node",
 		"swagger-autogen": "node ./src/config/swagger.js"
 	},
