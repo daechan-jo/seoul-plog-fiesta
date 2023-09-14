@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Seoul plog fiesta API",
-    "description": "서울 플로깅 웹 서비슷 API 문서",
+    "description": "서울 플로깅 웹 서비스 API 문서",
     "version": "1.0.0"
   },
   "servers": [
@@ -13,10 +13,17 @@
   "paths": {
     "/auth": {
       "post": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원가입",
+        "description": "이메일과 닉네임 중복 검사 후 회원가입",
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         },
         "requestBody": {
@@ -40,7 +47,11 @@
     },
     "/auth/login": {
       "post": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "로그인",
+        "description": "로컬 로그인. 로그인 성공시 JWT 발급",
         "responses": {
           "200": {
             "description": "OK"
@@ -53,10 +64,17 @@
     },
     "/auth/findpassword": {
       "post": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "비밀번호 찾기",
+        "description": "입력받은 닉네임과 이메일을 데이터베이스와 대조 후 해당 이메일로 링크 + 토큰 전송",
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         },
         "requestBody": {
@@ -80,7 +98,11 @@
     },
     "/auth/checkemail": {
       "get": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "비밀번호찾기 링크 인증",
+        "description": "토큰 검증 후 비밀번호 변경 페이지로 리다이렉트",
         "parameters": [
           {
             "name": "token",
@@ -99,7 +121,11 @@
     },
     "/auth/changepassword": {
       "post": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "비밀번호 찾기 비밀번호 변경",
+        "description": "토큰 검증 후 비밀번호 변경",
         "responses": {
           "200": {
             "description": "OK"
@@ -135,6 +161,10 @@
     },
     "/auth/login/update": {
       "put": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "비밀번호 변경",
         "description": "",
         "responses": {
           "200": {
@@ -171,6 +201,10 @@
     },
     "/auth/update": {
       "put": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원정보 업데이트",
         "description": "",
         "responses": {
           "200": {
@@ -213,7 +247,11 @@
     },
     "/auth/drop": {
       "delete": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원탈퇴",
+        "description": "회원과 관련된 모든 데이터 삭제. 가입되어있는 그룹이나 친구가 있다면 탈퇴 불가",
         "responses": {
           "204": {
             "description": "No Content"
@@ -229,7 +267,11 @@
     },
     "/users": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "모든 유저",
+        "description": "모든 유저 정보를 가져온다.",
         "parameters": [
           {
             "name": "page",
@@ -258,7 +300,11 @@
     },
     "/user/random": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "랜덤 유저",
+        "description": "랜덤 유저 5명을 가져온다.",
         "responses": {
           "200": {
             "description": "OK"
@@ -268,7 +314,11 @@
     },
     "/user/{name}": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "유저 검색",
+        "description": "유저 닉네임으로 검색한다.",
         "parameters": [
           {
             "name": "name",
@@ -291,7 +341,11 @@
     },
     "/search/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "유저 검색(id)",
+        "description": "유저 id로 검색한다.",
         "parameters": [
           {
             "name": "id",
@@ -314,7 +368,11 @@
     },
     "/user": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "나의 상세 정보",
+        "description": "나의 상세 정보를 가져온다.",
         "responses": {
           "200": {
             "description": "OK"
@@ -327,7 +385,11 @@
     },
     "/req/{id}": {
       "post": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "친구 요청",
+        "description": "중복 요청 불가 ",
         "parameters": [
           {
             "name": "id",
@@ -353,6 +415,10 @@
     },
     "/req/list": {
       "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "친구 요청 리스트",
         "description": "",
         "responses": {
           "200": {
@@ -366,6 +432,10 @@
     },
     "/accept/{id}": {
       "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "친구 수락",
         "description": "",
         "parameters": [
           {
@@ -389,6 +459,10 @@
     },
     "/reject/{id}": {
       "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "친구 거절",
         "description": "",
         "parameters": [
           {
@@ -412,7 +486,11 @@
     },
     "/friends": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "나의 친구 목록",
+        "description": "page, limit을 query로 받아서 페이징 처리",
         "parameters": [
           {
             "name": "page",
@@ -441,6 +519,10 @@
     },
     "/user/drop/{id}": {
       "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "친구 삭제",
         "description": "",
         "parameters": [
           {
@@ -464,6 +546,10 @@
     },
     "/count": {
       "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "나의 점수 / 랭킹",
         "description": "",
         "responses": {
           "200": {
@@ -477,6 +563,10 @@
     },
     "/user/list/info": {
       "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "친구 최신 게시물",
         "description": "",
         "responses": {
           "200": {
@@ -490,7 +580,11 @@
     },
     "/user/cert/list": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "summary": "유저의 인증 게시글",
+        "description": "page, limit을 query로 받아서 페이징 처리",
         "parameters": [
           {
             "name": "page",
@@ -519,7 +613,11 @@
     },
     "/group": {
       "post": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 생성",
+        "description": "1인당 5개 생성 제한 / 그룹 이름 중복 불가",
         "responses": {
           "201": {
             "description": "Created"
@@ -533,7 +631,11 @@
         }
       },
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "모든 그룹 조회",
+        "description": "서버사이드 페이지네이션",
         "parameters": [
           {
             "name": "page",
@@ -559,7 +661,11 @@
     },
     "/group/join/{groupid}": {
       "post": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 가입 신청",
+        "description": "GroupUser 테이블에 isMember = false로 생성",
         "parameters": [
           {
             "name": "groupid",
@@ -588,7 +694,11 @@
     },
     "/group/join": {
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 가입 신청 목록",
+        "description": "그룹 생성자 권한",
         "responses": {
           "200": {
             "description": "OK"
@@ -601,7 +711,11 @@
     },
     "/group/join/req/{groupid}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "해당 그룹 가입 신청 목록",
+        "description": "그룹 생성자 권한",
         "parameters": [
           {
             "name": "groupid",
@@ -627,7 +741,11 @@
     },
     "/group/accept/{groupid}/{userid}": {
       "post": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 가입 신청 수락",
+        "description": "그룹 생성자 권한",
         "parameters": [
           {
             "name": "groupid",
@@ -658,7 +776,11 @@
     },
     "/group/reject/{groupid}/{userid}": {
       "delete": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 가입 신청 거절",
+        "description": "그룹 생성자 권한",
         "parameters": [
           {
             "name": "groupid",
@@ -692,7 +814,11 @@
     },
     "/group/mygroup": {
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "사용자 소속 그룹 목록",
+        "description": "서버사이드 페이지네이션",
         "parameters": [
           {
             "name": "page",
@@ -721,6 +847,10 @@
     },
     "/group/members/{groupname}": {
       "get": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "해당 그룹원 닉네임 배열 반환",
         "description": "",
         "parameters": [
           {
@@ -758,7 +888,11 @@
     },
     "/group/certpost": {
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "소속 그룹 최신 인증글",
+        "description": "서버사이드 페이지네이션",
         "parameters": [
           {
             "name": "page",
@@ -787,7 +921,11 @@
     },
     "/group/certpost/{groupname}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 인증 게시글 상세조회",
+        "description": "참여자 정보 포함 / 서버사이드 페이지네이션",
         "parameters": [
           {
             "name": "groupname",
@@ -821,6 +959,10 @@
     },
     "/group/{groupid}": {
       "get": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 상세 조회",
         "description": "",
         "parameters": [
           {
@@ -842,7 +984,11 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 탈퇴",
+        "description": "사용자의 게시글 및 댓글은 유지 / 관리자는 탈퇴 불가",
         "parameters": [
           {
             "name": "groupid",
@@ -868,7 +1014,11 @@
     },
     "/group/post/{groupid}": {
       "post": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 게시글 작성",
+        "description": "isNotice는 기본값 false / true 라면 공지글",
         "parameters": [
           {
             "name": "groupid",
@@ -914,7 +1064,11 @@
     },
     "/group/posts/{groupid}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "해당 그룹 모든 게시글 목록",
+        "description": "서버사이드 페이지네이션",
         "parameters": [
           {
             "name": "groupid",
@@ -951,6 +1105,10 @@
     },
     "/group/post/{postid}": {
       "get": {
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 게시글 상세조회",
         "description": "",
         "parameters": [
           {
@@ -974,7 +1132,11 @@
     },
     "/group/recent/posts": {
       "get": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "사용자 소속 그룹 최신 게시글 목록",
+        "description": "서버사이드 페이지네이션",
         "parameters": [
           {
             "name": "page",
@@ -1003,7 +1165,11 @@
     },
     "/group/post/put/{postid}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 게시글 수정",
+        "description": "작성자 권한",
         "parameters": [
           {
             "name": "postid",
@@ -1029,7 +1195,11 @@
     },
     "/group/post/delete/{postid}": {
       "delete": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 게시글 삭제",
+        "description": "작성자 또는 관리자 권한",
         "parameters": [
           {
             "name": "postid",
@@ -1058,7 +1228,11 @@
     },
     "/group/expulse/{groupid}/{userid}": {
       "delete": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 추방",
+        "description": "해당 유저의 게시글 및 댓글 유지 / 관리자 권한",
         "parameters": [
           {
             "name": "groupid",
@@ -1095,7 +1269,11 @@
     },
     "/group/drop/{groupid}": {
       "delete": {
-        "description": "",
+        "tags": [
+          "Group"
+        ],
+        "summary": "그룹 삭제",
+        "description": "관리자 권한 / 해당 그룹 관련 모든 데이터 삭제 및 그룹원 탈퇴 처리",
         "parameters": [
           {
             "name": "groupid",
@@ -1121,7 +1299,11 @@
     },
     "/upload/profile": {
       "post": {
-        "description": "",
+        "tags": [
+          "Upload"
+        ],
+        "summary": "프로필 이미지 업로드",
+        "description": "유저의 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트",
         "responses": {
           "201": {
             "description": "Created"
@@ -1134,7 +1316,11 @@
     },
     "/upload/postimg/{postid}": {
       "post": {
-        "description": "",
+        "tags": [
+          "Upload"
+        ],
+        "summary": "게시글 이미지 업로드",
+        "description": "게시글의 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트",
         "parameters": [
           {
             "name": "postid",
@@ -1160,7 +1346,11 @@
     },
     "/upload/groupimg/{groupid}": {
       "post": {
-        "description": "",
+        "tags": [
+          "Upload"
+        ],
+        "summary": "그룹 이미지 업로드",
+        "description": "그룹 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트",
         "parameters": [
           {
             "name": "groupid",
@@ -1186,7 +1376,11 @@
     },
     "/upload/certimg/{postid}": {
       "post": {
-        "description": "",
+        "tags": [
+          "Upload"
+        ],
+        "summary": "인증게시글 이미지 업로드",
+        "description": "인증게시글 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트",
         "parameters": [
           {
             "name": "postid",
@@ -1212,6 +1406,10 @@
     },
     "/profileimg/{userid}": {
       "get": {
+        "tags": [
+          "Load"
+        ],
+        "summary": "프로필 이미지 로드",
         "description": "",
         "parameters": [
           {
@@ -1235,6 +1433,10 @@
     },
     "/postimg/{postid}": {
       "get": {
+        "tags": [
+          "Load"
+        ],
+        "summary": "게시글 이미지 로드",
         "description": "",
         "parameters": [
           {
@@ -1258,6 +1460,10 @@
     },
     "/groupimg/{groupid}": {
       "get": {
+        "tags": [
+          "Load"
+        ],
+        "summary": "그룹 이미지 로드",
         "description": "",
         "parameters": [
           {
@@ -1281,6 +1487,10 @@
     },
     "/certimg/{certid}": {
       "get": {
+        "tags": [
+          "Load"
+        ],
+        "summary": "인증게시글 이미지 로드",
         "description": "",
         "parameters": [
           {
@@ -1304,7 +1514,11 @@
     },
     "/comment/{postid}": {
       "post": {
-        "description": "",
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 작성",
+        "description": "parentId가 있으면 대댓글, 없으면 댓글 / isCertPost가 true면 인증글 댓글",
         "parameters": [
           {
             "name": "postid",
@@ -1354,7 +1568,11 @@
     },
     "/comment/{commentid}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 수정",
+        "description": "댓글 작성자만 수정 가능",
         "parameters": [
           {
             "name": "commentid",
@@ -1398,7 +1616,11 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 삭제",
+        "description": "댓글 작성자와 게시글 작성자 삭제 가능",
         "parameters": [
           {
             "name": "commentid",
@@ -1424,6 +1646,10 @@
     },
     "/plo/post": {
       "post": {
+        "tags": [
+          "Plo"
+        ],
+        "summary": "인증 게시글 작성",
         "description": "",
         "responses": {
           "201": {
@@ -1438,7 +1664,11 @@
         }
       },
       "get": {
-        "description": "",
+        "tags": [
+          "Plo"
+        ],
+        "summary": "인증 게시글 조회",
+        "description": "모든 인증 게시글 조회 / 서버사이드 페이지네이션",
         "parameters": [
           {
             "name": "page",
@@ -1464,6 +1694,10 @@
     },
     "/plo/post/{postid}": {
       "get": {
+        "tags": [
+          "Plo"
+        ],
+        "summary": "인증 게시글 상세 조회",
         "description": "",
         "parameters": [
           {
@@ -1482,7 +1716,11 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Plo"
+        ],
+        "summary": "인증 게시글 수정",
+        "description": "작성자 권한",
         "parameters": [
           {
             "name": "postid",
@@ -1506,7 +1744,11 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Plo"
+        ],
+        "summary": "인증 게시글 삭제",
+        "description": "작성자 권한",
         "parameters": [
           {
             "name": "postid",
@@ -1532,6 +1774,10 @@
     },
     "/plo/main/five": {
       "get": {
+        "tags": [
+          "Plo"
+        ],
+        "summary": "intro 페이지 top5 유저",
         "description": "",
         "responses": {
           "200": {
@@ -1542,6 +1788,10 @@
     },
     "/plo/five": {
       "get": {
+        "tags": [
+          "Plo"
+        ],
+        "summary": "top5 유저, 그룹",
         "description": "",
         "responses": {
           "200": {
@@ -1552,6 +1802,10 @@
     },
     "/plo/hundred": {
       "get": {
+        "tags": [
+          "Plo"
+        ],
+        "summary": "top100 유저",
         "description": "",
         "parameters": [
           {
@@ -1578,6 +1832,10 @@
     },
     "/plo/rank/user": {
       "get": {
+        "tags": [
+          "Plo"
+        ],
+        "summary": "유저 순위",
         "description": "",
         "parameters": [
           {
@@ -1600,6 +1858,10 @@
     },
     "/plo/rank/{groupname}": {
       "get": {
+        "tags": [
+          "Plo"
+        ],
+        "summary": "그룹 순위",
         "description": "",
         "parameters": [
           {
@@ -1620,7 +1882,11 @@
     },
     "/plo/count/user/{userid}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Plo"
+        ],
+        "summary": "유저 인증 게시글 지역별 개수",
+        "description": "지도 시각화 데이터",
         "parameters": [
           {
             "name": "userid",
@@ -1640,7 +1906,11 @@
     },
     "/plo/count/group/{groupname}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Plo"
+        ],
+        "summary": "그룹 인증 게시글 지역별 개수",
+        "description": "지도 시각화 데이터",
         "parameters": [
           {
             "name": "groupname",
@@ -1660,7 +1930,11 @@
     },
     "/plo/count/all": {
       "get": {
-        "description": "",
+        "tags": [
+          "Plo"
+        ],
+        "summary": "전체 인증 게시글 지역별 개수",
+        "description": "지도 시각화 데이터",
         "responses": {
           "200": {
             "description": "OK"

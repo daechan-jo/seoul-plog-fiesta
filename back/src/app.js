@@ -15,6 +15,8 @@ import http from 'http';
 import { PrismaClient } from '@prisma/client';
 import path from 'path';
 import passport from 'passport';
+import swaggerFile from './config/swagger-output.json';
+import swaggerUi from 'swagger-ui-express';
 
 const prisma = new PrismaClient();
 const initializeSocketServer = require('./socket');
@@ -30,6 +32,11 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(passport.initialize());
 passport.use('local', local);
 passport.use('jwt', jwt);
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile, { explorer: true }),
+);
 
 app.use(loggerMiddleware);
 
