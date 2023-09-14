@@ -57,15 +57,15 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
     const nickname = req.body.nickname;
     const email = req.body.email;
 
-    if (!nickname || !email) throw new Error('닉네임과 이메일을 입력해주세요');
+    if (!nickname || !email)
+      return res.status(400).json({ message: '입력해주세요' });
 
     //유저가 있는지 검증
     const existingUser = await authService.getUserByEmail(email);
 
     //유저가 해당 닉네임을 가지고 있는지
     if (existingUser.nickname !== nickname)
-      throw new Error('일치하는 사용자가 없습니다.');
-
+      return res.status(400).json({ message: '닉네임이 일치하지 않습니다.' });
     //링크에 포함될 랜덤 토큰 생성
     const token = randomToken.createRandomToken();
 

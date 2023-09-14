@@ -4,28 +4,27 @@ const path = require('path');
 const prisma = new PrismaClient();
 
 const createCertPost = async (userId, certPostData) => {
+  const participants = certPostData.participants || [];
+  if (certPostData.isGroupPost && certPostData.groupName) {
+    const group = await prisma.group.findUnique({
+      where: {
+        name: certPostData.groupName,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (!group) throw new Error('그룹이 존재하지 않음');
+
+    const userInGroup = await prisma.groupUser.findFirst({
+      where: {
+        groupId: group.id,
+        userId: userId,
+      },
+    });
+    if (!userInGroup) throw new Error('그룹에 속해있지 않음');
+  }
   try {
-    const participants = certPostData.participants || [];
-    if (certPostData.isGroupPost && certPostData.groupName) {
-      const group = await prisma.group.findUnique({
-        where: {
-          name: certPostData.groupName,
-        },
-        select: {
-          id: true,
-        },
-      });
-      if (!group) throw new Error('그룹이 존재하지 않음');
-
-      const userInGroup = await prisma.groupUser.findFirst({
-        where: {
-          groupId: group.id,
-          userId: userId,
-        },
-      });
-      if (!userInGroup) throw new Error('그룹에 속해있지 않음');
-    }
-
     return await prisma.certPost.create({
       data: {
         ...certPostData,
@@ -98,40 +97,39 @@ const getAllCertPosts = async (page, limit) => {
 };
 
 const getCertPostDetails = async (certPostId) => {
-  try {
-    const certPost = await prisma.certPost.findUnique({
-      where: {
-        id: certPostId,
+  const certPost = await prisma.certPost.findUnique({
+    where: {
+      id: certPostId,
+    },
+    include: {
+      writer: {
+        select: {
+          nickname: true,
+        },
       },
-      include: {
-        writer: {
-          select: {
-            nickname: true,
-          },
+      images: {
+        select: {
+          imageUrl: true,
         },
-        images: {
-          select: {
-            imageUrl: true,
-          },
+      },
+      participants: {
+        select: {
+          participant: true,
         },
-        participants: {
-          select: {
-            participant: true,
-          },
-        },
-        comments: {
-          include: {
-            writer: {
-              select: {
-                nickname: true,
-              },
+      },
+      comments: {
+        include: {
+          writer: {
+            select: {
+              nickname: true,
             },
           },
         },
       },
-    });
-    if (!certPost) throw new Error('인증게시글이 없음');
-
+    },
+  });
+  if (!certPost) throw new Error('인증게시글이 없음');
+  try {
     const imageUrls = certPost.images.map((image) => image.imageUrl);
     const participants = certPost.participants.map(
       (participant) => participant.participant,

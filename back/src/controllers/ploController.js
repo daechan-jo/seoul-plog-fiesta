@@ -1,7 +1,11 @@
 import ploService from '../services/ploService.js';
 
-const postPlo = async (req, res, next) => {
+const createCertPost = async (req, res, next) => {
   try {
+    /**
+     * #swagger.tags = ['Plo']
+     * #swagger.summary = '인증 게시글 작성'
+     */
     const userId = req.user.id;
     const certPostData = req.body;
     const createdCertPost = await ploService.createCertPost(
@@ -16,6 +20,11 @@ const postPlo = async (req, res, next) => {
 };
 
 const getAllCertPosts = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '인증 게시글 조회'
+   * #swagger.description = '모든 인증 게시글 조회 / 서버사이드 페이지네이션'
+   */
   try {
     const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
     const limit =
@@ -29,6 +38,10 @@ const getAllCertPosts = async (req, res, next) => {
 };
 
 const getCertPost = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '인증 게시글 상세 조회'
+   */
   try {
     const certPostId = parseInt(req.params.postid);
     const detailedCertPost = await ploService.getCertPostDetails(certPostId);
@@ -40,8 +53,13 @@ const getCertPost = async (req, res, next) => {
 };
 
 const updateCertPost = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '인증 게시글 수정'
+   * #swagger.description = '작성자 권한'
+   */
   try {
-    const certPostId = parseInt(req.params.postid); // Assuming the ID is passed as a parameter
+    const certPostId = parseInt(req.params.postid);
     const certPostData = req.body;
     const updatedCertPost = await ploService.updateCertPost(
       certPostId,
@@ -55,6 +73,11 @@ const updateCertPost = async (req, res, next) => {
 };
 
 const deleteCertPost = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '인증 게시글 삭제'
+   * #swagger.description = '작성자 권한'
+   */
   try {
     const userId = req.user.id;
     const certPostId = parseInt(req.params.postid);
@@ -75,6 +98,10 @@ const deleteCertPost = async (req, res, next) => {
 };
 
 const getTopMainCertPostContributors = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = 'intro 페이지 top5 유저'
+   */
   try {
     const topUsers = await ploService.getTopMainCertPostContributors();
     return res.status(200).json(topUsers);
@@ -85,6 +112,10 @@ const getTopMainCertPostContributors = async (req, res, next) => {
 };
 
 const getTopCertPostContributors = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = 'top5 유저, 그룹'
+   */
   try {
     const topUsers = await ploService.getTopCertPostContributorsUsers();
     const topGroups = await ploService.getTopCertPostContributorsGroups();
@@ -96,6 +127,10 @@ const getTopCertPostContributors = async (req, res, next) => {
 };
 
 const getTopUsers = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = 'top100 유저'
+   */
   try {
     const page = parseInt(req.query.page) || null;
     const limit = parseInt(req.query.limit) || null;
@@ -108,6 +143,10 @@ const getTopUsers = async (req, res, next) => {
 };
 
 const getUserRank = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '유저 순위'
+   */
   try {
     const userId = req.user.id ? Number(req.query.id) : req.user.id;
     const rank = await ploService.getUserRank(userId);
@@ -119,6 +158,10 @@ const getUserRank = async (req, res, next) => {
 };
 
 const getGroupRank = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '그룹 순위'
+   */
   try {
     const groupName = req.params.groupname;
     const groupRank = await ploService.getGroupRank(groupName);
@@ -130,6 +173,11 @@ const getGroupRank = async (req, res, next) => {
 };
 
 const getUserCertPostsRegionCount = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '유저 인증 게시글 지역별 개수'
+   * #swagger.description = '지도 시각화 데이터'
+   */
   try {
     const userId = parseInt(req.params.userid);
     const regionCount = await ploService.getUserCertPostsRegionCount(userId);
@@ -141,6 +189,11 @@ const getUserCertPostsRegionCount = async (req, res, next) => {
 };
 
 const getGroupCertPostsRegionCount = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '그룹 인증 게시글 지역별 개수'
+   * #swagger.description = '지도 시각화 데이터'
+   */
   try {
     const groupName = req.params.groupname;
     const regionCount = await ploService.getGroupCertPostsRegionCount(
@@ -154,6 +207,11 @@ const getGroupCertPostsRegionCount = async (req, res, next) => {
 };
 
 const getAllCertPostsRegionCount = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['Plo']
+   * #swagger.summary = '전체 인증 게시글 지역별 개수'
+   * #swagger.description = '지도 시각화 데이터'
+   */
   try {
     const regions = await ploService.getAllCertPostsRegions();
     return res.json(regions);
@@ -164,7 +222,7 @@ const getAllCertPostsRegionCount = async (req, res, next) => {
 };
 
 module.exports = {
-  postPlo,
+  createCertPost,
   getAllCertPosts,
   getCertPost,
   updateCertPost,

@@ -1,8 +1,12 @@
 import userService from '../services/userService.js';
 import ploService from '../services/ploService.js';
 
-/** @description 모든 유저  */
 const getAllUsers = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '모든 유저'
+   * #swagger.description = '모든 유저 정보를 가져온다.'
+   */
   try {
     const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
     const limit =
@@ -21,8 +25,12 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-/** @description 유저 검색 */
 const searchUsers = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '유저 검색'
+   * #swagger.description = '유저 닉네임으로 검색한다.'
+   */
   const nickname = req.params.name;
   try {
     const searchNickname = await userService.searchUsers(nickname);
@@ -38,8 +46,12 @@ const searchUsers = async (req, res, next) => {
   }
 };
 
-/** @description 유저 찬기(id) */
 const searchUserId = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '유저 검색(id)'
+   * #swagger.description = '유저 id로 검색한다.'
+   */
   try {
     const userId = parseInt(req.params.id);
     const searchId = await userService.searchUserId(userId);
@@ -55,8 +67,12 @@ const searchUserId = async (req, res, next) => {
   }
 };
 
-/** @description 랜덤 유저 */
 const getRandomUsers = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '랜덤 유저'
+   * #swagger.description = '랜덤 유저 5명을 가져온다.'
+   */
   try {
     const randomUsers = await userService.getRandomUsers();
     return res.status(200).json({ message: '랜덤 유저', randomUsers });
@@ -66,8 +82,12 @@ const getRandomUsers = async (req, res, next) => {
   }
 };
 
-/** @description 현재 사용자 */
 const currentUser = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '나의 상세 정보'
+   * #swagger.description = '나의 상세 정보를 가져온다.'
+   */
   try {
     const userId = req.user.id;
     const currentUserInfo = await userService.getUserInfo(userId);
@@ -78,8 +98,12 @@ const currentUser = async (req, res, next) => {
   }
 };
 
-/** @description 친구 요청 */
 const friendRequest = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '친구 요청'
+   * #swagger.description = '중복 요청 불가 '
+   */
   try {
     const userId = req.user.id;
     const requestId = parseInt(req.params.id);
@@ -108,8 +132,11 @@ const friendRequest = async (req, res, next) => {
   }
 };
 
-/** @description 친구 요청 목록 */
 const friendRequestList = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '친구 요청 리스트'
+   */
   try {
     const userId = req.user.id;
     const friendRequest = await userService.friendRequestList(userId);
@@ -120,8 +147,11 @@ const friendRequestList = async (req, res, next) => {
   }
 };
 
-/** @description 친구 수락 */
 const acceptFriend = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '친구 수락'
+   */
   try {
     const userId = req.user.id;
     const requestId = parseInt(req.params.id);
@@ -133,8 +163,11 @@ const acceptFriend = async (req, res, next) => {
   }
 };
 
-/** @description 친구 거절 */
 const rejectFriend = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '친구 거절'
+   */
   try {
     const userId = req.user.id;
     const requestId = parseInt(req.params.id);
@@ -146,8 +179,12 @@ const rejectFriend = async (req, res, next) => {
   }
 };
 
-/** @description 친구 목록 */
 const getMyFriends = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '나의 친구 목록'
+   * #swagger.description = 'page, limit을 query로 받아서 페이징 처리'
+   */
   try {
     const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
     const limit =
@@ -161,8 +198,11 @@ const getMyFriends = async (req, res, next) => {
   }
 };
 
-/** @description 친구 삭제 */
 const deleteFriend = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '친구 삭제'
+   */
   try {
     const userId = req.user.id;
     const friendId = parseInt(req.params.id);
@@ -174,8 +214,11 @@ const deleteFriend = async (req, res, next) => {
   }
 };
 
-/** @description 나의 인증 */
 const myScoreNRank = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '나의 점수 / 랭킹'
+   */
   try {
     const userId = req.user.id;
     const myCertPostCount = await userService.myScoreNRank(userId);
@@ -190,8 +233,11 @@ const myScoreNRank = async (req, res, next) => {
   }
 };
 
-/** @description 친구 최신 게시물 */
 const friendsRecentPost = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '친구 최신 게시물'
+   */
   try {
     const userId = req.user.id;
     const friendsRecentPost = await userService.friendsRecentPost(userId);
@@ -205,6 +251,11 @@ const friendsRecentPost = async (req, res, next) => {
 };
 
 const getCertPostsByUserId = async (req, res, next) => {
+  /**
+   * #swagger.tags = ['User']
+   * #swagger.summary = '유저의 인증 게시글'
+   * #swagger.description = 'page, limit을 query로 받아서 페이징 처리'
+   */
   try {
     const page = req.query.page !== undefined ? parseInt(req.query.page) : null;
     const limit =

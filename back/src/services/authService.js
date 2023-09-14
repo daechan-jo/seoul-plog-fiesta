@@ -20,15 +20,16 @@ const createUser = async (userData) => {
   if (existingUser) throw new Error('이미 존재하는 이메일입니다.');
   if (existingNickname) throw new Error('이미 존재하는 닉네임입니다.');
 
-  //비밀번호 해쉬화
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = {
-    name,
-    nickname,
-    email,
-    password: hashedPassword,
-  };
   try {
+    //비밀번호 해쉬화
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = {
+      name,
+      nickname,
+      email,
+      password: hashedPassword,
+    };
+
     return await prisma.user.create({
       data: newUser,
     });
@@ -40,13 +41,16 @@ const createUser = async (userData) => {
 
 /** @description 이메일로 유저 찾기*/
 const getUserByEmail = async (email) => {
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  });
-  if (!existingUser) throw new Error('존재하지 않는 사용자입니다.');
-  return existingUser;
+  try {
+    return await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 /** @description 이메일로 유저 찾아 패스워드 토큰 업데이트*/
@@ -102,23 +106,20 @@ const changePassword = async (email, password) => {
 };
 
 const changePasswordByCheckOriginPassword = async (passwordData) => {
+  const { id, password, newPassword } = passwordData;
+  const passwordUser = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  //기존 비밀번호와 새로 입력한 비밀번호가 다르면 오류 반환
+  const isPasswordMatch = await bcrypt.compare(password, passwordUser.password);
+
+  if (!isPasswordMatch) {
+    throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
+  }
+
   try {
-    const { id, password, newPassword } = passwordData;
-    const passwordUser = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
-    //기존 비밀번호와 새로 입력한 비밀번호가 다르면 오류 반환
-    const isPasswordMatch = await bcrypt.compare(
-      password,
-      passwordUser.password,
-    );
-
-    if (!isPasswordMatch) {
-      throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
-    }
-
     //비밀번호 변경
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     return await prisma.user.update({
@@ -138,13 +139,11 @@ const changePasswordByCheckOriginPassword = async (passwordData) => {
 /** @description 패스워드토큰으로 유저 찾기*/
 const getUserByPasswordToken = async (passwordToken) => {
   try {
-    const user = await prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: {
         passwordToken: passwordToken,
       },
     });
-    if (!user) throw new Error('비밀번호 토큰과 일치하는 사용자가 없습니다.');
-    return user;
   } catch (error) {
     console.error(error);
     throw error;
@@ -153,24 +152,20 @@ const getUserByPasswordToken = async (passwordToken) => {
 
 /** @description 유저 정보 수정 -> 입력한 비밀번호가 기존 비밀번호여야 함 */
 const changeInformation = async (user) => {
+  const { id, name, nickname, about, activity, password } = user;
+  const passwordUser = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  if (!passwordUser) throw new Error('존재하지 않는 사용자입니다.');
+  //기존 비밀번호와 새로 입력한 비밀번호가 다르면 오류 반환
+  const isPasswordMatch = await bcrypt.compare(password, passwordUser.password);
+
+  if (!isPasswordMatch) {
+    throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
+  }
   try {
-    const { id, name, nickname, about, activity, password } = user;
-    const passwordUser = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    //기존 비밀번호와 새로 입력한 비밀번호가 다르면 오류 반환
-    const isPasswordMatch = await bcrypt.compare(
-      password,
-      passwordUser.password,
-    );
-
-    if (!isPasswordMatch) {
-      throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
-    }
-
     //정보 업데이트
     return await prisma.user.update({
       where: {
@@ -259,15 +254,13 @@ const getFriendIdsByUserId = async (id) => {
 
 /**@description 프로필 이미지 삭제*/
 const deleteUserProfileImageByUserId = async (id) => {
+  const user = await prisma.user.findUnique({
+    where: { id: id },
+    include: { profileImage: true },
+  });
+  if (!user && !user.profileImage)
+    throw new Error('존재하지 않은 유저이거나 프로필 이미지가 없습니다.');
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: id },
-      include: { profileImage: true },
-    });
-
-    if (!user && !user.profileImage) {
-      return { success: false, message: '프로필 이미지가 없습니다.' };
-    }
     //프로필 이미지가 존재하면 삭제
     const image = await prisma.userProfileImage.findFirst({
       where: { userId: id },

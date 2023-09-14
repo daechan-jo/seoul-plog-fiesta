@@ -6,10 +6,10 @@ const ploRouter = router();
 
 /** @description 인증게시글 작성 */
 ploRouter.post(
-	'/plo/post',
-	authenticateJWT,
-	ploValidate.validateCertCreation,
-	ploController.postPlo,
+  '/plo/post',
+  authenticateJWT,
+  ploValidate.validateCertCreation,
+  ploController.createCertPost,
 );
 
 /** @description 모든 인증 게시글 */
@@ -20,17 +20,17 @@ ploRouter.get('/plo/post/:postid', ploController.getCertPost);
 
 /** @description 인증 게시글 수정 */
 ploRouter.put(
-	'/plo/post/:postid',
-	authenticateJWT,
-	ploValidate.validateCertUpdateCreation,
-	ploController.updateCertPost,
+  '/plo/post/:postid',
+  authenticateJWT,
+  ploValidate.validateCertUpdateCreation,
+  ploController.updateCertPost,
 );
 
 /** @description 인증 게시글 삭제 */
 ploRouter.delete(
-	'/plo/post/:postid',
-	authenticateJWT,
-	ploController.deleteCertPost,
+  '/plo/post/:postid',
+  authenticateJWT,
+  ploController.deleteCertPost,
 );
 
 /** @description 메인화면 top5 유저 */
@@ -49,13 +49,13 @@ ploRouter.get('/plo/rank/user', authenticateJWT, ploController.getUserRank);
 ploRouter.get('/plo/rank/:groupname', ploController.getGroupRank);
 
 ploRouter.get(
-	'/plo/count/user/:userid',
-	ploController.getUserCertPostsRegionCount,
+  '/plo/count/user/:userid',
+  ploController.getUserCertPostsRegionCount,
 );
 
 ploRouter.get(
-	'/plo/count/group/:groupname',
-	ploController.getGroupCertPostsRegionCount,
+  '/plo/count/group/:groupname',
+  ploController.getGroupCertPostsRegionCount,
 );
 
 ploRouter.get('/plo/count/all', ploController.getAllCertPostsRegionCount);
