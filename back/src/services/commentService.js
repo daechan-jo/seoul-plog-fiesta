@@ -8,30 +8,25 @@ const createComment = async (
   parentId,
   isCertPost,
 ) => {
-  try {
-    let commentData = {
-      writer: {
-        connect: { id: writerId },
-      },
-      content,
+  let commentData = {
+    writer: {
+      connect: { id: writerId },
+    },
+    content,
+  };
+  if (isCertPost) {
+    commentData.certPost = {
+      connect: { id: postId },
     };
-    if (isCertPost) {
-      commentData.certPost = {
-        connect: { id: postId },
-      };
-    } else {
-      commentData.post = {
-        connect: { id: postId },
-      };
-    }
-    if (parentId !== undefined && parentId !== null) {
-      commentData.parent = {
-        connect: { id: parentId },
-      };
-    }
-  } catch (error) {
-    console.error(error);
-    throw new Error('잘못된 게시글 아이디 입니다.');
+  } else {
+    commentData.post = {
+      connect: { id: postId },
+    };
+  }
+  if (parentId !== undefined && parentId !== null) {
+    commentData.parent = {
+      connect: { id: parentId },
+    };
   }
   try {
     const newCommentWithWriterInfo = await prisma.comment.create({
@@ -111,24 +106,23 @@ const canDeleteComment = async (commentId, userId) => {
   }
 };
 
-const deleteCommentsByPostId = async (postId) => {
-  try {
-    await prisma.comment.deleteMany({
-      where: {
-        postId: postId,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+// const deleteCommentsByPostId = async (postId) => {
+//   try {
+//     await prisma.comment.deleteMany({
+//       where: {
+//         postId: postId,
+//       },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };
 
 module.exports = {
   createComment,
   getCommentById,
   updateComment,
   deleteCommentAndChildren,
-  deleteCommentsByPostId,
   canDeleteComment,
 };

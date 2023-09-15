@@ -1,8 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const groupUtils = require('../utils/groupUtils');
-const fs = require('fs');
-const path = require('path');
 
 const createGroup = async (groupData, managerId) => {
   const { name, goal, region, introduction } = groupData;
@@ -577,13 +575,7 @@ const deletePost = async (postId, userId) => {
     });
     if (!post) throw new Error('존재하지 않는 게시글');
     const isAdmin = await groupUtils.isUserGroupAdmin(userId, post.groupId);
-    if (post.writerId !== userId && !isAdmin) throw new Error('권한이 없음');
-
-    await prisma.comment.deleteMany({
-      where: {
-        postId: postId,
-      },
-    });
+    if (post.writerId !== userId && !isAdmin) throw new Error('권한 없음');
 
     await prisma.post.delete({
       where: {
@@ -644,54 +636,6 @@ const removeGroupMember = async (userId, groupId) => {
 
 const dropGroup = async (groupId) => {
   try {
-    const group = await prisma.group.findUnique({ where: { id: groupId } });
-    if (!group) throw new Error('그룹을 찾을 수 없음');
-    const groupName = group.name;
-
-    const posts = await prisma.post.findMany({ where: { groupId } });
-    for (let post of posts) {
-      const postImages = await prisma.postImage.findMany({
-        where: { postId: post.id },
-      });
-      for (let image of postImages) {
-        fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
-      }
-      await prisma.postImage.deleteMany({ where: { postId: post.id } });
-      await prisma.comment.deleteMany({ where: { postId: post.id } });
-      await prisma.post.delete({ where: { id: post.id } });
-    }
-
-    const certPosts = await prisma.certPost.findMany({
-      where: { groupName: groupName },
-    });
-    for (let certPost of certPosts) {
-      const certPostImages = await prisma.certPostImage.findMany({
-        where: { certPostId: certPost.id },
-      });
-      for (let image of certPostImages) {
-        fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
-      }
-      await prisma.certPostImage.deleteMany({
-        where: { certPostId: certPost.id },
-      });
-      await prisma.certPostParticipant.deleteMany({
-        where: { certPostId: certPost.id },
-      });
-      await prisma.comment.deleteMany({
-        where: { certPostId: certPost.id },
-      });
-      await prisma.certPost.delete({
-        where: { id: certPost.id },
-      });
-    }
-    const groupImages = await prisma.groupImage.findMany({
-      where: { groupId },
-    });
-    for (let image of groupImages) {
-      fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
-    }
-    await prisma.groupUser.deleteMany({ where: { groupId } });
-    await prisma.groupImage.deleteMany({ where: { groupId } });
     await prisma.group.deleteMany({ where: { id: groupId } });
   } catch (error) {
     console.error(error);

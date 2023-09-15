@@ -1,6 +1,7 @@
 import authService from '../services/authService';
 import randomToken from '../utils/randomToken';
 import mailSend from '../utils/mailSend';
+import localService from '../services/localService';
 
 const createUser = async (req, res, next) => {
   /**
@@ -223,26 +224,9 @@ const removeUser = async (req, res, next) => {
    * #swagger.description = '회원과 관련된 모든 데이터 삭제. 가입되어있는 그룹이나 친구가 있다면 탈퇴 불가'
    */
   try {
-    const id = req.user.id;
-    const groups = await authService.getGroupsByUserId(id);
-    const friendships = await authService.getFriendIdsByUserId(id);
-
-    if (groups.length !== 0)
-      return res.status(400).json({
-        message: '가입하거나 생성한 그룹이 있으면 탈퇴할 수 없습니다',
-      });
-
-    if (friendships.length !== 0)
-      return res
-        .status(400)
-        .json({ message: '친구관계가 있으면 탈퇴할 수 없습니다.' });
-
-    await authService.deleteUserProfileImageByUserId(id);
-    await authService.deleteCertPostImagesByUserId(id);
-    await authService.deleteCertPostsAndCommentsByUserId(id);
-    await authService.deleteMyCommentsOnOtherUserCertPosts(id);
-
-    await authService.removeUser(id);
+    const userId = req.user.id;
+    await localService.LocalStorageClearByDropUser(userId);
+    await authService.removeUser(userId);
     res.status(204).json({ message: '회원탈퇴가 완료되었습니다.' });
   } catch (error) {
     console.error(error);

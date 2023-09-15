@@ -87,7 +87,6 @@ const deleteCertPost = async (req, res, next) => {
 
     await Promise.all([
       ploService.deleteCertPostImages(certPostId),
-      ploService.deleteCertPostParticipants(certPostId),
       ploService.deleteCertPost(certPostId),
     ]);
     return res.status(204).json({ message: '삭제 완료' });

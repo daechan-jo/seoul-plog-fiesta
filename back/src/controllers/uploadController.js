@@ -148,6 +148,7 @@ const uploadGroupImage = async (req, res, next) => {
     if (!isGroupAdmin) {
       return res.status(403).json({ message: '관리자 권한' });
     }
+    console.log(req.file);
     const imageUrl = path.join('images', req.file.filename);
     const existingImage = await prisma.groupImage.findFirst({
       where: { groupId },

@@ -187,12 +187,6 @@ const changeInformation = async (user) => {
 /** @description 유저 삭제*/
 const removeUser = async (id) => {
   try {
-    // 다른 테이블의 외래 키 레코드를 먼저 삭제
-    await prisma.friendship.deleteMany({
-      where: {
-        OR: [{ userAId: id }, { userBId: id }],
-      },
-    });
     return await prisma.user.delete({
       where: {
         id: id,
@@ -205,11 +199,11 @@ const removeUser = async (id) => {
 };
 
 /** @description 아이디로 가입된 모임 아이디들 찾기 -> 배열 반환*/
-const getGroupsByUserId = async (id) => {
+const getGroupsByUserId = async (userId) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: id,
+        id: userId,
       },
       include: {
         groups: true,
@@ -223,11 +217,11 @@ const getGroupsByUserId = async (id) => {
 };
 
 /** @description 아이디로 친구 관계인 친구 아이디들 찾기 -> 배열 반환*/
-const getFriendIdsByUserId = async (id) => {
+const getFriendIdsByUserId = async (userId) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: id,
+        id: userId,
       },
       include: {
         friendshipsA: {
@@ -252,102 +246,6 @@ const getFriendIdsByUserId = async (id) => {
   }
 };
 
-/**@description 프로필 이미지 삭제*/
-const deleteUserProfileImageByUserId = async (id) => {
-  const user = await prisma.user.findUnique({
-    where: { id: id },
-    include: { profileImage: true },
-  });
-  if (!user && !user.profileImage)
-    throw new Error('존재하지 않은 유저이거나 프로필 이미지가 없습니다.');
-  try {
-    //프로필 이미지가 존재하면 삭제
-    const image = await prisma.userProfileImage.findFirst({
-      where: { userId: id },
-    });
-    if (image)
-      fs.unlinkSync(path.join(__dirname, '../..', 'public', image.imageUrl));
-    await prisma.userProfileImage.delete({
-      where: { id: user.profileImage.id },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-/** @description 인증글 이미지 삭제*/
-const deleteCertPostImagesByUserId = async (id) => {
-  try {
-    // 해당 유저의 CertPostImage 가져오기
-    const userCertPostImages = await prisma.certPostImage.findMany({
-      where: { certPost: { writerId: id } }, // 해당 유저의 인증글 이미지 가져오기
-    });
-
-    for (const certPostImage of userCertPostImages) {
-      // CertPostImage 삭제
-      await prisma.certPostImage.delete({ where: { id: certPostImage.id } });
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-/**@description 개인 인증글과 댓글 삭제*/
-const deleteCertPostsAndCommentsByUserId = async (id) => {
-  try {
-    const certPosts = await prisma.certPost.findMany({
-      where: { writerId: id },
-      include: { comments: true },
-    });
-
-    if (!certPosts) {
-      return { success: false, message: '삭제할 게시물이 없습니다.' };
-    }
-    for (const certPost of certPosts) {
-      // 개인 인증글에 해당하는 댓글들 삭제
-      for (const comment of certPost.comments) {
-        await prisma.comment.delete({ where: { id: comment.id } });
-      }
-      // 개인 인증글 삭제
-      await prisma.certPost.delete({ where: { id: certPost.id } });
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-/**@description 다른 사용자 인증글에 달린 댓글 및 대댓글 삭제
- * 기존 사용자 탈퇴시 모든 댓글 및 댓글의 부모 댓글도 지워짐*/
-const deleteMyCommentsOnOtherUserCertPosts = async (id) => {
-  try {
-    const myComments = await prisma.comment.findMany({
-      where: {
-        writerId: id, //자신의 댓글
-      },
-      include: { children: true }, //대댓글 정보 가져오기
-    });
-
-    if (!myComments) {
-      return { success: false, message: '삭제할 댓글이 없습니다.' };
-    }
-
-    for (const comment of myComments) {
-      // 대댓글 삭제
-      for (const reply of comment.children) {
-        await prisma.comment.delete({ where: { id: reply.id } });
-        // 댓글 삭제
-      }
-      await prisma.comment.delete({ where: { id: comment.id } });
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 module.exports = {
   createUser,
   getUserByEmail,
@@ -359,9 +257,5 @@ module.exports = {
   updatePasswordValidByEmail,
   getGroupsByUserId,
   getFriendIdsByUserId,
-  deleteUserProfileImageByUserId,
-  deleteCertPostsAndCommentsByUserId,
-  deleteMyCommentsOnOtherUserCertPosts,
-  deleteCertPostImagesByUserId,
   changePasswordByCheckOriginPassword,
 };

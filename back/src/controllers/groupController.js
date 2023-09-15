@@ -1,7 +1,6 @@
 import groupService from '../services/groupService.js';
-import commentService from '../services/commentService.js';
-import imageService from '../services/imageService.js';
 import groupUtils from '../utils/groupUtils.js';
+import localService from '../services/localService';
 
 const createGroup = async (req, res, next) => {
   /**
@@ -160,11 +159,7 @@ const rejectGroupJoinRequest = async (req, res, next) => {
       groupId,
       userId,
     );
-    if (success) {
-      return res.status(200).json({ message: '그룹 가입 거절' });
-    } else {
-      return res.status(400).json({ message: '그룹 가입 거절 실패' });
-    }
+    if (success) return res.status(200).json({ message: '그룹 가입 거절' });
   } catch (error) {
     console.error(error);
     next(error);
@@ -329,11 +324,9 @@ const deletePost = async (req, res, next) => {
       if (!groupUser?.isAdimin)
         return res.status(403).json({ message: '권한 없음' });
     }
-    await Promise.all([
-      commentService.deleteCommentsByPostId(postId),
-      imageService.deleteImagesByPostId(postId),
-      groupService.deletePost(postId, userId),
-    ]);
+
+    await groupService.deletePost(postId, userId);
+
     return res.status(204).json({ message: `게시글 삭제 : ${postId}` });
   } catch (error) {
     console.error(error);
@@ -401,7 +394,10 @@ const dropGroup = async (req, res, next) => {
     const group = await groupService.getGroupDetails(groupId);
     if (!group || group.managerId !== userId)
       return res.status(403).json({ message: '권한 없음' });
+
+    await localService.LocalStorageClearByDropGroup(groupId);
     await groupService.dropGroup(groupId);
+
     return res.status(204).json({ message: '삭제 완료' });
   } catch (error) {
     console.error(error);

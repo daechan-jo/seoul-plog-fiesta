@@ -10,7 +10,7 @@ const createComment = async (req, res, next) => {
     const writerId = req.user.id;
     const content = req.body.content;
     const parentId = req.body.parentId;
-    const isCertPost = req.query.cert === 'true';
+    const isCertPost = req.query.cert;
 
     const newComment = await commentService.createComment(
       postId,

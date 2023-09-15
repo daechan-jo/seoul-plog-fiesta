@@ -256,9 +256,6 @@
           "204": {
             "description": "No Content"
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "401": {
             "description": "Unauthorized"
           }
@@ -802,9 +799,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -1397,114 +1391,6 @@
           },
           "401": {
             "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/profileimg/{userid}": {
-      "get": {
-        "tags": [
-          "Load"
-        ],
-        "summary": "프로필 이미지 로드",
-        "description": "",
-        "parameters": [
-          {
-            "name": "userid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/postimg/{postid}": {
-      "get": {
-        "tags": [
-          "Load"
-        ],
-        "summary": "게시글 이미지 로드",
-        "description": "",
-        "parameters": [
-          {
-            "name": "postid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/groupimg/{groupid}": {
-      "get": {
-        "tags": [
-          "Load"
-        ],
-        "summary": "그룹 이미지 로드",
-        "description": "",
-        "parameters": [
-          {
-            "name": "groupid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/certimg/{certid}": {
-      "get": {
-        "tags": [
-          "Load"
-        ],
-        "summary": "인증게시글 이미지 로드",
-        "description": "",
-        "parameters": [
-          {
-            "name": "certid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
           "404": {
             "description": "Not Found"

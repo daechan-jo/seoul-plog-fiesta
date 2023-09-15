@@ -191,20 +191,6 @@ const deleteCertPostImages = async (certPostId) => {
       await fs.unlinkSync(
         path.join(__dirname, '../..', 'public', image.imageUrl),
       );
-    await prisma.certPostImage.deleteMany({
-      where: { certPostId: certPostId },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-const deleteCertPostParticipants = async (certPostId) => {
-  try {
-    await prisma.certPostParticipant.deleteMany({
-      where: { certPostId: certPostId },
-    });
   } catch (error) {
     console.error(error);
     throw error;
@@ -527,7 +513,6 @@ module.exports = {
   getCertPostDetails,
   updateCertPost,
   deleteCertPostImages,
-  deleteCertPostParticipants,
   deleteCertPost,
   getTopCertPostContributorsUsers,
   getTopCertPostContributorsGroups,

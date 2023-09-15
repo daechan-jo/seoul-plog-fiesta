@@ -31,35 +31,36 @@ model User {
 	certPosts     CertPost[]
 	chatMessage   ChatMessage[]
 }
+model UserProfileImage {
+	id       Int    	@id @default(autoincrement())
+	imageUrl String
+	user     User  		@relation(fields: [userId], references: [id], onDelete: Cascade)
+	userId   Int    	@unique
+}
+
 
 model ChatRoom {
-	id        String        @id
+	id        String       		 @id
 	messages  ChatMessage[]
-	createdAt DateTime      @default(now())
+	createdAt DateTime     		 @default(now())
 }
 
 model ChatMessage {
-	id        Int      @id @default(autoincrement())
-	room      ChatRoom @relation(fields: [roomId], references: [id])
+	id        Int    		   @id @default(autoincrement())
+	room      ChatRoom 		 @relation(fields: [roomId], references: [id], onDelete: Cascade)
 	roomId    String
-	sender    User     @relation(fields: [senderId], references: [id])
-	senderId  Int      @map("sender_id")
+	sender    User    		 @relation(fields: [senderId], references: [id], onDelete: Cascade)
+	senderId  Int    		   @map("sender_id")
 	message   String
-	createdAt DateTime @default(now())
-	isRead    Boolean  @default(false)
+	createdAt DateTime		 @default(now())
+	isRead    Boolean 		 @default(false)
 }
 
-model UserProfileImage {
-	id       Int    @id @default(autoincrement())
-	imageUrl String
-	user     User   @relation(fields: [userId], references: [id])
-	userId   Int    @unique
-}
 
 model Group {
 	id           Int          @id @default(autoincrement())
 	name         String       @unique
-	manager      User         @relation(fields: [managerId], references: [id])
+	manager      User         @relation(fields: [managerId], references: [id], onDelete: Cascade)
 	managerId    Int
 	posts        Post[]
 	certposts    CertPost[]
@@ -72,9 +73,9 @@ model Group {
 }
 
 model GroupUser {
-	user       User    @relation(fields: [userId], references: [id])
+	user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 	userId     Int
-	group      Group   @relation(fields: [groupId], references: [id])
+	group      Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
 	groupId    Int
 	isAdmin    Boolean @default(false)
 	isAccepted Boolean @default(false)
@@ -85,15 +86,15 @@ model GroupUser {
 model GroupImage {
 	id       Int    @id @default(autoincrement())
 	imageUrl String
-	group    Group  @relation(fields: [groupId], references: [id])
+	group    Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 	groupId  Int
 }
 
 model Friendship {
 	id         Int     @id @default(autoincrement())
-	userA      User    @relation("UserFriendshipsA", fields: [userAId], references: [id])
+	userA      User    @relation("UserFriendshipsA", fields: [userAId], references: [id],onDelete: Cascade)
 	userAId    Int
-	userB      User    @relation("UserFriendshipsB", fields: [userBId], references: [id])
+	userB      User    @relation("UserFriendshipsB", fields: [userBId], references: [id],onDelete: Cascade)
 	userBId    Int
 	isAccepted Boolean @default(false)
 
@@ -101,10 +102,10 @@ model Friendship {
 }
 
 model Post {
-	id        Int         @id @default(autoincrement())
-	writer    User        @relation(fields: [writerId], references: [id])
+	id        Int      	  @id @default(autoincrement())
+	writer    User        @relation(fields: [writerId], references: [id],onDelete: Cascade)
 	writerId  Int
-	group     Group       @relation(fields: [groupId], references: [id])
+	group     Group       @relation(fields: [groupId], references: [id],onDelete: Cascade)
 	groupId   Int
 	title     String      @db.VarChar(50)
 	content   String      @db.VarChar(1000)
@@ -119,13 +120,13 @@ model Comment {
 	content    String    @db.VarChar(200)
 	createdAt  DateTime  @default(now())
 	updatedAt  DateTime  @updatedAt
-	writer     User      @relation(fields: [writerId], references: [id])
+	writer     User      @relation(fields: [writerId], references: [id], onDelete: Cascade)
 	writerId   Int
-	post       Post?     @relation(fields: [postId], references: [id])
+	post       Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
 	postId     Int?
-	certPost   CertPost? @relation(fields: [certPostId], references: [id])
+	certPost   CertPost? @relation(fields: [certPostId], references: [id], onDelete: Cascade)
 	certPostId Int?
-	parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
+	parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
 	parentId   Int?
 	children   Comment[] @relation("CommentToComment")
 }
@@ -133,13 +134,13 @@ model Comment {
 model PostImage {
 	id       Int    @id @default(autoincrement())
 	imageUrl String
-	post     Post   @relation(fields: [postId], references: [id])
+	post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 	postId   Int
 }
 
 model CertPost {
 	id           Int                   @id @default(autoincrement())
-	writer       User                  @relation(fields: [writerId], references: [id])
+	writer       User                  @relation(fields: [writerId], references: [id], onDelete: Cascade)
 	writerId     Int
 	title        String                @db.VarChar(50)
 	region       String                @db.VarChar(20)
@@ -154,14 +155,14 @@ model CertPost {
 	comments     Comment[]
 	images       CertPostImage[]
 	isGroupPost  Boolean               @default(false)
-	group        Group?                @relation(fields: [groupName], references: [name])
+	group        Group?                @relation(fields: [groupName], references: [name], onDelete: Cascade)
 	groupName    String?
 	participants CertPostParticipant[]
 }
 
 model CertPostParticipant {
 	id          Int      @id @default(autoincrement())
-	certPost    CertPost @relation(fields: [certPostId], references: [id])
+	certPost    CertPost @relation(fields: [certPostId], references: [id], onDelete: Cascade)
 	certPostId  Int
 	participant String
 }
@@ -169,6 +170,6 @@ model CertPostParticipant {
 model CertPostImage {
 	id         Int      @id @default(autoincrement())
 	imageUrl   String
-	certPost   CertPost @relation(fields: [certPostId], references: [id])
+	certPost   CertPost @relation(fields: [certPostId], references: [id], onDelete: Cascade)
 	certPostId Int
 }
