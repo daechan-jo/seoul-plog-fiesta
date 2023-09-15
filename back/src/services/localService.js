@@ -61,53 +61,49 @@ const LocalStorageClearByDropUser = async (userId) => {
   try {
     const groups = await prisma.group.findMany({
       where: { managerId: userId },
-      include: { groupImage: true },
     });
 
     const posts = await prisma.post.findMany({
       where: { writerId: userId },
-      include: { postImage: true },
     });
 
     const certPosts = await prisma.certPost.findMany({
       where: { writerId: userId },
-      include: { certPostImage: true },
     });
 
-    const userImage = await prisma.userProfileImage.findUnique({
+    const user = await prisma.user.findUnique({
       where: { userId },
     });
 
     let imageFilesToDelete = [];
 
-    if (userImage) {
+    if (user) {
       imageFilesToDelete.push(
-        path.join(__dirname, '../../', 'public', userImage.imageUrl),
+        path.join(__dirname, '../../', 'public', user.imagePath),
       );
     }
 
     for (let group of groups) {
-      if (group.groupImage) {
+      if (group.imagePath) {
         imageFilesToDelete.push(
-          path.join(__dirname, '../../', 'public', group.groupImage.imageUrl),
+          path.join(__dirname, '../../', 'public', group.imagePath),
         );
       }
     }
 
     for (let post of posts) {
-      if (post.postImage) {
+      if (post.imagePath) {
         imageFilesToDelete.push(
-          path.join(__dirname, '../../', 'public', post.postImage.imageUrl),
+          path.join(__dirname, '../../', 'public', post.imagePath),
         );
       }
     }
 
     for (let certPost of certPosts) {
-      if (certPost.certPostImages && certPost.certPostImages.length > 0) {
-        for (let image of certPost.certPostImages)
-          imageFilesToDelete.push(
-            path.join(__dirname, '../../', 'public', image.imageUrl),
-          );
+      if (certPost.imagePath) {
+        imageFilesToDelete.push(
+          path.join(__dirname, '../../', 'public', certPost.imagePath),
+        );
       }
     }
 

@@ -8,8 +8,7 @@ const createComment = async (req, res, next) => {
   try {
     const postId = parseInt(req.params.postid);
     const writerId = req.user.id;
-    const content = req.body.content;
-    const parentId = req.body.parentId;
+    const { content, parentId } = req.body;
     const isCertPost = req.query.cert;
 
     const newComment = await commentService.createComment(

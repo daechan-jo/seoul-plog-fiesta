@@ -52,7 +52,7 @@ const getCommentById = async (commentId) => {
   }
 };
 
-const updateComment = async (commentId, content) => {
+const updateComment = async (commentId, content, userId) => {
   try {
     return prisma.comment.update({
       where: { id: commentId },

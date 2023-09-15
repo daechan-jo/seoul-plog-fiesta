@@ -52,11 +52,6 @@ const getAllCertPosts = async (page, limit) => {
     const totalPages = Math.ceil(totalCertPostCount / limit);
     const certPosts = await prisma.certPost.findMany({
       include: {
-        images: {
-          select: {
-            imageUrl: true,
-          },
-        },
         participants: {
           select: {
             participant: true,
@@ -68,7 +63,6 @@ const getAllCertPosts = async (page, limit) => {
       ...paginationOptions,
     });
     const posts = certPosts.map((certPost) => {
-      const imageUrls = certPost.images.map((image) => image.imageUrl);
       const participants = certPost.participants.map(
         (participant) => participant.participant,
       );
@@ -80,8 +74,8 @@ const getAllCertPosts = async (page, limit) => {
       }));
       return {
         ...certPost,
+        imagePath: certPost.imagePath ? [certPost.imagePath] : [],
         comments: comments,
-        images: imageUrls,
         participants: participants,
       };
     });
@@ -107,11 +101,6 @@ const getCertPostDetails = async (certPostId) => {
           nickname: true,
         },
       },
-      images: {
-        select: {
-          imageUrl: true,
-        },
-      },
       participants: {
         select: {
           participant: true,
@@ -130,7 +119,6 @@ const getCertPostDetails = async (certPostId) => {
   });
   if (!certPost) throw new Error('인증게시글이 없음');
   try {
-    const imageUrls = certPost.images.map((image) => image.imageUrl);
     const participants = certPost.participants.map(
       (participant) => participant.participant,
     );
@@ -142,7 +130,7 @@ const getCertPostDetails = async (certPostId) => {
     }));
     return {
       ...restCertPost,
-      images: imageUrls,
+      imagePath: restCertPost.imagePath ? [restCertPost.imagePath] : [],
       participants: participants,
       authorNickname: writer.nickname,
       comments: commentDetails,
@@ -184,12 +172,12 @@ const updateCertPost = async (certPostId, certPostData) => {
 };
 const deleteCertPostImages = async (certPostId) => {
   try {
-    const image = await prisma.certPostImage.findFirst({
-      where: { certPostId: certPostId },
+    const certPost = await prisma.certPost.findFirst({
+      where: { id: certPostId },
     });
-    if (image)
+    if (certPost.imagePath)
       await fs.unlinkSync(
-        path.join(__dirname, '../..', 'public', image.imageUrl),
+        path.join(__dirname, '../..', 'public', certPost.imagePath),
       );
   } catch (error) {
     console.error(error);
@@ -240,17 +228,12 @@ const getTopMainCertPostContributors = async () => {
         select: {
           id: true,
           nickname: true,
-          profileImage: {
-            select: {
-              imageUrl: true,
-            },
-          },
+          imagePath: true,
         },
       });
-      userDetails.imageUrl = userDetails.profileImage?.imageUrl || null;
+      userDetails.imagePath = [userDetails.imagePath] || [];
       userDetails.score = userCounts[userId] * 353;
       userDetails.rank = i + 1;
-      delete userDetails.profileImage;
       topUsers.push(userDetails);
     }
     return topUsers;
@@ -276,7 +259,7 @@ const getTopCertPostContributorsUsers = async () => {
           name: true,
           nickname: true,
           activity: true,
-          profileImage: true,
+          imagePath: true,
         },
       });
       userDetails.score = userCounts[userId] * 353;

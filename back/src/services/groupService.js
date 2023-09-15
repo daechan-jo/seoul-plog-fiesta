@@ -59,6 +59,7 @@ const getAllGroups = async (page, limit) => {
         name: true,
         goal: true,
         region: true,
+        imagePath: true,
         groupUser: {
           select: {
             userId: true,
@@ -68,24 +69,29 @@ const getAllGroups = async (page, limit) => {
       },
       ...paginationOptions,
     });
-    const formatGroups = await Promise.all(
-      groups.map(async (group) => {
-        const memberCount = await prisma.groupUser.count({
+
+    const formatGroups = groups.map((group) => {
+      let imagePath;
+      if (group.imagePath) {
+        imagePath = [group.imagePath];
+      } else {
+        imagePath = [];
+      }
+
+      return {
+        ...group,
+        imagePath: imagePath,
+      };
+    });
+
+    await Promise.all(
+      formatGroups.map(async (group) => {
+        group.memberCount = await prisma.groupUser.count({
           where: { groupId: group.id, isAccepted: true },
         });
-        const images = await prisma.groupImage.findMany({
-          where: { groupId: group.id },
-        });
-        const imageUrls = images.map((image) => {
-          return image.imageUrl;
-        });
-        return {
-          ...group,
-          memberCount,
-          images: imageUrls,
-        };
       }),
     );
+
     return { groups: formatGroups, currentPage: page, totalPages: totalPages };
   } catch (error) {
     console.error(error);
@@ -133,18 +139,23 @@ const isUserGroupAdmin = async (userId, groupId) => {
   }
 };
 
-const isUserGroupMember = async (userId, groupId) => {
+const getGroupAndMembership = async (userId, groupId) => {
   try {
-    const groupUser = await prisma.groupUser.findUnique({
+    const groupWithMemberships = await prisma.group.findUnique({
       where: {
-        userId_groupId: {
-          userId: userId,
-          groupId: groupId,
+        id: groupId,
+      },
+      include: {
+        groupUser: {
+          where: { userId },
         },
       },
     });
 
-    return !!groupUser;
+    return {
+      group: groupWithMemberships,
+      membership: groupWithMemberships?.memberships[0],
+    };
   } catch (error) {
     console.error(error);
     throw error;
@@ -296,6 +307,7 @@ const getMyGroups = async (userId, page, limit) => {
       page !== null && limit !== null
         ? { skip: (page - 1) * limit, take: limit }
         : {};
+
     const groups = await prisma.groupUser.findMany({
       where: {
         userId: userId,
@@ -312,6 +324,7 @@ const getMyGroups = async (userId, page, limit) => {
             region: true,
             introduction: true,
             memberLimit: true,
+            imagePath: true,
             manager: {
               select: {
                 id: true,
@@ -319,15 +332,11 @@ const getMyGroups = async (userId, page, limit) => {
                 nickname: true,
               },
             },
-            groupImage: {
-              select: {
-                imageUrl: true,
-              },
-            },
             groupUser: {
               where: {
                 isAccepted: true,
               },
+              select: { userId: true },
             },
           },
         },
@@ -336,20 +345,10 @@ const getMyGroups = async (userId, page, limit) => {
     });
 
     const myGroup = groups.map((group) => ({
-      id: group.group.id,
-      name: group.group.name,
-      managerId: group.group.managerId,
-      goal: group.group.goal,
-      region: group.group.region,
-      introduction: group.group.introduction,
-      memberLimit: group.group.memberLimit,
+      ...group.group,
       memberCount: group.group.groupUser.length,
-      manager: {
-        id: group.group.manager.id,
-        name: group.group.manager.name,
-        nickname: group.group.manager.nickname,
-      },
-      imageUrl: group.group.groupImage[0]?.imageUrl || null,
+      manager: group.group.manager,
+      imagePath: group.group.imagePath ? [group.group.imagePath] : [],
     }));
     return {
       groups: myGroup,
@@ -563,20 +562,20 @@ const editPost = async (postId, userId, postData) => {
 };
 
 const deletePost = async (postId, userId) => {
-  try {
-    const post = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-      include: {
-        writer: true,
-        group: true,
-      },
-    });
-    if (!post) throw new Error('존재하지 않는 게시글');
-    const isAdmin = await groupUtils.isUserGroupAdmin(userId, post.groupId);
-    if (post.writerId !== userId && !isAdmin) throw new Error('권한 없음');
+  const post = await prisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+    include: {
+      writer: true,
+      group: true,
+    },
+  });
+  if (!post) throw new Error('존재하지 않는 게시글');
+  const isAdmin = await groupUtils.isUserGroupAdmin(userId, post.groupId);
+  if (post.writerId !== userId && !isAdmin) throw new Error('권한 없음');
 
+  try {
     await prisma.post.delete({
       where: {
         id: postId,
@@ -752,7 +751,7 @@ module.exports = {
   createGroup,
   getAllGroups,
   getGroupDetails,
-  isUserGroupMember,
+  getGroupAndMembership,
   requestToJoinGroup,
   acceptRegistration,
   getMyGroups,

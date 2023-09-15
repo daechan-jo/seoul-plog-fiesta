@@ -21,21 +21,15 @@ model User {
 	about         String?
 	activity      String?
 	provider      String?
+	imagePath 	  String?
 	friendshipsA  Friendship[]      @relation("UserFriendshipsA")
 	friendshipsB  Friendship[]      @relation("UserFriendshipsB")
 	groups        GroupUser[]
 	createdGroups Group[]
 	posts         Post[]
 	comments      Comment[]
-	profileImage  UserProfileImage?
 	certPosts     CertPost[]
 	chatMessage   ChatMessage[]
-}
-model UserProfileImage {
-	id       Int    	@id @default(autoincrement())
-	imageUrl String
-	user     User  		@relation(fields: [userId], references: [id], onDelete: Cascade)
-	userId   Int    	@unique
 }
 
 
@@ -62,6 +56,7 @@ model Group {
 	name         String       @unique
 	manager      User         @relation(fields: [managerId], references: [id], onDelete: Cascade)
 	managerId    Int
+	imagePath    String?
 	posts        Post[]
 	certposts    CertPost[]
 	goal         String?      @db.VarChar(1000)
@@ -69,7 +64,6 @@ model Group {
 	introduction String?      @db.VarChar(1000)
 	memberLimit  Int          @default(50)
 	groupUser    GroupUser[]
-	groupImage   GroupImage[]
 }
 
 model GroupUser {
@@ -83,12 +77,7 @@ model GroupUser {
 	@@id([userId, groupId])
 }
 
-model GroupImage {
-	id       Int    @id @default(autoincrement())
-	imageUrl String
-	group    Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
-	groupId  Int
-}
+
 
 model Friendship {
 	id         Int     @id @default(autoincrement())
@@ -109,10 +98,10 @@ model Post {
 	groupId   Int
 	title     String      @db.VarChar(50)
 	content   String      @db.VarChar(1000)
+	imagePath String?
 	isNotice  Boolean
 	createdAt DateTime    @default(now())
 	comments  Comment[]
-	images    PostImage[]
 }
 
 model Comment {
@@ -131,12 +120,6 @@ model Comment {
 	children   Comment[] @relation("CommentToComment")
 }
 
-model PostImage {
-	id       Int    @id @default(autoincrement())
-	imageUrl String
-	post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-	postId   Int
-}
 
 model CertPost {
 	id           Int                   @id @default(autoincrement())
@@ -152,8 +135,8 @@ model CertPost {
 	startTime    String                @db.VarChar(50)
 	endTime      String                @db.VarChar(50)
 	createdAt    DateTime              @default(now())
+	imagePath    String?
 	comments     Comment[]
-	images       CertPostImage[]
 	isGroupPost  Boolean               @default(false)
 	group        Group?                @relation(fields: [groupName], references: [name], onDelete: Cascade)
 	groupName    String?
@@ -165,11 +148,4 @@ model CertPostParticipant {
 	certPost    CertPost @relation(fields: [certPostId], references: [id], onDelete: Cascade)
 	certPostId  Int
 	participant String
-}
-
-model CertPostImage {
-	id         Int      @id @default(autoincrement())
-	imageUrl   String
-	certPost   CertPost @relation(fields: [certPostId], references: [id], onDelete: Cascade)
-	certPostId Int
 }

@@ -63,11 +63,13 @@ const requestToJoinGroup = async (req, res, next) => {
     const userId = req.user.id;
     const groupId = parseInt(req.params.groupid);
 
-    const group = await groupService.getGroupDetails(groupId);
-    if (!group) return res.status(404).json({ message: '그룹 없음' });
-
-    const isMember = await groupService.isUserGroupMember(userId, groupId);
-    if (isMember)
+    const { group, membership } = await groupService.getGroupAndMembership(
+      userId,
+      groupId,
+    );
+    if (!group)
+      return res.status(404).json({ message: '그룹을 찾을 수 없습니다.' });
+    if (membership)
       return res
         .status(400)
         .json({ message: '이미 가입된 그룹 또는 가입 신청한 그룹' });
@@ -348,6 +350,7 @@ const leaveGroup = async (req, res, next) => {
       return res.status(400).json({ message: '가입되지 않은 그룹' });
     if (isMember.isAdmin === true)
       return res.status(400).json({ message: '관리자는 탈퇴할 수 없음' });
+
     await groupService.leaveGroup(userId, groupId);
     return res.status(200).json({ message: `그룹 탈퇴 : ${groupId}` });
   } catch (error) {

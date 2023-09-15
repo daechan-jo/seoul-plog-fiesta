@@ -85,10 +85,9 @@ const deleteCertPost = async (req, res, next) => {
     if (!certPost || certPost.writerId !== userId)
       return res.status(403).json({ message: '권한이 없음' });
 
-    await Promise.all([
-      ploService.deleteCertPostImages(certPostId),
-      ploService.deleteCertPost(certPostId),
-    ]);
+    await ploService.deleteCertPostImages(certPostId);
+    await ploService.deleteCertPost(certPostId);
+
     return res.status(204).json({ message: '삭제 완료' });
   } catch (error) {
     console.error(error);

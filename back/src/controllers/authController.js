@@ -31,6 +31,7 @@ const login = async (req, res, next) => {
    */
   try {
     const id = req.user.id;
+    //todo N+1 문제 해결
     const groups = await authService.getGroupsByUserId(id);
     const friendships = await authService.getFriendIdsByUserId(id);
     const user = {
@@ -57,6 +58,8 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
   try {
     const nickname = req.body.nickname;
     const email = req.body.email;
+
+    //todo 그냥 최적화 필요..
 
     if (!nickname || !email)
       return res.status(400).json({ message: '입력해주세요' });
@@ -172,6 +175,7 @@ const changeInformation = async (req, res, next) => {
     if (!req.body.password) {
       return res.status(400).json({ message: '비밀번호를 입력해주세요' });
     }
+    //todo 그냥 최적화..서비스로직에서 앤트리 쓰자..
     const user = {
       id: req.user.id,
       nickname: req.body.nickname || req.user.nickname, //입력하지 않으면 기존 정보 유지
@@ -202,6 +206,7 @@ const changePasswordByCheckOriginPassword = async (req, res, next) => {
         .status(400)
         .json({ message: '비밀번호와 확인 비밀번호가 일치하지 않습니다.' });
     }
+    //todo 마찬가지
     const user = {
       id: req.user.id,
       password: password,

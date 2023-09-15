@@ -11,33 +11,25 @@ const uploadProfileImage = async (req, res, next) => {
    */
   try {
     const userId = req.user.id;
-    const imageUrl = path.join('images', req.file.filename);
-    const existingImage = await prisma.userProfileImage.findUnique({
+    const newImagePath = path.join('images', req.file.filename);
+    const user = await prisma.userProfileImage.findUnique({
       where: { userId },
     });
 
-    if (existingImage) {
+    if (user.imagePath) {
       const absoluteImagePath = path.join(
         __dirname,
         '../..',
         'public',
-        existingImage.imageUrl,
+        user.imagePath,
       );
       fs.unlinkSync(absoluteImagePath);
-
-      await prisma.userProfileImage.update({
-        where: { id: existingImage.id },
-        data: { imageUrl },
-      });
-    } else {
-      await prisma.userProfileImage.create({
-        data: {
-          imageUrl,
-          userId,
-        },
-      });
     }
-    return res.status(201).json(imageUrl);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { imagePath: newImagePath },
+    });
+    return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
     next(error);
@@ -52,38 +44,28 @@ const uploadPostImage = async (req, res, next) => {
    */
   try {
     const postId = parseInt(req.params.postid);
-    const imageUrl = path.join('images', req.file.filename);
+    const newImagePath = path.join('images', req.file.filename);
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: { group: true },
     });
 
-    if (!post) {
-      return res.status(404).json({ message: '게시글 없음' }); // Corrected line
+    if (post.imagePath) {
+      const absoluteImagePath = path.join(
+        __dirname,
+        '../..',
+        'public',
+        post.imagePath,
+      );
+      fs.unlinkSync(absoluteImagePath);
     }
 
-    const existingImage = await prisma.postImage.findFirst({
-      where: { postId: post.id },
+    await prisma.post.update({
+      where: { id: postId },
+      data: { imagePath: newImagePath },
     });
 
-    if (existingImage) {
-      fs.unlinkSync(
-        path.join(__dirname, '../..', 'public', existingImage.imageUrl),
-      );
-
-      await prisma.postImage.update({
-        where: { id: existingImage.id },
-        data: { imageUrl },
-      });
-    } else {
-      await prisma.postImage.create({
-        data: {
-          imageUrl,
-          post: { connect: { id: postId } },
-        },
-      });
-    }
-    return res.status(201).json(imageUrl);
+    return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
     next(error);
@@ -98,33 +80,27 @@ const uploadCertImage = async (req, res, next) => {
    */
   try {
     const certPostId = parseInt(req.params.postid);
-    const imageUrl = path.join('images', req.file.filename);
+    const newImagePath = path.join('images', req.file.filename);
     const certPost = await prisma.certPost.findUnique({
       where: { id: certPostId },
     });
-    if (!certPost) {
-      return res.status(404).json({ message: '인증 게시글 없음' });
-    }
-    const existingImage = await prisma.certPostImage.findFirst({
-      where: { certPostId: certPost.id },
-    });
-    if (existingImage) {
-      fs.unlinkSync(
-        path.join(__dirname, '../..', 'public', existingImage.imageUrl),
+
+    if (certPost.imagePath) {
+      const absoluteImagePath = path.join(
+        __dirname,
+        '../..',
+        'public',
+        certPost.imagePath,
       );
-      await prisma.certPostImage.update({
-        where: { id: existingImage.id },
-        data: { imageUrl },
-      });
-    } else {
-      await prisma.certPostImage.create({
-        data: {
-          imageUrl,
-          certPost: { connect: { id: certPostId } },
-        },
-      });
+      fs.unlinkSync(absoluteImagePath);
     }
-    return res.status(201).json(imageUrl);
+
+    await prisma.certPost.update({
+      where: { id: certPostId },
+      data: { imagePath: newImagePath },
+    });
+
+    return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
     next(error);
@@ -140,40 +116,31 @@ const uploadGroupImage = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const groupId = parseInt(req.params.groupid);
-    const isGroupAdmin = await prisma.group.findFirst({
+    const newImagePath = path.join('images', req.file.filename);
+    const group = await prisma.group.findFirst({
       where: {
         AND: [{ id: groupId }, { managerId: userId }],
       },
     });
-    if (!isGroupAdmin) {
-      return res.status(403).json({ message: '관리자 권한' });
+    if (!group) {
+      return res.status(403).json({ message: '잘못된 접근입니다' });
     }
-    console.log(req.file);
-    const imageUrl = path.join('images', req.file.filename);
-    const existingImage = await prisma.groupImage.findFirst({
-      where: { groupId },
-    });
-    if (existingImage) {
+
+    if (group.imagePath) {
       const absoluteImagePath = path.join(
         __dirname,
         '../..',
         'public',
-        existingImage.imageUrl,
+        group.imagePath,
       );
       fs.unlinkSync(absoluteImagePath);
-      await prisma.groupImage.update({
-        where: { id: existingImage.id },
-        data: { imageUrl },
-      });
-    } else {
-      await prisma.groupImage.create({
-        data: {
-          imageUrl,
-          groupId,
-        },
-      });
     }
-    return res.status(201).json(imageUrl);
+    await prisma.groupImage.update({
+      where: { id: groupId },
+      data: { newImagePath },
+    });
+
+    return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
     next(error);
