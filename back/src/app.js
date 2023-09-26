@@ -50,10 +50,4 @@ app.use(errorMiddleware);
 
 app.io = io;
 
-/** @description 프로세스 종료 후 프리즈마 연결해제 */
-process.on('SIGINT', async () => {
-  await prisma.$disconnect();
-  process.exit();
-});
-
 module.exports = { app };

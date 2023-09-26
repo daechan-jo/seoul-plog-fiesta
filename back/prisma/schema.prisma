@@ -2,154 +2,145 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-	provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-	provider = "mysql"
-	url      = env("DATABASE_URL")
-}
-
-generator erd {
-  provider = "prisma-erd-generator"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-	id            Int               @id @default(autoincrement())
-	name          String
-	nickname      String            @unique
-	email         String            @unique
-	password      String
-	passwordToken String?           @unique
-	passwordValid DateTime?
-	about         String?
-	activity      String?
-	provider      String?
-	imagePath 	  String?
-	friendshipsA  Friendship[]      @relation("UserFriendshipsA")
-	friendshipsB  Friendship[]      @relation("UserFriendshipsB")
-	groups        GroupUser[]
-	createdGroups Group[]
-	posts         Post[]
-	comments      Comment[]
-	certPosts     CertPost[]
-	chatMessage   ChatMessage[]
+  id            Int           @id @default(autoincrement())
+  name          String
+  nickname      String        @unique
+  email         String        @unique
+  password      String
+  passwordToken String?       @unique
+  passwordValid DateTime?
+  about         String?
+  activity      String?
+  provider      String?
+  imagePath     String?
+  friendshipsA  Friendship[]  @relation("UserFriendshipsA")
+  friendshipsB  Friendship[]  @relation("UserFriendshipsB")
+  groups        GroupUser[]
+  createdGroups Group[]
+  posts         Post[]
+  comments      Comment[]
+  certPosts     CertPost[]
+  chatMessage   ChatMessage[]
 }
 
-
 model ChatRoom {
-	id        String       		 @id
-	messages  ChatMessage[]
-	createdAt DateTime     		 @default(now())
+  id        String        @id
+  messages  ChatMessage[]
+  createdAt DateTime      @default(now())
 }
 
 model ChatMessage {
-	id        Int    		   @id @default(autoincrement())
-	room      ChatRoom 		 @relation(fields: [roomId], references: [id], onDelete: Cascade)
-	roomId    String
-	sender    User    		 @relation(fields: [senderId], references: [id], onDelete: Cascade)
-	senderId  Int    		   @map("sender_id")
-	message   String
-	createdAt DateTime		 @default(now())
-	isRead    Boolean 		 @default(false)
+  id        Int      @id @default(autoincrement())
+  room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId    String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId  Int      @map("sender_id")
+  message   String
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
 }
 
-
 model Group {
-	id           Int          @id @default(autoincrement())
-	name         String       @unique
-	manager      User         @relation(fields: [managerId], references: [id], onDelete: Cascade)
-	managerId    Int
-	imagePath    String?
-	posts        Post[]
-	certposts    CertPost[]
-	goal         String?      @db.VarChar(1000)
-	region       String?      @db.VarChar(1000)
-	introduction String?      @db.VarChar(1000)
-	memberLimit  Int          @default(50)
-	groupUser    GroupUser[]
+  id           Int         @id @default(autoincrement())
+  name         String      @unique
+  manager      User        @relation(fields: [managerId], references: [id], onDelete: Cascade)
+  managerId    Int
+  imagePath    String?
+  posts        Post[]
+  certposts    CertPost[]
+  goal         String?     @db.VarChar(1000)
+  region       String?     @db.VarChar(1000)
+  introduction String?     @db.VarChar(1000)
+  memberLimit  Int         @default(50)
+  groupUser    GroupUser[]
 }
 
 model GroupUser {
-	user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-	userId     Int
-	group      Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
-	groupId    Int
-	isAdmin    Boolean @default(false)
-	isAccepted Boolean @default(false)
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  group      Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId    Int
+  isAdmin    Boolean @default(false)
+  isAccepted Boolean @default(false)
 
-	@@id([userId, groupId])
+  @@id([userId, groupId])
 }
 
-
-
 model Friendship {
-	id         Int     @id @default(autoincrement())
-	userA      User    @relation("UserFriendshipsA", fields: [userAId], references: [id],onDelete: Cascade)
-	userAId    Int
-	userB      User    @relation("UserFriendshipsB", fields: [userBId], references: [id],onDelete: Cascade)
-	userBId    Int
-	isAccepted Boolean @default(false)
+  id         Int     @id @default(autoincrement())
+  userA      User    @relation("UserFriendshipsA", fields: [userAId], references: [id], onDelete: Cascade)
+  userAId    Int
+  userB      User    @relation("UserFriendshipsB", fields: [userBId], references: [id], onDelete: Cascade)
+  userBId    Int
+  isAccepted Boolean @default(false)
 
-	@@unique([userAId, userBId])
+  @@unique([userAId, userBId])
 }
 
 model Post {
-	id        Int      	  @id @default(autoincrement())
-	writer    User        @relation(fields: [writerId], references: [id],onDelete: Cascade)
-	writerId  Int
-	group     Group       @relation(fields: [groupId], references: [id],onDelete: Cascade)
-	groupId   Int
-	title     String      @db.VarChar(50)
-	content   String      @db.VarChar(1000)
-	imagePath String?
-	isNotice  Boolean
-	createdAt DateTime    @default(now())
-	comments  Comment[]
+  id        Int       @id @default(autoincrement())
+  writer    User      @relation(fields: [writerId], references: [id], onDelete: Cascade)
+  writerId  Int
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   Int
+  title     String    @db.VarChar(50)
+  content   String    @db.VarChar(1000)
+  imagePath String?
+  isNotice  Boolean
+  createdAt DateTime  @default(now())
+  comments  Comment[]
 }
 
 model Comment {
-	id         Int       @id @default(autoincrement())
-	content    String    @db.VarChar(200)
-	createdAt  DateTime  @default(now())
-	updatedAt  DateTime  @updatedAt
-	writer     User      @relation(fields: [writerId], references: [id], onDelete: Cascade)
-	writerId   Int
-	post       Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
-	postId     Int?
-	certPost   CertPost? @relation(fields: [certPostId], references: [id], onDelete: Cascade)
-	certPostId Int?
-	parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
-	parentId   Int?
-	children   Comment[] @relation("CommentToComment")
+  id         Int       @id @default(autoincrement())
+  content    String    @db.VarChar(200)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  writer     User      @relation(fields: [writerId], references: [id], onDelete: Cascade)
+  writerId   Int
+  post       Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     Int?
+  certPost   CertPost? @relation(fields: [certPostId], references: [id], onDelete: Cascade)
+  certPostId Int?
+  parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId   Int?
+  children   Comment[] @relation("CommentToComment")
 }
 
-
 model CertPost {
-	id           Int                   @id @default(autoincrement())
-	writer       User                  @relation(fields: [writerId], references: [id], onDelete: Cascade)
-	writerId     Int
-	title        String                @db.VarChar(50)
-	region       String                @db.VarChar(20)
-	location     String                @db.VarChar(50)
-	distance     String                @db.VarChar(50)
-	trashAmount  String                @db.VarChar(50)
-	averagePace  String                @db.VarChar(50)
-	description  String                @db.VarChar(1000)
-	startTime    String                @db.VarChar(50)
-	endTime      String                @db.VarChar(50)
-	createdAt    DateTime              @default(now())
-	imagePath    String?
-	comments     Comment[]
-	isGroupPost  Boolean               @default(false)
-	group        Group?                @relation(fields: [groupName], references: [name], onDelete: Cascade)
-	groupName    String?
-	participants CertPostParticipant[]
+  id           Int                   @id @default(autoincrement())
+  writer       User                  @relation(fields: [writerId], references: [id], onDelete: Cascade)
+  writerId     Int
+  title        String                @db.VarChar(50)
+  region       String                @db.VarChar(20)
+  location     String                @db.VarChar(50)
+  distance     String                @db.VarChar(50)
+  trashAmount  String                @db.VarChar(50)
+  averagePace  String                @db.VarChar(50)
+  description  String                @db.VarChar(1000)
+  startTime    String                @db.VarChar(50)
+  endTime      String                @db.VarChar(50)
+  createdAt    DateTime              @default(now())
+  imagePath    String?
+  comments     Comment[]
+  isGroupPost  Boolean               @default(false)
+  group        Group?                @relation(fields: [groupName], references: [name], onDelete: Cascade)
+  groupName    String?
+  participants CertPostParticipant[]
 }
 
 model CertPostParticipant {
-	id          Int      @id @default(autoincrement())
-	certPost    CertPost @relation(fields: [certPostId], references: [id], onDelete: Cascade)
-	certPostId  Int
-	participant String
+  id          Int      @id @default(autoincrement())
+  certPost    CertPost @relation(fields: [certPostId], references: [id], onDelete: Cascade)
+  certPostId  Int
+  participant String
 }
