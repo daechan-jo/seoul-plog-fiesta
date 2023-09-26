@@ -20,7 +20,7 @@ const createUser = async (userData) => {
   if (existingUser) throw new Error('이미 존재하는 이메일입니다.');
   if (existingNickname) throw new Error('이미 존재하는 닉네임입니다.');
 
-  try {
+
     //비밀번호 해쉬화
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {
@@ -30,66 +30,48 @@ const createUser = async (userData) => {
       password: hashedPassword,
     };
 
-    return await prisma.user.create({
-      data: newUser,
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    return prisma.user.create({
+			data: newUser,
+		});
 };
 
 /** @description 이메일로 유저 찾기*/
 const getUserByEmail = async (email) => {
-  try {
-    return await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+
+    return prisma.user.findUnique({
+			where: {
+				email: email,
+			},
+		});
 };
 
 /** @description 이메일로 유저 찾아 패스워드 토큰 업데이트*/
 const updatePasswordTokenByEmail = async (email, token) => {
-  try {
-    return await prisma.user.update({
-      where: {
-        email: email,
-      },
-      data: {
-        passwordToken: token,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+
+    return prisma.user.update({
+			where: {
+				email: email,
+			},
+			data: {
+				passwordToken: token,
+			},
+		});
 };
 
 /** @description 이메일로 유저 찾아 패스워드 유효기간 업데이트*/
 const updatePasswordValidByEmail = async (email) => {
-  try {
-    return await prisma.user.update({
-      where: {
-        email: email,
-      },
-      data: {
-        passwordValid: new Date(),
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    return prisma.user.update({
+			where: {
+				email: email,
+			},
+			data: {
+				passwordValid: new Date(),
+			},
+		});
 };
 
 /** @description 비밀번호 변경*/
 const changePassword = async (email, password) => {
-  try {
     const hashedPassword = await bcrypt.hash(password, 10);
     return prisma.user.update({
       where: {
@@ -99,10 +81,7 @@ const changePassword = async (email, password) => {
         password: hashedPassword,
       },
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+
 };
 
 const changePasswordByCheckOriginPassword = async (passwordData) => {
@@ -119,35 +98,26 @@ const changePasswordByCheckOriginPassword = async (passwordData) => {
     throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
   }
 
-  try {
     //비밀번호 변경
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    return await prisma.user.update({
-      where: {
-        id: id,
-      },
-      data: {
-        password: hashedPassword,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    return prisma.user.update({
+			where: {
+				id: id,
+			},
+			data: {
+				password: hashedPassword,
+			},
+		});
+
 };
 
 /** @description 패스워드토큰으로 유저 찾기*/
 const getUserByPasswordToken = async (passwordToken) => {
-  try {
-    return await prisma.user.findUnique({
+    return prisma.user.findUnique({
       where: {
         passwordToken: passwordToken,
       },
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 /** @description 유저 정보 수정 -> 입력한 비밀번호가 기존 비밀번호여야 함 */
@@ -165,9 +135,8 @@ const changeInformation = async (user) => {
   if (!isPasswordMatch) {
     throw new Error('비밀번호가 틀렸습니다. 다시 입력해주세요');
   }
-  try {
     //정보 업데이트
-    return await prisma.user.update({
+    return prisma.user.update({
       where: {
         id: id,
       },
@@ -178,29 +147,19 @@ const changeInformation = async (user) => {
         activity: activity,
       },
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 /** @description 유저 삭제*/
 const removeUser = async (id) => {
-  try {
-    return await prisma.user.delete({
+    return  prisma.user.delete({
       where: {
         id: id,
       },
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 /** @description 아이디로 가입된 모임 아이디들 찾기 -> 배열 반환*/
 const getGroupsByUserId = async (userId) => {
-  try {
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -210,15 +169,10 @@ const getGroupsByUserId = async (userId) => {
       },
     });
     return user.groups.map((group) => group.groupId);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 /** @description 아이디로 친구 관계인 친구 아이디들 찾기 -> 배열 반환*/
 const getFriendIdsByUserId = async (userId) => {
-  try {
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -240,10 +194,6 @@ const getFriendIdsByUserId = async (userId) => {
     });
 
     return user.friendshipsA.map((friendship) => friendship.userB.id);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 module.exports = {

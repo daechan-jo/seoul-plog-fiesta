@@ -28,7 +28,6 @@ const createComment = async (
       connect: { id: parentId },
     };
   }
-  try {
     const newCommentWithWriterInfo = await prisma.comment.create({
       data: commentData,
       include: { writer: true },
@@ -37,31 +36,18 @@ const createComment = async (
     delete result.writer;
     result.nickname = newCommentWithWriterInfo.writer.nickname;
     return result;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 const getCommentById = async (commentId) => {
-  try {
     return prisma.comment.findUnique({ where: { id: commentId } });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 const updateComment = async (commentId, content, userId) => {
-  try {
+
     return prisma.comment.update({
       where: { id: commentId },
       data: { content },
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 const deleteCommentAndChildren = async (commentId) => {
@@ -69,7 +55,6 @@ const deleteCommentAndChildren = async (commentId) => {
     where: { id: commentId },
   });
   if (!comment) throw new Error('댓글을 찾을 수 없음');
-  try {
     async function recursiveDelete(parentId) {
       const children = await prisma.comment.findMany({ where: { parentId } });
 
@@ -80,14 +65,9 @@ const deleteCommentAndChildren = async (commentId) => {
     }
     await recursiveDelete(commentId);
     await prisma.comment.delete({ where: { id: commentId } });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 const canDeleteComment = async (commentId, userId) => {
-  try {
     const comment = await prisma.comment.findUnique({
       where: { id: commentId },
       include: {
@@ -99,25 +79,8 @@ const canDeleteComment = async (commentId, userId) => {
       comment.writerId === userId ||
       (comment.post && comment.post.writerId === userId) ||
       (comment.certPost && comment.certPost.writerId === userId)
-    );
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    )
 };
-
-// const deleteCommentsByPostId = async (postId) => {
-//   try {
-//     await prisma.comment.deleteMany({
-//       where: {
-//         postId: postId,
-//       },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
 
 module.exports = {
   createComment,
