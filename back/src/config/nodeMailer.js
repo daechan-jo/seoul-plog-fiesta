@@ -10,4 +10,4 @@ const smtpTransport = nodemailer.createTransport({
   },
 });
 
-module.exports = smtpTransport;
+export default smtpTransport;

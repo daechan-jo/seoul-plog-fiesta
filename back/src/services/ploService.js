@@ -1,6 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
-const fs = require('fs');
-const path = require('path');
+import { PrismaClient } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
+
 const prisma = new PrismaClient();
 
 const createCertPost = async (userId, certPostData) => {
@@ -19,12 +20,12 @@ const createCertPost = async (userId, certPostData) => {
     const userInGroup = await prisma.groupUser.findFirst({
       where: {
         groupId: group.id,
-        userId: userId,
+        userId,
       },
     });
     if (!userInGroup) throw new Error('그룹에 속해있지 않음');
   }
-  return await prisma.certPost.create({
+  return prisma.certPost.create({
     data: {
       ...certPostData,
       writerId: userId,
@@ -69,14 +70,14 @@ const getAllCertPosts = async (page, limit) => {
     return {
       ...certPost,
       imagePath: certPost.imagePath ? [certPost.imagePath] : [],
-      comments: comments,
-      participants: participants,
+      comments,
+      participants,
     };
   });
   return {
-    posts: posts,
+    posts,
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   };
 };
 
@@ -121,7 +122,7 @@ const getCertPostDetails = async (certPostId) => {
   return {
     ...restCertPost,
     imagePath: restCertPost.imagePath ? [restCertPost.imagePath] : [],
-    participants: participants,
+    participants,
     authorNickname: writer.nickname,
     comments: commentDetails,
   };
@@ -133,12 +134,12 @@ const updateCertPost = async (certPostId, certPostData) => {
 
   if (participants !== undefined) {
     await prisma.certPostParticipant.deleteMany({
-      where: { certPostId: certPostId },
+      where: { certPostId },
     });
 
     const newParticipants = participants.map((participant) => ({
-      participant: participant,
-      certPostId: certPostId,
+      participant,
+      certPostId,
     }));
 
     await prisma.certPostParticipant.createMany({
@@ -146,7 +147,7 @@ const updateCertPost = async (certPostId, certPostData) => {
     });
   }
 
-  return await prisma.certPost.update({
+  return prisma.certPost.update({
     where: { id: certPostId },
     data: updateData,
   });
@@ -186,10 +187,10 @@ const getTopMainCertPostContributors = async () => {
     .sort((a, b) => userCounts[b] - userCounts[a])
     .slice(0, 5);
   const topUsers = [];
-  for (let i = 0; i < topUserIds.length; i++) {
-    let userId = topUserIds[i];
-    const userDetails = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
+  for (let i = 0; i < topUserIds.length; i += 1) {
+    const userId = topUserIds[i];
+    const userDetails = prisma.user.findUnique({
+      where: { id: Number(userId) },
       select: {
         id: true,
         nickname: true,
@@ -210,10 +211,10 @@ const getTopCertPostContributorsUsers = async () => {
     .slice(0, 5);
 
   const topUsers = [];
-  for (let i = 0; i < topUserIds.length; i++) {
-    let userId = topUserIds[i];
-    const userDetails = await prisma.user.findUnique({
-      where: { id: parseInt(userId) },
+  for (let i = 0; i < topUserIds.length; i += 1) {
+    const userId = topUserIds[i];
+    const userDetails = prisma.user.findUnique({
+      where: { id: Number(userId) },
       select: {
         id: true,
         name: true,
@@ -247,9 +248,9 @@ const getTopCertPostContributorsGroups = async () => {
     .slice(0, 5);
 
   const topGroups = [];
-  for (let i = 0; i < topGroupNames.length; i++) {
-    let groupName = topGroupNames[i];
-    let groupDetails = await prisma.group.findUnique({
+  for (let i = 0; i < topGroupNames.length; i += 1) {
+    const groupName = topGroupNames[i];
+    const groupDetails = prisma.group.findUnique({
       where: { name: groupName },
       select: {
         id: true,
@@ -268,12 +269,11 @@ const getTopCertPostContributorsGroups = async () => {
   return topGroups;
 };
 
-const allCertPosts = async () => {
-  return prisma.certPost.findMany({
+const allCertPosts = async () =>
+  prisma.certPost.findMany({
     where: { isGroupPost: false },
     select: { writerId: true },
   });
-};
 
 const paginate = (array, page, limit) => {
   const startIndex = (page - 1) * limit;
@@ -296,9 +296,9 @@ const getTopUsers = async (page, limit) => {
     paginatedUserIds = paginate(sortedUserIds, page, limit);
 
   const topUsers = [];
-  for (let i = 0; i < paginatedUserIds.length; i++) {
-    let userId = paginatedUserIds[i];
-    let userDetails = await prisma.user.findUnique({
+  for (let i = 0; i < paginatedUserIds.length; i += 1) {
+    const userId = paginatedUserIds[i];
+    const userDetails = prisma.user.findUnique({
       where: { id: Number(userId) },
       select: {
         id: true,
@@ -316,7 +316,7 @@ const getTopUsers = async (page, limit) => {
   return {
     users: topUsers,
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   };
 };
 
@@ -330,7 +330,7 @@ const getUserRank = async (userId) => {
     (a, b) => userCounts[b] - userCounts[a],
   );
   let loggedInUserRank;
-  for (let i = 0; i < sortedUserIds.length; i++) {
+  for (let i = 0; i < sortedUserIds.length; i += 1) {
     if (Number(sortedUserIds[i]) === userId) {
       loggedInUserRank = i + 1;
       break;
@@ -352,7 +352,7 @@ const getGroupRank = async (groupName) => {
     (a, b) => groupCounts[b] - groupCounts[a],
   );
   let groupRank;
-  for (let i = 0; i < sortedGroupNames.length; i++) {
+  for (let i = 0; i < sortedGroupNames.length; i += 1) {
     if (sortedGroupNames[i] === groupName) {
       groupRank = i + 1;
       break;
@@ -366,42 +366,41 @@ const getUserCertPostsRegionCount = async (userId) => {
     where: { writerId: userId },
   });
   const regionCount = {};
-  for (let post of userCertPosts) {
+  for (const post of userCertPosts) {
     if (!regionCount[post.region]) {
       regionCount[post.region] = 0;
     }
-    regionCount[post.region]++;
+    regionCount[post.region] += 1;
   }
   return regionCount;
 };
 
 const getGroupCertPostsRegionCount = async (groupName) => {
   const groupCertPosts = await prisma.certPost.findMany({
-    where: { groupName: groupName },
+    where: { groupName },
   });
   const regionCount = {};
-  for (let post of groupCertPosts) {
+  for (const post of groupCertPosts) {
     if (!regionCount[post.region]) {
       regionCount[post.region] = 0;
     }
-    regionCount[post.region]++;
+    regionCount[post.region] += 1;
   }
   return regionCount;
 };
 
 const getAllCertPostsRegions = async () => {
-  const allCertPosts = await prisma.certPost.findMany();
   const regionCount = {};
-  for (let post of allCertPosts) {
+  for (const post of allCertPosts) {
     if (!regionCount[post.region]) {
       regionCount[post.region] = 0;
     }
-    regionCount[post.region]++;
+    regionCount[post.region] += 1;
   }
   return regionCount;
 };
 
-module.exports = {
+export default {
   createCertPost,
   getAllCertPosts,
   getCertPostDetails,

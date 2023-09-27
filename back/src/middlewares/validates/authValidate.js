@@ -35,9 +35,7 @@ const validateUserUpdate = (req, res, next) => {
       details: validationResult.error.details,
     });
   }
-  next();
+  return next();
 };
 
-module.exports = {
-  validateUserUpdate,
-};
+export default validateUserUpdate;

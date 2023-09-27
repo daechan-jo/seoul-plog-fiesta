@@ -1,4 +1,5 @@
 import commentService from '../services/commentService';
+
 const createComment = async (req, res, next) => {
   /**
    * #swagger.tags = ['Comment']
@@ -6,7 +7,7 @@ const createComment = async (req, res, next) => {
    * #swagger.description = 'parentId가 있으면 대댓글, 없으면 댓글 / isCertPost가 true면 인증글 댓글'
    */
   try {
-    const postId = parseInt(req.params.postid);
+    const postId = Number(req.params.postid);
     const writerId = req.user.id;
     const { content, parentId } = req.body;
     const isCertPost = req.query.cert;
@@ -21,7 +22,7 @@ const createComment = async (req, res, next) => {
     return res.status(201).json(newComment);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -32,9 +33,9 @@ const updateComment = async (req, res, next) => {
    * #swagger.description = '댓글 작성자만 수정 가능'
    */
   try {
-    const commentId = parseInt(req.params.commentid);
+    const commentId = Number(req.params.commentid);
     const userId = req.user.id;
-    const content = req.body.content;
+    const { content } = req.body;
 
     const comment = await commentService.getCommentById(commentId);
 
@@ -49,7 +50,7 @@ const updateComment = async (req, res, next) => {
     return res.status(201).json(updatedComment);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -60,7 +61,7 @@ const deleteComment = async (req, res, next) => {
    * #swagger.description = '댓글 작성자와 게시글 작성자 삭제 가능'
    */
   try {
-    const commentId = parseInt(req.params.commentid);
+    const commentId = Number(req.params.commentid);
     const userId = req.user.id;
 
     const canDelete = await commentService.canDeleteComment(commentId, userId);
@@ -71,8 +72,8 @@ const deleteComment = async (req, res, next) => {
     return res.status(204).json({ message: '댓글 삭제 :', commentId });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
-module.exports = { createComment, updateComment, deleteComment };
+export default { createComment, updateComment, deleteComment };

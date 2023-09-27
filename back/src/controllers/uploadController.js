@@ -1,7 +1,9 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+
+import path from 'path';
+import fs from 'fs';
+
 const prisma = new PrismaClient();
-const path = require('path');
-const fs = require('fs');
 
 const uploadProfileImage = async (req, res, next) => {
   /**
@@ -12,7 +14,7 @@ const uploadProfileImage = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const newImagePath = path.join('images', req.file.filename);
-    const user = await prisma.userProfileImage.findUnique({
+    const user = await prisma.user.findUnique({
       where: { userId },
     });
 
@@ -32,7 +34,7 @@ const uploadProfileImage = async (req, res, next) => {
     return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -43,7 +45,7 @@ const uploadPostImage = async (req, res, next) => {
    * #swagger.description = '게시글의 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트'
    */
   try {
-    const postId = parseInt(req.params.postid);
+    const postId = Number(req.params.postid);
     const newImagePath = path.join('images', req.file.filename);
     const post = await prisma.post.findUnique({
       where: { id: postId },
@@ -68,7 +70,7 @@ const uploadPostImage = async (req, res, next) => {
     return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -79,7 +81,7 @@ const uploadCertImage = async (req, res, next) => {
    * #swagger.description = '인증게시글 이미지가 이미 로컬에 저장되어있다면 삭제 후 재등록. DB에 이미지 경로 업데이트'
    */
   try {
-    const certPostId = parseInt(req.params.postid);
+    const certPostId = Number(req.params.postid);
     const newImagePath = path.join('images', req.file.filename);
     const certPost = await prisma.certPost.findUnique({
       where: { id: certPostId },
@@ -103,7 +105,7 @@ const uploadCertImage = async (req, res, next) => {
     return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -115,7 +117,7 @@ const uploadGroupImage = async (req, res, next) => {
    */
   try {
     const userId = req.user.id;
-    const groupId = parseInt(req.params.groupid);
+    const groupId = Number(req.params.groupid);
     const newImagePath = path.join('images', req.file.filename);
     const group = await prisma.group.findFirst({
       where: {
@@ -135,19 +137,19 @@ const uploadGroupImage = async (req, res, next) => {
       );
       fs.unlinkSync(absoluteImagePath);
     }
-    await prisma.groupImage.update({
+    await prisma.group.update({
       where: { id: groupId },
-      data: { newImagePath },
+      data: { imagePath: newImagePath },
     });
 
     return res.status(201).json(newImagePath);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
-module.exports = {
+export default {
   uploadProfileImage,
   uploadPostImage,
   uploadGroupImage,

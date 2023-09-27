@@ -8,31 +8,31 @@ const uploadRouter = router();
 const upload = multer({ storage });
 
 uploadRouter.post(
-	'/upload/profile',
-	authenticateJWT,
-	upload.single('profileImage'),
-	uploadController.uploadProfileImage,
+  '/upload/profile',
+  authenticateJWT,
+  upload.single('profileImage'),
+  uploadController.uploadProfileImage,
 );
 
 uploadRouter.post(
-	'/upload/postimg/:postid',
-	authenticateJWT,
-	upload.single('postImage'),
-	uploadController.uploadPostImage,
+  '/upload/postimg/:postid',
+  authenticateJWT,
+  upload.single('postImage'),
+  uploadController.uploadPostImage,
 );
 
 uploadRouter.post(
-	'/upload/groupimg/:groupid',
-	authenticateJWT,
-	upload.single('groupImage'),
-	uploadController.uploadGroupImage,
+  '/upload/groupimg/:groupid',
+  authenticateJWT,
+  upload.single('groupImage'),
+  uploadController.uploadGroupImage,
 );
 
 uploadRouter.post(
-	'/upload/certimg/:postid',
-	authenticateJWT,
-	upload.single('certImage'),
-	uploadController.uploadCertImage,
+  '/upload/certimg/:postid',
+  authenticateJWT,
+  upload.single('certImage'),
+  uploadController.uploadCertImage,
 );
 
-module.exports = uploadRouter;
+export default uploadRouter;

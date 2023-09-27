@@ -1,6 +1,7 @@
 import router from 'express';
 import userController from '../controllers/userController';
 import authenticateJWT from '../middlewares/authenticateJWT';
+
 const userRouter = router();
 
 /** @description 모든 유저 정보 */
@@ -9,9 +10,8 @@ userRouter.get('/users', userController.getAllUsers);
 /** @description 랜덤 유저 */
 userRouter.get('/user/random', userController.getRandomUsers);
 
-/**
- * @description 유저 찾기
- * @CHANGED authenticateJWT 인가 삭제*/
+/** @description 유저 찾기
+ * @CHANGED authenticateJWT 인가 삭제 */
 userRouter.get('/user/:name', userController.searchUsers);
 
 /**
@@ -63,4 +63,4 @@ userRouter.get(
   userController.getCertPostsByUserId,
 );
 
-module.exports = userRouter;
+export default userRouter;

@@ -1,10 +1,10 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 function generateToken(payload, secretKey, expiresIn) {
-	return jwt.sign(payload, secretKey, {
-		expiresIn: expiresIn,
-		issuer: "Pineapple Pizza",
-	});
+  return jwt.sign(payload, secretKey, {
+    expiresIn,
+    issuer: 'Pineapple Pizza',
+  });
 }
 
-module.exports = generateToken;
+export default generateToken;

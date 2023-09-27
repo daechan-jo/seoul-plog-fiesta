@@ -22,7 +22,7 @@ const validateCommentCreation = (req, res, next) => {
       details: validGroup.error.details,
     });
   }
-  next();
+  return next();
 };
 
 module.exports = { validateCommentCreation };

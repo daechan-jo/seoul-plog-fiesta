@@ -1,4 +1,7 @@
+/* eslint-disable consistent-return */
+
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 const createRoomId = async (loggedInUserId, otherUserId) => {
@@ -100,7 +103,7 @@ const deleteChatRoom = async (roomId) => {
   }
 };
 
-module.exports = {
+export default {
   getUserById,
   getUnreadMessages,
   getChatRoom,

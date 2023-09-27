@@ -13,4 +13,4 @@ async function mailSendApp(emailOptions) {
   });
 }
 
-module.exports = mailSendApp;
+export default mailSendApp;

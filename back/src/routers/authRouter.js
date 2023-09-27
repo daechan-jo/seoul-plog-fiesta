@@ -29,7 +29,6 @@ authRouter.put(
   authController.changeInformation,
 );
 
-//회원 탈퇴
-authRouter.delete('/auth/drop', authenticateJWT, authController.removeUser); //회원 탈퇴
+authRouter.delete('/auth/drop', authenticateJWT, authController.removeUser);
 
-module.exports = authRouter;
+export default authRouter;

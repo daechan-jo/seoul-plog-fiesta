@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+
 const prisma = new PrismaClient();
 const groupUtils = require('../utils/groupUtils');
 
@@ -12,7 +13,7 @@ const createGroup = async (groupData, managerId) => {
   if (checkGroup) throw new Error('이미 존재하는 그룹 이름');
   const userGroupCount = await prisma.group.count({
     where: {
-      managerId: managerId,
+      managerId,
     },
   });
   if (userGroupCount >= 5) throw new Error('그룹 생성 제한 초과');
@@ -31,7 +32,7 @@ const createGroup = async (groupData, managerId) => {
   await prisma.groupUser.create({
     data: {
       userId: managerId,
-      groupId: groupId,
+      groupId,
       isAdmin: true,
       isAccepted: true,
     },
@@ -74,23 +75,24 @@ const getAllGroups = async (page, limit) => {
 
     return {
       ...group,
-      imagePath: imagePath,
+      imagePath,
     };
   });
 
   await Promise.all(
     formatGroups.map(async (group) => {
-      group.memberCount = await prisma.groupUser.count({
+      const memberCount = await prisma.groupUser.count({
         where: { groupId: group.id, isAccepted: true },
       });
+      Object.assign(group, { memberCount });
     }),
   );
 
-  return { groups: formatGroups, currentPage: page, totalPages: totalPages };
+  return { groups: formatGroups, currentPage: page, totalPages };
 };
 
-const getGroupDetails = async (groupId) => {
-  return prisma.group.findUnique({
+const getGroupDetails = async (groupId) =>
+  prisma.group.findUnique({
     where: {
       id: groupId,
     },
@@ -105,7 +107,6 @@ const getGroupDetails = async (groupId) => {
       },
     },
   });
-};
 
 const isUserGroupAdmin = async (userId, groupId) => {
   const group = await prisma.group.findUnique({
@@ -147,10 +148,10 @@ const requestToJoinGroup = async (userId, groupId) => {
   });
 };
 
-const getGroupJoinRequests = async (managerId) => {
-  return prisma.group.findMany({
+const getGroupJoinRequests = async (managerId) =>
+  prisma.group.findMany({
     where: {
-      managerId: managerId,
+      managerId,
       groupUser: {
         some: {
           isAccepted: false,
@@ -170,13 +171,12 @@ const getGroupJoinRequests = async (managerId) => {
       },
     },
   });
-};
 
 const acceptRegistration = async (managerId, groupId, userId) => {
   const groupUser = await prisma.groupUser.findUnique({
     where: {
       userId_groupId: {
-        groupId: groupId,
+        groupId,
         userId: managerId,
       },
     },
@@ -190,8 +190,8 @@ const acceptRegistration = async (managerId, groupId, userId) => {
   return prisma.groupUser.update({
     where: {
       userId_groupId: {
-        userId: userId,
-        groupId: groupId,
+        userId,
+        groupId,
       },
     },
     data: {
@@ -203,8 +203,8 @@ const acceptRegistration = async (managerId, groupId, userId) => {
 const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
   const groupUser = await prisma.groupUser.findFirst({
     where: {
-      groupId: groupId,
-      userId: userId,
+      groupId,
+      userId,
       isAccepted: false,
     },
     include: {
@@ -217,8 +217,8 @@ const rejectGroupJoinRequest = async (managerId, groupId, userId) => {
   await prisma.groupUser.delete({
     where: {
       userId_groupId: {
-        userId: userId,
-        groupId: groupId,
+        userId,
+        groupId,
       },
     },
   });
@@ -249,7 +249,7 @@ const getGroupJoinRequestsByGroupId = async (groupId, managerId) => {
 const getMyGroups = async (userId, page, limit) => {
   const totalGroupsCount = await prisma.groupUser.count({
     where: {
-      userId: userId,
+      userId,
       isAccepted: true,
     },
   });
@@ -261,7 +261,7 @@ const getMyGroups = async (userId, page, limit) => {
 
   const groups = await prisma.groupUser.findMany({
     where: {
-      userId: userId,
+      userId,
       isAccepted: true,
     },
     select: {
@@ -304,7 +304,7 @@ const getMyGroups = async (userId, page, limit) => {
   return {
     groups: myGroup,
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   };
 };
 
@@ -343,7 +343,7 @@ const getGroupMembers = async (groupName, userId, page, limit) => {
   return {
     members: groupMembers.map((groupUser) => groupUser.user.nickname),
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   };
 };
 
@@ -384,7 +384,7 @@ const getAllPosts = async (groupId, page, limit) => {
   return {
     posts,
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   };
 };
 
@@ -432,7 +432,7 @@ const getRecentPosts = async (userId, page, limit) => {
       : {};
   const userGroupIds = await prisma.groupUser.findMany({
     where: {
-      userId: userId,
+      userId,
       isAccepted: true,
     },
     select: {
@@ -453,7 +453,7 @@ const getRecentPosts = async (userId, page, limit) => {
   return {
     posts,
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   };
 };
 
@@ -508,8 +508,8 @@ const leaveGroup = async (userId, groupId) => {
   await prisma.groupUser.delete({
     where: {
       userId_groupId: {
-        userId: userId,
-        groupId: groupId,
+        userId,
+        groupId,
       },
     },
   });
@@ -519,8 +519,8 @@ const removeGroupMember = async (userId, groupId) => {
   const isRemoved = await prisma.groupUser.delete({
     where: {
       userId_groupId: {
-        userId: userId,
-        groupId: groupId,
+        userId,
+        groupId,
       },
     },
   });
@@ -531,26 +531,24 @@ const dropGroup = async (groupId) => {
   await prisma.group.deleteMany({ where: { id: groupId } });
 };
 
-const getGroupByPostId = async (postId) => {
-  return prisma.group.findFirst({
+const getGroupByPostId = async (postId) =>
+  prisma.group.findFirst({
     where: { post: { some: { id: postId } } },
   });
-};
 
-const getGroupUserByUserIdAndGroupId = async (userId, groupId) => {
-  return prisma.groupUser.findUnique({
+const getGroupUserByUserIdAndGroupId = async (userId, groupId) =>
+  prisma.groupUser.findUnique({
     where: {
       userId_groupId: {
-        userId: userId,
-        groupId: groupId,
+        userId,
+        groupId,
       },
     },
   });
-};
 
 const getUserGroupCertPosts = async (userId, page, limit) => {
   const userGroups = await prisma.groupUser.findMany({
-    where: { userId: userId, isAccepted: true },
+    where: { userId, isAccepted: true },
     select: { groupId: true },
   });
   const groupIds = userGroups.map((group) => group.groupId);
@@ -573,7 +571,7 @@ const getUserGroupCertPosts = async (userId, page, limit) => {
     orderBy: { createdAt: 'desc' },
     ...paginationOptions,
   });
-  return { posts: posts, currentPage: page, totalPages: totalPages };
+  return { posts, currentPage: page, totalPages };
 };
 
 const getCertPostsByGroupName = async (groupName, page, limit) => {
@@ -610,13 +608,13 @@ const getCertPostsByGroupName = async (groupName, page, limit) => {
     };
   });
   return {
-    posts: posts,
+    posts,
     currentPage: page,
-    totalPages: totalPages,
+    totalPages,
   };
 };
 
-module.exports = {
+export default {
   createGroup,
   getAllGroups,
   getGroupDetails,

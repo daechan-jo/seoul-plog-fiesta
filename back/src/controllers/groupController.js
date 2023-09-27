@@ -1,5 +1,5 @@
-import groupService from '../services/groupService.js';
-import groupUtils from '../utils/groupUtils.js';
+import groupService from '../services/groupService';
+import groupUtils from '../utils/groupUtils';
 import localService from '../services/localService';
 
 const createGroup = async (req, res, next) => {
@@ -16,7 +16,7 @@ const createGroup = async (req, res, next) => {
     return res.status(201).json(group);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -27,13 +27,13 @@ const getAllGroups = async (req, res, next) => {
    * #swagger.description = '서버사이드 페이지네이션'
    */
   try {
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
     const groups = await groupService.getAllGroups(page, limit);
     return res.status(200).json(groups);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -43,13 +43,13 @@ const getGroupDetails = async (req, res, next) => {
    * #swagger.summary = '그룹 상세 조회'
    */
   try {
-    const groupId = parseInt(req.params.groupid);
+    const groupId = Number(req.params.groupid);
     const group = await groupService.getGroupDetails(groupId);
     if (!group) return res.status(404).json({ message: '그룹 없음' });
     return res.status(200).json(group);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -61,7 +61,7 @@ const requestToJoinGroup = async (req, res, next) => {
    */
   try {
     const userId = req.user.id;
-    const groupId = parseInt(req.params.groupid);
+    const groupId = Number(req.params.groupid);
 
     const { group, membership } = await groupService.getGroupAndMembership(
       userId,
@@ -78,7 +78,7 @@ const requestToJoinGroup = async (req, res, next) => {
     return res.status(200).json('그룹 가입 신청 성공');
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -96,7 +96,7 @@ const getGroupJoinRequests = async (req, res, next) => {
     return res.status(200).json(groupJoinRequests);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -108,8 +108,8 @@ const acceptRegistration = async (req, res, next) => {
    */
   try {
     const managerId = req.user.id;
-    const groupId = parseInt(req.params.groupid);
-    const userId = parseInt(req.params.userid);
+    const groupId = Number(req.params.groupid);
+    const userId = Number(req.params.userid);
     const acceptedRequest = await groupService.acceptRegistration(
       managerId,
       groupId,
@@ -118,7 +118,7 @@ const acceptRegistration = async (req, res, next) => {
     return res.status(200).json(acceptedRequest);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -129,7 +129,7 @@ const getGroupJoinRequestsByGroupId = async (req, res, next) => {
    * #swagger.description = '그룹 생성자 권한'
    */
   try {
-    const groupId = parseInt(req.params.groupid);
+    const groupId = Number(req.params.groupid);
     const managerId = req.user.id;
     const groupJoinRequests = await groupService.getGroupJoinRequestsByGroupId(
       groupId,
@@ -141,7 +141,7 @@ const getGroupJoinRequestsByGroupId = async (req, res, next) => {
     return res.status(200).json(groupJoinRequests);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -152,8 +152,8 @@ const rejectGroupJoinRequest = async (req, res, next) => {
    * #swagger.description = '그룹 생성자 권한'
    */
   try {
-    const userId = parseInt(req.params.userid);
-    const groupId = parseInt(req.params.groupid);
+    const userId = Number(req.params.userid);
+    const groupId = Number(req.params.groupid);
     const managerId = req.user.id;
 
     const success = await groupService.rejectGroupJoinRequest(
@@ -161,10 +161,12 @@ const rejectGroupJoinRequest = async (req, res, next) => {
       groupId,
       userId,
     );
-    if (success) return res.status(200).json({ message: '그룹 가입 거절' });
+    return success
+      ? res.status(200).json({ message: '그룹 가입 거절' })
+      : res.status(404).json({ message: '가입 신청 없음' });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -176,13 +178,13 @@ const getMyGroups = async (req, res, next) => {
    */
   try {
     const userId = req.user.id;
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
     const groups = await groupService.getMyGroups(userId, page, limit);
     return res.status(200).json(groups);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -192,8 +194,8 @@ const getGroupMembers = async (req, res, next) => {
    * #swagger.summary = '해당 그룹원 닉네임 배열 반환'
    */
   try {
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
     const groupName = req.params.groupname;
     const userId = req.user.id;
     const members = await groupService.getGroupMembers(
@@ -205,7 +207,7 @@ const getGroupMembers = async (req, res, next) => {
     return res.status(200).json(members);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -217,7 +219,7 @@ const createPost = async (req, res, next) => {
    */
   try {
     const userId = req.user.id;
-    const groupId = parseInt(req.params.groupid);
+    const groupId = Number(req.params.groupid);
     const { title, content } = req.body;
     const isNotice =
       req.body.isNotice !== undefined ? req.body.isNotice : false;
@@ -232,7 +234,7 @@ const createPost = async (req, res, next) => {
     return res.status(201).json(post);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -243,14 +245,14 @@ const getRecentPosts = async (req, res, next) => {
    * #swagger.description = '서버사이드 페이지네이션'
    */
   try {
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
     const userId = req.user.id;
     const posts = await groupService.getRecentPosts(userId, page, limit);
     return res.status(200).json(posts);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -261,15 +263,15 @@ const getAllPosts = async (req, res, next) => {
    * #swagger.description = '서버사이드 페이지네이션'
    */
   try {
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
-    const groupId = parseInt(req.params.groupid);
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
+    const groupId = Number(req.params.groupid);
 
     const posts = await groupService.getAllPosts(groupId, page, limit);
     return res.status(200).json(posts);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -279,13 +281,13 @@ const getPostById = async (req, res, next) => {
    * #swagger.summary = '그룹 게시글 상세조회'
    */
   try {
-    const postId = parseInt(req.params.postid);
+    const postId = Number(req.params.postid);
     const post = await groupService.getPostById(postId);
     if (!post) return res.status(404).json({ message: '게시글 없음' });
     return res.status(200).json(post);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -296,14 +298,14 @@ const editPost = async (req, res, next) => {
    * #swagger.description = '작성자 권한'
    */
   try {
-    const postId = parseInt(req.params.postid);
+    const postId = Number(req.params.postid);
     const userId = req.user.id;
     const postData = req.body;
     const updatedPost = await groupService.editPost(postId, userId, postData);
     return res.status(201).json(updatedPost);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -314,7 +316,7 @@ const deletePost = async (req, res, next) => {
    * #swagger.description = '작성자 또는 관리자 권한'
    */
   try {
-    const postId = parseInt(req.params.postid);
+    const postId = Number(req.params.postid);
     const userId = req.user.id;
     const post = await groupService.getPostById(postId);
     if (!post) return res.status(404).json({ message: '게시글 없음' });
@@ -332,7 +334,7 @@ const deletePost = async (req, res, next) => {
     return res.status(204).json({ message: `게시글 삭제 : ${postId}` });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -343,7 +345,7 @@ const leaveGroup = async (req, res, next) => {
    * #swagger.description = '사용자의 게시글 및 댓글은 유지 / 관리자는 탈퇴 불가'
    */
   const userId = req.user.id;
-  const groupId = parseInt(req.params.groupid);
+  const groupId = Number(req.params.groupid);
   try {
     const isMember = await groupUtils.isUserGroupMember(userId, groupId);
     if (!isMember)
@@ -355,7 +357,7 @@ const leaveGroup = async (req, res, next) => {
     return res.status(200).json({ message: `그룹 탈퇴 : ${groupId}` });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -367,8 +369,8 @@ const removeGroupMember = async (req, res, next) => {
    */
   try {
     const managerId = req.user.id;
-    const groupId = parseInt(req.params.groupid);
-    const userId = parseInt(req.params.userid);
+    const groupId = Number(req.params.groupid);
+    const userId = Number(req.params.userid);
 
     if (!(await groupService.isUserGroupAdmin(managerId, groupId)))
       return res.status(403).json({ message: '권한 없음' });
@@ -376,12 +378,11 @@ const removeGroupMember = async (req, res, next) => {
     const isRemoved = await groupService.removeGroupMember(userId, groupId);
     if (isRemoved) {
       return res.status(200).json({ message: `그룹원 추방 : ${userId}` });
-    } else {
-      return res.status(404).json({ message: '그룹원 없음' });
     }
+    return res.status(404).json({ message: '그룹원 없음' });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -393,7 +394,7 @@ const dropGroup = async (req, res, next) => {
    */
   try {
     const userId = req.user.id;
-    const groupId = parseInt(req.params.groupid);
+    const groupId = Number(req.params.groupid);
     const group = await groupService.getGroupDetails(groupId);
     if (!group || group.managerId !== userId)
       return res.status(403).json({ message: '권한 없음' });
@@ -404,7 +405,7 @@ const dropGroup = async (req, res, next) => {
     return res.status(204).json({ message: '삭제 완료' });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -415,14 +416,14 @@ const getGroupCertPosts = async (req, res, next) => {
    * #swagger.description = '서버사이드 페이지네이션'
    */
   try {
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
     const userId = req.user.id;
     const posts = await groupService.getUserGroupCertPosts(userId, page, limit);
     return res.status(200).json(posts);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -433,8 +434,8 @@ const getCertPostsByGroupName = async (req, res, next) => {
    * #swagger.description = '참여자 정보 포함 / 서버사이드 페이지네이션'
    */
   try {
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
+    const page = Number(req.query.page) || null;
+    const limit = Number(req.query.limit) || null;
     const groupName = req.params.groupname;
     const certPostDetails = await groupService.getCertPostsByGroupName(
       groupName,
@@ -444,11 +445,11 @@ const getCertPostsByGroupName = async (req, res, next) => {
     return res.status(200).json(certPostDetails);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
-module.exports = {
+export default {
   createGroup,
   getAllGroups,
   getGroupDetails,

@@ -2,6 +2,7 @@ import router from 'express';
 import authenticateJWT from '../middlewares/authenticateJWT';
 import ploController from '../controllers/ploController';
 import ploValidate from '../middlewares/validates/ploValidate';
+
 const ploRouter = router();
 
 /** @description 인증게시글 작성 */
@@ -60,4 +61,4 @@ ploRouter.get(
 
 ploRouter.get('/plo/count/all', ploController.getAllCertPostsRegionCount);
 
-module.exports = ploRouter;
+export default ploRouter;

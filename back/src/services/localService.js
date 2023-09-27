@@ -1,11 +1,12 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+import { PrismaClient } from '@prisma/client';
+
 import fs from 'fs';
 import path from 'path';
 
-const createFilePath = (image) => {
-  return path.join(__dirname, '../../', 'public', image.imageUrl);
-};
+const prisma = new PrismaClient();
+
+const createFilePath = (image) =>
+  path.join(__dirname, '../../', 'public', image.imageUrl);
 
 const LocalStorageClearByDropGroup = async (groupId) => {
   const group = await prisma.group.findUnique({ where: { id: groupId } });
@@ -27,85 +28,55 @@ const LocalStorageClearByDropGroup = async (groupId) => {
     where: { groupId },
   });
 
-  let imageFilesToDelete = [];
+  const imageFilesToDelete = [
+    ...(groupImage && createFilePath(groupImage)),
+    ...posts.map((post) => createFilePath(post.postImages)),
+    ...certPosts.map((certPost) => createFilePath(certPost.certPostImages)),
+  ];
 
-  if (groupImage) {
-    imageFilesToDelete.push(createFilePath(groupImage));
-  }
-
-  for (let post of posts) {
-    for (let image of post.postImages) {
-      imageFilesToDelete.push(createFilePath(image));
-    }
-  }
-
-  for (let certPost of certPosts) {
-    for (let image of certPost.certPostImages) {
-      imageFilesToDelete.push(createFilePath(image));
-    }
-  }
-
-  for (let filePath of imageFilesToDelete) {
+  for (const filePath of imageFilesToDelete) {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
   }
 };
 
+// 지정된 사용자 ID와 관련된 로컬 스토리지에 저장된 이미지 파일을 삭제하는 함수
 const LocalStorageClearByDropUser = async (userId) => {
-  const groups = await prisma.group.findMany({
-    where: { managerId: userId },
-  });
+  // 지정된 사용자 ID와 관련된 그룹, 게시물, 인증 게시물, 사용자를 가져온다.
+  const [groups, posts, certPosts, user] = await Promise.all([
+    prisma.group.findMany({ where: { managerId: userId } }),
+    prisma.post.findMany({ where: { writerId: userId } }),
+    prisma.certPost.findMany({ where: { writerId: userId } }),
+    prisma.user.findUnique({ where: { id: userId } }),
+  ]);
 
-  const posts = await prisma.post.findMany({
-    where: { writerId: userId },
-  });
-
-  const certPosts = await prisma.certPost.findMany({
-    where: { writerId: userId },
-  });
-
-  const user = await prisma.user.findUnique({
-    where: { userId },
-  });
-
-  let imageFilesToDelete = [];
-
-  if (user) {
-    imageFilesToDelete.push(
-      path.join(__dirname, '../../', 'public', user.imagePath),
-    );
-  }
-
-  for (let group of groups) {
-    if (group.imagePath) {
-      imageFilesToDelete.push(
+  // 삭제할 이미지 파일 목록을 만든다.
+  const imageFilesToDelete = [
+    ...(user.imagePath &&
+      path.join(__dirname, '../../', 'public', user.imagePath)),
+    ...groups.map(
+      (group) =>
+        group.imagePath &&
         path.join(__dirname, '../../', 'public', group.imagePath),
-      );
-    }
-  }
-
-  for (let post of posts) {
-    if (post.imagePath) {
-      imageFilesToDelete.push(
+    ),
+    ...posts.map(
+      (post) =>
+        post.imagePath &&
         path.join(__dirname, '../../', 'public', post.imagePath),
-      );
-    }
-  }
-
-  for (let certPost of certPosts) {
-    if (certPost.imagePath) {
-      imageFilesToDelete.push(
+    ),
+    ...certPosts.map(
+      (certPost) =>
+        certPost.imagePath &&
         path.join(__dirname, '../../', 'public', certPost.imagePath),
-      );
-    }
-  }
+    ),
+  ];
 
-  for (let filePath of imageFilesToDelete) {
+  for (const filePath of imageFilesToDelete) {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
   }
 };
 
-module.exports = { LocalStorageClearByDropGroup, LocalStorageClearByDropUser };
+export default { LocalStorageClearByDropGroup, LocalStorageClearByDropUser };
