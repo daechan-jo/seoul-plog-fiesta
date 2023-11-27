@@ -10,9 +10,9 @@ import {
   isErrorState,
 } from '../../features/recoilState';
 import { seoulDistricts } from '../common/exportData';
-import { UserIdContext } from '../../containers/userId';
 import MyLanking from '../feat/Lanking';
 import { handleImgUrl } from '../../utils/handleImgUrl';
+import { UserIdContext } from '../../pages/UserIdPage';
 
 const mockmyInfo = {
   imgUrl: 'http://placekitten.com/200/200',

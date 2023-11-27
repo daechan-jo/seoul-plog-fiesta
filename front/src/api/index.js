@@ -7,12 +7,7 @@ const userToken = () => localStorage.getItem('userToken');
 const get = async (endpoint) => {
   try {
     console.log(`GET: ${baseURL}${endpoint}`);
-    const res = await instance.get(endpoint, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken()}`,
-      },
-    });
+    const res = await instance.get(endpoint);
     if (res.message) {
       console.log(`MESSAGE: ${res.message}`, 'color: #a25cd1;');
     }
@@ -30,12 +25,7 @@ const post = async (endpoint, data) => {
   try {
     console.log(`POST: ${baseURL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
-    const res = await instance.post(endpoint, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken()}`,
-      },
-    });
+    const res = await instance.post(endpoint, data);
     if (res.message) {
       console.log(`MESSAGE: ${res.message}`, 'color: #a25cd1;');
     }
@@ -53,12 +43,7 @@ const registerPost = async (endpoint, data) => {
   try {
     console.log(`POST: ${baseURL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
-    const res = await instance.post(endpoint, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken()}`,
-      },
-    });
+    const res = await instance.post(endpoint, data);
     if (res.message) {
       console.log(`MESSAGE: ${res.message}`, 'color: #a25cd1;');
     }
@@ -76,12 +61,7 @@ const postForm = async (endpoint, data) => {
   try {
     console.log(`POST: ${baseURL}${endpoint}`);
     console.log(`DATA: ${JSON.stringify(data)}`);
-    const res = await formDataInstance.post(endpoint, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${userToken()}`,
-      },
-    });
+    const res = await formDataInstance.post(endpoint, data);
     if (res.message) {
       console.log(`MESSAGE: ${res.message}`, 'color: #a25cd1;');
     }
@@ -106,12 +86,7 @@ const put = async (endpoint, data) => {
       }
     }
     console.log(`FILTERED DATA: ${JSON.stringify(filteredData)}`);
-    const res = await instance.put(endpoint, filteredData, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken()}`,
-      },
-    });
+    const res = await instance.put(endpoint, filteredData);
     if (res.message) {
       console.log(`MESSAGE: ${res.message}`, 'color: #a25cd1;');
     }
@@ -128,12 +103,7 @@ const put = async (endpoint, data) => {
 const del = async (endpoint) => {
   try {
     console.log(`DELTE: ${baseURL}${endpoint} ${userToken}`);
-    const res = await instance.delete(endpoint, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userToken()}`,
-      },
-    });
+    const res = await instance.delete(endpoint);
     if (res.message) {
       console.log(`MESSAGE: ${res.message}`, 'color: #a25cd1;');
     }

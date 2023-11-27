@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Api from '../../api';
-import { GroupIdContext } from '../../containers/groupId';
 import { handlePagenation } from '../../utils/pagenation';
 import Pagination from '../common/Pagenation';
 import PloggingShow from '../common/PlogginShow';
 import { handleCreatedDate } from '../../utils/handleCreatedDate';
 import styles from './index.module.scss';
+import { GroupIdContext } from '../../pages/GroupIdPage';
 
 const GroupPlogging = ({ view }) => {
   const [isFetching, setIsFetching] = useState(false);

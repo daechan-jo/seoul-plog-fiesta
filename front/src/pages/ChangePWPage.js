@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Layout from './Layout';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import PasswordEmailSuccessContainer from '../containers/password/EmailSuccess';
+import PasswordChangeSuccess from '../components/user/PasswordChangeSuccess';
 
 const PasswordEmailSuccessPage = () => {
   const navigator = useNavigate();
@@ -18,7 +18,9 @@ const PasswordEmailSuccessPage = () => {
 
   return (
     <Layout>
-      <PasswordEmailSuccessContainer />
+      <main>
+      <PasswordChangeSuccess />
+      </main>
     </Layout>
   );
 };

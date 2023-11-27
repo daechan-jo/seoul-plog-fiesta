@@ -4,11 +4,11 @@ import * as Api from '../../api';
 import { useSelector } from 'react-redux';
 import { seoulDistricts } from '../common/exportData';
 import styles from './index.module.scss';
-import { GroupIdContext } from '../../containers/groupId';
 import { useRecoilState } from 'recoil';
 import { errorMessageState, isErrorState } from '../../features/recoilState';
 import { handlePagenation } from '../../utils/pagenation';
 import Pagination from '../common/Pagenation';
+import { GroupIdContext } from '../../pages/GroupIdPage';
 
 const GroupMember = ({ setView, view }) => {
   const [, setIsError] = useRecoilState(isErrorState);
