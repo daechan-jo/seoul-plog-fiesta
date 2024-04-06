@@ -43,40 +43,46 @@ const LocalStorageClearByDropGroup = async (groupId) => {
 
 // 지정된 사용자 ID와 관련된 로컬 스토리지에 저장된 이미지 파일을 삭제하는 함수
 const LocalStorageClearByDropUser = async (userId) => {
-  // 지정된 사용자 ID와 관련된 그룹, 게시물, 인증 게시물, 사용자를 가져온다.
-  const [groups, posts, certPosts, user] = await Promise.all([
+  return Promise.all([
     prisma.group.findMany({ where: { managerId: userId } }),
     prisma.post.findMany({ where: { writerId: userId } }),
     prisma.certPost.findMany({ where: { writerId: userId } }),
     prisma.user.findUnique({ where: { id: userId } }),
-  ]);
+  ]).then(([groups, posts, certPosts, user]) => {
+    // 삭제할 이미지 파일 목록을 만든다.
+    const imageFilesToDelete = [
+      ...(user?.imagePath
+        ? [path.join(__dirname, '../../', 'public', user.imagePath)]
+        : []),
+      ...groups
+        .map((group) =>
+          group.imagePath
+            ? path.join(__dirname, '../../', 'public', group.imagePath)
+            : [],
+        )
+        .filter(Boolean),
+      ...posts
+        .map((post) =>
+          post.imagePath
+            ? path.join(__dirname, '../../', 'public', post.imagePath)
+            : [],
+        )
+        .filter(Boolean),
+      ...certPosts
+        .map((certPost) =>
+          certPost.imagePath
+            ? path.join(__dirname, '../../', 'public', certPost.imagePath)
+            : [],
+        )
+        .filter(Boolean),
+    ];
 
-  // 삭제할 이미지 파일 목록을 만든다.
-  const imageFilesToDelete = [
-    ...(user.imagePath &&
-      path.join(__dirname, '../../', 'public', user.imagePath)),
-    ...groups.map(
-      (group) =>
-        group.imagePath &&
-        path.join(__dirname, '../../', 'public', group.imagePath),
-    ),
-    ...posts.map(
-      (post) =>
-        post.imagePath &&
-        path.join(__dirname, '../../', 'public', post.imagePath),
-    ),
-    ...certPosts.map(
-      (certPost) =>
-        certPost.imagePath &&
-        path.join(__dirname, '../../', 'public', certPost.imagePath),
-    ),
-  ];
-
-  for (const filePath of imageFilesToDelete) {
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-  }
+    imageFilesToDelete.forEach((filePath) => {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    });
+  });
 };
 
 export default { LocalStorageClearByDropGroup, LocalStorageClearByDropUser };

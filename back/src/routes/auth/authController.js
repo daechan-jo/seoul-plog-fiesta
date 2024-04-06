@@ -1,4 +1,4 @@
-import authService from './authService';
+import { authService } from './authService';
 import randomToken from '../../utils/randomToken';
 import mailSend from '../../utils/mailSend';
 import localService from '../../services/localService';
@@ -226,7 +226,7 @@ const removeUser = async (req, res, next) => {
    */
   try {
     const userId = req.user.id;
-    await localService.LocalStorageClearByDropUser(userId);
+    localService.LocalStorageClearByDropUser(userId);
     await authService.removeUser(userId);
     return res.status(204).json({ message: '회원탈퇴가 완료되었습니다.' });
   } catch (error) {
