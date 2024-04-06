@@ -1,6 +1,6 @@
 import smtpTransport from '../config/nodeMailer';
 
-async function mailSendApp(emailOptions) {
+export async function mailSendApp(emailOptions) {
   return new Promise((resolve, reject) => {
     smtpTransport.sendMail(emailOptions, (err, info) => {
       if (err) {
@@ -12,5 +12,3 @@ async function mailSendApp(emailOptions) {
     });
   });
 }
-
-export default mailSendApp;

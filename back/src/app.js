@@ -7,7 +7,7 @@ import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import errorMiddleware from './middlewares/errorMiddleware';
 import loggerMiddleware from './middlewares/loggerMiddleware';
-import authRoutes from './routes/auth/authRoute';
+import authRoutes from './routes/auth/auth.route';
 import userRoutes from './routes/user/userRoute';
 import groupRoutes from './routes/group/groupRoute';
 import uploadRoute from './routes/upload/uploadRoute';
@@ -31,9 +31,9 @@ app.use(passport.initialize());
 passport.use('local', local);
 passport.use('jwt', jwt);
 app.use(
-	'/api-docs',
-	swaggerUi.serve,
-	swaggerUi.setup(swaggerFile, { explorer: true }),
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile, { explorer: true }),
 );
 
 app.use(loggerMiddleware);

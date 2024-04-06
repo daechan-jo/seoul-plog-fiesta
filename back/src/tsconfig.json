@@ -12,6 +12,10 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
+		 "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"  // 여기에 선언 파일이 포함된 디렉토리 경로를 추가
+    ],
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
