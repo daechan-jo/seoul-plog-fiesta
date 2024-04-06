@@ -4,6 +4,10 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 /** @description 유저 생성 */
+class UserService {
+  constructor() {}
+}
+
 const createUser = async (userData) => {
   const { name, nickname, email, password } = userData;
   const existingUser = await prisma.user.findUnique({

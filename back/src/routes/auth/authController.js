@@ -1,7 +1,7 @@
-import authService from '../services/authService';
-import randomToken from '../utils/randomToken';
-import mailSend from '../utils/mailSend';
-import localService from '../services/localService';
+import authService from './authService';
+import randomToken from '../../utils/randomToken';
+import mailSend from '../../utils/mailSend';
+import localService from '../../services/localService';
 
 const createUser = async (req, res, next) => {
   /**
@@ -81,7 +81,7 @@ const sendEmailWithTokenUrl = async (req, res, next) => {
       html:
         `<h2>안녕하세요. SeoulPlogFiesta입니다.</h2>` +
         `<h2>고객님의 비밀번호 변경을 위해 아래의 링크를 클릭해주세요.</h2>` +
-        `<a href= "${process.env.SERVER_URL}auth/checkEmail?token=${token}">비밀번호 재설정 링크<a>`,
+        `<a href= '${process.env.SERVER_URL}auth/checkEmail?token=${token}'>비밀번호 재설정 링크<a>`,
     };
     // 이메일 발송
     await mailSend(emailOptions);

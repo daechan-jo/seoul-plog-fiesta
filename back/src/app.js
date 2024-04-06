@@ -7,12 +7,12 @@ import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import errorMiddleware from './middlewares/errorMiddleware';
 import loggerMiddleware from './middlewares/loggerMiddleware';
-import authRoutes from './routers/authRouter';
-import userRoutes from './routers/userRouter';
-import groupRoutes from './routers/groupRouter';
-import uploadRouter from './routers/uploadRouter';
-import commentRouter from './routers/commentRouter';
-import ploRouter from './routers/ploRouter';
+import authRoutes from './routes/auth/authRoute';
+import userRoutes from './routes/user/userRoute';
+import groupRoutes from './routes/group/groupRoute';
+import uploadRoute from './routes/upload/uploadRoute';
+import commentRoute from './routes/comment/commentRoute';
+import ploRoute from './routes/plo/ploRoute';
 import { local, jwt } from './config';
 import swaggerFile from './config/swagger-output.json';
 
@@ -31,9 +31,9 @@ app.use(passport.initialize());
 passport.use('local', local);
 passport.use('jwt', jwt);
 app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerFile, { explorer: true }),
+	'/api-docs',
+	swaggerUi.serve,
+	swaggerUi.setup(swaggerFile, { explorer: true }),
 );
 
 app.use(loggerMiddleware);
@@ -41,9 +41,9 @@ app.use(loggerMiddleware);
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(groupRoutes);
-app.use(uploadRouter);
-app.use(commentRouter);
-app.use(ploRouter);
+app.use(uploadRoute);
+app.use(commentRoute);
+app.use(ploRoute);
 
 app.use(errorMiddleware);
 
